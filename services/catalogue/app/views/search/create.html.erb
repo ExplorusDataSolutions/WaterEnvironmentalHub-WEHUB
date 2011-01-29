@@ -1,40 +1,25 @@
 
 <table>  
   <tr>
-    <td valign="top">
-    
-    <%= form_for :search do |f| %>
-      Keyword: <%= f.text_field :query %>
-      <%= f.submit "Search" %>
-    <% end %>
-    
+    <td valign="top">  
+    <%= render "search" %>    
     </td>
     <td>
-      <table>
+      <table>  
+      <% @results.each do |result| %>  
         <tr>
+          <td style="padding-right: 10px" valign="top"><img src="http://174.129.10.37:8080/geonetwork/srv/<%= result.thumbnail %>" width="100px" /></td>
           <td>
-
-<% @search.test.each do |item| %>
-  <tr>  
-  <% if item["title"] != nil %>
-    <td style="padding-right: 10px" valign="top">
-    <img src="http://174.129.10.37:8080/geonetwork/srv/<%= item.fetch("content").fetch("url") %>" width="100px" />
-    </td>
-    <td>
-    <a href=""><%= item["title"] %></a><br />
-    <%= item.fetch("pubDate") %> ... <%= item.fetch("text") %><br />
-    <ul>
-      <% item["link"].each do |components| %>
-        <% if components["title"] != nil %>
-          <li><a href="<%= components["href"] %>"><%= components["title"] %></a> (<%= components["type"] %>)</li>
-        <% end %>
-      <% end %>
-    </ul>
-    </td>
-  <% end %>
-  </tr>
-<% end %>
-
+            <a href=""><%= result.title %></a><br />
+            <%= result.publication_date %> ... <%= result.description %><br />
+            <ul>
+              <% result.resources.each do |resource| %>
+                <li><a href="<%= resource.uri %>"><%= resource.title %></a> (<%= resource.type %>)</li>
+              <% end %>
+            </ul>
+          </td>
+        </tr>
+      <% end %>  
       </table>
     </td>
   </tr>
