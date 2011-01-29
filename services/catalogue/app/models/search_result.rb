@@ -1,5 +1,5 @@
 class SearchResult
-  attr_accessor :description, :title, :resources, :thumbnail, :source, :publication_date
+  attr_accessor :description, :title, :resources, :thumbnail, :source, :publication_date, :query
   
   def initialize(description, title, resources, thumbnail, source, publication_date)
     @description = description

@@ -5,8 +5,9 @@
     <%= render "search" %>    
     </td>
     <td>
-      <table>  
-      <% @results.each do |result| %>  
+      <h2>Search results for '<%= @search.query %>'</h2
+      <table>
+      <% @search.results.each do |result| %>  
         <tr>
           <td style="padding-right: 10px" valign="top"><img src="http://174.129.10.37:8080/geonetwork/srv/<%= result.thumbnail %>" width="100px" /></td>
           <td>

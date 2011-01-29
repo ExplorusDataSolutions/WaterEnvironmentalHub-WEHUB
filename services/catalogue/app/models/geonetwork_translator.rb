@@ -20,7 +20,7 @@ class GeoNetworkTranslator
         
         description = item.elements['media:text'].text
         
-        resources = Array.new
+        resources = []
         
         item.elements.to_a('link').each do |link, index|
           if index != 1
@@ -55,6 +55,6 @@ class GeoNetworkTranslator
     request.content_type = "text/xml"
     response = Net::HTTP.start(url.host, url.port) {|http| http.request(request)}
    
-    translate_from_search(response.body)    
+    translate_from_search(response.body)
   end
 end
