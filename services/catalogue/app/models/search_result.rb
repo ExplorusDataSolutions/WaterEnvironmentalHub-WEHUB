@@ -10,13 +10,3 @@ class SearchResult
     @publication_date = publication_date
   end
 end
-
-class Resources
-  attr_accessor :uri, :title, :type
-  
-  def initialize(uri, title, type)
-    @uri = uri
-    @title = title
-    @type = type
-  end
-end

@@ -9,7 +9,7 @@ class SearchController < ApplicationController
   
   def create
     translator = GeoNetworkTranslator.new
-    @query = params[:search][:query]
-    @results = translator.search_results(@query)
+    query = params[:search][:query]
+    @results = translator.search_results(query)
   end
 end

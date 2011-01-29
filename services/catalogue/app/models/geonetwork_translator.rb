@@ -20,14 +20,16 @@ class GeoNetworkTranslator
         
         description = item.elements['media:text'].text
         
-        resources = []
+        resources = Array.new
         
         item.elements.to_a('link').each do |link, index|
-          if link.attributes['href'] != nil || link.attributes['href'] != nil || link.attributes['type'] != nil
-            resources.push(Resources.new(link.attributes['href'], link.attributes['title'], link.attributes['type']))
+          if index != 1
+            if link.attributes['href'] != nil && link.attributes['title'] != nil && link.attributes['type'] != nil
+              resources.push(Resource.new(link.attributes['href'], link.attributes['title'], link.attributes['type']))
+            end
           end
         end
-        
+
         media_content = item.elements['media:content']
         if media_content != nil
           thumbnail = media_content.attributes['url']
