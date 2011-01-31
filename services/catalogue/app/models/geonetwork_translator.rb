@@ -39,8 +39,10 @@ class GeoNetworkTranslator
         
         publication_date = item.elements['pubDate'].text
         
+        id = item.elements['uuid'].text
+        
         if title != nil
-          search_result.push(SearchResult.new(description, title, resources, thumbnail, source, publication_date))
+          search_result.push(SearchResult.new(description, title, resources, thumbnail, source, publication_date, id))
         end
       end
     end

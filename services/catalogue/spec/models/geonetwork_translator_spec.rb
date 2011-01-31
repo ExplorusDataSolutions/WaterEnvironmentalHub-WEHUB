@@ -13,7 +13,7 @@ describe GeoNetworkTranslator do
   it "search_results are translated" do 
     results = @translator.translate_from_search(File.read(File.dirname(__FILE__) + '/../data/geonetwork_search_water_rss.xml'))    
     
-    results.count.should eql 3    
+    results.count.should eql 2    
     assert_equal 'Hydrological Basins in Africa (Sample record, please remove!)', results[0].title
     results[0].description.index('Major hydrological basins and their sub-basins.').should_not eql nil
 
@@ -27,7 +27,7 @@ describe GeoNetworkTranslator do
     resource = results[0].resources[1]
     assert_equal 'http://174.129.10.37:8080/geonetwork/srv/en/resources.get?id=10&fname=basins.zip&access=private', resource.uri
     
-    assert_equal '/geonetwork/srv/en/resources.get?id=21&fname=thumbnail_s.gif&access=public', results[0].thumbnail
+    assert_equal '/geonetwork/srv/en/resources.get?id=13&fname=thumbnail_s.gif&access=public', results[0].thumbnail
     assert_equal '06 Nov 2007 12:13:00 EST', results[0].publication_date
   end
   
