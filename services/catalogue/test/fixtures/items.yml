@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: MyString
+  item_group: 1
+  description: MyText
+  methodology: MyText
+
+two:
+  name: MyString
+  item_group: 1
+  description: MyText
+  methodology: MyText
