@@ -6,6 +6,7 @@ gem 'rails', '3.0.3'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'pg'
+gem 'uuidtools'
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -28,6 +29,6 @@ gem 'pg'
 # and rake tasks are available in development mode:
 group :development, :test do
   gem "rspec-rails", ">= 2.4.1"
-  gem 'factory_girl'
+  gem 'factory_girl_rails'
 # gem 'webrat'
 end
