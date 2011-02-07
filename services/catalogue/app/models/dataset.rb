@@ -1,6 +1,6 @@
-class Item < ActiveRecord::Base
+class Dataset < ActiveRecord::Base
   
-  has_one :item_group
+  has_one :dataset_group
   has_many :features
   
 end

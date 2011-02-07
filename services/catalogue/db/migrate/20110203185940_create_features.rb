@@ -3,7 +3,7 @@ class CreateFeatures < ActiveRecord::Migration
     create_table :features do |t|
       t.string :name
       t.string :location
-      t.references :item
+      t.references :dataset
 
       t.timestamps
     end

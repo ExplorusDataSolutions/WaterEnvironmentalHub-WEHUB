@@ -1,14 +1,14 @@
-class CreateItemGroups < ActiveRecord::Migration
+class CreateDatasetGroups < ActiveRecord::Migration
   def self.up
-    create_table :item_groups do |t|
+    create_table :dataset_groups do |t|
       t.string :name
-      t.references :item
+      t.references :dataset
 
       t.timestamps
     end
   end
 
   def self.down
-    drop_table :item_groups
+    drop_table :dataset_groups
   end
 end

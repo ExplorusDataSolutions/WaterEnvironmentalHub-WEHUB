@@ -12,6 +12,22 @@
 
 ActiveRecord::Schema.define(:version => 20110203185940) do
 
+  create_table "dataset_groups", :force => true do |t|
+    t.string   "name"
+    t.integer  "dataset_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "datasets", :force => true do |t|
+    t.string   "name"
+    t.string   "uuid"
+    t.text     "description"
+    t.text     "methodology"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "feature_attributes", :force => true do |t|
     t.string   "name"
     t.string   "location"
@@ -23,30 +39,14 @@ ActiveRecord::Schema.define(:version => 20110203185940) do
   create_table "features", :force => true do |t|
     t.string   "name"
     t.string   "location"
-    t.integer  "item_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "item_groups", :force => true do |t|
-    t.string   "name"
-    t.integer  "item_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "items", :force => true do |t|
-    t.string   "name"
-    t.string   "uuid"
-    t.text     "description"
-    t.text     "methodology"
+    t.integer  "dataset_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "observations", :force => true do |t|
     t.text     "json"
-    t.integer  "item_id"
+    t.integer  "feature_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

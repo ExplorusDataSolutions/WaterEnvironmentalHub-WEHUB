@@ -1,18 +1,18 @@
-Factory.define :item  do |i|
+Factory.define :dataset  do |i|
   i.name "test item name"
   i.uuid "3068e840-2fe6-11e0-91fa-0800200c9a66"
   i.description "test description"
   i.methodology "test methodology"
 end
 
-Factory.define :item_fully_loaded, :class => Item do |i|
-  i.association :item_group  
+Factory.define :dataset_fully_loaded, :class => Dataset do |i|
+  i.association :dataset_group  
   i.features { |f| [f.association(:feature), f.association(:feature)] }
 end
 
-Factory.define :item_group do |g|
+Factory.define :dataset_group do |g|
   g.name "test group"
-  g.association :item, :factory => :item
+  g.association :dataset, :factory => :dataset
 end
 
 Factory.define :feature do |f|

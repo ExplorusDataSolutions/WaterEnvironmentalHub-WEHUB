@@ -1,6 +1,6 @@
 class Feature < ActiveRecord::Base
   
-  belongs_to :item
+  belongs_to :dataset
   has_one :observation
   has_many :feature_attributes
   

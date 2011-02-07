@@ -1,6 +1,6 @@
-class CreateItems < ActiveRecord::Migration
+class CreateDatasets < ActiveRecord::Migration
   def self.up
-    create_table :items do |t|
+    create_table :datasets do |t|
       t.string :name
       t.string :uuid
       t.text :description
@@ -11,6 +11,6 @@ class CreateItems < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :items
+    drop_table :datasets
   end
 end

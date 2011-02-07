@@ -1,5 +1,5 @@
-class ItemGroup < ActiveRecord::Base
+class DatasetGroup < ActiveRecord::Base
   
-  belongs_to :item
+  belongs_to :dataset
   
 end
