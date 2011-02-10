@@ -17,7 +17,7 @@ end
 
 Factory.define :feature do |f|
   f.sequence(:name) { |n| "test feature name #{n}}}" }
-  f.sequence(:location) { |n| "test feature location #{n}}}" }
+  f.sequence(:description) { |n| "test feature description #{n}}}" }
   f.association :observation, :factory => :observation
   f.feature_attributes { |f| [f.association(:feature_attribute), f.association(:feature_attribute)] }
 end
@@ -28,5 +28,5 @@ end
 
 Factory.define :feature_attribute do |f|
   f.name "test feature attribute name"
-  f.location "test feature attribute location"
+  f.unit "test feature attribute description"
 end

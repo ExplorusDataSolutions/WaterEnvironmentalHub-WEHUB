@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110203185940) do
+ActiveRecord::Schema.define(:version => 20110210165248) do
 
   create_table "dataset_groups", :force => true do |t|
     t.string   "name"
@@ -30,16 +30,24 @@ ActiveRecord::Schema.define(:version => 20110203185940) do
 
   create_table "feature_attributes", :force => true do |t|
     t.string   "name"
-    t.string   "location"
+    t.string   "unit"
     t.integer  "feature_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "feature_types", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "features", :force => true do |t|
     t.string   "name"
-    t.string   "location"
+    t.text     "description"
     t.integer  "dataset_id"
+    t.integer  "feature_types_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

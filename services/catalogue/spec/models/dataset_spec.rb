@@ -24,7 +24,7 @@ describe Dataset do
     
     Dataset.all.should == [set1, set2, set3]
     
-    result = Dataset.find_by_uuid("0de453a0-32e2-11e0-bc8e-0800200c9a66").should == [set2]
+    Dataset.find_by_uuid("0de453a0-32e2-11e0-bc8e-0800200c9a66").should == set2
   end
   
 end
