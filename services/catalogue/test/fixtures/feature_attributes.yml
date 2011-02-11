@@ -1,11 +1,330 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+--- 
+feature_attribute_00005: 
+  feature_id: 1
+  id: 5
+  name: Root Zone (%)
 
-one:
-  name: MyString
-  location: MyString
-  feature: 
+feature_attribute_00006: 
+  feature_id: 1
+  id: 6
+  name: Top Zone (mm)
 
-two:
-  name: MyString
-  location: MyString
-  feature: 
+feature_attribute_00007: 
+  feature_id: 1
+  id: 7
+  name: Top Zone (%)
+
+feature_attribute_00008: 
+  feature_id: 1
+  id: 8
+  name: Actual Evapotranspiration (mm)
+
+feature_attribute_00009: 
+  feature_id: 
+  id: 9
+  name: Precipitation (mm)
+
+feature_attribute_00010: 
+  feature_id: 1
+  id: 10
+  name: Relative Humidity (%)
+
+feature_attribute_00011: 
+  feature_id: 1
+  id: 11
+  name: Biometeorological Time
+
+feature_attribute_00012: 
+  feature_id: 1
+  id: 12
+  name: Leaf Area
+
+feature_attribute_00013: 
+  feature_id: 1
+  id: 13
+  name: Potential Evapotranspiration (mm)
+
+feature_attribute_00014: 
+  feature_id: 1
+  id: 14
+  name: Total Soil Moisture (mm)
+
+feature_attribute_00015: 
+  feature_id: 2
+  id: 15
+  name: Field
+
+feature_attribute_00016: 
+  feature_id: 2
+  id: 16
+  name: Crop
+
+feature_attribute_00017: 
+  feature_id: 2
+  id: 17
+  name: Calendar Day
+
+feature_attribute_00018: 
+  feature_id: 2
+  id: 18
+  name: Root Zone (mm)
+
+feature_attribute_00019: 
+  feature_id: 2
+  id: 19
+  name: Root Zone (%)
+
+feature_attribute_00020: 
+  feature_id: 2
+  id: 20
+  name: Top Zone (mm)
+
+feature_attribute_00021: 
+  feature_id: 2
+  id: 21
+  name: Top Zone (%)
+
+feature_attribute_00022: 
+  feature_id: 2
+  id: 22
+  name: Actual Evapotranspiration (mm)
+
+feature_attribute_00023: 
+  feature_id: 2
+  id: 23
+  name: Precipitation (mm)
+
+feature_attribute_00024: 
+  feature_id: 2
+  id: 24
+  name: Relative Humidity (%)
+
+feature_attribute_00025: 
+  feature_id: 2
+  id: 25
+  name: Biometeorological Time
+
+feature_attribute_00026: 
+  feature_id: 2
+  id: 26
+  name: Leaf Area
+
+feature_attribute_00027: 
+  feature_id: 2
+  id: 27
+  name: Potential Evapotranspiration (mm)
+
+feature_attribute_00028: 
+  feature_id: 2
+  id: 28
+  name: Total Soil Moisture (mm)
+
+feature_attribute_00029: 
+  feature_id: 3
+  id: 29
+  name: Field
+
+feature_attribute_00030: 
+  feature_id: 3
+  id: 30
+  name: Crop
+
+feature_attribute_00031: 
+  feature_id: 3
+  id: 31
+  name: Calendar Day
+
+feature_attribute_00032: 
+  feature_id: 3
+  id: 32
+  name: Root Zone (mm)
+
+feature_attribute_00033: 
+  feature_id: 3
+  id: 33
+  name: Root Zone (%)
+
+feature_attribute_00034: 
+  feature_id: 3
+  id: 34
+  name: Top Zone (mm)
+
+feature_attribute_00035: 
+  feature_id: 3
+  id: 35
+  name: Top Zone (%)
+
+feature_attribute_00036: 
+  feature_id: 3
+  id: 36
+  name: Actual Evapotranspiration (mm)
+
+feature_attribute_00037: 
+  feature_id: 3
+  id: 37
+  name: Precipitation (mm)
+
+feature_attribute_00038: 
+  feature_id: 3
+  id: 38
+  name: Relative Humidity (%)
+
+feature_attribute_00039: 
+  feature_id: 3
+  id: 39
+  name: Biometeorological Time
+
+feature_attribute_00040: 
+  feature_id: 3
+  id: 40
+  name: Leaf Area
+
+feature_attribute_00041: 
+  feature_id: 3
+  id: 41
+  name: Potential Evapotranspiration (mm)
+
+feature_attribute_00042: 
+  feature_id: 3
+  id: 42
+  name: Total Soil Moisture (mm)
+
+feature_attribute_00043: 
+  feature_id: 4
+  id: 43
+  name: Field
+
+feature_attribute_00044: 
+  feature_id: 4
+  id: 44
+  name: Crop
+
+feature_attribute_00045: 
+  feature_id: 4
+  id: 45
+  name: Calendar Day
+
+feature_attribute_00046: 
+  feature_id: 4
+  id: 46
+  name: Root Zone (mm)
+
+feature_attribute_00047: 
+  feature_id: 4
+  id: 47
+  name: Root Zone (%)
+
+feature_attribute_00048: 
+  feature_id: 4
+  id: 48
+  name: Top Zone (mm)
+
+feature_attribute_00049: 
+  feature_id: 4
+  id: 49
+  name: Top Zone (%)
+
+feature_attribute_00050: 
+  feature_id: 4
+  id: 50
+  name: Actual Evapotranspiration (mm)
+
+feature_attribute_00051: 
+  feature_id: 4
+  id: 51
+  name: Precipitation (mm)
+
+feature_attribute_00052: 
+  feature_id: 4
+  id: 52
+  name: Relative Humidity (%)
+
+feature_attribute_00053: 
+  feature_id: 4
+  id: 53
+  name: Biometeorological Time
+
+feature_attribute_00054: 
+  feature_id: 4
+  id: 54
+  name: Leaf Area
+
+feature_attribute_00055: 
+  feature_id: 4
+  id: 55
+  name: Potential Evapotranspiration (mm)
+
+feature_attribute_00056: 
+  feature_id: 4
+  id: 56
+  name: Total Soil Moisture (mm)
+
+feature_attribute_00057: 
+  feature_id: 5
+  id: 57
+  name: Field
+
+feature_attribute_00058: 
+  feature_id: 5
+  id: 58
+  name: Crop
+
+feature_attribute_00059: 
+  feature_id: 5
+  id: 59
+  name: Calendar Day
+
+feature_attribute_00060: 
+  feature_id: 5
+  id: 60
+  name: Root Zone (mm)
+
+feature_attribute_00061: 
+  feature_id: 5
+  id: 61
+  name: Root Zone (%)
+
+feature_attribute_00062: 
+  feature_id: 5
+  id: 62
+  name: Top Zone (mm)
+
+feature_attribute_00063: 
+  feature_id: 5
+  id: 63
+  name: Top Zone (%)
+
+feature_attribute_00064: 
+  feature_id: 5
+  id: 64
+  name: Actual Evapotranspiration (mm)
+
+feature_attribute_00065: 
+  feature_id: 5
+  id: 65
+  name: Precipitation (mm)
+
+feature_attribute_00066: 
+  feature_id: 5
+  id: 66
+  name: Relative Humidity (%)
+
+feature_attribute_00067: 
+  feature_id: 5
+  id: 67
+  name: Biometeorological Time
+
+feature_attribute_00068: 
+  feature_id: 5
+  id: 68
+  name: Leaf Area
+
+feature_attribute_00069: 
+  feature_id: 5
+  id: 69
+  name: Potential Evapotranspiration (mm)
+
+feature_attribute_00070: 
+  feature_id: 5
+  id: 70
+  name: Total Soil Moisture (mm)

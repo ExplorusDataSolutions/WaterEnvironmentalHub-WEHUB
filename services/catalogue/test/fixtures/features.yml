@@ -1,11 +1,30 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+--- 
+feature_00001:
+  id: 1
+  feature_types_id: 3
+  dataset_id: 1  
+  name: "Melfort"
 
-one:
-  name: MyString
-  location: MyString
-  item: 
+feature_00002:
+  id: 2
+  feature_types_id: 3
+  dataset_id: 1  
+  name: "Regina"
 
-two:
-  name: MyString
-  location: MyString
-  item: 
+feature_00003:
+  id: 3
+  feature_types_id: 3
+  dataset_id: 1  
+  name: "Swift Current"
+
+feature_00004:
+  id: 4
+  feature_types_id: 3
+  dataset_id: 1  
+  name: "Winnipeg"
+
+feature_00005:
+  id: 5
+  feature_types_id: 3
+  dataset_id: 1  
+  name: "Carman"

@@ -1,0 +1,21 @@
+--- 
+feature_type_00001: 
+  description: 
+  id: 1
+  name: Base_Data_Static
+
+feature_type_00002: 
+  description: 
+  id: 2
+  name: Base_Data_Dynamic
+
+feature_type_00004: 
+  description: 
+  id: 4
+  name: Observation_Data_Dynamic
+
+feature_type_00003: 
+  description: 
+  id: 3
+  name: Observation_Data_Static
+
