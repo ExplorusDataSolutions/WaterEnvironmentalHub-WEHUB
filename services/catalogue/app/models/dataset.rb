@@ -16,7 +16,7 @@ class Dataset < ActiveRecord::Base
     if uuid.match(/[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12}/) != nil    
       uuid = uuid.gsub(/-/, '_')
     
-      tablename = self.connection.execute("SELECT tablename FROM pg_tables WHERE tablename LIKE '%#{uuid}%'")[0]['tablename']      
+      tablename = self.connection.execute("SELECT tablename FROM pg_tables WHERE tablename LIKE '%#{uuid}%'")[0]['tablename']            
       self.connection.execute("SELECT * FROM #{tablename}")
     end
   end
