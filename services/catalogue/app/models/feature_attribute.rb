@@ -1,8 +1,12 @@
 class FeatureAttribute < ActiveRecord::Base
   belongs_to :feature
   
+  def self.unit
+    self.name
+  end
+  
   def as_json(options={})
-    json = { :location => self.location, :name => self.name }
+    json = { :name => self.name, :unit => self.unit }
   end
   
 end

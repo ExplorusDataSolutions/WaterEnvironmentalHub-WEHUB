@@ -5,3 +5,10 @@ dataset_00001:
   methodology: 
   name: PAM Dataset
   uuid: 6f713ea0-307e-11e0-91fa-0800200c9a66
+
+dataset_00002: 
+  description: Sample Dataset
+  id: 2
+  methodology: 
+  name: Sample Dataset
+  uuid: 2a9a4860-3607-11e0-9e42-0800200c9a66

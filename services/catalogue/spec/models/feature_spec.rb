@@ -4,8 +4,8 @@ describe Feature do
   
   it "has an observation relationship" do
     feature = Factory(:feature)
-    feature.observation.should_not be_nil    
-    feature.observation.should be_kind_of(Observation)
+    feature.feature_type.should_not be_nil    
+    feature.feature_type.should be_kind_of(FeatureType)
   end
 
   it "has a feature attribute relationship" do

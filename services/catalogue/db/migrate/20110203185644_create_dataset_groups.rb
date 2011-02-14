@@ -2,7 +2,6 @@ class CreateDatasetGroups < ActiveRecord::Migration
   def self.up
     create_table :dataset_groups do |t|
       t.string :name
-      t.references :dataset
 
       t.timestamps
     end

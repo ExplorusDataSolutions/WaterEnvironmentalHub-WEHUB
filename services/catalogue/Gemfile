@@ -7,6 +7,7 @@ gem 'rails', '3.0.3'
 
 gem 'pg'
 gem 'uuidtools'
+gem 'rubyzip'
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -30,5 +31,6 @@ gem 'uuidtools'
 group :development, :test do
   gem "rspec-rails", ">= 2.4.1"
   gem 'factory_girl_rails'
+  gem 'ar_fixtures'
 # gem 'webrat'
 end

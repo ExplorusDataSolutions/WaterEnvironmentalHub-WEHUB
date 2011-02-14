@@ -10,13 +10,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110210165248) do
+ActiveRecord::Schema.define(:version => 20110211172333) do
 
   create_table "dataset_groups", :force => true do |t|
     t.string   "name"
-    t.integer  "dataset_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "dataset_groups_datasets", :id => false, :force => true do |t|
+    t.integer "dataset_group_id", :null => false
+    t.integer "dataset_id",       :null => false
   end
 
   create_table "datasets", :force => true do |t|
@@ -30,7 +34,6 @@ ActiveRecord::Schema.define(:version => 20110210165248) do
 
   create_table "feature_attributes", :force => true do |t|
     t.string   "name"
-    t.string   "unit"
     t.integer  "feature_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -48,13 +51,6 @@ ActiveRecord::Schema.define(:version => 20110210165248) do
     t.text     "description"
     t.integer  "dataset_id"
     t.integer  "feature_types_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "observations", :force => true do |t|
-    t.text     "json"
-    t.integer  "feature_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
