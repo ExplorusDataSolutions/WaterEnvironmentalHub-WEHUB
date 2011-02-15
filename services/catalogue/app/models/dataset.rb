@@ -14,10 +14,11 @@ class Dataset < ActiveRecord::Base
 
   def self.download(uuid)    
     if uuid.match(/[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12}/) != nil    
-      uuid = uuid.gsub(/-/, '_')
-    
-      tablename = self.connection.execute("SELECT tablename FROM pg_tables WHERE tablename LIKE '%#{uuid}%'")[0]['tablename']            
-      self.connection.execute("SELECT * FROM #{tablename}")
+      uuid = uuid.gsub(/-/, '_')    
+      tablename = self.connection.execute("SELECT tablename FROM pg_tables WHERE tablename LIKE '%#{uuid}%'")[0]['tablename']      
+      dataset_name = tablename.gsub("_#{uuid}", '')
+      
+      { :tablename => dataset_name, :data => self.connection.execute("SELECT * FROM #{tablename}") }
     end
   end
 end
