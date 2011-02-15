@@ -1,3 +1,4 @@
+
 class Search
   attr_accessor :results, :query
   

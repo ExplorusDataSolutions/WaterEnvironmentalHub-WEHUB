@@ -1,27 +1,67 @@
+<script>
+  $(document).ready(function() {
+    $('[type=button][name=download]').click(function() { 
+      var ids = [];
+      $('[type=checkbox][name=download]:checked').each(function() { ids.push($(this).val()); })
+      window.location = 'http://localhost:3000/items/download/?id=' + ids;
+    });
+    var searchButton = $('#search_submit');
+    
+    $(searchButton).click(function(e) {
+      e.preventDefault();
+      searchButton.attr('disabled', 'true');
+      var keyword = $('#search_query').val()
+      $.get('http://localhost:3001/search/show', { keyword: keyword }, function(data) {
+        searchButton.removeAttr('disabled');  
+        $('#results').html(data);
+        $('.keyword').text(keyword);
+      });      
+      return false;
+    });
+    
+    $('#results').click(function(e) {
+      e.preventDefault();
+      var hash = e.originalTarget.hash.replace(/#/, '');
+      
+      $.getJSON('http://localhost:3000/items/show/?callback=?', { id: hash }, function(data) {
+        if (data) {
+          alert('name: ' + data.dataset.name + ' more information: ' + data.dataset.description )
+        }
+        
+      });
+      
+      return false;
+    });
+  })
+</script>
 
-<table>  
+<table>
   <tr>
-    <td valign="top">  
-    <%= render "search" %>    
-    </td>
-    <td>
-      <h2>Search results for '<%= @search.query %>'</h2
-      <table>
-      <% @search.results.each do |result| %>  
+    <td valign="top" style="width: 250px; border-right: solid 1px grey; padding-right: 5px; padding-bottom: 20px;">
+      <table style="padding-bottom: 20px;">
         <tr>
-          <td style="padding-right: 10px" valign="top"><img src="http://174.129.10.37:8080/geonetwork/srv/<%= result.thumbnail %>" width="100px" /></td>
-          <td>
-            <a href=""><%= result.title %></a><br />
-            <%= result.publication_date %> ... <%= result.description %><br />
-            <ul>
-              <% result.resources.each do |resource| %>
-                <li><a href="<%= resource.uri %>"><%= resource.title %></a> (<%= resource.type %>)</li>
-              <% end %>
-            </ul>
+          <td colspan="2">Data Sets</td>
+        </tr>
+        <tr>
+          <td style="width: 5px;"></td>
+          <td style="background-color: #fff; margin-left: 20px; width: 100%; border: solid 1px grey;">
+            Item 1<br />
+            Item 2<br />
+            Item 3<br />
+            Item 4<br />
           </td>
         </tr>
-      <% end %>  
       </table>
+    <%= render "search" %>    
+    </td>
+    <td style="padding-left: 5px;" valign="top">
+      <h2>Search results for '<span class='keyword'><%= @search.query %></span>'</h2>  
+
+      <div id='results'>
+        <%= render "search_results" %>
+      </div>
+      <input type='button' value='Download' name="download" />
     </td>
   </tr>
 </table>
+

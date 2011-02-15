@@ -1,0 +1,23 @@
+<table>
+<% @search.results.each do |result| %>  
+  <tr>
+    <td><input type='checkbox' name='download' value='<%= result.id %>' /></td>
+    <td style="padding-right: 10px" valign="top"><img src="http://174.129.10.37:8080/geonetwork/srv/<%= result.thumbnail %>" width="100px" /></td>
+    <td>
+      
+      <a href="#<%= result.id %>" onclick="return false;"><%= result.title %></a><br />
+      <%= result.publication_date %> ... <%= result.description %><br />
+      
+<%
+=begin %>            
+      <ul>
+        <% result.resources.each do |resource| %>
+          <li><a href="<%= resource.uri %>"><%= resource.title %></a> (<%= resource.type %>)</li>
+        <% end %>
+      </ul>
+<%
+=end %>             
+    </td>
+  </tr>
+<% end %>  
+</table>

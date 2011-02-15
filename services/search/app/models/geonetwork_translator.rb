@@ -1,4 +1,5 @@
 require "rexml/document"
+require 'net/http'
 
 class GeoNetworkTranslator
   attr_accessor :server_address, :search_uri
