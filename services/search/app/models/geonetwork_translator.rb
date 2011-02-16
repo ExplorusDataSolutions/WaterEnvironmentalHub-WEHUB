@@ -1,4 +1,4 @@
-require "rexml/document"
+require 'rexml/document'
 require 'net/http'
 
 class GeoNetworkTranslator

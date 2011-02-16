@@ -19,18 +19,19 @@
       return false;
     });
     
-    $('#results').click(function(e) {
-      e.preventDefault();
-      var hash = e.originalTarget.hash.replace(/#/, '');
-      
-      $.getJSON('http://localhost:3000/items/show/?callback=?', { id: hash }, function(data) {
-        if (data) {
-          alert('name: ' + data.dataset.name + ' more information: ' + data.dataset.description )
-        }
+    $('#results').click(function(e) {      
+      if (e.originalTarget.hash) {
+        e.preventDefault();
+        var hash = e.originalTarget.hash.replace(/#/, '');
         
-      });
-      
-      return false;
+        $.getJSON('http://localhost:3000/items/show/?callback=?', { id: hash }, function(data) {
+          if (data) {
+            alert('name: ' + data.dataset.name + ' more information: ' + data.dataset.description )
+          }
+          
+        });
+        return false;
+      }
     });
   })
 </script>
@@ -45,14 +46,13 @@
         <tr>
           <td style="width: 5px;"></td>
           <td style="background-color: #fff; margin-left: 20px; width: 100%; border: solid 1px grey;">
-            Item 1<br />
-            Item 2<br />
-            Item 3<br />
-            Item 4<br />
+          <% @search.basedata.each do |result| %> 
+            <%= result.title %><br />
+          <% end %>
           </td>
         </tr>
       </table>
-    <%= render "search" %>    
+    <%= render "search" %>
     </td>
     <td style="padding-left: 5px;" valign="top">
       <h2>Search results for '<span class='keyword'><%= @search.query %></span>'</h2>  
@@ -64,4 +64,3 @@
     </td>
   </tr>
 </table>
-
