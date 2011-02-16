@@ -6,7 +6,7 @@
     <td>
       
       <a href="#<%= result.id %>" onclick="return false;"><%= result.title %></a><br />
-      <%= result.publication_date %> ... <%= result.description %><br />
+      <%= result.publication_date %> ... <%= result.description[0,255] %> ...<br />
       
 <%
 =begin %>            

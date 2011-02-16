@@ -45,7 +45,7 @@
         </tr>
         <tr>
           <td style="width: 5px;"></td>
-          <td style="background-color: #fff; margin-left: 20px; width: 100%; border: solid 1px grey;">
+          <td style="background-color: #fff; margin-left: 20px; width: 100%; border: solid 1px grey; font-size: 10pt;">
           <% @search.basedata.each do |result| %> 
             <%= result.title %><br />
           <% end %>
@@ -60,7 +60,7 @@
       <div id='results'>
         <%= render "search_results" %>
       </div>
-      <input type='button' value='Download' name="download" />
+      <input type='button' value='Download' name="download" style="margin-top: 20px;" />
     </td>
   </tr>
 </table>

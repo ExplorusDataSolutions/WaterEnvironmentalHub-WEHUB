@@ -1,7 +1,7 @@
 require 'geonetwork_translator.rb'
 
 class SearchController < ApplicationController
-  def index    
+  def index
   end
   
   def show
@@ -9,8 +9,12 @@ class SearchController < ApplicationController
     render :partial => "search_results"
   end
   
-  def create
-    @search = Search.new(params[:search][:query])
+  def create    
+    if params == nil || params[:search] == nil || params[:search][:query] == nil
+      @search = Search.new('all')  
+    else
+      @search = Search.new(params[:search][:query])
+    end
   end
   
 end
