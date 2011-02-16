@@ -28,3 +28,9 @@ feature_00005:
   feature_types_id: 3
   dataset_id: 1  
   name: "Carman"
+
+feature_00006:
+  id: 6
+  feature_types_id: 3
+  dataset_id:
+  name: "Alpine Site"

@@ -328,3 +328,118 @@ feature_attribute_00070:
   feature_id: 5
   id: 70
   name: Total Soil Moisture (mm)
+
+feature_attribute_00071: 
+  feature_id: 6
+  id: 71
+  name: Date/Time
+
+feature_attribute_00072: 
+  feature_id: 6
+  id: 72
+  name: Radiation, Net
+
+feature_attribute_00073: 
+  feature_id: 6
+  id: 73
+  name: Radiation, SW, In
+
+feature_attribute_00074: 
+  feature_id: 6
+  id: 74
+  name: Radiation, SW, Out
+
+feature_attribute_00075: 
+  feature_id: 6
+  id: 75
+  name: Soil Heat Flux
+
+feature_attribute_00076: 
+  feature_id: 6
+  id: 76
+  name: Temperature, Soil
+
+feature_attribute_00077: 
+  feature_id: 6
+  id: 77
+  name: Temperature, Air/Snow Interface
+
+feature_attribute_00078: 
+  feature_id: 6
+  id: 78
+  name: Temperature, Air (upper)
+
+feature_attribute_00079: 
+  feature_id: 6
+  id: 79
+  name: Temperature, Surface, IR
+
+feature_attribute_00080: 
+  feature_id: 6
+  id: 80
+  name: Humidity, Relative (upper)
+
+feature_attribute_00081: 
+  feature_id: 6
+  id: 81
+  name: Pressure, Vapour (upper)
+
+feature_attribute_00082: 
+  feature_id: 6
+  id: 82
+  name: Pressure, Air
+
+feature_attribute_00083: 
+  feature_id: 6
+  id: 83
+  name: Wind Speed (lower)
+
+feature_attribute_00084: 
+  feature_id: 6
+  id: 84
+  name: Wind Speed (upper)
+
+feature_attribute_00085: 
+  feature_id: 6
+  id: 85
+  name: Wind Direction
+
+feature_attribute_00086: 
+  feature_id: 6
+  id: 86
+  name: Wind Speed (RMY)
+
+feature_attribute_00087: 
+  feature_id: 6
+  id: 87
+  name: Wind Direction (RMY)
+
+feature_attribute_00088: 
+  feature_id: 6
+  id: 88
+  name: Snow Depth
+
+feature_attribute_00089: 
+  feature_id: 6
+  id: 89
+  name: Rainfall
+
+feature_attribute_00090: 
+  feature_id: 6
+  id: 90
+  name: Soil Water Content, Volumetric (5cm depth)
+
+feature_attribute_00091: 
+  feature_id: 6
+  id: 91
+  name: Soil Water Content, Volumetric (15cm depth)
+
+feature_attribute_00092: 
+  feature_id: 6
+  id: 92
+  name: Temperature, Soil (5cm depth)
+
+feature_attribute_00093: 
+  feature_id: 6
+  id: 93
+  name: Temperature, Soil (15cm depth)
