@@ -1,10 +1,97 @@
-<table height="100%">
+<script>
+  $(document).ready(function() {
+    
+    var downloadButton = $('[type=button][name=download]');
+    downloadButton.button();
+    downloadButton.click(function() {
+      var ids = [];
+      $('[type=checkbox][name=download]:checked').each(function() { ids.push($(this).val()); })
+      window.location = '/item/download/?ids=' + ids;
+    });  
+
+    var searchButton = $('[form[name=search]][type=submit]');
+    searchButton.button();
+    
+    searchButton.click(function(e) { 
+      e.preventDefault();
+      searchButton.attr('disabled', 'true');
+      var keywords = $('#search_query').val()
+      $.get('/search/query', { keywords: keywords }, function(data) {
+        searchButton.removeAttr('disabled');  
+        $('#results').html(data);
+        $('.keyword').text(keywords);
+      });      
+      return false;
+    });    
+
+    function showModal(message) {
+      modal = $("#dialog-modal");
+      modal.html(message);
+      modal.dialog({
+        height: 400,
+        width: 600,
+        modal: true
+      });                  
+    }
+    
+    $('#results').click(function(e) {      
+      if (e.target.hash) {
+        e.preventDefault();
+        var id = e.target.hash.replace(/#\!\//, '');
+        var keywords = $('#search_query').val();
+        $.getJSON('/search/info/', { id: id, keywords: keywords }, function(data) {
+          if (data) { 
+            showModal('<span>name:</span> ' + data.title + '<br /><span>description:</span> ' + data.description + '<br /><span>date:</span> ' + data.publication_date) 
+          }
+        });
+        return false;
+      }
+    });
+    
+    $("#dataset-navigation").treeview({
+  		persist: "location",
+  		collapsed: true,
+  		unique: true
+  	});
+  })
+</script>
+<style>
+  #dataset-navigation {
+    font-size: .7em;
+  }
+  h2 {
+    font-size: .8em;
+  }
+</style>
+<table>
   <tr>
-    <td valign="top" style="width: 250px; border-right: solid 1px grey; padding-right: 5px; padding-bottom: 20px;">
-      
-      <%= render "search" %>    
+    <td rowspan="2" valign="top" style="width: 250px; border-right: solid 1px grey; padding-right: 5px; padding-bottom: 20px;">
+      <h2>Search:</h2>      
+      <%= render "search" %>
+
+      <h2>Browse:</h2>      
+      <ul id="dataset-navigation"> 
+      <% @search.basedata.each_with_index do |result, index| %> 
+        <li><a href="?<%= index %>"><%= result.title %></a>         
+          <ul><li><a href="?1.0">Item 1.0</a></li></ul>
+        </li>
+      <% end %>
+      </ul>
+
+    
     </td>
     <td style="padding-left: 5px;" valign="top">
+      <h2>Results for '<span class='keyword'><%= @search.query %></span>'</h2>  
+
+      <div id='results'>
+        <%= render "search_results" %>
+      </div>
+      
     </td>
   </tr>
+  <tr>
+    <td valign="bottom"><input type='button' value='Download' name="download" style="margin-top: 20px;" /></td>
+  </tr>
 </table>
+
+<%= render "dialog" %>

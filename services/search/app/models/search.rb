@@ -1,4 +1,5 @@
-
+require 'geonetwork_translator.rb'
+require 'geoserver_translator.rb'
 
 class Search
   attr_accessor :results, :query, :basedata

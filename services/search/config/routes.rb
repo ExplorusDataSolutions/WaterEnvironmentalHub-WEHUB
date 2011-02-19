@@ -1,7 +1,7 @@
 Catalogue::Application.routes.draw do
-  resources :search
+  #resources :search
 
-  root :to => "search#index"
+  #root :to => "search#index"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

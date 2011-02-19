@@ -3,80 +3,61 @@
 <head>
   <title>The Water and Environment Hub (WEHUB)</title>
   <%= stylesheet_link_tag :all %>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script> 
-  <%= javascript_include_tag :defaults %>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script> 
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script> 
+  <%= javascript_include_tag :all %>
   <%= csrf_meta_tag %>
   
   <style>
     body {
       background: #E2EBF3 url('/images/bodybackground.jpg') repeat-y center top;
-      font-family: Helvetica;
-      
+      font-family: Helvetica;      
     }
-    body #main {
+    body {
       width: 990px;
       margin: auto;
-    }
-    table#top {
-      font-weight: bold;
-      font-size: 13pt;
-      margin-bottom: 0px;
-      padding-bottom: 0px;
-    }
-    table#top td {
-      padding: 2px 10px 0px 10px;
-      border: solid 1px grey;
-      -moz-border-radius: 4px 3px 6px / 2px 4px;
-      border-radius: 4px 3px 6px / 2px 4px;    
-    }
-    table#top td.selected {
-      background-color: #dfdfdf;
-    }
-    table#top td.submenu {
-      border: 0px;
-      font-weight: normal;
-      font-size: 10pt;
-      
-    }
-    table .body {
-      border: solid 1px grey;
-      margin-top: 0px;
-      padding-top: 0px;
-      background-color: #E8EDE6;
-      -moz-border-radius: 4px 3px 6px / 2px 4px;
-      border-radius: 4px 3px 6px / 2px 4px;    
-      
     }
     #search_query {
       width: 100px;
     }
     table {
-      width: 100%;
-      
+      width: 100%;      
+    }
+    #dialog-modal {
+      font-size: .8em;
+    }
+    #dialog-modal span {
+      font-weight: bold;
+    }
+    .ui-widget-content {
+      font-size: 1em;
     }
 </style>
+<script>
+  $(document).ready(function() {
+    var tabMenu = $('#tabs');
+    tabMenu.tabs({
+      selected: 1
+    });
+  });
+</script>
 </head>
 <body>
-  <div id='main'>
-  <img src='images/water-drop.png' height='63' width='63' style="padding-bottom: 10px;" />
-  <h1 style='color: #004B97; display: inline; position: absolute; top: -15px'>The Water and Environment Hub<br><span style="left: 300px; position: relative; left: 395px; top: -10px; font-size: 18pt; color: #728496">(WEHub)</span></h1>
-  <table id="top" width="100%">
-    <tr>
-      <td>About</td>
-      <td class="selected">WE Data Catalogue</td>
-      <td>WE Tools</td>
-      <td>WE Community</td>
-      <td>Contact Us</td>
-      <td class="submenu" align="right" width="38%"><a href="">login</a></td>
-    </tr>
-  </table>
-  <table>
-    <tr>
-      <td class="body">
-<%= yield %>
-      </td>
-    </tr>
-  </table>
-  <div>
+  <img src='images/water-drop.png' height='63' width='63' style="padding-bottom: 10px; padding-top: 15px;" />
+  <h1 style='color: #004B97; display: inline; position: absolute; top: -5px'>The Water and Environment Hub<br><span style="left: 300px; position: relative; left: 395px; top: -10px; font-size: 18pt; color: #728496">(WEHub)</span></h1>
+  <div id="tabs">
+    <ul>
+      <li><a href="#tabs-1">About</a></li>
+      <li><a href="#tabs-2">WE Data Catalogue</a></li>
+      <li><a href="#tabs-3">WE Tools</a></li>
+      <li><a href="#tabs-4">Contact Us</a></li>
+    </ul>
+    <div id="tabs-1">About</div>
+    <div id="tabs-2">
+      <%= yield %>
+    </div>
+    <div id="tabs-3">WE Tools</div>
+    <div id="tabs-4">Contact Us</div>
+  </div>
 </body>
 </html>

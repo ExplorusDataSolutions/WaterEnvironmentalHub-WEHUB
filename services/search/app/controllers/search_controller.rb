@@ -1,20 +1,28 @@
-require 'geonetwork_translator.rb'
-
 class SearchController < ApplicationController
+  
   def index
+    query = 'all'
+    if params[:query] != nil
+      query = params[:query]
+    end
+    @search = Search.new(query)
   end
   
-  def show
-    @search = Search.new(params[:keyword])
-    render :partial => "search_results"
+  def query
+    @search = Search.new(params[:keywords])
+    render :partial => "search_results"    
   end
   
-  def create    
-    if params == nil || params[:search] == nil || params[:search][:query] == nil
-      @search = Search.new('all')  
-    else
-      @search = Search.new(params[:search][:query])
+  def info
+    id = params[:id]      
+    if id != nil
+      @search = Search.new(params[:keywords]);
+      @search.results.each do |result|
+        if result.id == id
+          render :json => result
+        end
+      end
     end
   end
-  
+    
 end

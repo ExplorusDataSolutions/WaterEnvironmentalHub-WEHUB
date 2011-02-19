@@ -1,4 +1,4 @@
 <%= form_for :search do |f| %>
-  keywords: <%= f.text_field :query %>
-  <%= f.submit :search %>
+  <%= f.text_field :query, :name => 'query' %>
+  <%= f.submit :search, :name => 'search' %>
 <% end %>
