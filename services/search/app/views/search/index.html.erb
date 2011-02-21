@@ -1,37 +1,66 @@
 <script>
   $(document).ready(function() {
     
-    var downloadButton = $('[type=button][name=download]');
-    downloadButton.button();
-    downloadButton.click(function() {
-      var ids = [];
-      $('[type=checkbox][name=download]:checked').each(function() { ids.push($(this).val()); })
-      window.location = '/item/download/?ids=' + ids;
-    });  
-
-    var searchButton = $('[form[name=search]][type=submit]');
-    searchButton.button();
+    $('button').button();
     
-    searchButton.click(function(e) { 
-      e.preventDefault();
-      searchButton.attr('disabled', 'true');
-      var keywords = $('#search_query').val()
-      $.get('/search/query', { keywords: keywords }, function(data) {
-        searchButton.removeAttr('disabled');  
-        $('#results').html(data);
-        $('.keyword').text(keywords);
-      });      
-      return false;
-    });    
+    function download() {
+        var format = $('[name=download-format]:checked').val();
+        var ids = [];
+        console.debug(format);
+        $('[type=checkbox][name=download]:checked').each(function() { ids.push($(this).val()); })
+        window.location = '/item/download/?ids=' + ids + '&format=' + format;
+    }
+        
+    function bindDownloadButtonset() {
+      var formatSelector = $('.format-selector');
+      formatSelector.buttonset();    
+
+      $('button[name=download]')
+        .button()
+        .click(function() {
+          formatSelector.hide();
+          download();
+        })
+        .next()
+          .button({ text: false, icons: { primary: 'ui-icon-triangle-1-s' }})
+          .click(function() { 
+            formatSelector.toggle();
+           })
+          .parent()
+            .buttonset();
+            
+      $('[name=download-format]')
+        .click(function() {
+          formatSelector.hide();
+          download();
+        });
+    }
+    bindDownloadButtonset()
+
+    $('[for=download-format-JSON]').addClass('ui-state-active');
+    
+    $('[name=search][type=submit]')
+      .button()
+      .click(function(e) { 
+        e.preventDefault();
+        var keywords = $('#search_query').val()
+        $.get('/search/query', { keywords: keywords }, function(data) {
+          $('#results').html(data);
+          $('.keyword').text(keywords);
+        });      
+        return false;
+      });    
 
     function showModal(message) {
       modal = $("#dialog-modal");
-      modal.html(message);
+      downloadPartial = $('#download-buttonset-fragment').clone().prepend('<br />').html();
+      modal.html(message + downloadPartial);
       modal.dialog({
         height: 400,
         width: 600,
         modal: true
-      });                  
+      });
+      bindDownloadButtonset();
     }
     
     $('#results').click(function(e) {      
@@ -62,6 +91,21 @@
   h2 {
     font-size: .8em;
   }
+  #download-buttonset-fragment .format-selector {
+    position: absolute;
+    font-size: .8em;
+    padding: 10px;
+    left: 403px;
+    margin-top: 2px;
+  }
+  .ui-dialog .format-selector {
+    position: absolute;
+    font-size: .8em;
+    padding: 10px;
+    left: 137px;
+    margin-top: 2px;
+  }
+
 </style>
 <table>
   <tr>
@@ -90,7 +134,29 @@
     </td>
   </tr>
   <tr>
-    <td valign="bottom"><input type='button' value='Download' name="download" style="margin-top: 20px;" /></td>
+    <td valign="bottom">
+      <span id="download-buttonset-fragment">
+        <span>
+          <button name="download">Download</button>
+          <button name="select-download-format">Select Format</button>
+        </span>      
+        <div style="display: none;" class="format-selector ui-widget-content ui-corner-all ui-state-active">
+          Select format
+          <%
+            formats = ['JSON', 'CSV', 'Shape']
+            formats.each do |format|
+          %>
+            <label for="download-format-<%= format %>"><%= format %></label<input type="radio" name="download-format" value="<%= format %>" id="download-format-<%= format %>" />
+          <%
+            end
+          %>
+      </div>
+      </span>
+      <button name="graph">Graph</button>
+      <button name="map-view">Map View</button>
+      <button name="clear">Clear</button>
+
+    </td>
   </tr>
 </table>
 
