@@ -2,3 +2,23 @@
 dataset_group_00001: 
   id: 1
   name: PAM Dataset Group
+
+dataset_group_00002: 
+  id: 2
+  name: Canvec Base Data
+
+dataset_group_00003: 
+  id: 3
+  name: National Road Network
+
+dataset_group_00004: 
+  id: 4
+  name: Geological Survey of Canada
+
+dataset_group_00005: 
+  id: 5
+  name: Geological Survey of Canada
+
+dataset_group_00006: 
+  id: 6
+  name: Canvec Hydro Data

@@ -2,6 +2,131 @@
 join_00000: 
   dataset_group_id: "1"
   dataset_id: "1"
+
 join_00001: 
   dataset_group_id: "1"
   dataset_id: "2"
+
+join_00002: 
+  dataset_group_id: "2"
+  dataset_id: "4"
+
+join_00003: 
+  dataset_group_id: "2"
+  dataset_id: "5"
+
+join_00004: 
+  dataset_group_id: "2"
+  dataset_id: "6"
+
+join_00005: 
+  dataset_group_id: "2"
+  dataset_id: "7"
+
+join_00006: 
+  dataset_group_id: "2"
+  dataset_id: "8"
+
+join_00007: 
+  dataset_group_id: "2"
+  dataset_id: "9"
+
+join_00008: 
+  dataset_group_id: "2"
+  dataset_id: "10"
+
+join_00009: 
+  dataset_group_id: "2"
+  dataset_id: "11"
+
+join_00010: 
+  dataset_group_id: "2"
+  dataset_id: "12"
+
+join_00011: 
+  dataset_group_id: "2"
+  dataset_id: "13"
+
+join_00012: 
+  dataset_group_id: "2"
+  dataset_id: "14"
+
+join_00013: 
+  dataset_group_id: "2"
+  dataset_id: "15"
+
+join_00014: 
+  dataset_group_id: "2"
+  dataset_id: "16"
+
+join_00015: 
+  dataset_group_id: "2"
+  dataset_id: "17"
+
+join_00016: 
+  dataset_group_id: "2"
+  dataset_id: "18"
+
+join_00017: 
+  dataset_group_id: "2"
+  dataset_id: "19"
+
+join_00018: 
+  dataset_group_id: "2"
+  dataset_id: "20"
+
+join_00019: 
+  dataset_group_id: "2"
+  dataset_id: "21"
+
+join_00020: 
+  dataset_group_id: "2"
+  dataset_id: "22"
+
+join_00021: 
+  dataset_group_id: "2"
+  dataset_id: "23"
+
+join_00022: 
+  dataset_group_id: "5"
+  dataset_id: "24"
+
+join_00023: 
+  dataset_group_id: "6"
+  dataset_id: "25"
+
+join_00024: 
+  dataset_group_id: "6"
+  dataset_id: "26"
+
+join_00025: 
+  dataset_group_id: "6"
+  dataset_id: "27"
+
+join_00026: 
+  dataset_group_id: "3"
+  dataset_id: "28"
+
+join_00027: 
+  dataset_group_id: "3"
+  dataset_id: "29"
+
+join_00028: 
+  dataset_group_id: "3"
+  dataset_id: "30"
+
+join_00029: 
+  dataset_group_id: "3"
+  dataset_id: "31"
+
+join_00030: 
+  dataset_group_id: "3"
+  dataset_id: "32"
+
+join_00031: 
+  dataset_group_id: "3"
+  dataset_id: "33"
+
+join_00032: 
+  dataset_group_id: "3"
+  dataset_id: "34"
