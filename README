@@ -1,2 +1,6 @@
+Development environment links: 
+  Search: http://174.129.10.37:3001/search
+  GeoNetwork: http://174.129.10.37:8080/geonetwork/srv/en/
+  GeoServer: http://174.129.10.37:8080/geoserver/
 
 Read more about our Development Environment here: https://github.com/tesera/WEHub/wiki/Development-Environment

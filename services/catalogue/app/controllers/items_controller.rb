@@ -14,44 +14,41 @@ class ItemsController < ApplicationController
       uuids.push(params[:id])
     end
     
-    result = ''
-    results = {}
-    uuids.each do |uuid|
-      result = Dataset.download(uuid)
-      results.store(result[:tablename], result[:data].to_json)
+    format_type = 'json'
+    if params[:format] != nil
+      format_type = params[:format].downcase
     end
     
-    filename = "tmp/zip/#{Time.now.to_s.gsub(/ /,'_').gsub(/:/,'').gsub(/-/,'').gsub(/_/,'').gsub(/\+0000/,'').gsup(/0700/,'')}.zip"
+    result = ''
+    results = {}
+    uuids.each do |uuid|      
+      case 
+        when format_type == 'json'
+          result = Dataset.data(uuid)
+          results.store("#{result[:tablename]}.json", result[:data].to_json)
+        when format_type == 'csv'          
+        when format_type == 'shape'
+          factory = ShapeFactory.new
+          id = Dataset.find_observation_id(uuid)          
+          shape_files = factory.find_by_id(id)
+          shape_files.each do |file|
+            result = factory.data(file)
+            results.store(file, result)
+          end
+      end
+      
+    end
+    
+    filename = "tmp/zips/#{Time.now.to_s.gsub(/ /,'_').gsub(/:/,'').gsub(/-/,'').gsub(/_/,'').gsub(/\+0000/,'').gsub(/0700/,'')}.zip"
     
     Zip::ZipFile.open(filename, Zip::ZipFile::CREATE) do |zip|
       zip.get_output_stream("README") { |f| f.puts "Thanks for visiting WEHub" }
       results.each do |key, value|
-        zip.get_output_stream("#{key}.json") { |f| f.puts value}  
+        zip.get_output_stream("#{key}") { |f| f.puts value}  
       end      
     end    
         
     send_file filename, :type => "application/zip"
-    #send_file filename, :type => "application/zip", :x_sendfile => true
   end
-  
-  def shape
-    uuid = "BAS_AB_CVEC_BUILDING_PY_R01_"
-    filename = "tmp/zip/fragments/#{uuid}"
-    database_user = "catalogue"
-    database_table = "catalogue"
-    database_pwd = "t3s3raDeV"
-    database_name = "catalogue_development"
-    
-    result = %x[pgsql2shp -f #{filename} -u #{database_user} -P #{database_pwd} -r #{database_name} #{uuid}]
-    render :text => result
 
-    if result[/Output shape: Polygon/] != nil
-      shapefiles = []
-      ['dbf', 'shp', 'shx'].each do |extension|
-        shapefiles.push("#{uuid}.#{extension}")
-      end
-    end
-    render :json => shapefiles
-
-  end
 end

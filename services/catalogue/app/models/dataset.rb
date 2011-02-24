@@ -12,13 +12,30 @@ class Dataset < ActiveRecord::Base
     }
   end
 
-  def self.download(uuid)    
-    if uuid.match(/[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12}/) != nil    
-      uuid = uuid.gsub(/-/, '_')    
-      tablename = self.connection.execute("SELECT tablename FROM pg_tables WHERE tablename LIKE '%#{uuid}%'")[0]['tablename']      
+  def self.data(uuid)    
+    tablename = self.find_observation_id(uuid)
+    if tablename != nil          
       dataset_name = tablename.gsub("_#{uuid}", '')
       
       { :tablename => dataset_name, :data => self.connection.execute("SELECT * FROM #{tablename}") }
     end
+  end
+  
+  def self.find_observation_id(uuid)
+    tablename = nil
+    if uuid.match(/[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12}/) != nil
+      uuid = uuid.gsub(/-/, '_')
+      
+      begin
+        tablename = self.connection.execute("SELECT tablename FROM pg_tables WHERE tablename LIKE '%#{uuid}%'")[0]['tablename']
+      rescue
+        raise ArgumentError, "Observation data for #{uuid} could not be found"  
+      end
+
+      tablename
+    else
+      raise ArgumentError, "Expected a valid uuid, but got #{uuid}"
+    end
+    tablename
   end
 end
