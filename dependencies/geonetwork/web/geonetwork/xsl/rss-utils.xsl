@@ -28,6 +28,7 @@
 			<title><xsl:value-of select="$metadata/title"/></title>
 			<link><xsl:value-of select="$mdURL"/></link>
 			<uuid><xsl:value-of select="$customUuid"/></uuid>
+      <additionalInfo><xsl:value-of select="$metadata/additionalInfo"/></additionalInfo>			
 			
 			<xsl:apply-templates mode="link" select="$metadata/link">
 				<xsl:with-param name="north" select="$metadata/geoBox/northBL" />
