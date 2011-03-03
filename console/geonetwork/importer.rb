@@ -50,11 +50,11 @@ class Importer
     post_body << "Content-Disposition: form-data; name=\"mefFile\"; filename=\"#{File.basename(file)}\"\r\n"
     post_body << "Content-Type: application/octet-stream\r\n"
     post_body << "\r\n" 
-  	content = open(file,"rb") do |f|
-  		f.read()
-  	end
-  	post_body << content
-  	post_body << "\r\n"
+    content = open(file,"rb") do |f|
+      f.read()
+    end
+    post_body << content
+    post_body << "\r\n"
     post_body << "--#{@boundary}--\r\n"    
     
     post_body
