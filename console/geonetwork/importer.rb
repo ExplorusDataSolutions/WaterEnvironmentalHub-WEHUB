@@ -11,19 +11,23 @@ class Importer
     @boundary = '----RubyMultipartClient' + rand(1000000).to_s + 'ZZZZZ'
   end  
 
-  def authenticate()
-    puts "Authenticating with GeoNetwork"    
+  def authenticate
+    puts "Authenticating user #{username} with GeoNetwork"    
     
-    url = URI.parse("http://#{server_address}/geonetwork/srv/en/xml.user.login")
+    url = URI.parse("http://#{@server_address}/geonetwork/srv/en/xml.user.login")
     request = Net::HTTP::Post.new(url.path)
     request.body = "<?xml version='1.0' encoding='UTF-8'?><request><username>#{@username}</username><password>#{@password}</password></request>"    
     request.content_type = "text/xml"
     response = Net::HTTP.start(url.host, url.port) {|http| http.request(request) }
     
-    #ToDo: insert response code logic here
-    @cookies = response['set-cookie']
+    case response
+    when Net::HTTPSuccess, Net::HTTPRedirection
+      puts "Success!"
+      @cookies = response['set-cookie']
+    else
+      response.error!  
+    end
     
-    puts response.body
   end
   
   def build_post(file)  
@@ -61,24 +65,30 @@ class Importer
   end
   
   def upload_mef(file)
-    puts "Uploading MEF to GeoNetwork"    
+    puts "Uploading #{file} to GeoNetwork"    
 
-    url = URI.parse("http://#{server_address}/geonetwork/srv/en/mef.import")
+    url = URI.parse("http://#{@server_address}/geonetwork/srv/en/mef.import")
     request = Net::HTTP::Post.new(url.path)
-    puts build_post(file).join
     request.body = build_post(file).join
     request.content_type = "multipart/form-data, boundary=#{@boundary}"    
     request['cookie'] = @cookies    
     response = Net::HTTP.start(url.host, url.port) {|http| http.request(request)}
+    
+    case response
+    when Net::HTTPSuccess, Net::HTTPRedirection
+      puts "Success!"
+    else
+      puts response.body
+      response.error!
+    end
 
-    puts response.body
   end
   
   def upload_all
     authenticate
     
-    mef_files = Dir.glob("#{Dir.getwd}/#{temp_directory}/*.mef")
-    puts "#{mef_files} to be uploaded"
+    mef_files = Dir.glob("#{Dir.getwd}/#{@temp_directory}/*.mef")
+    puts "#{mef_files.count} Mef file(s) queued for upload"
     mef_files.each do |file|
       upload_mef(file)
     end
