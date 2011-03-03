@@ -14,9 +14,9 @@ class Importer
   def authenticate
     puts "Authenticating user #{username} with GeoNetwork"    
     
-    url = URI.parse("http://#{@server_address}/geonetwork/srv/en/xml.user.login")
+    url = URI.parse("http://#{server_address}/geonetwork/srv/en/xml.user.login")
     request = Net::HTTP::Post.new(url.path)
-    request.body = "<?xml version='1.0' encoding='UTF-8'?><request><username>#{@username}</username><password>#{@password}</password></request>"    
+    request.body = "<?xml version='1.0' encoding='UTF-8'?><request><username>#{username}</username><password>#{password}</password></request>"    
     request.content_type = "text/xml"
     response = Net::HTTP.start(url.host, url.port) {|http| http.request(request) }
     
@@ -32,7 +32,7 @@ class Importer
   
   def build_post(file)  
     post_body = []        
-    post_body << "--#{@boundary}\r\n"
+    post_body << "--#{boundary}\r\n"
 
     form_values = { :insert_mode => '1', 
                     :file_type => 'mef', 
@@ -48,7 +48,7 @@ class Importer
       post_body << "Content-Disposition: form-data; name=\"#{key}\"\r\n"
       post_body << "\r\n"    
       post_body << "#{value}\r\n"
-      post_body << "--#{@boundary}\r\n"      
+      post_body << "--#{boundary}\r\n"      
     end
       
     post_body << "Content-Disposition: form-data; name=\"mefFile\"; filename=\"#{File.basename(file)}\"\r\n"
@@ -59,7 +59,7 @@ class Importer
     end
     post_body << content
     post_body << "\r\n"
-    post_body << "--#{@boundary}--\r\n"    
+    post_body << "--#{boundary}--\r\n"    
     
     post_body
   end
@@ -67,11 +67,11 @@ class Importer
   def upload_mef(file)
     puts "Uploading #{file} to GeoNetwork"    
 
-    url = URI.parse("http://#{@server_address}/geonetwork/srv/en/mef.import")
+    url = URI.parse("http://#{server_address}/geonetwork/srv/en/mef.import")
     request = Net::HTTP::Post.new(url.path)
     request.body = build_post(file).join
-    request.content_type = "multipart/form-data, boundary=#{@boundary}"    
-    request['cookie'] = @cookies    
+    request.content_type = "multipart/form-data, boundary=#{boundary}"
+    request['cookie'] = cookies    
     response = Net::HTTP.start(url.host, url.port) {|http| http.request(request)}
     
     case response
@@ -87,7 +87,7 @@ class Importer
   def upload_all
     authenticate
     
-    mef_files = Dir.glob("#{Dir.getwd}/#{@temp_directory}/*.mef")
+    mef_files = Dir.glob("#{Dir.getwd}/#{temp_directory}/*.mef")
     puts "#{mef_files.count} Mef file(s) queued for upload"
     mef_files.each do |file|
       upload_mef(file)

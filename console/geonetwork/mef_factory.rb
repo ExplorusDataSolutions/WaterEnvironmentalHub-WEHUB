@@ -19,7 +19,7 @@ class MefFactory
   end
   
   def filepath(uuid)
-    "#{Dir.getwd}/#{@temp_directory}/#{filename(uuid)}"
+    "#{Dir.getwd}/#{temp_directory}/#{filename(uuid)}"
   end
   
   def filename(uuid)
