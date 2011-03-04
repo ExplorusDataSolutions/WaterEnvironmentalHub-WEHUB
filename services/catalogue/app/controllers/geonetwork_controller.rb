@@ -2,16 +2,20 @@ class GeonetworkController < ApplicationController
   
   respond_to :xml
   
-  def metadata
+  def metadata    
     @dataset = Dataset.find_by_uuid(params[:id]).first
     
     @related_datasets = []
-    @dataset.dataset_groups.first.datasets.each do |d|
-      if d.uuid != params[:id]
-        @related_datasets.push(d)
-      end
-    end
     
+    if @dataset.dataset_groups.count > 0
+      @dataset.dataset_groups.first.datasets.each do |d|
+        if d.uuid != params[:id]
+          @related_datasets.push(d)
+        end
+      end
+    end    
+    
+    @type = Dataset.is_base(params[:id])? 'base' : ''
     @keywords = Dataset.keywords(params[:id])
   end
   

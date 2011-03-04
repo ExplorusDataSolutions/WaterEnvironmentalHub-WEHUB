@@ -21,10 +21,10 @@ dataset_00003:
   uuid: ed8fb7c0-8e59-4884-a422-a8a3be49982b
 
 dataset_00004: 
-  description: BAS_AB_CVEC_BUILDING_PY_R01_
+  description: CanVec Base Data Buildings
   id: 4
   methodology: 
-  name: BAS_AB_CVEC_BUILDING_PY_R01_
+  name: CanVec Base Data Buildings
   uuid: 9df5b770-3f73-11e0-9207-0800200c9a66
 
 dataset_00005: 
@@ -49,10 +49,10 @@ dataset_00007:
   uuid: a493c280-3f77-11e0-9207-0800200c9a66
 
 dataset_00008: 
-  description: BAS_AB_CVEC_PARK_R01_Project
+  description: CanVec Base Data Parks
   id: 8
   methodology: 
-  name: BAS_AB_CVEC_PARK_R01_Project
+  name: CanVec Base Data Parks
   uuid: c7d1d2f0-3f77-11e0-9207-0800200c9a66
   
 dataset_00009: 
@@ -105,17 +105,17 @@ dataset_00015:
   uuid: c8121ad0-3f78-11e0-9207-0800200c9a66
 
 dataset_00016: 
-  description: BAS_AB_CVEC_WATERBODY_R01_Pr
+  description: CanVec Base Data WaterBodies
   id: 16
   methodology: 
-  name: BAS_AB_CVEC_WATERBODY_R01_Pr
+  name: CanVec Base Data WaterBodies
   uuid: fd9bb3a0-3f78-11e0-9207-0800200c9a66
 
 dataset_00017: 
-  description: BAS_AB_CVEC_WATERCOURSE_R01_
+  description: CanVec Base Data Watercourse 
   id: 17
   methodology: 
-  name: BAS_AB_CVEC_WATERCOURSE_R01_
+  name: CanVec Base Data Watercourse 
   uuid: 1d7f9c90-3f79-11e0-9207-0800200c9a66
 
 dataset_00018: 
@@ -126,10 +126,10 @@ dataset_00018:
   uuid: 3958aba0-3f79-11e0-9207-0800200c9a66
 
 dataset_00019: 
-  description: BAS_AB_CVEC_WETLAND_R01_Proj
+  description: CanVec Base Data Wetlands
   id: 19
   methodology: 
-  name: BAS_AB_CVEC_WETLAND_R01_Proj
+  name: CanVec Base Data Wetlands
   uuid: 57a32fe0-3f79-11e0-9207-0800200c9a66
 
 dataset_00020: 
@@ -140,17 +140,17 @@ dataset_00020:
   uuid: 739e45e0-3f79-11e0-9207-0800200c9a66
 
 dataset_00021: 
-  description: BAS_CA_CVEC_PROVINCE_BNDRY_R
+  description: CanVec Base Data Province Boundaries
   id: 21
   methodology: 
-  name: BAS_CA_CVEC_PROVINCE_BNDRY_R
+  name: CanVec Base Data Province Boundaries
   uuid: 9388be80-3f79-11e0-9207-0800200c9a66
 
 dataset_00022: 
-  description: BAS_CVEC_WETLAND_R01_Project
+  description: CanVec Base Data Wetlands Project
   id: 22
   methodology: 
-  name: BAS_CVEC_WETLAND_R01_Project
+  name: CanVec Base Data Wetlands Project
   uuid: c7f0bab0-3f79-11e0-9207-0800200c9a66
 
 dataset_00023: 
@@ -175,17 +175,17 @@ dataset_00025:
   uuid: 3377bcc0-3f7a-11e0-9207-0800200c9a66
   
 dataset_00026: 
-  description: HYD_AB_NSF_LAKES_1M_2003_PY_
+  description: CanVec Hydro Base Data Lakes
   id: 26
   methodology: 
-  name: HYD_AB_NSF_LAKES_1M_2003_PY_
+  name: CanVec Hydro Base Data Lakes
   uuid: 4ff06730-3f7a-11e0-9207-0800200c9a66
 
 dataset_00027: 
-  description: HYD_AB_NSF_RIVERS_1M_2003_LN
+  description: CanVec Hydro Base Data Rivers
   id: 27
   methodology: 
-  name: HYD_AB_NSF_RIVERS_1M_2003_LN
+  name: CanVec Hydro Base Data Rivers
   uuid: 885cad90-3f7a-11e0-9207-0800200c9a66
 
 dataset_00028: 
@@ -203,17 +203,17 @@ dataset_00029:
   uuid: c38de050-3f7a-11e0-9207-0800200c9a66
 
 dataset_00030: 
-  description: NRN_AB_7_0_JUNCTION_Project
+  description: GeoBase National Road Network Alberta Junctions
   id: 30
   methodology: 
-  name: NRN_AB_7_0_JUNCTION_Project
+  name: GeoBase National Road Network Alberta Junctions
   uuid: edb6e020-3f7a-11e0-9207-0800200c9a66
 
 dataset_00031: 
-  description: NRN_AB_7_0_ROADSEG_Project
+  description: GeoBase National Road Network Alberta Road Segments
   id: 31
   methodology: 
-  name: NRN_AB_7_0_ROADSEG_Project
+  name: GeoBase National Road Network Alberta Road Segments
   uuid: 09abdba0-3f7b-11e0-9207-0800200c9a66
   
 dataset_00032: 

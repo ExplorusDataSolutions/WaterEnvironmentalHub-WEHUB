@@ -29,10 +29,12 @@ xml.Metadata('xmlns:geonet' => 'http://www.fao.org/geonetwork') do
 
   relations = []  
   @related_datasets.each do |d|
-    relations.push({ :uuid => d.uuid, :name => d.name, :description => d.description })
+    if d.uuid != @dataset.uuid
+      relations.push(d.uuid)
+    end
   end
   #Todo: switch between 'user generated' and 'base data' datasets
-  message = {:type => 'user-generated', :relations => relations}.to_json
+  message = {:type => @type, :relations => relations}.to_json
   xml.additionalInfo(message)
   
 end
