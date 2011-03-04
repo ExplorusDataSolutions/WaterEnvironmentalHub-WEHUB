@@ -38,4 +38,35 @@ class Dataset < ActiveRecord::Base
     end
     tablename
   end
+  
+  def self.keywords(uuid)
+    keywords = []
+
+    observation_data = self.data(uuid)
+    observation_data[:data][0].each do |k, v|
+      if /\(/ =~ k
+        if /(?<title_with_out_units>[\D]*)\(/ =~ k
+          keywords.push(title_with_out_units.strip)
+        end
+        if /\((?<measurement_unit>.+)\)/ =~ k
+          keywords.push(measurement_unit)
+        end
+      else
+        keywords.push(k)
+      end
+    end
+    
+    keywords = remove_id_fields(keywords)
+    
+    keywords.uniq + self.synonyms.uniq
+  end
+    
+  def self.synonyms
+    synonyms = []
+  end
+  
+  def self.remove_id_fields(keywords)
+    keywords.delete('id')
+    keywords.delete_if { |keyword| keyword.index('_id') }
+  end    
 end
