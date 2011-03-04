@@ -3,11 +3,12 @@ require 'zip/zip'
 require 'active_support/core_ext'
 
 class MefFactory
-  attr_accessor :server_address, :temp_directory
+  attr_accessor :server_address, :temp_directory, :timeout
   
-  def initialize(temp_directory='tmp/mefs', server_address='localhost:3000')
+  def initialize(temp_directory='tmp/mefs', server_address='localhost:3000', timeout=300)
     @server_address = server_address
     @temp_directory = temp_directory
+    @timeout = timeout
   end
   
   def metadata(uuid)
@@ -60,9 +61,19 @@ class MefFactory
   
   def http_get(uri)
     puts "Getting #{uri}"
-    url = URI.parse(uri)
-    request = Net::HTTP::Get.new(url.to_s)    
-    response = Net::HTTP.start(url.host, url.port) {|http| http.request(request)}
+    url = URI.parse(uri)    
+    http = Net::HTTP.new(url.host, url.port)
+    http.read_timeout = timeout
+    http.open_timeout = timeout
+    response = http.start {|http| http.get(url.to_s) }
+    
+    case response
+    when Net::HTTPSuccess, Net::HTTPRedirection
+      puts "Success!"
+    else
+      response.error!  
+    end
+
     response.body
   end
 end
