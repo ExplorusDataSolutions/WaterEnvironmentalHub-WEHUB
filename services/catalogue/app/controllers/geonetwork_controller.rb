@@ -1,5 +1,3 @@
-require 'net/http'
-
 class GeonetworkController < ApplicationController
   
   respond_to :xml

@@ -14,13 +14,6 @@ xml.Metadata('xmlns:geonet' => 'http://www.fao.org/geonetwork') do
         xml.keyword(k.to_s)
       end
     end
-    xml.additionalInfo do
-      relations = ''
-      @related_datasets.each do |d|
-        relations = "<dataset><uuid>#{d.uuid}</uuid><name>#{d.name}</name><description>#{d.description}</description></dataset>"
-      end
-      #xml.cdata! "<relations>#{relations}</relations>"
-    end
   end
 
   xml.refSysInfo do
@@ -33,5 +26,13 @@ xml.Metadata('xmlns:geonet' => 'http://www.fao.org/geonetwork') do
       end
     end
   end
+
+  relations = []  
+  @related_datasets.each do |d|
+    relations.push({ :uuid => d.uuid, :name => d.name, :description => d.description })
+  end
+  #Todo: switch between 'user generated' and 'base data' datasets
+  message = {:type => 'user-generated', :relations => relations}.to_json
+  xml.additionalInfo(message)
   
 end
