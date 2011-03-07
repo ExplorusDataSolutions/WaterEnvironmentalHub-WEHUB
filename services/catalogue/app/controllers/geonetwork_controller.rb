@@ -31,4 +31,16 @@ class GeonetworkController < ApplicationController
     
     render :xml => uuids
   end
+  
+  def group
+    @feature_type = FeatureType.find(params[:id])
+  end
+  
+  def group_import_list
+    ids = []
+    FeatureType.all.each do |feature|
+      ids.push(feature.id.to_s)
+    end
+    render :xml => ids
+  end
 end

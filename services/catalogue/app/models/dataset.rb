@@ -1,7 +1,7 @@
 class Dataset < ActiveRecord::Base
   
   has_and_belongs_to_many :dataset_groups
-  has_many :features
+  belongs_to :feature_type
   
   scope :find_by_uuid, lambda {|uuid| { :conditions => { :uuid => uuid }}}
 

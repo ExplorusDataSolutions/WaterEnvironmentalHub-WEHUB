@@ -5,6 +5,7 @@ dataset_00001:
   methodology: 
   name: PAM Dataset
   uuid: fe4460ca-6dec-4b65-93fe-9b5d6e31e6e8
+  feature_type_id: 4
 
 dataset_00002: 
   description: Natural Polar Ecosystems
@@ -12,6 +13,7 @@ dataset_00002:
   methodology: 
   name: Natural Polar Ecosystems
   uuid: 416ad2bc-04cf-41eb-9c9b-7e440c21673b
+  feature_type_id: 4
 
 dataset_00003: 
   description: IP3 Alpine Tundra Dataset
@@ -19,6 +21,7 @@ dataset_00003:
   methodology: 
   name: IP3 Alpine Tundra Dataset
   uuid: ed8fb7c0-8e59-4884-a422-a8a3be49982b
+  feature_type_id: 4
 
 dataset_00004: 
   description: CanVec Base Data Buildings
@@ -26,6 +29,7 @@ dataset_00004:
   methodology: 
   name: CanVec Base Data Buildings
   uuid: 9df5b770-3f73-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00005: 
   description: BAS_AB_CVEC_CUTLINE_R01_Proj
@@ -33,13 +37,15 @@ dataset_00005:
   methodology: 
   name: BAS_AB_CVEC_CUTLINE_R01_Proj
   uuid: 391af140-3f77-11e0-9207-0800200c9a66
-  
+  feature_type_id: 1
+
 dataset_00006: 
   description: BAS_AB_CVEC_HISTORIC_SITE_R0
   id: 6
   methodology: 
   name: BAS_AB_CVEC_HISTORIC_SITE_R0
   uuid: 7c884b80-3f77-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00007: 
   description: BAS_AB_CVEC_INTERMIT_WATER_R
@@ -47,6 +53,7 @@ dataset_00007:
   methodology: 
   name: BAS_AB_CVEC_INTERMIT_WATER_R
   uuid: a493c280-3f77-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00008: 
   description: CanVec Base Data Parks
@@ -54,6 +61,7 @@ dataset_00008:
   methodology: 
   name: CanVec Base Data Parks
   uuid: c7d1d2f0-3f77-11e0-9207-0800200c9a66
+  feature_type_id: 1
   
 dataset_00009: 
   description: BAS_AB_CVEC_PIPELINE_R01_Pro
@@ -61,6 +69,7 @@ dataset_00009:
   methodology: 
   name: BAS_AB_CVEC_PIPELINE_R01_Pro
   uuid: ed2d9340-3f77-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00010: 
   description: BAS_AB_CVEC_POWER_LINE_R01_P
@@ -68,6 +77,7 @@ dataset_00010:
   methodology: 
   name: BAS_AB_CVEC_POWER_LINE_R01_P
   uuid: 0b749510-3f78-11e0-9207-0800200c9a66
+  feature_type_id: 1
   
 dataset_00011: 
   description: BAS_AB_CVEC_RAILWAY_R01_Proj
@@ -75,13 +85,15 @@ dataset_00011:
   methodology: 
   name: BAS_AB_CVEC_RAILWAY_R01_Proj
   uuid: 2dd8c040-3f78-11e0-9207-0800200c9a66
-  
+  feature_type_id: 1
+
 dataset_00012: 
   description: BAS_AB_CVEC_RESIDENTIAL_R01_
   id: 12
   methodology: 
   name: BAS_AB_CVEC_RESIDENTIAL_R01_
   uuid: 5b171660-3f78-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00013: 
   description: BAS_AB_CVEC_ROAD_R01_Project
@@ -89,6 +101,7 @@ dataset_00013:
   methodology: 
   name: BAS_AB_CVEC_ROAD_R01_Project
   uuid: 8c0d9280-3f78-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00014: 
   description: BAS_AB_CVEC_RUNWAY_PY_R01_Pr
@@ -96,6 +109,7 @@ dataset_00014:
   methodology: 
   name: BAS_AB_CVEC_RUNWAY_PY_R01_Pr
   uuid: a6f93450-3f78-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00015: 
   description: BAS_AB_CVEC_TRAIL_R01_Projec
@@ -103,6 +117,7 @@ dataset_00015:
   methodology: 
   name: BAS_AB_CVEC_TRAIL_R01_Projec
   uuid: c8121ad0-3f78-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00016: 
   description: CanVec Base Data WaterBodies
@@ -110,6 +125,7 @@ dataset_00016:
   methodology: 
   name: CanVec Base Data WaterBodies
   uuid: fd9bb3a0-3f78-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00017: 
   description: CanVec Base Data Watercourse 
@@ -117,6 +133,7 @@ dataset_00017:
   methodology: 
   name: CanVec Base Data Watercourse 
   uuid: 1d7f9c90-3f79-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00018: 
   description: BAS_AB_CVEC_WELL_R01_Project
@@ -124,6 +141,7 @@ dataset_00018:
   methodology: 
   name: BAS_AB_CVEC_WELL_R01_Project
   uuid: 3958aba0-3f79-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00019: 
   description: CanVec Base Data Wetlands
@@ -131,6 +149,7 @@ dataset_00019:
   methodology: 
   name: CanVec Base Data Wetlands
   uuid: 57a32fe0-3f79-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00020: 
   description: BAS_AB_CVEC_WOOD_AREA_R01_Pr
@@ -138,6 +157,7 @@ dataset_00020:
   methodology: 
   name: BAS_AB_CVEC_WOOD_AREA_R01_Pr
   uuid: 739e45e0-3f79-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00021: 
   description: CanVec Base Data Province Boundaries
@@ -145,6 +165,7 @@ dataset_00021:
   methodology: 
   name: CanVec Base Data Province Boundaries
   uuid: 9388be80-3f79-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00022: 
   description: CanVec Base Data Wetlands Project
@@ -152,6 +173,7 @@ dataset_00022:
   methodology: 
   name: CanVec Base Data Wetlands Project
   uuid: c7f0bab0-3f79-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00023: 
   description: BDY_AB_CVEC_BUILDING_PT_R01_
@@ -159,27 +181,31 @@ dataset_00023:
   methodology: 
   name: BDY_AB_CVEC_BUILDING_PT_R01_
   uuid: eb080940-3f79-11e0-9207-0800200c9a66
-  
+  feature_type_id: 1
+
 dataset_00024: 
   description: GEO_AB_CLI_AGR_CAP_250K_Proj
   id: 24
   methodology: 
   name: GEO_AB_CLI_AGR_CAP_250K_Proj
   uuid: 141bef90-3f7a-11e0-9207-0800200c9a66
-  
+  feature_type_id: 1
+
 dataset_00025: 
   description: HYD_AB_NSF_ISLANDS_1M_2003_P
   id: 25
   methodology: 
   name: HYD_AB_NSF_ISLANDS_1M_2003_P
   uuid: 3377bcc0-3f7a-11e0-9207-0800200c9a66
-  
+  feature_type_id: 1
+
 dataset_00026: 
   description: CanVec Hydro Base Data Lakes
   id: 26
   methodology: 
   name: CanVec Hydro Base Data Lakes
   uuid: 4ff06730-3f7a-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00027: 
   description: CanVec Hydro Base Data Rivers
@@ -187,6 +213,7 @@ dataset_00027:
   methodology: 
   name: CanVec Hydro Base Data Rivers
   uuid: 885cad90-3f7a-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00028: 
   description: NRN_AB_7_0_BLKPASSAGE_Projec
@@ -194,6 +221,7 @@ dataset_00028:
   methodology: 
   name: NRN_AB_7_0_BLKPASSAGE_Projec
   uuid: a795fea0-3f7a-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00029: 
   description: NRN_AB_7_0_FERRYSEG_Project
@@ -201,6 +229,7 @@ dataset_00029:
   methodology: 
   name: NRN_AB_7_0_FERRYSEG_Project
   uuid: c38de050-3f7a-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00030: 
   description: GeoBase National Road Network Alberta Junctions
@@ -208,6 +237,7 @@ dataset_00030:
   methodology: 
   name: GeoBase National Road Network Alberta Junctions
   uuid: edb6e020-3f7a-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00031: 
   description: GeoBase National Road Network Alberta Road Segments
@@ -215,13 +245,15 @@ dataset_00031:
   methodology: 
   name: GeoBase National Road Network Alberta Road Segments
   uuid: 09abdba0-3f7b-11e0-9207-0800200c9a66
-  
+  feature_type_id: 1
+
 dataset_00032: 
   description: TRN_AB_NRN_LN_R02_Project
   id: 32
   methodology: 
   name: TRN_AB_NRN_LN_R02_Project
   uuid: 2682d2b0-3f7b-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00033: 
   description: TRN_AB_NRN_LN_R02_Project1
@@ -229,6 +261,7 @@ dataset_00033:
   methodology: 
   name: TRN_AB_NRN_LN_R02_Project1
   uuid: 438f0a90-3f7b-11e0-9207-0800200c9a66
+  feature_type_id: 1
 
 dataset_00034: 
   description: TRN_AB_NSF_ROAD_NETWORK_1M_2
@@ -236,4 +269,4 @@ dataset_00034:
   methodology: 
   name: TRN_AB_NSF_ROAD_NETWORK_1M_2
   uuid: 5ea9d2b0-3f7b-11e0-9207-0800200c9a66
-
+  feature_type_id: 1

@@ -1,6 +1,7 @@
 Catalogue::Application.routes.draw do
   
   match 'geonetwork/mef-import-list' => 'geonetwork#mef_import_list'
+  match 'geonetwork/group-import-list' => 'geonetwork#group_import_list'
   #resources :items
 
   # The priority is based upon order of creation:

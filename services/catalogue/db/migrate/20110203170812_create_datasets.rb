@@ -5,6 +5,7 @@ class CreateDatasets < ActiveRecord::Migration
       t.string :uuid
       t.text :description
       t.text :methodology
+      t.references :feature_type
 
       t.timestamps
     end

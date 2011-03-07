@@ -1,2 +1,2 @@
-class FeatureType < ActiveRecord::Base
+class FeatureType < ActiveRecord::Base  
 end
