@@ -115,16 +115,23 @@
 
       <h2>Browse:</h2>      
       <ul id="dataset-navigation"> 
-      <% @search.basedata.each_with_index do |result, index| %> 
-        <li><a href="?<%= index %>"><%= result.title %></a>         
-          <ul><li><a href="?1.0">Item 1.0</a></li></ul>
-        </li>
+        <li>Base Data
+      <% @search.base_data.each_with_index do |result, index| %>         
+          <ul><li><a href="?<%= result.id %>"><%= result.title %></li></ul>
       <% end %>
+        </li>
+        <li>Observation Data
+      <% @search.observation_data.each_with_index do |result, index| %>         
+          <ul><li><a href="?<%= result.id %>"><%= result.title %></li></ul>
+      <% end %>
+        </li>        
       </ul>
-
-    
+      
     </td>
     <td style="padding-left: 5px;" valign="top">
+      <div id="map">
+        map here
+      </div>
       <h2>Results for '<span class='keyword'><%= @search.query %></span>'</h2>  
 
       <div id='results'>

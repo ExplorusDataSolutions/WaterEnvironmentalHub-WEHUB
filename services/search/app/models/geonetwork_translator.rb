@@ -10,6 +10,7 @@ class GeoNetworkTranslator
   end
   
   def translate_from_search(xml)
+    
     search_result = []
     if !xml.empty?
       xml = xml.gsub(/localhost/, server_address)
@@ -20,16 +21,6 @@ class GeoNetworkTranslator
         title = item.elements['title'].text
         
         description = item.elements['media:text'].text
-        
-        resources = []
-        
-        item.elements.to_a('link').each do |link, index|
-          if index != 1
-            if link.attributes['href'] != nil && link.attributes['title'] != nil && link.attributes['type'] != nil
-              resources.push(Resource.new(link.attributes['href'], link.attributes['title'], link.attributes['type']))
-            end
-          end
-        end
 
         media_content = item.elements['media:content']
         if media_content != nil
@@ -43,7 +34,7 @@ class GeoNetworkTranslator
         id = item.elements['uuid'].text
         
         if title != nil
-          search_result.push(SearchResult.new(description, title, resources, thumbnail, source, publication_date, id))
+          search_result.push(SearchResult.new(description, title, nil, thumbnail, source, publication_date, id))
         end
       end
     end
@@ -52,12 +43,57 @@ class GeoNetworkTranslator
   end
   
   def search_results(query)
+    if @cookies == nil
+      authenticate
+    end
+    
     url = URI.parse(@search_uri)
     request = Net::HTTP::Post.new(url.path)
     request.body = "<?xml version='1.0' encoding='UTF-8'?><request><any>#{query}</any></request>"    
     request.content_type = "text/xml"
+    request['cookie'] = @cookies
     response = Net::HTTP.start(url.host, url.port) {|http| http.request(request)}
    
     translate_from_search(response.body)
   end
+  
+  def search_results_by_group(group_ids)  
+    if @cookies == nil
+      authenticate
+    end
+    url = URI.parse(@search_uri)
+    request = Net::HTTP::Post.new(url.path)
+    
+    groups_xml = ''
+    group_ids.each do |id|
+      groups_xml << "<group>#{id}</group>"
+    end
+
+    request.body = "<?xml version='1.0' encoding='UTF-8'?><request>#{groups_xml}</request>"    
+    request.content_type = "text/xml"
+    request['cookie'] = @cookies
+    response = Net::HTTP.start(url.host, url.port) {|http| http.request(request)}    
+    
+    translate_from_search(response.body)    
+  end
+  
+  def authenticate(username='development', password='development')
+    puts "Authenticating user #{username} with GeoNetwork"    
+    
+    url = URI.parse("http://#{server_address}/geonetwork/srv/en/xml.user.login")  
+    request = Net::HTTP::Post.new(url.path)
+    request.body = "<?xml version='1.0' encoding='UTF-8'?><request><username>#{username}</username><password>#{password}</password></request>"    
+    request.content_type = "text/xml"
+    
+    response = Net::HTTP.start(url.host, url.port) {|http| http.request(request) }
+    
+    case response
+    when Net::HTTPSuccess, Net::HTTPRedirection
+      puts "Success!"
+      @cookies = response['set-cookie']
+    else
+      response.error!  
+    end    
+  end
+
 end
