@@ -1,0 +1,26 @@
+<script>
+  $(document).ready(function() {
+    
+    var map = new OpenLayers.Map('map');
+    
+  <% @search.base_data.each do |result| %>
+    map.addLayer(new OpenLayers.Layer.WMS("<%= result.title %>", "http://174.129.10.37:8080/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=<%= result.title %>", {layers: 'basic'}));    
+  <% end %>    
+
+    map.addControl(new OpenLayers.Control.PanZoomBar());
+    map.addControl(new OpenLayers.Control.MouseToolbar());
+    map.addControl(new OpenLayers.Control.MousePosition());
+    map.addControl(new OpenLayers.Control.Permalink());
+    map.addControl(new OpenLayers.Control.ScaleLine());
+    map.addControl(new OpenLayers.Control.LayerSwitcher());
+    
+    var long = "-114.801";
+    var lat = "53.295";
+    var zoom = 6;
+    map.setCenter(new OpenLayers.LonLat(long, lat), zoom);
+  });
+</script>
+<% 
+  # visit the open-layers.css for open layer styles 
+%>
+<div id="map"></div>

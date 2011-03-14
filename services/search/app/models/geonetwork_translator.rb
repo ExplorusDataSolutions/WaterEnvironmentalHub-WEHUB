@@ -74,13 +74,15 @@ class GeoNetworkTranslator
     request['cookie'] = @cookies
     response = Net::HTTP.start(url.host, url.port) {|http| http.request(request)}    
     
+    puts response.body
+    
     translate_from_search(response.body)    
   end
   
   def authenticate(username='development', password='development')
     puts "Authenticating user #{username} with GeoNetwork"    
     
-    url = URI.parse("http://#{server_address}/geonetwork/srv/en/xml.user.login")  
+    url = URI.parse("http://#{server_address}:8080/geonetwork/srv/en/xml.user.login")  
     request = Net::HTTP::Post.new(url.path)
     request.body = "<?xml version='1.0' encoding='UTF-8'?><request><username>#{username}</username><password>#{password}</password></request>"    
     request.content_type = "text/xml"

@@ -52,10 +52,11 @@
       });    
 
     function showModal(message) {
-      modal = $("#dialog-modal");
+      var modal = $("#dialog-modal");
       downloadPartial = $('#download-buttonset-fragment').clone().prepend('<br />').html();
       modal.html(message + downloadPartial);
       modal.dialog({
+        zIndex: 2000, /* override Open Layers */
         height: 400,
         width: 600,
         modal: true
@@ -63,7 +64,7 @@
       bindDownloadButtonset();
     }
     
-    $('#results').click(function(e) {      
+    $('#results, #dataset-navigation').click(function(e) {      
       if (e.target.hash) {
         e.preventDefault();
         var id = e.target.hash.replace(/#\!\//, '');
@@ -78,15 +79,17 @@
     });
     
     $("#dataset-navigation").treeview({
-  		persist: "location",
-  		collapsed: true,
-  		unique: true
-  	});
+      persist: "location",
+      unique: true
+    });
   })
 </script>
 <style>
   #dataset-navigation {
     font-size: .7em;
+    height: 281px;    
+    overflow: auto;
+    border: solid 1px #D4D4D4;
   }
   h2 {
     font-size: .8em;
@@ -105,33 +108,29 @@
     left: 137px;
     margin-top: 2px;
   }
-
 </style>
 <table>
   <tr>
     <td rowspan="2" valign="top" style="width: 250px; border-right: solid 1px grey; padding-right: 5px; padding-bottom: 20px;">
-      <h2>Search:</h2>      
-      <%= render "search" %>
-
       <h2>Browse:</h2>      
       <ul id="dataset-navigation"> 
         <li>Base Data
       <% @search.base_data.each_with_index do |result, index| %>         
-          <ul><li><a href="?<%= result.id %>"><%= result.title %></li></ul>
+          <ul><li><a href="/#!/<%= result.id %>" onclick="return false;"><%= result.title %></li></ul>
       <% end %>
         </li>
-        <li>Observation Data
+        <li class="closed">Observation Data
       <% @search.observation_data.each_with_index do |result, index| %>         
-          <ul><li><a href="?<%= result.id %>"><%= result.title %></li></ul>
+          <ul><li><a href="/#!/<%= result.id %>" onclick="return false;"><%= result.title %></li></ul>
       <% end %>
         </li>        
       </ul>
       
+      <h2>Search:</h2>      
+      <%= render "search" %>
     </td>
     <td style="padding-left: 5px;" valign="top">
-      <div id="map">
-        map here
-      </div>
+      <%= render "map" %>
       <h2>Results for '<span class='keyword'><%= @search.query %></span>'</h2>  
 
       <div id='results'>
