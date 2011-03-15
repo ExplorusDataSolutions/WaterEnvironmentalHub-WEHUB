@@ -118,14 +118,14 @@
         <li>Base Data
           <ul>
       <% @search.base_data.each_with_index do |result, index| %>         
-            <li><a href="/#!/<%= result.id + '_hey' %>" onclick="return false;"><%= result.title %></a></li>
+            <li><a href="/#!/<%= result.id %>" onclick="return false;"><%= result.title %></a></li>
       <% end %>
           </ul>
         </li>
         <li class="closed">Observation Data
           <ul>
       <% @search.observation_data.each_with_index do |result, index| %>         
-            <li><a href="/#!/<%= result.id + '_hi' %>" onclick="return false;"><%= result.title %></a></li>
+            <li><a href="/#!/<%= result.id %>" onclick="return false;"><%= result.title %></a></li>
       <% end %>
           </ul>
         </li>        
