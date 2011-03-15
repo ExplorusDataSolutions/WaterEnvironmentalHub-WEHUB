@@ -69,7 +69,7 @@
         e.preventDefault();
         var id = e.target.hash.replace(/#\!\//, '');
         var keywords = $('#search_query').val();
-        $.getJSON('/search/info/', { id: id, keywords: keywords }, function(data) {
+        $.getJSON('/search/info/', { id: id }, function(data) {
           if (data) { 
             showModal('<span>name:</span> ' + data.title + '<br /><span>description:</span> ' + data.description + '<br /><span>date:</span> ' + data.publication_date) 
           }

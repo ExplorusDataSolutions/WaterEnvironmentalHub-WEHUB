@@ -1,7 +1,7 @@
 class SearchResult
-  attr_accessor :description, :title, :resources, :thumbnail, :source, :publication_date, :id
+  attr_accessor :description, :title, :publication_date, :id
   
-  def initialize(description, title, resources, thumbnail, source, publication_date, id)
+  def initialize(description, title, publication_date, id)
     if description == nil
       @description = ''
     elsif description.length < 255
@@ -11,10 +11,11 @@ class SearchResult
     end
     
     @title = title
-    @resources = resources
-    @thumbnail = thumbnail
-    @source = source
     @publication_date = publication_date
     @id = id
+  end
+  
+  def to_s
+    puts "search_result:\n id: #{id}\n title: #{title}\n description: #{description}\n publication_date: #{publication_date}" 
   end
 end

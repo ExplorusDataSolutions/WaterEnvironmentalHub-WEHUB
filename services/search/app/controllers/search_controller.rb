@@ -1,27 +1,30 @@
 class SearchController < ApplicationController
+
+  def search_instance
+    if @search_instance == nil
+      @search_instance = Search.new
+    end
+    @search_instance
+  end
   
   def index
     query = 'all'
     if params[:query] != nil
       query = params[:query]
     end
-    @search = Search.new(query)
+
+    @search = search_instance.do_query(query)
   end
   
-  def query
-    @search = Search.new(params[:keywords])
+  def query    
+    @search = search_instance.do_query(params[:keywords])
     render :partial => "search_results"    
   end
   
   def info
     id = params[:id]      
     if id != nil
-      @search = Search.new(params[:keywords]);
-      @search.results.each do |result|
-        if result.id == id
-          render :json => result
-        end
-      end
+      render :json => search_instance.info(id)
     end
   end
     
