@@ -38,7 +38,7 @@ class GeoServerTranslator
     end
   end
 
-  def feature_type_fields(uuid)
+  def feature_fields(uuid)
     fields = []
     hash = JSON.parse(http_get("GetFeature&typeName=#{uuid}&maxFeatures=1&outputFormat=json"))
     hash = hash['features'][0]['properties']
@@ -108,6 +108,8 @@ class GeoServerTranslator
 
 end 
 
+=begin
 test = GeoServerTranslator.new()
 test.get_shape('1d7f9c90-3f79-11e0-9207-0800200c9a66')
 test.unzip_shape('1d7f9c90-3f79-11e0-9207-0800200c9a66')
+=end

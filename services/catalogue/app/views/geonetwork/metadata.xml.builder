@@ -34,7 +34,7 @@ xml.Metadata('xmlns:geonet' => 'http://www.fao.org/geonetwork') do
     end
   end
   #Todo: switch between 'user generated' and 'base data' datasets
-  message = {:type => @type, :relations => relations}.to_json
+  message = {:relations => relations}.to_json
   xml.additionalInfo(message)
   
 end

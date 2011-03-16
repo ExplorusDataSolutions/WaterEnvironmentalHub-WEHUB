@@ -1,7 +1,7 @@
 class ShapeFactory
   attr_accessor :working_directory
   
-  def initialize(working_directory = "tmp/shapes/")
+  def initialize(working_directory = "tmp/shapes")
     @working_directory = working_directory
   end
 

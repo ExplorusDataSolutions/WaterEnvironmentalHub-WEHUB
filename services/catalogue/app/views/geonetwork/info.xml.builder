@@ -11,12 +11,16 @@ xml.info(:version => 1) do
     xml.createDate(@dataset.updated_at)
     xml.schema('iso19115')
     xml.isTemplate('false')
-    xml.format('simple')
+    xml.format('full')
   end
-  xml.categories
+  xml.categories do
+    xml.category(:name => 'datasets')
+  end
   xml.privileges do
     xml.group(:name => 'all') do
-      xml.operation(:name => 'download')
+      xml.operation(:name => 'view')
+    end
+    xml.group(:name => @dataset.feature_type.name) do
       xml.operation(:name => 'view')
     end
   end

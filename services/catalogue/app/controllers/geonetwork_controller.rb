@@ -15,8 +15,7 @@ class GeonetworkController < ApplicationController
       end
     end    
     
-    @type = Dataset.is_base(params[:id])? 'base' : ''
-    @keywords = Dataset.keywords(params[:id])
+    @keywords = @dataset.feature.keywords(params[:id])
   end
   
   def info
@@ -33,13 +32,13 @@ class GeonetworkController < ApplicationController
   end
   
   def group
-    @feature_type = FeatureType.find(params[:id])
+    @feature_type = FeatureType.find_by_name(params[:id]).first    
   end
   
   def group_import_list
-    ids = []
+    ids = {}
     FeatureType.all.each do |feature|
-      ids.push(feature.id.to_s)
+      ids.store(feature.name, feature.id.to_s)
     end
     render :xml => ids
   end

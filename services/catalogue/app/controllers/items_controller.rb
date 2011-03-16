@@ -24,12 +24,12 @@ class ItemsController < ApplicationController
     uuids.each do |uuid|      
       case 
         when format_type == 'json'
-          result = Dataset.data(uuid)
+          result = Feature.data(uuid)
           results.store("#{result[:tablename]}.json", result[:data].to_json)
         when format_type == 'csv'          
         when format_type == 'shape'
           factory = ShapeFactory.new
-          id = Dataset.find_observation_id(uuid)          
+          id = Feature.find_observation_id(uuid)          
           shape_files = factory.find_by_id(id)
           shape_files.each do |file|
             result = factory.data(file)
