@@ -32,7 +32,7 @@ dataset_00004:
   feature_type_id: 1
 
 dataset_00005: 
-  description: BAS_AB_CVEC_CUTLINE_R01_Proj
+  description: BAS AB CVEC CUTLINE R01 Proj
   id: 5
   methodology: 
   name: BAS_AB_CVEC_CUTLINE_R01_Proj
@@ -40,7 +40,7 @@ dataset_00005:
   feature_type_id: 1
 
 dataset_00006: 
-  description: BAS_AB_CVEC_HISTORIC_SITE_R0
+  description: BAS AB CVEC HISTORIC SITE R0
   id: 6
   methodology: 
   name: BAS_AB_CVEC_HISTORIC_SITE_R0
@@ -48,7 +48,7 @@ dataset_00006:
   feature_type_id: 1
 
 dataset_00007: 
-  description: BAS_AB_CVEC_INTERMIT_WATER_R
+  description: BAS AB CVEC INTERMIT WATER R
   id: 7
   methodology: 
   name: BAS_AB_CVEC_INTERMIT_WATER_R
@@ -64,7 +64,7 @@ dataset_00008:
   feature_type_id: 1
   
 dataset_00009: 
-  description: BAS_AB_CVEC_PIPELINE_R01_Pro
+  description: BAS AB CVEC PIPELINE R01 Pro
   id: 9
   methodology: 
   name: BAS_AB_CVEC_PIPELINE_R01_Pro
@@ -72,7 +72,7 @@ dataset_00009:
   feature_type_id: 1
 
 dataset_00010: 
-  description: BAS_AB_CVEC_POWER_LINE_R01_P
+  description: BAS AB CVEC POWER LINE R01 P
   id: 10
   methodology: 
   name: BAS_AB_CVEC_POWER_LINE_R01_P
@@ -80,7 +80,7 @@ dataset_00010:
   feature_type_id: 1
   
 dataset_00011: 
-  description: BAS_AB_CVEC_RAILWAY_R01_Proj
+  description: BAS AB CVEC RAILWAY R01 Proj
   id: 11
   methodology: 
   name: BAS_AB_CVEC_RAILWAY_R01_Proj
@@ -88,7 +88,7 @@ dataset_00011:
   feature_type_id: 1
 
 dataset_00012: 
-  description: BAS_AB_CVEC_RESIDENTIAL_R01_
+  description: BAS AB CVEC RESIDENTIAL R01 
   id: 12
   methodology: 
   name: BAS_AB_CVEC_RESIDENTIAL_R01_
@@ -96,7 +96,7 @@ dataset_00012:
   feature_type_id: 1
 
 dataset_00013: 
-  description: BAS_AB_CVEC_ROAD_R01_Project
+  description: BAS AB CVEC ROAD R01 Project
   id: 13
   methodology: 
   name: BAS_AB_CVEC_ROAD_R01_Project
@@ -104,7 +104,7 @@ dataset_00013:
   feature_type_id: 1
 
 dataset_00014: 
-  description: BAS_AB_CVEC_RUNWAY_PY_R01_Pr
+  description: BAS AB CVEC RUNWAY PY R01 Pr
   id: 14
   methodology: 
   name: BAS_AB_CVEC_RUNWAY_PY_R01_Pr
@@ -112,7 +112,7 @@ dataset_00014:
   feature_type_id: 1
 
 dataset_00015: 
-  description: BAS_AB_CVEC_TRAIL_R01_Projec
+  description: BAS AB CVEC TRAIL R01 Projec
   id: 15
   methodology: 
   name: BAS_AB_CVEC_TRAIL_R01_Projec
@@ -136,7 +136,7 @@ dataset_00017:
   feature_type_id: 1
 
 dataset_00018: 
-  description: BAS_AB_CVEC_WELL_R01_Project
+  description: BAS AB CVEC WELL R01 Project
   id: 18
   methodology: 
   name: BAS_AB_CVEC_WELL_R01_Project
@@ -152,7 +152,7 @@ dataset_00019:
   feature_type_id: 1
 
 dataset_00020: 
-  description: BAS_AB_CVEC_WOOD_AREA_R01_Pr
+  description: BAS AB CVEC WOOD AREA R01 Pr
   id: 20
   methodology: 
   name: BAS_AB_CVEC_WOOD_AREA_R01_Pr
@@ -176,7 +176,7 @@ dataset_00022:
   feature_type_id: 1
 
 dataset_00023: 
-  description: BDY_AB_CVEC_BUILDING_PT_R01_
+  description: BDY AB CVEC BUILDING PT R01 
   id: 23
   methodology: 
   name: BDY_AB_CVEC_BUILDING_PT_R01_
@@ -184,7 +184,7 @@ dataset_00023:
   feature_type_id: 1
 
 dataset_00024: 
-  description: GEO_AB_CLI_AGR_CAP_250K_Proj
+  description: GEO AB CLI AGR CAP 250K Proj
   id: 24
   methodology: 
   name: GEO_AB_CLI_AGR_CAP_250K_Proj
@@ -192,7 +192,7 @@ dataset_00024:
   feature_type_id: 1
 
 dataset_00025: 
-  description: HYD_AB_NSF_ISLANDS_1M_2003_P
+  description: HYD AB NSF ISLANDS 1M 2003 P
   id: 25
   methodology: 
   name: HYD_AB_NSF_ISLANDS_1M_2003_P
@@ -216,7 +216,7 @@ dataset_00027:
   feature_type_id: 1
 
 dataset_00028: 
-  description: NRN_AB_7_0_BLKPASSAGE_Projec
+  description: NRN AB 7 0 BLKPASSAGE Projec
   id: 28
   methodology: 
   name: NRN_AB_7_0_BLKPASSAGE_Projec
@@ -224,7 +224,7 @@ dataset_00028:
   feature_type_id: 1
 
 dataset_00029: 
-  description: NRN_AB_7_0_FERRYSEG_Project
+  description: NRN AB 7 0 FERRYSEG Project
   id: 29
   methodology: 
   name: NRN_AB_7_0_FERRYSEG_Project
@@ -248,7 +248,7 @@ dataset_00031:
   feature_type_id: 1
 
 dataset_00032: 
-  description: TRN_AB_NRN_LN_R02_Project
+  description: TRN AB NRN LN R02 Project
   id: 32
   methodology: 
   name: TRN_AB_NRN_LN_R02_Project
@@ -256,7 +256,7 @@ dataset_00032:
   feature_type_id: 1
 
 dataset_00033: 
-  description: TRN_AB_NRN_LN_R02_Project1
+  description: TRN AB NRN LN R02 Project1
   id: 33
   methodology: 
   name: TRN_AB_NRN_LN_R02_Project1
@@ -264,7 +264,7 @@ dataset_00033:
   feature_type_id: 1
 
 dataset_00034: 
-  description: TRN_AB_NSF_ROAD_NETWORK_1M_2
+  description: TRN AB NSF ROAD NETWORK 1M 2
   id: 34
   methodology: 
   name: TRN_AB_NSF_ROAD_NETWORK_1M_2
