@@ -31,92 +31,12 @@ dataset_00004:
   uuid: 9df5b770-3f73-11e0-9207-0800200c9a66
   feature_type_id: 1
 
-dataset_00005: 
-  description: BAS AB CVEC CUTLINE R01 Proj
-  id: 5
-  methodology: 
-  name: BAS_AB_CVEC_CUTLINE_R01_Proj
-  uuid: 391af140-3f77-11e0-9207-0800200c9a66
-  feature_type_id: 1
-
-dataset_00006: 
-  description: BAS AB CVEC HISTORIC SITE R0
-  id: 6
-  methodology: 
-  name: BAS_AB_CVEC_HISTORIC_SITE_R0
-  uuid: 7c884b80-3f77-11e0-9207-0800200c9a66
-  feature_type_id: 1
-
-dataset_00007: 
-  description: BAS AB CVEC INTERMIT WATER R
-  id: 7
-  methodology: 
-  name: BAS_AB_CVEC_INTERMIT_WATER_R
-  uuid: a493c280-3f77-11e0-9207-0800200c9a66
-  feature_type_id: 1
-
 dataset_00008: 
   description: CanVec Base Data Parks
   id: 8
   methodology: 
   name: CanVec Base Data Parks
   uuid: c7d1d2f0-3f77-11e0-9207-0800200c9a66
-  feature_type_id: 1
-  
-dataset_00009: 
-  description: BAS AB CVEC PIPELINE R01 Pro
-  id: 9
-  methodology: 
-  name: BAS_AB_CVEC_PIPELINE_R01_Pro
-  uuid: ed2d9340-3f77-11e0-9207-0800200c9a66
-  feature_type_id: 1
-
-dataset_00010: 
-  description: BAS AB CVEC POWER LINE R01 P
-  id: 10
-  methodology: 
-  name: BAS_AB_CVEC_POWER_LINE_R01_P
-  uuid: 0b749510-3f78-11e0-9207-0800200c9a66
-  feature_type_id: 1
-  
-dataset_00011: 
-  description: BAS AB CVEC RAILWAY R01 Proj
-  id: 11
-  methodology: 
-  name: BAS_AB_CVEC_RAILWAY_R01_Proj
-  uuid: 2dd8c040-3f78-11e0-9207-0800200c9a66
-  feature_type_id: 1
-
-dataset_00012: 
-  description: BAS AB CVEC RESIDENTIAL R01 
-  id: 12
-  methodology: 
-  name: BAS_AB_CVEC_RESIDENTIAL_R01_
-  uuid: 5b171660-3f78-11e0-9207-0800200c9a66
-  feature_type_id: 1
-
-dataset_00013: 
-  description: BAS AB CVEC ROAD R01 Project
-  id: 13
-  methodology: 
-  name: BAS_AB_CVEC_ROAD_R01_Project
-  uuid: 8c0d9280-3f78-11e0-9207-0800200c9a66
-  feature_type_id: 1
-
-dataset_00014: 
-  description: BAS AB CVEC RUNWAY PY R01 Pr
-  id: 14
-  methodology: 
-  name: BAS_AB_CVEC_RUNWAY_PY_R01_Pr
-  uuid: a6f93450-3f78-11e0-9207-0800200c9a66
-  feature_type_id: 1
-
-dataset_00015: 
-  description: BAS AB CVEC TRAIL R01 Projec
-  id: 15
-  methodology: 
-  name: BAS_AB_CVEC_TRAIL_R01_Projec
-  uuid: c8121ad0-3f78-11e0-9207-0800200c9a66
   feature_type_id: 1
 
 dataset_00016: 
@@ -135,28 +55,12 @@ dataset_00017:
   uuid: 1d7f9c90-3f79-11e0-9207-0800200c9a66
   feature_type_id: 1
 
-dataset_00018: 
-  description: BAS AB CVEC WELL R01 Project
-  id: 18
-  methodology: 
-  name: BAS_AB_CVEC_WELL_R01_Project
-  uuid: 3958aba0-3f79-11e0-9207-0800200c9a66
-  feature_type_id: 1
-
 dataset_00019: 
   description: CanVec Base Data Wetlands
   id: 19
   methodology: 
   name: CanVec Base Data Wetlands
   uuid: 57a32fe0-3f79-11e0-9207-0800200c9a66
-  feature_type_id: 1
-
-dataset_00020: 
-  description: BAS AB CVEC WOOD AREA R01 Pr
-  id: 20
-  methodology: 
-  name: BAS_AB_CVEC_WOOD_AREA_R01_Pr
-  uuid: 739e45e0-3f79-11e0-9207-0800200c9a66
   feature_type_id: 1
 
 dataset_00021: 
@@ -175,30 +79,6 @@ dataset_00022:
   uuid: c7f0bab0-3f79-11e0-9207-0800200c9a66
   feature_type_id: 1
 
-dataset_00023: 
-  description: BDY AB CVEC BUILDING PT R01 
-  id: 23
-  methodology: 
-  name: BDY_AB_CVEC_BUILDING_PT_R01_
-  uuid: eb080940-3f79-11e0-9207-0800200c9a66
-  feature_type_id: 1
-
-dataset_00024: 
-  description: GEO AB CLI AGR CAP 250K Proj
-  id: 24
-  methodology: 
-  name: GEO_AB_CLI_AGR_CAP_250K_Proj
-  uuid: 141bef90-3f7a-11e0-9207-0800200c9a66
-  feature_type_id: 1
-
-dataset_00025: 
-  description: HYD AB NSF ISLANDS 1M 2003 P
-  id: 25
-  methodology: 
-  name: HYD_AB_NSF_ISLANDS_1M_2003_P
-  uuid: 3377bcc0-3f7a-11e0-9207-0800200c9a66
-  feature_type_id: 1
-
 dataset_00026: 
   description: CanVec Hydro Base Data Lakes
   id: 26
@@ -213,22 +93,6 @@ dataset_00027:
   methodology: 
   name: CanVec Hydro Base Data Rivers
   uuid: 885cad90-3f7a-11e0-9207-0800200c9a66
-  feature_type_id: 1
-
-dataset_00028: 
-  description: NRN AB 7 0 BLKPASSAGE Projec
-  id: 28
-  methodology: 
-  name: NRN_AB_7_0_BLKPASSAGE_Projec
-  uuid: a795fea0-3f7a-11e0-9207-0800200c9a66
-  feature_type_id: 1
-
-dataset_00029: 
-  description: NRN AB 7 0 FERRYSEG Project
-  id: 29
-  methodology: 
-  name: NRN_AB_7_0_FERRYSEG_Project
-  uuid: c38de050-3f7a-11e0-9207-0800200c9a66
   feature_type_id: 1
 
 dataset_00030: 
@@ -246,27 +110,4 @@ dataset_00031:
   name: GeoBase National Road Network Alberta Road Segments
   uuid: 09abdba0-3f7b-11e0-9207-0800200c9a66
   feature_type_id: 1
-
-dataset_00032: 
-  description: TRN AB NRN LN R02 Project
-  id: 32
-  methodology: 
-  name: TRN_AB_NRN_LN_R02_Project
-  uuid: 2682d2b0-3f7b-11e0-9207-0800200c9a66
-  feature_type_id: 1
-
-dataset_00033: 
-  description: TRN AB NRN LN R02 Project1
-  id: 33
-  methodology: 
-  name: TRN_AB_NRN_LN_R02_Project1
-  uuid: 438f0a90-3f7b-11e0-9207-0800200c9a66
-  feature_type_id: 1
-
-dataset_00034: 
-  description: TRN AB NSF ROAD NETWORK 1M 2
-  id: 34
-  methodology: 
-  name: TRN_AB_NSF_ROAD_NETWORK_1M_2
-  uuid: 5ea9d2b0-3f7b-11e0-9207-0800200c9a66
-  feature_type_id: 1
+  

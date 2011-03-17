@@ -9,9 +9,11 @@ xml.Metadata('xmlns:geonet' => 'http://www.fao.org/geonetwork') do
     end
     xml.idAbs(@dataset.name)
     xml.idPurp(@dataset.description)
-    @keywords.each do |k|
-      xml.descKeys do
-        xml.keyword(k.to_s)
+    if !@keywords.nil?
+      @keywords.each do |k|
+        xml.descKeys do
+          xml.keyword(k.to_s)
+        end
       end
     end
   end

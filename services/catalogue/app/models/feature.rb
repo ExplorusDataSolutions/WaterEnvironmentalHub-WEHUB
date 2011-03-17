@@ -22,7 +22,6 @@ class Feature < ActiveRecord::Base
       keywords = extract_keywords(observation_data)
     else
       observation_data = data_lightweight(uuid)
-      puts "\n\n\n#{observation_data[:data]}"
       if observation_data[:data].count > 0
         keywords = extract_keywords(observation_data[:data][0])
       end
@@ -33,11 +32,10 @@ class Feature < ActiveRecord::Base
     keywords.uniq + synonyms.uniq
   end
   
-  def self.find_observation_id(uuid)
+  def find_observation_id(uuid)
     tablename = nil
     if uuid.match(/[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12}/) != nil
-      uuid = uuid.gsub(/-/, '_')
-      
+      uuid = uuid.gsub(/-/, '_')      
       tablename = tablename(uuid)
     else
       raise ArgumentError, "Expected a valid uuid, but got #{uuid}"
@@ -57,7 +55,7 @@ class Feature < ActiveRecord::Base
     end
   end
   
-  def self.tablename(uuid)    
+  def tablename(uuid)    
     begin
       tablename = self.connection.execute("SELECT tablename FROM pg_tables WHERE tablename LIKE '%#{uuid}%'")[0]['tablename']
     rescue
