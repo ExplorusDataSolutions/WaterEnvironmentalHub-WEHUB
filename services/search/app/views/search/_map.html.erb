@@ -4,7 +4,7 @@
     var map = new OpenLayers.Map('map');
     
   <% @search.base_data.each do |result| %>
-    map.addLayer(new OpenLayers.Layer.WMS("<%= result.title %>", "http://174.129.10.37:8080/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=<%= result.title %>", {layers: 'basic'}));    
+    map.addLayer(new OpenLayers.Layer.WMS("<%= result.title %>", "http://174.129.10.37:8080/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=<%= result.id %>", {layers: 'basic'}));    
   <% end %>    
 
     map.addControl(new OpenLayers.Control.PanZoomBar());

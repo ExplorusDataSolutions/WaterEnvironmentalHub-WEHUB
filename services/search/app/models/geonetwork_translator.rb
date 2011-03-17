@@ -2,12 +2,12 @@ require 'rexml/document'
 require 'net/http'
 
 class GeoNetworkTranslator
-  attr_accessor :server_address, :search_uri
+  attr_accessor :server_address
 
   @@cached_search_query = {}
   @@cached_metadata = {}
   
-  def initialize(server_address = '174.129.10.37')
+  def initialize(server_address = '174.129.10.37:8080')
     @server_address = server_address
   end
 
@@ -103,7 +103,7 @@ class GeoNetworkTranslator
       authenticate
     end
     puts "Posting #{xmlRequest} to #{uri}"
-    url = URI.parse("http://#{server_address}:8080/geonetwork/srv/en/#{uri}")
+    url = URI.parse("http://#{server_address}/geonetwork/srv/en/#{uri}")
     request = Net::HTTP::Post.new(url.path)
     request.body = "<?xml version='1.0' encoding='UTF-8'?>#{xmlRequest}"
     request.content_type = "text/xml"

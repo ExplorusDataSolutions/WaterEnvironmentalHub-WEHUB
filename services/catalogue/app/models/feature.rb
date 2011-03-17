@@ -27,9 +27,13 @@ class Feature < ActiveRecord::Base
       end
     end   
     
-    keywords = clean_id_fields(keywords)
+    if !keywords.nil?
+      keywords = clean_id_fields(keywords)
+      
+      keywords.uniq + synonyms.uniq
+    end
     
-    keywords.uniq + synonyms.uniq
+    keywords
   end
   
   def find_observation_id(uuid)
