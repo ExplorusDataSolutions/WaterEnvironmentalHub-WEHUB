@@ -12,8 +12,8 @@ class CatalogueTranslator
     "#{url}/show/#{id}"
   end
   
-  def download_uri(ids)
-    "#{url}/download/?id=#{ids}"
+  def download_uri(params)
+    "#{url}/download/?id=#{params[:ids]}&format=#{params[:format]}"
   end
   
   def find_by_id(id)

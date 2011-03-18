@@ -10,7 +10,7 @@ class ItemController < ApplicationController
   end
   
   def download
-    redirect_to @catalogue.download_uri(params[:ids])
+    redirect_to @catalogue.download_uri(params)
   end
   
 end
