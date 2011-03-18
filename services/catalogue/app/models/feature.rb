@@ -63,7 +63,6 @@ class Feature
   end
   
   def tablename
-    puts "uuid:#{uuid}"
     if is_base_data
       raise ArgumentError, "Features of type base data don't have tables"
     else
@@ -72,7 +71,6 @@ class Feature
   end
     
   def is_base_data
-    puts "\n\nFeature type:#{feature_type}"
     feature_type.name.downcase.index('base') != nil
   end
   
@@ -94,7 +92,6 @@ class Feature
     else
       raise ArgumentError, "Expected a valid uuid, but got #{uuid}"
     end
-    puts "#{tablename}"
     tablename
   end
 
