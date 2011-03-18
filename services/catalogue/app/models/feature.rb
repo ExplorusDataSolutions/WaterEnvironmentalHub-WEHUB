@@ -1,27 +1,41 @@
-
-class Feature < ActiveRecord::Base
-  attr_accessor :uuid, :feature_type
+class Feature 
+  include ActiveModel::Validations
+  include ActiveModel::Conversion  
+  extend ActiveModel::Naming
   
-  def initialize(uuid, feature_type)
+  attr_accessor :uuid, :feature_type, :name
+  
+  def initialize(uuid, feature_type, name='')
     @feature_type = feature_type
     @uuid = uuid
+    @name = name
   end
   
-  def self.data(uuid)
-    tablename = self.find_observation_id(uuid)
-    if tablename != nil          
-      dataset_name = tablename.gsub("_#{uuid}", '')
-      
-      { :tablename => dataset_name, :data => self.connection.execute("SELECT * FROM #{tablename}") }
+  def persisted?
+    false
+  end
+  
+  class << self
+    def all
+      return []
     end
   end
   
-  def keywords(uuid)
+  def data
+    tablename = self.find_by_uuid(uuid)
+    if tablename != nil          
+      dataset_name = tablename.gsub("_#{uuid}", '')
+      
+      { :tablename => dataset_name, :data => execute("SELECT * FROM #{tablename}") }
+    end
+  end
+  
+  def keywords
     if is_base_data
       observation_data = GeoServerTranslator.new.feature_fields(uuid)
       keywords = extract_keywords(observation_data)
     else
-      observation_data = data_lightweight(uuid)
+      observation_data = data_lightweight
       if observation_data[:data].count > 0
         keywords = extract_keywords(observation_data[:data][0])
       end
@@ -36,37 +50,61 @@ class Feature < ActiveRecord::Base
     keywords
   end
   
-  def find_observation_id(uuid)
+  def name
+    @name
+  end
+  
+  def filename(extension='')
+    filename = "#{name.gsub(' ','_')}_#{uuid.gsub('-','_')}".downcase
+    if !extension.empty?
+      filename = "#{filename}.#{extension}" 
+    end
+    filename
+  end
+  
+  def tablename
+    puts "uuid:#{uuid}"
+    if is_base_data
+      raise ArgumentError, "Features of type base data don't have tables"
+    else
+      resolve_tablename
+    end
+  end
+    
+  def is_base_data
+    puts "\n\nFeature type:#{feature_type}"
+    feature_type.name.downcase.index('base') != nil
+  end
+  
+  def to_s
+    puts "Feature:\n\t#{uuid}\n\t#{name}\n\t#{feature_type.to_s}"
+  end
+
+  private 
+  
+  def resolve_tablename
     tablename = nil
     if uuid.match(/[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12}/) != nil
-      uuid = uuid.gsub(/-/, '_')      
-      tablename = tablename(uuid)
+      uuid_with_underscores = uuid.gsub(/-/, '_')      
+      begin
+        tablename = execute("SELECT tablename FROM pg_tables WHERE tablename LIKE '%#{uuid_with_underscores}%'")[0]['tablename']
+      rescue
+        raise ArgumentError, "Observation data for #{uuid} could not be found"  
+      end
     else
       raise ArgumentError, "Expected a valid uuid, but got #{uuid}"
     end
+    puts "#{tablename}"
     tablename
   end
 
-  
-  private 
-  
-  def data_lightweight(uuid)
-    tablename = find_observation_id(uuid)
+  def data_lightweight
+    tablename = resolve_tablename
     if tablename != nil          
       dataset_name = tablename.gsub("_#{uuid}", '')
       
-      { :tablename => dataset_name, :data => self.connection.execute("SELECT * FROM #{tablename} LIMIT 1") }
+      { :tablename => dataset_name, :data => execute("SELECT * FROM #{tablename} LIMIT 1") }
     end
-  end
-  
-  def tablename(uuid)    
-    begin
-      tablename = self.connection.execute("SELECT tablename FROM pg_tables WHERE tablename LIKE '%#{uuid}%'")[0]['tablename']
-    rescue
-      raise ArgumentError, "Observation data for #{uuid} could not be found"  
-    end
-  
-    tablename
   end
       
   def extract_keywords(observation_data)
@@ -87,11 +125,7 @@ class Feature < ActiveRecord::Base
 
     keywords
   end
-  
-  def is_base_data()
-    feature_type.name.downcase.index('base') != nil
-  end
-    
+      
   def synonyms
     synonyms = []
   end
@@ -105,6 +139,10 @@ class Feature < ActiveRecord::Base
        keywords[index] = keyword.gsub('_',' ')
      end
     keywords
+  end
+  
+  def execute(sql)
+    ActiveRecord::Base.connection.execute(sql)
   end
 
 end

@@ -1,57 +1,55 @@
-class ShapeFactory
-  attr_accessor :working_directory
-  
-  def initialize(working_directory = "tmp/shapes")
-    @working_directory = working_directory
-  end
+require 'shape_builder_postgresql.rb'
+require 'shape_builder_geoserver.rb'
 
-  def find_by_id(id)    
-    shapefiles = filenames(id)
-    if !files_exist(shapefiles)
-      build_files(id)
-    end
-    shapefiles
+class ShapeFactory
+  attr_accessor :shape_directory, :feature
+  
+  def initialize(shape_directory = "tmp/shapes")
+    @shape_directory = shape_directory
+    @builders = {:base => ShapeBuilderGeoServer.new(shape_directory), :other => ShapeBuilderPostgreSQL.new(shape_directory)}
   end
   
-  def data(filename)
-    IO.read(path(filename))
+  def find(feature)
+    @feature = feature
+    
+    shapefiles = filenames
+    
+    if !files_exist(shapefiles)
+      builder.build(feature)
+    end
+    
+    shapefiles
   end
 
   private
-    
-  def path(id)
-    "#{working_directory}/#{id}"
+  
+  def builder
+    if feature.is_base_data
+      @builders[:base]
+    else
+      @builders[:other]
+    end
   end
   
+  def feature
+    @feature
+  end
+      
   def files_exist(filenames)
-    filenames.each do |file|
-      if !File.exist?(path(file))
+    filenames.each do |filename|
+      if !File.exist?("#{shape_directory}/#{filename}")
         return false
       end
     end
   end
-  
-  def build_files(id)    
-    filename = path(id)
-
-    config = Rails.configuration
-    database = config.database_configuration[RAILS_ENV]["database"]
-    username = config.database_configuration[RAILS_ENV]["username"]
-    password = config.database_configuration[RAILS_ENV]["password"]
-    
-    begin
-      # Building shape files using Postgis's pgsql2shp cmd
-      result = %x[pgsql2shp -f #{filename} -u #{username} -P #{password} -r #{database} #{id}]
-    rescue
-      raise ArgumentError, "Shape files for #{uuid} could not be generated"
-    end
-  end
-  
-  def filenames(id)
+      
+  def filenames
     shapefiles = []
-    ['dbf', 'shp', 'shx'].each do |extension|
-      shapefiles.push("#{id}.#{extension}")
+    
+    builder.file_extensions.each do |extension|      
+      shapefiles.push("#{feature.filename}.#{extension}")
     end
+    
     shapefiles
   end
   

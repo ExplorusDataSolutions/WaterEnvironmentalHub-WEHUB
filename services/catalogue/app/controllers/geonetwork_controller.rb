@@ -15,7 +15,7 @@ class GeonetworkController < ApplicationController
       end
     end    
     
-    @keywords = @dataset.feature.keywords(params[:id])
+    @keywords = @dataset.feature.keywords
   end
   
   def info

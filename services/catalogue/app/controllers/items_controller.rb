@@ -21,33 +21,42 @@ class ItemsController < ApplicationController
     
     result = ''
     results = {}
+    
+    shape_factory = ShapeFactory.new
+    
     uuids.each do |uuid|      
       case 
+=begin        
         when format_type == 'json'
           result = Feature.data(uuid)
           results.store("#{result[:tablename]}.json", result[:data].to_json)
         when format_type == 'csv'          
+=end          
         when format_type == 'shape'
-          factory = ShapeFactory.new
-          id = Feature.find_observation_id(uuid)          
-          shape_files = factory.find_by_id(id)
-          shape_files.each do |file|
-            result = factory.data(file)
-            results.store(file, result)
+          begin
+            dataset = Dataset.find_by_uuid(uuid).first
+            shape_files = shape_factory.find(dataset.feature)
+                  
+            shape_files.each do |filename|
+              file_data = IO.read("#{shape_factory.shape_directory}/#{filename}")
+              results.store(filename, file_data)
+            end
+          rescue            
           end
       end
-      
     end
     
     filename = "tmp/zips/#{Time.now.to_s.gsub(/ /,'_').gsub(/:/,'').gsub(/-/,'').gsub(/_/,'').gsub(/\+0000/,'').gsub(/0700/,'')}.zip"
     
-    Zip::ZipFile.open(filename, Zip::ZipFile::CREATE) do |zip|
-      zip.get_output_stream("README") { |f| f.puts "Thanks for visiting WEHub" }
-      results.each do |key, value|
-        zip.get_output_stream("#{key}") { |f| f.puts value}  
-      end      
-    end    
-        
+    if results.count != 0
+      Zip::ZipFile.open(filename, Zip::ZipFile::CREATE) do |zip|
+        zip.get_output_stream("README") { |f| f.puts "Thanks for visiting WEHub" }
+        results.each do |key, value|
+          zip.get_output_stream("#{key}") { |f| f.puts value}  
+        end      
+      end
+    end
+    
     send_file filename, :type => "application/zip"
   end
 
