@@ -5,10 +5,15 @@ class GeoServerTranslator
   attr_accessor :server_address, :timeout
   
   def initialize(server_address = '174.129.10.37:8080', timeout=300)
-    @shape_directory = shape_directory
-    @zip_directory = zip_directory
     @server_address = server_address
     @timeout = timeout
+  end
+
+  def data(uuid)
+    data = []
+    data = JSON.parse(http_get("GetFeature&typeName=#{uuid}&maxFeatures=10000&outputFormat=json"))
+    
+    data
   end
     
   def feature_fields(uuid)

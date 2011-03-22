@@ -23,26 +23,25 @@ class ItemsController < ApplicationController
     results = {}
     
     shape_factory = ShapeFactory.new
+    feature_format_factory = FeatureFormatFactory.new
     
     uuids.each do |uuid|      
-      case 
-=begin        
-        when format_type == 'json'
-          result = Feature.data(uuid)
-          results.store("#{result[:tablename]}.json", result[:data].to_json)
-        when format_type == 'csv'          
-=end          
-        when format_type == 'shape'
-          begin
-            dataset = Dataset.find_by_uuid(uuid).first
-            shape_files = shape_factory.find(dataset.feature)
-                  
+      dataset = Dataset.find_by_uuid(uuid).first
+      if !dataset.nil?
+        feature = dataset.feature
+        begin
+          if format_type == 'shape'              
+            shape_files = shape_factory.find(feature)                  
             shape_files.each do |filename|
               file_data = IO.read("#{shape_factory.shape_directory}/#{filename}")
               results.store(filename, file_data)
             end
-          rescue            
+          else
+            formatted_file = feature_format_factory.find(format_type, feature)
+            results.store(formatted_file[:filename], formatted_file[:data])
           end
+        rescue
+        end        
       end
     end
     
@@ -55,9 +54,12 @@ class ItemsController < ApplicationController
           zip.get_output_stream("#{key}") { |f| f.puts value}  
         end      
       end
+      
+      send_file filename, :type => "application/zip"
+    else
+      raise ArgumentError, "No results could be found for #{params}"
     end
     
-    send_file filename, :type => "application/zip"
   end
 
 end

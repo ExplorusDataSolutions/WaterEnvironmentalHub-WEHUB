@@ -22,11 +22,10 @@ class Feature
   end
   
   def data
-    tablename = self.find_by_uuid(uuid)
-    if tablename != nil          
-      dataset_name = tablename.gsub("_#{uuid}", '')
-      
-      { :tablename => dataset_name, :data => execute("SELECT * FROM #{tablename}") }
+    if is_base_data
+      GeoServerTranslator.new.data(uuid)
+    else      
+      execute("SELECT * FROM #{tablename}")
     end
   end
   
@@ -54,12 +53,8 @@ class Feature
     @name
   end
   
-  def filename(extension='')
-    filename = "#{name.gsub(' ','_')}_#{uuid.gsub('-','_')}".downcase
-    if !extension.empty?
-      filename = "#{filename}.#{extension}" 
-    end
-    filename
+  def filename
+    "#{name.gsub(' ','_')}_#{uuid.gsub('-','_')}".downcase
   end
   
   def tablename
