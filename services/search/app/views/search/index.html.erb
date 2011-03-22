@@ -1,14 +1,15 @@
+
 <script>
   $(document).ready(function() {
        
     $('button').button();
     
     function download() {
-        var format = $('[name=download-format]:checked').val();
-        var ids = [];
-        console.debug(format);
-        $('[type=checkbox][name=download]:checked').each(function() { ids.push($(this).val()); })
-        window.location = '/item/download/?ids=' + ids + '&format=' + format;
+      var format = $('[name=download-format]:checked').val();
+      var ids = [];
+      console.debug(format);
+      $('[type=checkbox][name=download]:checked').each(function() { ids.push($(this).val()); })
+      window.location = '/item/download/?ids=' + ids + '&format=' + format;
     }
         
     function bindDownloadButtonset() {
@@ -101,6 +102,7 @@
     padding: 10px;
     left: 403px;
     margin-top: 2px;
+    z-index: 100;
   }
   .ui-dialog .format-selector {
     position: absolute;
@@ -152,7 +154,7 @@
           <button name="download">Download</button>
           <button name="select-download-format">Select Format</button>
         </span>      
-        <div style="display: none;" class="format-selector ui-widget-content ui-corner-all ui-state-active">
+        <span style="display: none;" class="format-selector ui-widget-content ui-corner-all ui-state-active">
           Select format
           <%
             formats = ['JSON', 'CSV', 'Shape']
@@ -162,7 +164,7 @@
           <%
             end
           %>
-        </div>
+        </span>
       </span>
       <button name="graph">Graph</button>
       <button name="map-view">Map View</button>
