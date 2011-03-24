@@ -38,9 +38,9 @@ class SpreadsheetTranslator
     filename_temp = "#{path}/#{@spreadsheets_directory}/#{@filename.split('.')[0]}.processed.csv"
     # Clean up the first line, it contains the field names
     %x[tail -n +2 #{filename_csv} > #{filename_temp}]
-    # Clean up the csv file, remove double newlines
-    %x[sed ':a;N;$!ba;s/\n\n/\n/g' #{filename_temp} > #{filename_csv}]
-    # Clean up our temp file
+    # Clean up the csv file, remove double newlines    
+    %x[sed ':a;N;$!ba;s/\\n\\n/\\n/g' #{filename_temp} > #{filename_csv}]
+    # Clean up the temp file
     %x[rm #{filename_temp}]
   end
   
@@ -56,6 +56,5 @@ end
 
 =begin
 test = SpreadsheetTranslator.new('PAMCombined.xls')
-puts test.fields
-puts test.filename
+puts test.delete_fieldnames_row
 =end
