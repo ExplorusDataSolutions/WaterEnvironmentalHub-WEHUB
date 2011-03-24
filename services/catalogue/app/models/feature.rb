@@ -29,6 +29,19 @@ class Feature
     end
   end
   
+  def data(filename)
+    sheet_translator = SpreadsheetTranslator.new(filename)
+    
+    field_names_with_datatypes = ''  
+    sheet_translator.fieldnames.each do |field|
+      field_names_with_datatypes << "\"#{field}\" character varying(255),"
+    end
+    field_names_with_datatypes.chop!
+    
+    execute("CREATE TABLE ug_#{self.filename} (#{field_names_with_datatypes})")
+    execute("COPY ug_#{self.filename} FROM '#{sheet_translator.filename}' USING DELIMITERS ','");
+  end
+  
   def keywords
     if is_base_data
       observation_data = GeoServerTranslator.new.feature_fields(uuid)
