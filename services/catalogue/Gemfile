@@ -10,6 +10,7 @@ gem 'uuidtools'
 gem 'rubyzip'
 gem 'builder'
 gem 'roo'
+#roo depends on nokogiri, rubyzip, and spreadsheet
 gem 'nokogiri'
 gem 'spreadsheet'
 
