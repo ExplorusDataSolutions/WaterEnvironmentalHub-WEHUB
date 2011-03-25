@@ -1,0 +1,30 @@
+<%
+=begin
+%>
+<%= form_tag({:action => :create}, :multipart => true) do %>
+  <%= file_field_tag 'feature' %>
+  
+  <div><%= submit_tag 'Upload'  %></div>
+<% end %>
+<%
+=end
+%>
+<form accept-charset="UTF-8" action="http://localhost:3000/items/create" enctype="multipart/form-data" method="post">
+  <% feature_types = ['Static Base Data', 'Dynamic Base Data', 'Static Observation Data', 'Dynamic Observation Data'] %>
+  <% feature_types.each_with_index do |item, index| %>
+    <% index = index + 1 %>
+    <%= radio_button_tag "feature_type[#{index}]", index -%><%= "<label for=\"feature_type_#{index}_#{index}\">#{item}</label>".html_safe %><br />
+  <% end %>
+  
+  <input id="description" name="description" type="text" value="test description" /><br />
+  <input id="name" name="name" type="text" value="test name" /><br />
+  <input id="spreadsheet" name="spreadsheet" type="file" /><br />
+
+  <% datasets = ['PAM Dataset Group', 'Canvec Base Data', 'National Road Network', 'Geological Survey of Canada', 'Geological Survey of Canada', 'Canvec Hydro Data']%>  
+  <% datasets.each_with_index do |item, index| %>
+    <% index = index + 1 %>
+    <%= check_box_tag "dataset_groups[#{index}]", index -%><%= "<label for=\"dataset_groups_#{index}\">#{item}</label>".html_safe %><br />
+  <% end %>
+  
+  <input name="upload" type="submit" value="Upload" />
+</form>
