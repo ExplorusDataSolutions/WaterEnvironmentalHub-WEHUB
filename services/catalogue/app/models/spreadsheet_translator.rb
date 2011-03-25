@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'roo'
 
 class SpreadsheetTranslator
@@ -53,8 +52,3 @@ class SpreadsheetTranslator
   end
 
 end
-
-=begin
-test = SpreadsheetTranslator.new('PAMCombined.xls')
-puts test.delete_fieldnames_row
-=end

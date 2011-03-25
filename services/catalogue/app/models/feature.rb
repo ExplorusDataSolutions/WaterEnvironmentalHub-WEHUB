@@ -29,7 +29,7 @@ class Feature
     end
   end
   
-  def data(filename)
+  def create(filename)
     sheet_translator = SpreadsheetTranslator.new(filename)
     
     field_names_with_datatypes = ''  

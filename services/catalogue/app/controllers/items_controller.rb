@@ -1,6 +1,8 @@
 require 'zip/zip'
 
 class ItemsController < ApplicationController
+
+  protect_from_forgery :except => :create
   
   def show
     render :json => Dataset.find_by_uuid(params[:id]).first, :callback => params[:callback]
@@ -61,5 +63,53 @@ class ItemsController < ApplicationController
     end
     
   end
+  
+  def create
+    spreadsheet = params[:spreadsheet]
+    if spreadsheet.nil?
+      raise ArgumentError, "File required"
+    end
 
+    if spreadsheet.original_filename.match(/(\.xls|\.xlsx|\.ods)$/).nil?
+      raise ArgumentError, "Unsupported file type"
+    end        
+    filename = Rails.root.join('public', 'uploads', spreadsheet.original_filename)    
+    File.open(filename, 'wb') do |file|
+      file.write(spreadsheet.read)
+    end
+  
+    dataset = Dataset.create(:name => params[:name], :description => params[:description], :feature_type => feature_type, :dataset_groups => dataset_groups)
+    
+    if dataset.valid?
+      begin
+        dataset.feature.create(spreadsheet.original_filename)
+      rescue
+        Dataset.destroy(dataset.id)
+        raise ArgumentError, "Feature could not be created"
+      end
+    else
+      raise ArgumentError, dataset.errors
+    end
+    
+    render :json => dataset
+  end
+
+  private
+  
+  def feature_type
+    feature_type_id = ''
+    params[:feature_type].each do |key, value|
+      feature_type_id << key
+    end
+    FeatureType.find_by_id(feature_type_id)    
+  end
+  
+  def dataset_groups
+    dataset_groups = []
+    params[:dataset_groups].each do |key, value|
+      dataset_groups.push(DatasetGroup.find_by_id(Integer(key)))
+    end
+    dataset_groups
+  end
+  
 end

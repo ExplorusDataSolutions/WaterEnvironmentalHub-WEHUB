@@ -13,6 +13,7 @@ gem 'roo'
 #roo depends on nokogiri, rubyzip, and spreadsheet
 gem 'nokogiri'
 gem 'spreadsheet'
+gem 'uuidtools'
 
 
 # Use unicorn as the web server

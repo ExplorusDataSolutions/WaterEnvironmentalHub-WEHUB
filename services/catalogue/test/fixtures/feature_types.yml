@@ -2,20 +2,20 @@
 feature_type_00001: 
   description: Static Base Data
   id: 1
-  name: Base_Data_Static
+  name: base_data_static
 
 feature_type_00002: 
   description: Dynamic Base Data
   id: 2
-  name: Base_Data_Dynamic
+  name: base_data_dynamic
 
 feature_type_00003: 
   description: Static Observation Data
   id: 3
-  name: Observation_Data_Static
+  name: observation_data_static
 
 feature_type_00004: 
   description: Dynamic Observation Data
   id: 4
-  name: Observation_Data_Dynamic
+  name: observation_data_dynamic
 
