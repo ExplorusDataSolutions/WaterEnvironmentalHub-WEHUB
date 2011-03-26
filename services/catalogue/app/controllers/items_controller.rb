@@ -65,51 +65,62 @@ class ItemsController < ApplicationController
   end
   
   def create
+    errors = {}
+      
     spreadsheet = params[:spreadsheet]
     if spreadsheet.nil?
-      raise ArgumentError, "File required"
+      errors.store('spreadsheet','File required')
+    elsif spreadsheet.original_filename.match(/(\.xls|\.xlsx|\.ods)$/).nil?
+      errors.store('spreadsheet', 'Invalid file type')
     end
-
-    if spreadsheet.original_filename.match(/(\.xls|\.xlsx|\.ods)$/).nil?
-      raise ArgumentError, "Unsupported file type"
-    end        
-    filename = Rails.root.join('public', 'uploads', spreadsheet.original_filename)    
-    File.open(filename, 'wb') do |file|
-      file.write(spreadsheet.read)
-    end
-  
-    dataset = Dataset.create(:name => params[:name], :description => params[:description], :feature_type => feature_type, :dataset_groups => dataset_groups)
     
-    if dataset.valid?
-      begin
-        dataset.feature.create(spreadsheet.original_filename)
-      rescue
-        Dataset.destroy(dataset.id)
-        raise ArgumentError, "Feature could not be created"
+    if errors.empty?
+      filename = Rails.root.join('public', 'uploads', spreadsheet.original_filename)    
+      File.open(filename, 'wb') do |file|
+        file.write(spreadsheet.read)
+      end
+
+      dataset = Dataset.create(:name => params[:name], :description => params[:description], :feature_type => feature_type, :dataset_groups => dataset_groups)
+      
+      if dataset.valid?
+        begin
+          dataset.feature.create(spreadsheet.original_filename)
+        rescue
+          Dataset.destroy(dataset.id)
+          errors.store('spreadsheet','Features could not be parsed from file')
+        end
+      else
+        dataset.errors.each do |key, value|
+          errors.store('dataset', "#{key} #{value}")
+        end
+      end
+    end
+    
+    response = ''
+    if !errors.empty?
+      errors.each do |key, value|
+        response = response + "#{value}"
       end
     else
-      raise ArgumentError, dataset.errors
+      response = 'Success!'
     end
     
-    render :json => dataset
+    render :text => response
   end
 
   private
   
   def feature_type
-    feature_type_id = ''
-    params[:feature_type].each do |key, value|
-      feature_type_id << key
-    end
-    FeatureType.find_by_id(feature_type_id)    
+    FeatureType.find_by_id(params[:feature_type])
   end
   
   def dataset_groups
+    
     dataset_groups = []
     params[:dataset_groups].each do |key, value|
       dataset_groups.push(DatasetGroup.find_by_id(Integer(key)))
     end
-    dataset_groups
+    dataset_groups    
   end
   
 end
