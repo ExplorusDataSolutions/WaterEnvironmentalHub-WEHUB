@@ -38,7 +38,7 @@ $(document).ready(function() {
     <tr>
       <td colspan="2"><b>Feature type</b>
         <table>
-      <% feature_types = ['Static Base Data', 'Dynamic Base Data', 'Static Observation Data', 'Dynamic Observation Data'] %>
+      <% feature_types = ['Static Observation Data', 'Dynamic Observation Data'] %>
       <% feature_types.each_with_index do |item, index| %>
         <% index = index + 1 %>
         <%= "<tr><td><label for=\"feature_type_#{index}\">#{item}</label></td><td>".html_safe -%>
