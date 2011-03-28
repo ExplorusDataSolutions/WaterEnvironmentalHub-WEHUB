@@ -28,4 +28,8 @@ class SearchController < ApplicationController
     end
   end
     
+  def refresh
+    search_instance.refresh
+    render :text => 'Success!'
+  end
 end

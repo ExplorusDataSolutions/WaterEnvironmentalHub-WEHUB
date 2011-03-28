@@ -26,4 +26,8 @@ class Search
   def info(id)
     geonetwork.search_result(id)
   end
+  
+  def refresh
+    @geonetwork.refresh
+  end
 end

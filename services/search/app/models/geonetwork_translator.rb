@@ -132,4 +132,8 @@ class GeoNetworkTranslator
     @cookies = response['set-cookie']
   end
   
+  def refresh
+    @@cached_metadata = @@cached_search_query = {}
+  end
+  
 end
