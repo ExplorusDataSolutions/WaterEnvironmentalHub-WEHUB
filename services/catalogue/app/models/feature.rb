@@ -34,12 +34,13 @@ class Feature
     
     field_names_with_datatypes = ''  
     sheet_translator.fieldnames.each do |field|
-      field_names_with_datatypes << "\"#{field}\" character varying(255),"
+      sanitized_field = field.gsub('"','')
+      field_names_with_datatypes << "\"#{sanitized_field}\" character varying(255),"
     end
     field_names_with_datatypes.chop!
     
     execute("CREATE TABLE ug_#{self.filename} (#{field_names_with_datatypes})")
-    execute("COPY ug_#{self.filename} FROM '#{sheet_translator.filename}' USING DELIMITERS ','");
+    execute(["COPY ug_#{self.filename} FROM ? USING DELIMITERS ','", sheet_translator.filename]);
   end
   
   def keywords
@@ -67,7 +68,7 @@ class Feature
   end
   
   def filename
-    "#{name.gsub(' ','_')}_#{uuid.gsub('-','_')}".downcase
+    "#{name.gsub(' ','_').gsub(/\W/,'')}_#{uuid.gsub('-','_')}".downcase
   end
   
   def tablename
@@ -146,7 +147,12 @@ class Feature
     keywords
   end
   
-  def execute(sql)
+  def execute(sql_params)
+    if sql_params.kind_of?(Array)
+      sql = ActiveRecord::Base.send(:sanitize_sql_array, sql_params)
+    else
+      sql = sql_params
+    end
     ActiveRecord::Base.connection.execute(sql)
   end
 
