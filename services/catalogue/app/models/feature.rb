@@ -68,7 +68,7 @@ class Feature
   end
   
   def filename
-    "#{name.gsub(' ','_').gsub(/\W/,'')}_#{uuid.gsub('-','_')}".downcase
+    "#{(name.gsub(' ','_').gsub(/\W/,'')).slice(0,27)}_#{uuid.gsub('-','_')}".downcase
   end
   
   def tablename
