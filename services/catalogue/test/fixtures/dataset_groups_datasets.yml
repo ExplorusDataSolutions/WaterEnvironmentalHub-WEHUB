@@ -88,19 +88,19 @@ join_00021:
   dataset_id: "23"
 
 join_00022: 
-  dataset_group_id: "5"
+  dataset_group_id: "4"
   dataset_id: "24"
 
 join_00023: 
-  dataset_group_id: "6"
+  dataset_group_id: "5"
   dataset_id: "25"
 
 join_00024: 
-  dataset_group_id: "6"
+  dataset_group_id: "5"
   dataset_id: "26"
 
 join_00025: 
-  dataset_group_id: "6"
+  dataset_group_id: "5"
   dataset_id: "27"
 
 join_00026: 

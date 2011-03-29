@@ -17,8 +17,4 @@ dataset_group_00004:
 
 dataset_group_00005: 
   id: 5
-  name: Geological Survey of Canada
-
-dataset_group_00006: 
-  id: 6
   name: Canvec Hydro Data
