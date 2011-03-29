@@ -1,0 +1,1 @@
+powershell.exe -noexit C:\projects\WEHub\consoles\geocens\do_import.ps1
