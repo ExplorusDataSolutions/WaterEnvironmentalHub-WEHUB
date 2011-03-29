@@ -49,7 +49,10 @@ def get_geocens_data(url_param, service_id, layer_id)
   check_response(response)
   
   if !response.body.empty?
-    puts "Success! Service id: #{service_id}, Layer id: #{layer_id}, Response: #{response.body}"
+    data = (JSON.parse(response.body))['data']
+    if !data.nil? && !data.empty?
+      puts "Success! Service id: #{service_id}, Layer id: #{layer_id}"
+    end
   end
 end
 
