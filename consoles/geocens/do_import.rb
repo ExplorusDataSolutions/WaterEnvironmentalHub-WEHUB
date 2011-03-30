@@ -20,14 +20,14 @@ def check_response(response)
 end
 
 
-def get_geocens_data(url_param, service_id, layer_id)
+def get_geocens_data(url_param, service_id, layer)
   geocens_request = { 
     :request => "getdata", 
     :serviceid => service_id, 
-    :layerid => layer_id, 
+    :layerid => layer['id'], 
     :time => { 
-      :begintime => "2000-12-08T15:00:00.0 -0700",
-      :endtime => "2010-12-08T15:00:00.0 -0700" 
+      :begintime => "#{layer['time']['begintime']}",
+      :endtime => "#{layer['time']['endtime']}" 
     },
     :bbox => {
       :upperright => {
@@ -40,25 +40,43 @@ def get_geocens_data(url_param, service_id, layer_id)
       }
     }
   }
-  url = URI.parse(url_param)
-  request = Net::HTTP::Post.new(url.path)
-  request.body = geocens_request.to_json
-  request.content_type = "application/json"
-  response = Net::HTTP.start(url.host, url.port) {|http| http.request(request) }
   
-  check_response(response)
-  
-  if !response.body.empty?
-    data = (JSON.parse(response.body))['data']
-    if !data.nil? && !data.empty?
-      puts "Success! Service id: #{service_id}, Layer id: #{layer_id}"
+  begin
+    timeout = 500
+    url = URI.parse(url_param)
+    http = Net::HTTP.new(url.host, url.port)
+    http.read_timeout = timeout
+    http.open_timeout = timeout
+    response = http.start {|http| http.post(url.to_s, geocens_request.to_json, { 'Content-Type' => 'application/json'}) }
+    
+    check_response(response)
+    
+    if !response.body.empty?
+      data = (JSON.parse(response.body))['data']
+      if !data.nil? && !data.empty?
+        puts "Layer #{layer['id']} on service #{service_id} returns data"
+      end
     end
+  rescue Exception => e
+    puts "Failure on layer #{layer['id']} on service #{service_id}\n\t Exception: #{e}"
   end
+
 end
 
-service_list = (JSON.parse(http_get('http://wehub.geocens.ca:8182/wehub/services')))['servicelist']
+geocens_base = 'http://wehub.geocens.ca:8182/wehub'
+
+service_list = (JSON.parse(http_get("#{geocens_base}/services")))['servicelist']
+puts "Discovered #{service_list.count} services on #{Time.new}"
 service_list.each do |service|
-  1..10.times do |layer|
-    get_geocens_data("http://wehub.geocens.ca:8182/wehub", service['id'], layer)
+  service_id = service['id']
+  layer_list = (JSON.parse(http_get("#{geocens_base}/service/#{service_id}")))['layerlist']
+  if layer_list.is_a? Array
+    puts "Discovered #{layer_list.count} layers on service #{service_id}"
+    layer_list.each do |layer|    
+      get_geocens_data("#{geocens_base}", service_id, layer)
+    end 
+  else
+    puts "Discovered 1 layer on service #{service_id}"
+    get_geocens_data("#{geocens_base}", service_id, layer_list)
   end
 end
