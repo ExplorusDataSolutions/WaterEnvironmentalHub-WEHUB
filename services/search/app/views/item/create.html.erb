@@ -7,47 +7,90 @@
     color: #F00;
   }
   #name, #description, #spreadsheet {
-    width: 221px;
+    width: 521px;
   }
   form td {
-    line-height: 15pt;
+    vertical-align: text-top;
+    padding-bottom: 5px;
   }
+  
+  table .feature_types {
+    margin-left: 5px;
+  }
+  table .feature_types td {
+    height: 80px;
+  }
+  
+  table .fragment {
+    float: right;
+    margin-left: 15px;
+  }
+  
+  table.fragment td {
+    height: auto;
+  }
+  
   
 </style>
 
 <script>
 $(document).ready(function() {
+  function fragmentId(id) {
+    return $(id + '_fragment');
+  }
+  function fragment(id) {
+    var fragment = fragmentId(id);
+    var html = fragment.wrapAll('<div />').parent().html();
+    fragment.remove();
+    return {id: id, html: html};
+  }
   
+  var fragments = []
+  fragments.push(fragment('#feature_type_3'))
+  fragments.push(fragment('#feature_type_4'))
+  
+  $('[name="feature_type"]').change(function(event) {
+    var targetId = '#' + event.target.id;
+    $.each(fragments, function(idex, fragment){
+      if (fragment.id === targetId) {
+        $(fragment.id).after(fragment.html);
+        $(fragmentId(fragment.id)).show();
+      } else {
+        $(fragmentId(fragment.id)).remove();
+      }
+    });
+  })
   
 });
 </script>
 
-<div id="errors"><span></span.</div>
 <form accept-charset="UTF-8" action="http://localhost:3000/items/create" enctype="multipart/form-data" method="post">
   
   <table>
     <tr>
-      <td><label for="name">Dataset name</label></td><td><input id="name" name="name" type="text" /></td>
+      <td><label for="name">Title</label></td><td><input id="name" name="name" type="text" /></td>
     </tr>
     <tr>
-      <td><label for="description">Dataset description</label></td><td><input id="description" name="description" type="text" /></td>
+      <td><label for="description">Description</label></td><td><textarea id="description" name="description"></textarea></td>
     </tr>
     <tr>
-      <td><label for="file">Spreadsheet (.xls, .xlsx, or .ods format)</label></td><td><input id="spreadsheet" name="spreadsheet" type="file" /></td>
+      <td style="width: 300px;"><label for="file">Upload file (.cvs, .xls, .xlsx, or .ods format)</label></td><td><input id="spreadsheet" name="spreadsheet" type="file" /></td>
     </tr>
     <tr>
       <td colspan="2"><b>Feature type</b>
-        <table>
-      <% feature_types = ['Static Observation Data', 'Dynamic Observation Data'] %>
-      <% feature_types.each_with_index do |item, index| %>
-        <% index = index + 1 %>
-        <%= "<tr><td><label for=\"feature_type_#{index}\">#{item}</label></td><td>".html_safe -%>
-          <%= radio_button_tag 'feature_type', index, false -%>
+        <table class="feature_types">
+      <% feature_types = [{:description => 'Static Observation Data', :id => 3}, {:description => 'Dynamic Observation Data', :id => 4}] %>
+      <% feature_types.each_with_index do |item| %>
+        <%= "<tr><td><label for=\"feature_type_#{item[:id]}\">#{item[:description]}</label></td><td>".html_safe -%>
+          <%= radio_button_tag 'feature_type', item[:id], false -%>
         <%= "</td></tr>".html_safe %>
       <% end %>
         </table>
       </td>
     </tr>
+<%
+# This commented out section will be moved to another page
+=begin %>
     <tr>
       <td colspan="2"><b>Dataset groups</b>
         <table>
@@ -61,9 +104,39 @@ $(document).ready(function() {
         </table>
       </td>
     </tr>
+<%
+=end %>    
     <tr>
       <td><input name="upload" type="submit" value="Upload" /></td>
     </tr>
   </table>
   
 </form>
+
+<table id="feature_type_3_fragment" class="fragment" style="display: none;">
+  <tr>
+    <td>Date / time</td>
+    <td><input id="bound_end" name="bound_end" type="text" /></td>
+  <tr>
+</table>
+
+<table id="feature_type_4_fragment" class="fragment" style="display: none;">
+  <tr>
+    <td></td>
+    <td style="text-align: center">
+      Start
+    </td>
+    <td style="text-align: center">
+      End
+    </td>
+  </tr>
+  <tr>
+    <td>Date / time</td>
+    <td>
+      <input id="bound_start" name="bound_start" type="text" />
+    </td>
+    <td>
+      <input id="bound_end" name="bound_end" type="text" />
+    </td>
+  </tr>
+</table>
