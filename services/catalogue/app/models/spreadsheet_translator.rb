@@ -1,20 +1,27 @@
-require 'roo'
-
 class SpreadsheetTranslator
   
   def initialize(filename, uploads_directory='public/uploads', spreadsheets_directory='tmp/spreadsheets')
     @filename = filename
     @spreadsheets_directory = spreadsheets_directory
     
-    @spreadsheet = Roo::Spreadsheet.open("#{path}/#{uploads_directory}/#{@filename}")    
-    @spreadsheet.default_sheet = @spreadsheet.sheets.first
+    filename_upload = "#{path}/#{uploads_directory}/#{@filename}"
     
-    save_as_csv
+    if !is_csv
+      @spreadsheet = Roo::Spreadsheet.open(filename_upload)
+      @spreadsheet.default_sheet = @spreadsheet.sheets.first
+      
+      save_as_csv
+    else
+      %x[cp #{filename_upload} #{filename_csv}]
+    end
+    
+    @field_names = load_fieldnames
+    
     delete_fieldnames_row
   end
   
   def fieldnames
-    @spreadsheet.row(@spreadsheet.first_row)
+    @field_names
   end
   
   def filename
@@ -22,6 +29,22 @@ class SpreadsheetTranslator
   end
   
   private 
+
+  def is_csv
+    !@filename.match(/\.csv$/).nil?
+  end
+  
+  def load_fieldnames
+    if !is_csv
+      @spreadsheet.row(@spreadsheet.first_row)
+    else    
+      File.open(filename_csv, "r") do |file|
+        while (row = file.gets)
+            return row.gsub('\n','').split(',')
+        end
+      end
+    end
+  end
   
   def filename_csv
     "#{path}/#{@spreadsheets_directory}/#{@filename.split('.')[0]}.csv"
@@ -31,7 +54,7 @@ class SpreadsheetTranslator
     @spreadsheet.to_csv(filename_csv)
   end
   
-  # The Roo Gem (Spreadsheet manipulation) doesn't support editing spreadsheets
+  # The Roo Gem (providing spreadsheet conversion) is read only, doesn't support editing spreadsheets 
   #  since I can't edit the spreadsheet, I'm deleting the fieldnames through the commandline  
   def delete_fieldnames_row
     filename_temp = "#{path}/#{@spreadsheets_directory}/#{@filename.split('.')[0]}.processed.csv"
