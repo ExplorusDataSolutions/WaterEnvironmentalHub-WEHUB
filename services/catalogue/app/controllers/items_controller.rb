@@ -80,13 +80,14 @@ class ItemsController < ApplicationController
         file.write(spreadsheet.read)
       end
 
-      dataset = Dataset.create(:name => params[:name], :description => params[:description], :feature_type => feature_type, :dataset_groups => dataset_groups)
+      dataset = Dataset.create(:name => params[:name], :description => params[:description], :feature_type => feature_type)
       
       if dataset.valid?
         begin
           dataset.feature.create(spreadsheet.original_filename)
         rescue
           Dataset.destroy(dataset.id)
+          debugger
           errors.store('spreadsheet','Features could not be parsed from file')
         end
       else
@@ -113,14 +114,5 @@ class ItemsController < ApplicationController
   def feature_type
     FeatureType.find_by_id(params[:feature_type])
   end
-  
-  def dataset_groups
     
-    dataset_groups = []
-    params[:dataset_groups].each do |key, value|
-      dataset_groups.push(DatasetGroup.find_by_id(Integer(key)))
-    end
-    dataset_groups    
-  end
-  
 end
