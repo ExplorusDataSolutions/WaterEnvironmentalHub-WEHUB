@@ -10,20 +10,20 @@
     width: 521px;
   }
   form td {
-    vertical-align: text-top;
     padding-bottom: 5px;
   }
   
-  table .feature_types {
+  table .feature_types {    
     margin-left: 5px;
   }
   table .feature_types td {
+    vertical-align: text-top;
     height: 80px;
   }
   
   table .fragment {
-    float: right;
-    margin-left: 15px;
+    margin-left: 20px;
+    display: inline;
   }
   
   table.fragment td {
@@ -40,18 +40,12 @@ $(document).ready(function() {
   }
   function fragment(id) {
     var fragment = fragmentId(id);
-    var html = fragment.wrapAll('<div />').parent().html();
-    fragment.remove();
-    return {id: id, html: html};
+    return {id: id};
   }
   
   var fragments = []
   fragments.push(fragment('#feature_type_3'))
   fragments.push(fragment('#feature_type_4'))
-  
-  $.each(fragments, function(idex, fragment){  
-    $(fragment.id).after(fragment.html);
-  });
   
   $('[name="feature_type"]').change(function(event) {
     var targetId = '#' + event.target.id;
@@ -66,7 +60,9 @@ $(document).ready(function() {
         inputs.attr('disabled', true);
       }
     });
-  })
+  });
+  
+  $('#feature_type_3').attr('checked', true).trigger('change');
   
 });
 </script>
@@ -86,10 +82,15 @@ $(document).ready(function() {
     <tr>
       <td colspan="2"><b>Feature type</b>
         <table class="feature_types">
-      <% feature_types = [{:description => 'Static Observation Data', :id => 3}, {:description => 'Dynamic Observation Data', :id => 4}] %>
+      <% feature_types = [{:description => 'Temporal (dynamic)', :id => 3}, {:description => 'Non-temporal (static)', :id => 4}] %>
       <% feature_types.each_with_index do |item| %>
         <%= "<tr><td><label for=\"feature_type_#{item[:id]}\">#{item[:description]}</label></td><td>".html_safe -%>
           <%= radio_button_tag 'feature_type', item[:id], false -%>
+          <% if item[:id] == 3 %>
+            <%= render 'static_observation' %>
+          <% else %>
+            <%= render 'dynamic_observation' %>
+          <% end %>
         <%= "</td></tr>".html_safe %>
       <% end %>
         </table>
@@ -119,31 +120,3 @@ $(document).ready(function() {
   </table>
   
 </form>
-
-<table id="feature_type_3_fragment" class="fragment">
-  <tr>
-    <td>Date / time</td>
-    <td><input id="bound" name="bound" type="text" /></td>
-  <tr>
-</table>
-
-<table id="feature_type_4_fragment" class="fragment">
-  <tr>
-    <td></td>
-    <td style="text-align: center">
-      Start
-    </td>
-    <td style="text-align: center">
-      End
-    </td>
-  </tr>
-  <tr>
-    <td>Date / time</td>
-    <td>
-      <input id="bound_start" name="bound_start" type="text" />
-    </td>
-    <td>
-      <input id="bound_end" name="bound_end" type="text" />
-    </td>
-  </tr>
-</table>
