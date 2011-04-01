@@ -49,14 +49,21 @@ $(document).ready(function() {
   fragments.push(fragment('#feature_type_3'))
   fragments.push(fragment('#feature_type_4'))
   
+  $.each(fragments, function(idex, fragment){  
+    $(fragment.id).after(fragment.html);
+  });
+  
   $('[name="feature_type"]').change(function(event) {
     var targetId = '#' + event.target.id;
     $.each(fragments, function(idex, fragment){
-      if (fragment.id === targetId) {
-        $(fragment.id).after(fragment.html);
-        $(fragmentId(fragment.id)).show();
+      var parent = fragmentId(fragment.id);
+      var inputs = parent.find('input');
+      if (fragment.id === targetId) {      	        
+        parent.removeClass('disabled');
+        inputs.removeAttr('disabled');
       } else {
-        $(fragmentId(fragment.id)).remove();
+        parent.addClass('disabled');
+        inputs.attr('disabled', true);
       }
     });
   })
@@ -113,14 +120,14 @@ $(document).ready(function() {
   
 </form>
 
-<table id="feature_type_3_fragment" class="fragment" style="display: none;">
+<table id="feature_type_3_fragment" class="fragment">
   <tr>
     <td>Date / time</td>
-    <td><input id="bound_end" name="bound_end" type="text" /></td>
+    <td><input id="bound" name="bound" type="text" /></td>
   <tr>
 </table>
 
-<table id="feature_type_4_fragment" class="fragment" style="display: none;">
+<table id="feature_type_4_fragment" class="fragment">
   <tr>
     <td></td>
     <td style="text-align: center">
