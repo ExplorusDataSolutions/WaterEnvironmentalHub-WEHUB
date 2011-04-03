@@ -30,17 +30,21 @@ class Feature
   end
   
   def create(filename)
-    sheet_translator = SpreadsheetTranslator.new(filename)
-    
-    field_names_with_datatypes = ''  
-    sheet_translator.fieldnames.each do |field|
-      sanitized_field = field.gsub('"','')
-      field_names_with_datatypes << "\"#{sanitized_field}\" character varying(255),"
+    tablename = "ug_#{self.filename}"
+    if !filename.match(/(\.xls|\.xlsx|\.ods.|\.csv)$/).nil?
+      sheet_translator = SpreadsheetTranslator.new(filename)
+            
+      execute("CREATE TABLE #{tablename} (#{sheet_translator.fields_sql})")
+      execute(["COPY #{tablename} FROM ? USING DELIMITERS ','", sheet_translator.filename]);
+      
+    elsif !filename.match(/(\.zip)$/).nil?
+      shape_translator = ShapeTranslator.new(filename, tablename)
+          
+      execute(shape_translator.shape_sql)
+      debugger
+    else
+      
     end
-    field_names_with_datatypes.chop!
-    
-    execute("CREATE TABLE ug_#{self.filename} (#{field_names_with_datatypes})")
-    execute(["COPY ug_#{self.filename} FROM ? USING DELIMITERS ','", sheet_translator.filename]);
   end
   
   def keywords

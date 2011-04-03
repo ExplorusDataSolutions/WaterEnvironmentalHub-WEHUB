@@ -13,7 +13,7 @@ class ShapeBuilderGeoServer
     begin
       get_shape(feature)
     rescue
-      raise ArgumentError, "Shape files for #{feature.name} could not be generated be retrieved by GeoServer"
+      raise ArgumentError, "Shape files for #{feature.name} could not be retrieved by GeoServer"
     end
     begin
       unzip_shape(feature)

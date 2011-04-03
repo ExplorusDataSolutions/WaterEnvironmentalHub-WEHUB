@@ -68,11 +68,6 @@ class ItemsController < ApplicationController
     errors = {}
       
     spreadsheet = params[:spreadsheet]
-    if spreadsheet.nil?
-      errors.store('spreadsheet','File required')
-    elsif spreadsheet.original_filename.match(/(\.xls|\.xlsx|\.ods)$/).nil?
-      errors.store('spreadsheet', 'Invalid file type')
-    end
     
     if errors.empty?
       filename = Rails.root.join('public', 'uploads', spreadsheet.original_filename)    
@@ -87,7 +82,7 @@ class ItemsController < ApplicationController
           dataset.feature.create(spreadsheet.original_filename)
         rescue
           Dataset.destroy(dataset.id)
-          debugger
+          
           errors.store('spreadsheet','Features could not be parsed from file')
         end
       else

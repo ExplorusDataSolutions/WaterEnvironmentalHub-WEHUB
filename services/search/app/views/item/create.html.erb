@@ -30,6 +30,10 @@
     height: auto;
   }
   
+  td.additional {
+    font-style: italic;
+  }
+  
   
 </style>
 
@@ -77,8 +81,11 @@ $(document).ready(function() {
       <td><label for="description">Description</label></td><td><textarea id="description" name="description"></textarea></td>
     </tr>
     <tr>
-      <td style="width: 300px;"><label for="file">Upload file (.cvs, .xls, .xlsx, or .ods format)</label></td><td><input id="spreadsheet" name="spreadsheet" type="file" /></td>
+      <td style="width: 300px;"><label for="file">Upload file.</label></td><td><input id="spreadsheet" name="spreadsheet" type="file" /></td>
     </tr>
+    <tr>
+      <td colspan="2" class="additional">Valid uploads include: <strong>Spreadsheets</strong> in .cvs, .ods, .xls, or .xlsx format, or <strong>Shape</strong> files (a .zip file) containing at least a .shp and .dbf file.</td>
+    </tr>    
     <tr>
       <td colspan="2"><b>Feature type</b>
         <table class="feature_types">

@@ -24,6 +24,16 @@ class SpreadsheetTranslator
     @field_names
   end
   
+  def fields_sql
+    field_names_with_datatypes = ''  
+    sheet_translator.fieldnames.each do |field|
+      sanitized_field = field.gsub('"','')
+      field_names_with_datatypes << "\"#{sanitized_field}\" character varying(255),"
+    end
+    field_names_with_datatypes.chop!
+    field_names_with_datatypes
+  end
+  
   def filename
     File.path(filename_csv)
   end
