@@ -1,5 +1,5 @@
 class SearchResult
-  attr_accessor :description, :title, :publication_date, :id
+  attr_accessor :description, :title, :publication_date, :id, :relations
   
   def initialize(description, title, publication_date, id)
     if description == nil

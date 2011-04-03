@@ -68,13 +68,19 @@ class GeoNetworkTranslator
     doc.elements.each('response/metadata/geonet:info') do |item|
       publication_date = item.elements['createDate'].text
       uuid = item.elements['uuid'].text
+      
       if !uuid.empty? && !publication_date.empty?
         search_results.push(SearchResult.new(nil, nil, publication_date, uuid))
       end
     end
 
-    search_results.each_with_index do |result, index|
-      search_results[index] = augment_search_result(search_results[index])
+    search_results.each_with_index do |result, i|
+      search_results[i] = augment_search_result(search_results[i])
+      if !(search_results[i].relations.nil? || search_results[i].relations.empty?)
+        search_results[i].relations.each_with_index do |related_result, j|
+          search_results[i].relations[j] = augment_search_result(search_results[i].relations[j])
+        end
+      end
     end
     
     search_results
@@ -88,6 +94,17 @@ class GeoNetworkTranslator
       
       doc = REXML::Document.new(response.body)
       doc.elements.each('Metadata') do |item|
+        
+        related_search_results = []
+        relations = JSON.parse(item.elements['additionalInfo'].text)['relations']
+        if !relations.empty?
+          relations.each do |uuid|
+            related_search_results.push(SearchResult.new(nil, nil, nil, uuid))
+          end
+          
+          result.relations = related_search_results
+        end        
+        
         result.description = item.elements['dataIdInfo/idAbs'].text
         result.title = item.elements['dataIdInfo/idCitation/resTitle'].text
       end

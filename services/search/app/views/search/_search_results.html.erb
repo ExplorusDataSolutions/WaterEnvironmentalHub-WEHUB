@@ -4,16 +4,14 @@
     <td><input type='checkbox' name='download' value='<%= result.id %>' /></td>
     <td>      
       <a href="/#!/<%= result.id %>" onclick="return false;"><%= result.title %></a><br />
-      <%= result.publication_date %> ... <%= result.description %><br />      
-<%
-=begin %>            
-      <ul>
-        <% result.resources.each do |resource| %>
-          <li><a href="<%= resource.uri %>"><%= resource.title %></a> (<%= resource.type %>)</li>
+      <%= result.publication_date %> ... <%= result.description %><br />
+      <% if !result.relations.nil? %>
+        <select>
+        <% result.relations.each do |related_result| %>
+          <option><%= related_result.title %></option>
         <% end %>
-      </ul>
-<%
-=end %>             
+        </select>
+      <% end %>
     </td>
   </tr>
 <% end %>  
