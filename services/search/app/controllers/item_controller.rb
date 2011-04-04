@@ -1,5 +1,5 @@
 class ItemController < ApplicationController
-  @catalogue
+  protect_from_forgery :except => :do_create
   
   def initialize
     @catalogue = CatalogueTranslator.new
@@ -13,4 +13,21 @@ class ItemController < ApplicationController
     redirect_to @catalogue.download_uri(params)
   end
   
+  def create
+  end
+  
+  def do_create
+    debugger
+#    render :text => request.body.to_json
+#    render :text => request.host
+    url = URI.parse(@catalogue.create_uri)
+    pass_request = Net::HTTP::Post.new(url.path)
+    pass_request.body = request.body
+    puts request.content_type
+    pass_request.content_type = request.content_type
+
+    response = Net::HTTP.start(url.host, url.port) {|http| http.request(request)}
+
+  end
+    
 end

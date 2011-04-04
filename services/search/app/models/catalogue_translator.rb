@@ -27,4 +27,8 @@ class CatalogueTranslator
     
     response.body    
   end
+  
+  def create_uri
+    "#{url}/create"
+  end
 end

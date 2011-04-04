@@ -1,1 +1,1 @@
-powershell.exe -noexit C:\projects\WEHub\consoles\geonetwork\do_import.ps1
+powershell.exe C:\projects\WEHub\consoles\geonetwork\do_import.ps1

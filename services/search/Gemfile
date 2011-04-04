@@ -33,4 +33,5 @@ gem 'spreadsheet'
 group :development, :test do
   gem "rspec-rails", ">= 2.4.1"
   gem 'ruby-debug19'
+  gem "mongrel", '>= 1.2.0.pre2'
 end

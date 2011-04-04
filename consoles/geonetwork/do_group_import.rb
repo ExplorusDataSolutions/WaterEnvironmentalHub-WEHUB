@@ -8,51 +8,75 @@ class GroupImporter
   def initialize(catalogue_server_address='localhost:3000', geoserver_server_address='174.129.10.37:8080', timeout=300, username='development', password='development')
     @geoserver_server_address = geoserver_server_address
     @catalogue_server_address = catalogue_server_address
-    @server_address = server_address
     @timeout = timeout
     @username = username
     @password = password
   end
   
-  def group(id)
-    http_get("http://#{catalogue_server_address}/geonetwork/group/#{id}.xml")
+  def group_info(name)
+    http_get("http://#{catalogue_server_address}/geonetwork/group/#{name}.xml")
   end
   
   def group_list
     http_get("http://#{catalogue_server_address}/geonetwork/group-import-list.xml")
   end
   
+  def group_list_geonetwork
+    url = URI.parse("http://#{geoserver_server_address}/geonetwork/srv/en/xml.group.list")
+    request = Net::HTTP::Post.new(url.path)
+    request.body = "<?xml version='1.0' encoding='UTF-8'?><request />"
+    request.content_type = "text/xml"
+    request['cookie'] = cookies
+    response = Net::HTTP.start(url.host, url.port) {|http| http.request(request)}
+    
+    group_list = {}
+    doc = REXML::Document.new(response.body)
+    doc.elements.each('response/record') do |record|
+      group_list.store(record.elements['name'].text, record.elements['id'].text)
+    end
+    
+    group_list
+  end
+    
   def import_all    
     groups = []
 
-    group_ids = Hash.from_xml(group_list)['strings']
+    group_ids_from_catalogue = Hash.from_xml(group_list)['hash']
     
-    group_ids.each do |id|
-      groups.push(group(id))
+    
+    group_ids_from_geonetwork = group_list_geonetwork
+    
+    group_ids_from_catalogue.each do |key, value|
+      if (group_ids_from_geonetwork.count == 0 || group_ids_from_geonetwork.key?(key))
+        groups.push(group_info(key))
+      end
     end
     
-    authenticate    
+    puts groups
+    
+    authenticate
     groups.each do |group|
       import_group(group)
     end    
   end
 
   def import_group(group)
-    puts "Uploading #{group} to GeoNetwork"
+    puts "Uploading group to GeoNetwork"
 
     url = URI.parse("http://#{geoserver_server_address}/geonetwork/srv/en/group.update")
     request = Net::HTTP::Post.new(url.path)
     request.body = group
     request.content_type = "text/xml"
-    request['cookie'] = cookies    
+    request['cookie'] = cookies
     response = Net::HTTP.start(url.host, url.port) {|http| http.request(request)}
     
     case response
     when Net::HTTPSuccess, Net::HTTPRedirection
+      puts response.body
       puts "Success!"
     else
       puts response.body
-      response.error!
+      #response.error!
     end
 
   end

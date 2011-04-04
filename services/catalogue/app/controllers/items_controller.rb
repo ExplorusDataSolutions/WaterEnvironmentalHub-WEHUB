@@ -17,7 +17,7 @@ class ItemsController < ApplicationController
     end
     
     format_type = 'json'
-    if params[:format] != nil
+    if params[:format] != nil && params[:format] != 'undefined'
       format_type = params[:format].downcase
     end
     
