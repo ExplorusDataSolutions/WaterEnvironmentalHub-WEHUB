@@ -7,7 +7,6 @@
     function download() {
       var format = $('[name=download-format]:checked').val();
       var ids = [];
-      console.debug(format);
       $('[type=checkbox][name=download]:checked').each(function() { ids.push($(this).val()); })
       window.location = '/item/download/?ids=' + ids + '&format=' + format;
     }
@@ -110,6 +109,9 @@
     padding: 10px;
     left: 137px;
     margin-top: 2px;
+  }
+  table .search-result td {
+    padding-bottom: 20px;
   }
 </style>
 <table>
