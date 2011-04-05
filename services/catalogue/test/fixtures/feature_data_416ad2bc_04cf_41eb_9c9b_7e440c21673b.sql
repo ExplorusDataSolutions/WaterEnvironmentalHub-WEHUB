@@ -16,22 +16,22 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: ug_natural_416ad2bc_04cf_41eb_9c9b_7e440c21673b; Type: TABLE; Schema: public; Owner: catalogue; Tablespace: 
+-- Name: feature_data_416ad2bc_04cf_41eb_9c9b_7e440c21673b; Type: TABLE; Schema: public; Owner: catalogue; Tablespace: 
 --
 
-CREATE TABLE ug_natural_416ad2bc_04cf_41eb_9c9b_7e440c21673b (
+CREATE TABLE feature_data_416ad2bc_04cf_41eb_9c9b_7e440c21673b (
     id numeric(255,0) NOT NULL,
     feature_id numeric(255,0)
 );
 
 
-ALTER TABLE public.ug_natural_416ad2bc_04cf_41eb_9c9b_7e440c21673b OWNER TO catalogue;
+ALTER TABLE public.feature_data_416ad2bc_04cf_41eb_9c9b_7e440c21673b OWNER TO catalogue;
 
 --
--- Data for Name: ug_natural_416ad2bc_04cf_41eb_9c9b_7e440c21673b; Type: TABLE DATA; Schema: public; Owner: catalogue
+-- Data for Name: feature_data_416ad2bc_04cf_41eb_9c9b_7e440c21673b; Type: TABLE DATA; Schema: public; Owner: catalogue
 --
 
-COPY ug_natural_416ad2bc_04cf_41eb_9c9b_7e440c21673b (id, feature_id) FROM stdin;
+COPY feature_data_416ad2bc_04cf_41eb_9c9b_7e440c21673b (id, feature_id) FROM stdin;
 \.
 
 

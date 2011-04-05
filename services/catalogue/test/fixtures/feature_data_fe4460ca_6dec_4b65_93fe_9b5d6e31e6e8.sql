@@ -16,10 +16,10 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: ug_pamcombined_fe4460ca_6dec_4b65_93fe_9b5d6e31e6e8; Type: TABLE; Schema: public; Owner: catalogue; Tablespace: 
+-- Name: feature_data_fe4460ca_6dec_4b65_93fe_9b5d6e31e6e8; Type: TABLE; Schema: public; Owner: catalogue; Tablespace: 
 --
 
-CREATE TABLE ug_pamcombined_fe4460ca_6dec_4b65_93fe_9b5d6e31e6e8 (
+CREATE TABLE feature_data_fe4460ca_6dec_4b65_93fe_9b5d6e31e6e8 (
     id numeric(255,0) NOT NULL,
     feature_id character varying(255),
     "Field" character varying(255),
@@ -45,13 +45,13 @@ CREATE TABLE ug_pamcombined_fe4460ca_6dec_4b65_93fe_9b5d6e31e6e8 (
 );
 
 
-ALTER TABLE public.ug_pamcombined_fe4460ca_6dec_4b65_93fe_9b5d6e31e6e8 OWNER TO catalogue;
+ALTER TABLE public.feature_data_fe4460ca_6dec_4b65_93fe_9b5d6e31e6e8 OWNER TO catalogue;
 
 --
--- Data for Name: ug_pamcombined_fe4460ca_6dec_4b65_93fe_9b5d6e31e6e8; Type: TABLE DATA; Schema: public; Owner: catalogue
+-- Data for Name: feature_data_fe4460ca_6dec_4b65_93fe_9b5d6e31e6e8; Type: TABLE DATA; Schema: public; Owner: catalogue
 --
 
-COPY ug_pamcombined_fe4460ca_6dec_4b65_93fe_9b5d6e31e6e8 (id, feature_id, "Field", "Crop", "Calendar Day", "Root Zone (mm)", "Root Zone (%)", "Top Zone (mm)", "Top Zone (%)", "Actual Evapotranspiration (mm)", "Precipitation (mm)", "Relative Humidity (%)", "Biometeorological Time", "Leaf Area", "Potential Evapotranspiration (mm)", "Total Soil Moisture (mm)", longitude, latitude, thepoint_lonlat) FROM stdin;
+COPY feature_data_fe4460ca_6dec_4b65_93fe_9b5d6e31e6e8 (id, feature_id, "Field", "Crop", "Calendar Day", "Root Zone (mm)", "Root Zone (%)", "Top Zone (mm)", "Top Zone (%)", "Actual Evapotranspiration (mm)", "Precipitation (mm)", "Relative Humidity (%)", "Biometeorological Time", "Leaf Area", "Potential Evapotranspiration (mm)", "Total Soil Moisture (mm)", longitude, latitude, thepoint_lonlat) FROM stdin;
 1	1	Melfort 2003	Wheat	125	44.30365075	82.56562981	51.09743302	125.0112925	0.002182587	0	47.04036094	0.130203943	0	1.230440763	531.6678174	-104.59999999999999	52.82	0101000020E61000006666666666265AC0295C8FC2F5684A40
 2	1	Melfort 2003	Wheat	126	47.09416708	100	44.44709173	83.46180917	0.590070556	4.572	99.3261072	0.220581949	0	0.475578464	535.6497469	-104.59999999999999	52.82	0101000020E61000006666666666265AC0295C8FC2F5684A40
 3	1	Melfort 2003	Wheat	127	47.09416708	100	52	130.65028	0.610019829	5.08	97.19307004	0.338750386	0	0.82256943	540.119727	-104.59999999999999	52.82	0101000020E61000006666666666265AC0295C8FC2F5684A40
