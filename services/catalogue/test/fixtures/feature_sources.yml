@@ -1,0 +1,21 @@
+--- 
+feature_source_00001: 
+  description: Feature data is stored in this catalogue, user submitted content feature data is stored here
+  id: 1
+  name: catalogue
+
+feature_source_00002: 
+  description: Feature data is stored in GeoServer, our base data is currently stored there
+  id: 2
+  name: geoserver
+
+feature_source_00003: 
+  description: Feature data is stored external and provided via the GeoCens Service
+  id: 3
+  name: goecens
+
+feature_source_00004: 
+  description: Feature data is stored external and maintened by the Water Cloud Service
+  id: 4
+  name: water_cloud
+
