@@ -2,7 +2,7 @@ class CreateFeatureTypes < ActiveRecord::Migration
   def self.up
     create_table :feature_types do |t|
       t.string :name
-      t.text :description      
+      t.text :description
       
       t.timestamps
     end
