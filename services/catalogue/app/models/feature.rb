@@ -68,6 +68,8 @@ class Feature
       if observation_data[:data].count > 0
         keywords = extract_keywords(observation_data[:data][0])
       end
+    elsif is_data_source?('geocens')
+      keywords = FeatureMetaContent.find_by_dataset_uuid(uuid).keywords.split(',')
     else 
       raise ArgumentError, "Keywords could not be retrieved for feature source of type #{feature_source.name}"
     end   
@@ -90,10 +92,10 @@ class Feature
   end
   
   def tablename
-    if is_base_data
-      raise ArgumentError, "Features of type base data don't have tables"
-    else
+    if is_data_source?('catalogue')
       resolve_tablename
+    else
+      raise ArgumentError, "Features of type base data don't have tables"
     end
   end
     
@@ -101,16 +103,16 @@ class Feature
     puts "Feature:\n\t#{uuid}\n\t#{name}\n\t#{feature_source.to_s}"
   end
 
+  def is_data_source?(params)
+    feature_source.name == params
+  end
+
   private 
 
   def is_a_file?(params)
     params.is_a?(String)
   end
-    
-  def is_data_source?(params)
-    feature_source.name == params
-  end
-  
+      
   def resolve_tablename
     tablename = nil
     if uuid.match(/[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12}/) != nil

@@ -2,10 +2,10 @@ require 'zip/zip'
 
 class ItemsController < ApplicationController
 
-  protect_from_forgery :except => :create_meta_content
+  protect_from_forgery :except => :create
   
   def show
-    render :json => Dataset.find_by_uuid(params[:id]).first, :callback => params[:callback]
+    render :json => Dataset.find_by_uuid(params[:id]), :callback => params[:callback]
   end
   
   def download
@@ -28,12 +28,13 @@ class ItemsController < ApplicationController
     feature_format_factory = FeatureFormatFactory.new
     
     uuids.each do |uuid|      
-      dataset = Dataset.find_by_uuid(uuid).first
+      dataset = Dataset.find_by_uuid(uuid)
       if !dataset.nil?
         feature = dataset.feature
         begin
-          if format_type == 'shape'              
-            shape_files = shape_factory.find(feature)                  
+          if format_type == 'shape'          
+            shape_files = shape_factory.find(feature)
+            
             shape_files.each do |filename|
               file_data = IO.read("#{shape_factory.shape_directory}/#{filename}")
               results.store(filename, file_data)
@@ -42,7 +43,7 @@ class ItemsController < ApplicationController
             formatted_file = feature_format_factory.find(format_type, feature)
             results.store(formatted_file[:filename], formatted_file[:data])
           end
-        rescue
+        rescue Exception => e
         end        
       end
     end

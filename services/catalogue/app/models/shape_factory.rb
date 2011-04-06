@@ -24,7 +24,7 @@ class ShapeFactory
   private
   
   def builder
-    if feature.is_base_data
+    if feature.is_data_source?('geoserver')
       @builders[:base]
     else
       @builders[:other]
