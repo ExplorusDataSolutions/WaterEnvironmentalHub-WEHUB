@@ -3,7 +3,7 @@ class GeonetworkController < ApplicationController
   respond_to :xml
   
   def metadata    
-    @dataset = Dataset.find_by_uuid(params[:id]).first
+    @dataset = Dataset.find_by_uuid(params[:id])
     
     @related_datasets = []
     
@@ -19,7 +19,7 @@ class GeonetworkController < ApplicationController
   end
   
   def info
-    @dataset = Dataset.find_by_uuid(params[:id]).first
+    @dataset = Dataset.find_by_uuid(params[:id])
   end
   
   def mef_import_list
@@ -32,7 +32,7 @@ class GeonetworkController < ApplicationController
   end
   
   def group
-    @feature_type = FeatureType.find_by_name(params[:id]).first    
+    @feature_type = FeatureType.find_by_name(params[:id])
   end
   
   def group_import_list

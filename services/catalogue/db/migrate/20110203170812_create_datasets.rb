@@ -6,9 +6,12 @@ class CreateDatasets < ActiveRecord::Migration
       t.text :description
       t.text :methodology
       t.references :feature_type
+      t.references :feature_source
 
       t.timestamps
     end
+    
+    add_index :datasets, [:uuid], :unique => true
   end
 
   def self.down

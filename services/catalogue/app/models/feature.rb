@@ -3,11 +3,11 @@ class Feature
   include ActiveModel::Conversion  
   extend ActiveModel::Naming
   
-  attr_accessor :uuid, :feature_type, :name
+  attr_accessor :uuid, :feature_source, :name
   
-  def initialize(uuid, feature_type, name='')
-    @feature_type = feature_type
+  def initialize(uuid, feature_source, name='')
     @uuid = uuid
+    @feature_source = feature_source
     @name = name
   end
   
@@ -22,40 +22,54 @@ class Feature
   end
   
   def data
-    if is_base_data
+    if is_data_source?('geoserver')
       GeoServerTranslator.new.data(uuid)
-    else      
+    elsif is_data_source?('catalogue')
       execute("SELECT * FROM #{tablename}")
+    else
+      raise ArgumentError, "Data could not be retrieved for feature source of type #{feature_source.name}"
     end
   end
-  
-  def create(filename)
-    tablename = "ug_#{self.filename}"
-    if !filename.match(/(\.xls|\.xlsx|\.ods.|\.csv)$/).nil?
-      sheet_translator = SpreadsheetTranslator.new(filename)
+    
+  def create(params)
+    if is_a_file?(params)
+      tablename = "feature_data_"
+      if !params.match(/(\.xls|\.xlsx|\.ods.|\.csv)$/).nil?
+        sheet_translator = SpreadsheetTranslator.new(params)
+              
+        execute("CREATE TABLE #{tablename} (#{sheet_translator.fields_sql})")
+        execute(["COPY #{tablename} FROM ? USING DELIMITERS ','", sheet_translator.params]);
+        
+      elsif !params.match(/(\.zip)$/).nil?
+        shape_translator = ShapeTranslator.new(params, tablename)
             
-      execute("CREATE TABLE #{tablename} (#{sheet_translator.fields_sql})")
-      execute(["COPY #{tablename} FROM ? USING DELIMITERS ','", sheet_translator.filename]);
-      
-    elsif !filename.match(/(\.zip)$/).nil?
-      shape_translator = ShapeTranslator.new(filename, tablename)
-          
-      execute(shape_translator.shape_sql)
-      debugger
+        execute(shape_translator.shape_sql)
+      else
+        raise ArgumentError, "Feature could not be created from #{params}"
+      end
     else
-      
+      meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
+      meta_content_params = {:dataset_uuid => uuid, :keywords => params[:keywords], :source_uri => params[:source_uri]}
+      if meta_content.nil?
+        meta_content = FeatureMetaContent.create(meta_content_params)
+      else
+        meta_content.attributes = meta_content_params
+        meta_content.save
+      end
     end
   end
   
   def keywords
-    if is_base_data
+    if is_data_source?('geoserver')
       observation_data = GeoServerTranslator.new.feature_fields(uuid)
       keywords = extract_keywords(observation_data)
-    else
+    elsif is_data_source?('catalogue')
       observation_data = data_lightweight
       if observation_data[:data].count > 0
         keywords = extract_keywords(observation_data[:data][0])
       end
+    else 
+      raise ArgumentError, "Keywords could not be retrieved for feature source of type #{feature_source.name}"
     end   
     
     if !keywords.nil?
@@ -83,15 +97,19 @@ class Feature
     end
   end
     
-  def is_base_data
-    feature_type.name.downcase.index('base') != nil
-  end
-  
   def to_s
-    puts "Feature:\n\t#{uuid}\n\t#{name}\n\t#{feature_type.to_s}"
+    puts "Feature:\n\t#{uuid}\n\t#{name}\n\t#{feature_source.to_s}"
   end
 
   private 
+
+  def is_a_file?(params)
+    params.is_a?(String)
+  end
+    
+  def is_data_source?(params)
+    feature_source.name == params
+  end
   
   def resolve_tablename
     tablename = nil

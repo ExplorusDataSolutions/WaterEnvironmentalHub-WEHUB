@@ -29,10 +29,12 @@ ActiveRecord::Schema.define(:version => 20110405174033) do
     t.text     "description"
     t.text     "methodology"
     t.integer  "feature_type_id"
+    t.integer  "feature_source_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "feature_source_id"
   end
+
+  add_index "datasets", ["uuid"], :name => "index_datasets_on_uuid", :unique => true
 
   create_table "feature_data_416ad2bc_04cf_41eb_9c9b_7e440c21673b", :id => false, :force => true do |t|
     t.decimal "id",         :precision => 255, :scale => 0, :null => false
@@ -46,12 +48,14 @@ ActiveRecord::Schema.define(:version => 20110405174033) do
 #   Unknown type 'geometry' for column 'thepoint_lonlat'
 
   create_table "feature_meta_contents", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
+    t.text     "dataset_uuid"
     t.text     "keywords"
+    t.text     "source_uri"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "feature_meta_contents", ["dataset_uuid", "source_uri"], :name => "index_feature_meta_contents_on_dataset_uuid_and_source_uri", :unique => true
 
   create_table "feature_sources", :force => true do |t|
     t.string   "name"

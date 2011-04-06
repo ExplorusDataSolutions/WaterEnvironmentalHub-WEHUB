@@ -12,7 +12,7 @@ feature_source_00002:
 feature_source_00003: 
   description: Feature data is stored external and provided via the GeoCens Service
   id: 3
-  name: goecens
+  name: geocens
 
 feature_source_00004: 
   description: Feature data is stored external and maintened by the Water Cloud Service

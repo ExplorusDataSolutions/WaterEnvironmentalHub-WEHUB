@@ -1,12 +1,14 @@
 class CreateFeatureMetaContents < ActiveRecord::Migration
   def self.up
     create_table :feature_meta_contents do |t|
-      t.string :name
-      t.text :description
+      t.text :dataset_uuid
       t.text :keywords
+      t.text :source_uri
 
       t.timestamps
     end
+    
+    add_index :feature_meta_contents, [:dataset_uuid, :source_uri], :unique => true
   end
 
   def self.down

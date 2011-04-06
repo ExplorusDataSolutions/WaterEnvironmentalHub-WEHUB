@@ -2,7 +2,7 @@ require 'zip/zip'
 
 class ItemsController < ApplicationController
 
-  protect_from_forgery :except => :create
+  protect_from_forgery :except => :create_meta_content
   
   def show
     render :json => Dataset.find_by_uuid(params[:id]).first, :callback => params[:callback]
@@ -75,7 +75,7 @@ class ItemsController < ApplicationController
         file.write(spreadsheet.read)
       end
 
-      dataset = Dataset.create(:name => params[:name], :description => params[:description], :feature_type => feature_type)
+      dataset = Dataset.create(:name => params[:name], :description => params[:description], :feature_type => feature_type(params[:feature_type]))
       
       if dataset.valid?
         begin
@@ -103,11 +103,37 @@ class ItemsController < ApplicationController
     
     render :text => response
   end
+  
+  def load_external_meta_content
+    
+    meta_content = FeatureMetaContent.find_by_source_uri(params[:source_uri])
+    
+    if meta_content.nil?
+      dataset_params = {
+        :name => params[:name],
+        :description => params[:description],
+        :feature_type => FeatureType.find_by_name('observation_data_dynamic'),
+        :feature_source => FeatureSource.find_by_name(params[:source]),
+      }
+
+      dataset = Dataset.create(dataset_params)
+      dataset.feature.create(params)
+    else
+      dataset = Dataset.find_by_uuid(meta_content.dataset_uuid)
+      dataset.feature.create(params)
+    end
+        
+    render :text => dataset.uuid.to_s
+  end
 
   private
   
-  def feature_type
-    FeatureType.find_by_id(params[:feature_type])
+  def feature_type(feature_type)
+    FeatureType.find_by_id(Integer(feature_type))
+  end
+  
+  def feature_source(feature_source)
+    FeatureSource.find_by_name(feature_source)
   end
     
 end
