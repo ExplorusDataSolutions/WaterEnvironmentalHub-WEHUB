@@ -122,8 +122,8 @@ class ItemsController < ApplicationController
       dataset = Dataset.find_by_uuid(meta_content.dataset_uuid)
       dataset.feature.create(params)
     end
-        
-    render :text => dataset.uuid.to_s
+
+    render :text => dataset.uuid
   end
 
   private

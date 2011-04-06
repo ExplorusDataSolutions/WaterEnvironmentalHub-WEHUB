@@ -55,28 +55,70 @@ def get_geocens_data(url_param, service_id, layer)
       data = (JSON.parse(response.body))['data']
       if !data.nil? && !data.empty?
         puts "Layer #{layer['id']} on service #{service_id} returns data"
+        
+        return response.body
       end
     end
   rescue Exception => e
     puts "Failure on layer #{layer['id']} on service #{service_id}\n\t Exception: #{e}"
   end
+  
+  return nil
+end
 
+def add_to_catalogue(source_uri, service_hash)
+  puts "Updating Catalogue"
+  
+  keywords = service_hash[:keywords]
+  if keywords.nil? || keywords.empty?
+    keywords = "#{service_hash[:name]} #{service_hash[:provider]}"
+  end
+
+  request = { 
+    :source => 'geocens', 
+    :name => service_hash[:name], 
+    :description => service_hash[:description], 
+    :keywords => keywords, 
+    :source_uri => source_uri
+  }
+  
+  url_param = 'http://localhost:3000/items/load_external_meta_content'
+  timeout = 500
+  url = URI.parse(url_param)
+  http = Net::HTTP.new(url.host, url.port)
+  http.read_timeout = timeout
+  http.open_timeout = timeout
+  
+  response = http.start {|http| http.post(url.to_s, request.to_json, { 'Content-Type' => 'application/json'}) }
+  
+  check_response(response)
+  
+  if response.body.chomp(' ').empty?
+    puts "Failure, record for #{source_uri} was not updated"
+  else 
+    puts "Succrss, record for #{source_uri} updated"
+  end
+  
 end
 
 geocens_base = 'http://wehub.geocens.ca:8182/wehub'
-
 service_list = (JSON.parse(http_get("#{geocens_base}/services")))['servicelist']
 puts "Discovered #{service_list.count} services on #{Time.new}"
 service_list.each do |service|
   service_id = service['id']
-  layer_list = (JSON.parse(http_get("#{geocens_base}/service/#{service_id}")))['layerlist']
+  service_uri = "#{geocens_base}/service/#{service_id}"
+  layer_list = (JSON.parse(http_get(service_uri)))['layerlist']
   if layer_list.is_a? Array
     puts "Discovered #{layer_list.count} layers on service #{service_id}"
     layer_list.each do |layer|    
-      get_geocens_data("#{geocens_base}", service_id, layer)
+      if !get_geocens_data("#{geocens_base}", service_id, layer).nil?
+        add_to_catalogue(service_uri, service)
+      end  
     end 
   else
     puts "Discovered 1 layer on service #{service_id}"
-    get_geocens_data("#{geocens_base}", service_id, layer_list)
+    if !get_geocens_data("#{geocens_base}", service_id, layer_list).nil?
+      add_to_catalogue(service_uri, service)
+    end  
   end
 end
