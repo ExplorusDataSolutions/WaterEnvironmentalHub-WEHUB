@@ -96,7 +96,7 @@ def add_to_catalogue(source_uri, service_hash)
   if response.body.chomp(' ').empty?
     puts "Failure, record for #{source_uri} was not updated"
   else 
-    puts "Succrss, record for #{source_uri} updated"
+    puts "Success, record for #{source_uri} updated"
   end
   
 end
