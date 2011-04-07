@@ -81,10 +81,10 @@ class ItemsController < ApplicationController
       if dataset.valid?
         begin
           dataset.feature.create(spreadsheet.original_filename)
-        rescue
+        rescue Exception => e
           Dataset.destroy(dataset.id)
           
-          errors.store('spreadsheet','Features could not be parsed from file')
+          errors.store('spreadsheet', e)
         end
       else
         dataset.errors.each do |key, value|

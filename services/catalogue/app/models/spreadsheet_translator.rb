@@ -26,7 +26,7 @@ class SpreadsheetTranslator
   
   def fields_sql
     field_names_with_datatypes = ''  
-    sheet_translator.fieldnames.each do |field|
+    @field_names.each do |field|
       sanitized_field = field.gsub('"','')
       field_names_with_datatypes << "\"#{sanitized_field}\" character varying(255),"
     end
