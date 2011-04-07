@@ -76,7 +76,7 @@ class ItemsController < ApplicationController
         file.write(spreadsheet.read)
       end
 
-      dataset = Dataset.create(:name => params[:name], :description => params[:description], :feature_type => feature_type(params[:feature_type]))
+      dataset = Dataset.create(:name => params[:name], :description => params[:description], :feature_type => feature_type(params[:feature_type]), :feature_source => feature_source('catalogue'))
       
       if dataset.valid?
         begin
