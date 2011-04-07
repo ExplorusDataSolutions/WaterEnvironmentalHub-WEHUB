@@ -15,7 +15,10 @@ class SearchResult
     @id = id
   end
   
-  def to_s
-    puts "search_result:\n id: #{id}\n title: #{title}\n description: #{description}\n publication_date: #{publication_date}" 
+  def as_json(options={})
+    json = { 
+      :id => self.id, :title => self.title, :description => self.description, :publication_date => self.publication_date.to_s
+    }
   end
+    
 end
