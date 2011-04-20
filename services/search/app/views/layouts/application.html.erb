@@ -1,68 +1,146 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-<head>
-  <title>The Water and Environment Hub (WEHUB)</title>
-  <%= stylesheet_link_tag :all %>
-
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script> 
-  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script> 
-  <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAR7kR54BVDlqWYhWz74JPDRSZo37HQaflXCiy6TGG4RzVNrC14RSLPfT8dP76-nMO0wjDhCw5H9KnfQ" type="text/javascript"></script>
-  <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
-  <script src="http://clients.multimap.com/API/maps/1.1/metacarta_04"></script>
-  
-  <%= javascript_include_tag :all %>
-  <%= csrf_meta_tag %>
-  
-  <style>
-    body {
-      background: #E2EBF3 url('/images/bodybackground.jpg') repeat-x fixed center top;
-      font-family: Helvetica;      
-      width: 990px;
-      margin: auto;
-    }
-    #search_query {
-      width: 100px;
-    }
-    table {
-      width: 100%;      
-    }
-    #dialog-modal {
-      font-size: .8em;
-    }
-    #dialog-modal span {
-      font-weight: bold;
-    }
-    .ui-widget-content {
-      font-size: 1em;
-    }
-</style>
-<script>
-  $(document).ready(function() {
-    var tabMenu = $('#tabs');
-    tabMenu.tabs({
-      selected: 1
-    });
-  });
-</script>
-</head>
-<body>
-  <img src='images/water-drop.png' height='63' width='63' style="padding-bottom: 10px; padding-top: 15px;" />
-  <h1 style='color: #004B97; display: inline; position: absolute; top: -5px'>The Water and Environment Hub<br><span style="left: 300px; position: relative; left: 395px; top: -10px; font-size: 18pt; color: #728496">(WEHub)</span></h1>
-  <div id="tabs">
-    <ul>
-      <li><a href="#tabs-1">About</a></li>
-      <li><a href="#tabs-2">WE Data Catalogue</a></li>
-      <li><a href="#tabs-3">WE Tools</a></li>
-      <li><a href="#tabs-4">Contact Us</a></li>
-    </ul>
-    <div id="tabs-1">About</div>
-    <div id="tabs-2">
-<!-- content -->      
-      <%= yield %>
-<!-- end of content -->      
-    </div>
-    <div id="tabs-3">WE Tools</div>
-    <div id="tabs-4">Contact Us</div>
-  </div>
-</body>
+	<head>
+		<title>The Water and Environment Hub (WEHUB)</title>
+		<%= stylesheet_link_tag :all %>
+		
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script> 
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script> 
+		<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAR7kR54BVDlqWYhWz74JPDRSZo37HQaflXCiy6TGG4RzVNrC14RSLPfT8dP76-nMO0wjDhCw5H9KnfQ" type="text/javascript"></script>
+		<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+		<script src="http://clients.multimap.com/API/maps/1.1/metacarta_04"></script>
+		
+		<%= javascript_include_tag :all %>
+		<%= csrf_meta_tag %>
+		
+		<style>
+			#search_query {
+				width: 100px;
+			}
+			table {
+				width: 100%;      
+			}
+			#dialog-modal {
+				font-size: .8em;
+			}
+			#dialog-modal span {
+				font-weight: bold;
+			}
+			.ui-widget-content {
+				font-size: 1em;
+			}
+		</style>
+		<script>
+			$(document).ready(function() {
+				var tabMenu = $('#tabs');
+				tabMenu.tabs({
+				selected: 1
+				});
+			});
+		</script>
+		
+	</head>
+	<body>
+		<center>
+		<div id="main-body">
+			<div id="header-body">
+				<div class="header-sign">
+					<div class="signup">
+						<a href="#">
+							<img src="images/signup.jpg" border="0" alt="sign up">
+						</a>
+					</div>
+					<div class="float-right seperator">&nbsp;</div>
+					<div class="signup">
+						<a href="#">
+							<img src="images/login.jpg" border="0" alt="login">
+						</a>
+					</div>
+				</div>
+				<div class="clear"></div>
+				<div class="header-logo"></div>
+				<div class="header-tab">
+					<ul>
+						<li>
+							<a href="#">Home</a>
+						</li>
+						<li>
+							<a href="#">WE Data Catalogue</a>
+						</li>
+						<li>
+							<a href="#">WE Tools</a>
+						</li>
+						<li>
+							<a href="#">WE Community</a>
+						</li>
+						<li>
+							<a href="#">About</a>
+						</li>
+						<li class="no-border">
+							<a href="#">Contact Us</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="clear"></div>
+			<div id="content-body">
+				<div class="content">
+					<div id="tabs">
+						<ul>
+							<li><a href="#tabs-1">About</a></li>
+							<li><a href="#tabs-2">WE Data Catalogue</a></li>
+							<li><a href="#tabs-3">WE Tools</a></li>
+							<li><a href="#tabs-4">Contact Us</a></li>
+						</ul>
+						<div id="tabs-1">About</div>
+						<div id="tabs-2">
+						<!-- content -->      
+						<%= yield %>
+						<!-- end of content -->      
+						</div>
+						<div id="tabs-3">WE Tools</div>
+						<div id="tabs-4">Contact Us</div>
+					</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+			<div id="footer-body">
+				<div class="footer-content">
+					<div class="float-left" style="width:36px">
+						<img src="images/logo-footer.jpg" alt="WE Hub" border="0" align="top">
+					</div>
+					<div class="float:left" style="width:1020px; height:36px;">
+						
+						<ul>
+							<li>
+								<a href="#">Legal Notice</a>
+							</li>
+							<li>
+								<a href="#">Terms of Services</a>
+							</li>
+							<li>
+								<a href="#">Privacy</a>
+							</li>
+							<li class="no-border">
+								<a href="#">About WeHub</a>
+							</li>
+						</ul>
+						<br>
+						<div class="float-left" style="padding-left:10px;">
+						&copy; 2010 We Hub.Inc All rights reserved.
+						</div>
+						
+					</div>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		
+		
+		</center>
+		<script type="text/javascript">
+			teseraScreenSettings();
+		</script>
+	</body>
 </html>
