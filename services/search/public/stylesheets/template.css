@@ -50,6 +50,8 @@ body {
 	float:left;
 	color:#808080;
 	border-right:solid 1px #E6E6E6;
+	font-family:Latinaires;
+	font-size:14px;
 }
 #header-body .header-tab li.no-border{
 	border:none !important;

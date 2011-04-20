@@ -33,7 +33,7 @@ function browserCheck() {
 /** Browser height settings */
 function teseraScreenSettings(){
 	var browserName = browserCheck();
-	var divElement	= document.getElementById('content-body');
+	var divElement	= document.getElementById('content-body'); 
 	if(divElement) {
 		var myWidth = 0, myHeight = 0;
 		if( typeof( window.innerWidth ) == 'number' ) {
