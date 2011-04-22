@@ -7,6 +7,7 @@ class CreateDatasets < ActiveRecord::Migration
       t.text :methodology
       t.references :feature_type
       t.references :feature_source
+      t.references :owner
 
       t.timestamps
     end

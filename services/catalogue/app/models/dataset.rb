@@ -6,6 +6,7 @@ class Dataset < ActiveRecord::Base
   has_and_belongs_to_many :dataset_groups
   belongs_to :feature_type
   belongs_to :feature_source
+  belongs_to :owner
 
   validates_presence_of :name, :description, :feature_type
   

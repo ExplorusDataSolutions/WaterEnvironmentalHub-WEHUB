@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110405174033) do
+ActiveRecord::Schema.define(:version => 20110422182729) do
 
   create_table "dataset_groups", :force => true do |t|
     t.string   "name"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(:version => 20110405174033) do
     t.text     "methodology"
     t.integer  "feature_type_id"
     t.integer  "feature_source_id"
+    t.integer  "owner_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -79,6 +80,14 @@ ActiveRecord::Schema.define(:version => 20110405174033) do
     t.integer "coord_dimension",                  :null => false
     t.integer "srid",                             :null => false
     t.string  "type",              :limit => 30,  :null => false
+  end
+
+  create_table "owners", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "group_id"
+    t.string   "source",     :default => "EngineY"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "spatial_ref_sys", :id => false, :force => true do |t|

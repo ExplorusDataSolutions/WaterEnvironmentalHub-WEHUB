@@ -7,6 +7,7 @@ dataset_00001:
   uuid: fe4460ca-6dec-4b65-93fe-9b5d6e31e6e8
   feature_type_id: 4
   feature_source_id: 1
+  owner_id: 1
 
 dataset_00002: 
   description: Natural Polar Ecosystems
