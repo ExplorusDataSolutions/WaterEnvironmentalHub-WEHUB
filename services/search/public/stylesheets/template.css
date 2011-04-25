@@ -34,7 +34,7 @@ body {
 	height:40px;
 }
 #header-body .header-logo{
-	background: url(../images/header-logo.jpg) no-repeat;
+	background: url(/images/header-logo.jpg) no-repeat;
 	width:258px;
 	height:71px;
 	float:left;
@@ -72,7 +72,7 @@ body {
 	color:#43AD49;
 }
 #content-body{
-	background: #FFFFFF url(../images/bg-repeat.jpg) repeat-x;
+	background: #FFFFFF url(/images/bg-repeat.jpg) repeat-x;
 	text-align:center;
 }
 #content-body .content{
@@ -82,7 +82,7 @@ body {
 	margin:0 auto;
 }
 #footer-body{
-	background: #FFFFFF url(../images/bg-repeat-footer.jpg) repeat-x;
+	background: #FFFFFF url(/images/bg-repeat-footer.jpg) repeat-x;
 	height:100px;
 	text-align:center;
 }
