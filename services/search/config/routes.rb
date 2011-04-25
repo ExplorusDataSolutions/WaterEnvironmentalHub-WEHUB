@@ -1,7 +1,9 @@
 Catalogue::Application.routes.draw do
+  get "user/sign_in"
+
   #resources :search
 
-  #root :to => "search#index"
+  root :to => "search#index"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -1,0 +1,17 @@
+<style>
+#sign-in label {
+  display: block;
+  width: 100px;  
+}
+#sign-in input {
+  display: block;
+  position: relative;
+  top: -24px;
+  left: 100px;
+}
+</style>
+<%= form_for :user, :html => { :id => 'sign-in' } do |f| %>
+  <label for="user_username">Username:</label><%= f.text_field :login %>
+  <label for="user_password">Password:</label><%= f.password_field :password %>
+  <%= f.submit :"Sign-in", :name => 'sign_in' %>
+<% end %>
