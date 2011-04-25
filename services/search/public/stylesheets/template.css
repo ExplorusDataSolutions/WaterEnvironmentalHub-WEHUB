@@ -2,14 +2,18 @@ body {
 	background: #FFFFFF;
 	font-family: Helvetica;      
 	margin: auto;
+	text-align:center;
 }
 #main-body{
 	background:#F6F6F6;
+	text-align:center;
+	
 }
 #header-body{
 	width:1090px;
-	text-align:center;
+	text-align:left;
 	height:135px;
+	margin:0 auto;
 }
 #header-body .header-sign{
 	height:40px;
@@ -69,14 +73,18 @@ body {
 }
 #content-body{
 	background: #FFFFFF url(../images/bg-repeat.jpg) repeat-x;
+	text-align:center;
 }
 #content-body .content{
 	padding:30px 10px;
 	width:1090px;
+	text-align:left;
+	margin:0 auto;
 }
 #footer-body{
 	background: #FFFFFF url(../images/bg-repeat-footer.jpg) repeat-x;
 	height:100px;
+	text-align:center;
 }
 #footer-body .footer-content{
 	width:1090px;
@@ -84,10 +92,11 @@ body {
 	padding-top:34px;
 	font-size:11px;
 	color:#C4C9CC;
+	text-align:left;
+	margin:0 auto;
 }
 #footer-body .footer-content ul{
 	list-style: none;
-	float:left;
 	margin:0px;
 }
 #footer-body .footer-content li{
