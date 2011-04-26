@@ -10,8 +10,18 @@
   left: 100px;
 }
 </style>
+<% if @user.errors.any? %>  
+<div id="error-explanation">  
+  <ul>  
+  <% @user.errors.full_messages.each do |msg| %>  
+    <li><%= msg %></li>  
+  <% end %>  
+  </ul>  
+</div>  
+<% end %>  
+
 <%= form_for :user, :html => { :id => 'sign-in' } do |f| %>
-  <label for="user_username">Username:</label><%= f.text_field :login %>
-  <label for="user_password">Password:</label><%= f.password_field :password %>
-  <%= f.submit :"Sign-in", :name => 'sign_in' %>
+  <%= f.label :login %><%= f.text_field :login %>
+  <%= f.label :password %><%= f.password_field :password %>
+  <%= f.submit :"Sign-in" %>
 <% end %>

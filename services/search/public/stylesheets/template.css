@@ -15,24 +15,31 @@ body {
 	height:135px;
 	margin:0 auto;
 }
-#header-body .header-sign{
-	height:40px;
-	padding-top:10px;
-	float:right;
+
+.user-dashboard {
+  height:40px;
+  padding-top:10px;
+  float:right;
 }
-#header-body .signup{
-	float:right;
-	padding:0 14px;
+
+.user-dashboard .seperator {
+  border-left: solid 1px #E6E6E6;
+  width:1px;
+  color: #F6F6F6;
+  height:45px;
+  position: absolute;
 }
-#header-body .login{
-	float:right;
+.user-dashboard .log-in, .user-dashboard .log-out {
+  padding-left: 10px;
 }
-.header-sign .seperator{
-	float:right;
-	border-left:solid 1px #E6E6E6;
-	width:1px;
-	height:40px;
+.user-dashboard .sign-up, .user-dashboard .banner {
+  padding-right: 5px;
 }
+.user-dashboard .banner {
+  /*vertical-align: super;*/
+}
+
+
 #header-body .header-logo{
 	background: url(/images/header-logo.jpg) no-repeat;
 	width:258px;

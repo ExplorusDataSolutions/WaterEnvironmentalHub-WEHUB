@@ -1,7 +1,7 @@
 
 <script>
   $(document).ready(function() {
-       
+
     $('button').button();
     
     function download() {
@@ -50,19 +50,6 @@
         });      
         return false;
       });    
-
-    function showModal(message) {
-      var modal = $("#dialog-modal");
-      downloadPartial = $('#download-buttonset-fragment').clone().prepend('<br />').html();
-      modal.html(message + downloadPartial);
-      modal.dialog({
-        zIndex: 2000, /* override Open Layers */
-        height: 400,
-        width: 600,
-        modal: true
-      });
-      bindDownloadButtonset();
-    }
     
     $('#results, #dataset-navigation').click(function(e) {      
       if (e.target.hash) {
@@ -71,12 +58,17 @@
         var keywords = $('#search_query').val();
         $.getJSON('/search/info/', { id: id }, function(data) {
           if (data) { 
-            showModal('<span>name:</span> ' + data.title + '<br /><span>description:</span> ' + data.description + '<br /><span>date:</span> ' + data.publication_date) 
+            downloadPartial = $('#download-buttonset-fragment').clone().prepend('<br />').html();
+            WEHub.dialog('More details', '<span>name:</span> ' + data.title + '<br /><span>description:</span> ' + data.description + '<br /><span>date:</span> ' + data.publication_date + downloadPartial);
+
+            bindDownloadButtonset();
           }
         });
         return false;
       }
     });
+
+    
 
     $("#dataset-navigation").treeview({
       persist: "location",

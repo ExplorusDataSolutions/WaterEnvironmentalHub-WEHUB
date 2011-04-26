@@ -1,6 +1,7 @@
 load 'enginey_translator.rb'
 
 class UserController < ApplicationController
+  layout nil
 
   respond_to :html, :only => :sign_in
   respond_to :json, :except => :sign_in
@@ -13,21 +14,19 @@ class UserController < ApplicationController
   end 
 
   def sign_in
+    @user = User.new
+
     if request.post?
       begin
-        user = socialnetwork.sign_in(params[:user][:login], params[:user][:password])
-        respond_with(user) do |format|
-          if !user.nil?
-            :notice => "User was successfully logged in"
-            format.html { redirect_to :root }
-          else
-
-          end
+        @user = socialnetwork.sign_in(params[:user][:login], params[:user][:password])
+        session[:user] = @user
+        respond_with(@user) do |format|
+          format.html { redirect_to :root }
         end
       rescue Net::HTTPServerException => ex
-        :notice => "User could not be logged in"
+        @user.errors.add_to_base('User could not be authenticated. Check your Login and Password.')
       end
-    end
+    end    
   end
 
   def sign_out
