@@ -1,0 +1,40 @@
+
+<script>
+  $(document).ready(function() {
+    $('.log-out').click(function(event) {
+      event.preventDefault();
+      $.get('/user/sign_out', function(data) {
+        window.location.reload();
+      });
+    });
+
+    $('.log-in').click(function(event) {
+      event.preventDefault();
+      $.get('/user/sign_in', function(html) {
+        WEHub.dialog('Log in', html);
+      });
+    });
+  });      
+</script>
+
+<div class="user-dashboard">
+<% if !logged_in? %>
+  <div class="no-auth" >
+	  <a class="sign-up" href="#">
+		  <img src="/images/signup.jpg" border="0" alt="Sign up">
+	  </a>
+	  <span class="seperator">|</span>
+	  <a class="log-in" href="#">
+		  <img src="/images/login.jpg" border="0" alt="Log in">
+	  </a>
+  </div>
+<% else %>
+  <div class="auth">
+    <span class="banner">Welcome <a href="#" class="profile"><%= current_user.display_name %></a></span>
+	  <span class="seperator">|</span>
+	  <a class="log-out" href="#">
+		  <img src="/images/logout.jpg" border="0" alt="Log out">
+	  </a>
+	</div>
+<% end %>
+</div>
