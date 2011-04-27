@@ -1,5 +1,6 @@
 class SearchController < ApplicationController
-
+  
+  
   def search_instance
     if @search_instance == nil
       @search_instance = Search.new
@@ -32,4 +33,10 @@ class SearchController < ApplicationController
     search_instance.refresh
     render :text => 'Success!'
   end
+  
+  def chart
+    f = File.read('public/chart.json')
+    @json = f.strip
+  end
+  
 end
