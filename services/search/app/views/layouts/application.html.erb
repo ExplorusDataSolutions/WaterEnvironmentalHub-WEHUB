@@ -17,9 +17,6 @@
 			#search_query {
 				width: 100px;
 			}
-			table {
-				width: 100%;      
-			}
 			#dialog-modal {
 				font-size: .8em;
 			}
@@ -44,9 +41,19 @@
 		
 		<div id="main-body">
 			<div id="header-body">
-
-        <%= render 'shared/user_dashboard' %>
-
+				<div class="header-sign">
+					<div class="signup">
+						<a href="#">
+							<img src="/images/signup.jpg" border="0" alt="sign up">
+						</a>
+					</div>
+					<div class="float-right seperator">&nbsp;</div>
+					<div class="signup">
+						<a href="#">
+							<img src="/images/login.jpg" border="0" alt="login">
+						</a>
+					</div>
+				</div>
 				<div class="clear"></div>
 				<div class="header-logo"></div>
 				<div class="header-tab">
