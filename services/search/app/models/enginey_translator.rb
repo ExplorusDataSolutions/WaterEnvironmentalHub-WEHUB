@@ -40,7 +40,8 @@ class EngineYTranslator
   end
 
   def groups(user_id)
-    post_json(groups_uri, "{ 'user_id': '#{user_id}', 'format': 'json' }")
+
+    groups_from_enginey(post_json(groups_uri, "{ 'user_id': '#{user_id}', 'format': 'json' }"))
   end
   
   private
@@ -63,6 +64,17 @@ class EngineYTranslator
     User.new(enginey_user['first_name'], enginey_user['last_name'], enginey_user['login'], enginey_user['email'], enginey_user['id'])
   end
 
+  def groups_from_enginey(response)
+    enginey_groups = JSON.parse(response)
+
+    groups = []
+    enginey_groups.each do |item|
+      groups.push(Group.new(item['id'], item['name'], item['private'], item['description']))
+    end
+
+    groups
+  end
+
   def get(uri)
     url = URI.parse(uri)
     request = Net::HTTP::Get.new(url.to_s)    
@@ -78,9 +90,7 @@ class EngineYTranslator
     request = Net::HTTP::Post.new(url.path)
     request.body = body
     request.content_type = 'application/json'
-
     request['cookie'] = self.storage
-
     response = Net::HTTP.start(url.host, url.port) {|http| http.request(request)}
     
     check_response(response)

@@ -103,6 +103,22 @@ $(document).ready(function() {
         </table>
       </td>
     </tr>
+    <tr>
+      <td colspan="2"><b>Groups</b><br />
+        <select name="groups" id="groups">
+          <option value="0" style="width: 100px;">loading...</option>
+        </select>
+
+        <script>
+          $(document).ready(function() {
+            $.get(<%= "'/user/groups?user_id=#{current_user.id}?format=html'" %>, function(data) {
+              $('#groups').html($(data).find('option'))
+            });
+          });
+        </script>
+
+      </td>
+    </tr>
 <%
 # This commented out section will be moved to another page
 =begin %>

@@ -3,7 +3,7 @@ load 'enginey_translator.rb'
 class UserController < ApplicationController
   layout nil
 
-  respond_to :html, :only => :sign_in
+  respond_to :html, :only => [:sign_in, :groups]
   respond_to :json, :except => :sign_in
 
   def socialnetwork
@@ -37,7 +37,10 @@ class UserController < ApplicationController
   end
 
   def groups
-    respond_with(socialnetwork.groups(params[:user_id]))
+    @groups = socialnetwork.groups(params[:user_id])
+    respond_with(@groups) do |format|
+      format.html { render :partial => 'groups' }
+    end
   end
 
 end
