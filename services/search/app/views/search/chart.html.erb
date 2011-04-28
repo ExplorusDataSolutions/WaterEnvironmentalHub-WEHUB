@@ -1,13 +1,10 @@
-<link href="/stylesheets/jqplot/jquery.jqplot.css" media="screen" rel="stylesheet" type="text/css" />
-<script src="/javascripts/jqplot/jquery.jqplot.js" type="text/javascript"></script>
-<script src="/javascripts/jqplot/jqplot.categoryAxisRenderer.js" type="text/javascript"></script>
-<script src="/javascripts/jqplot/jqplot.barRenderer.js" type="text/javascript"></script>
-<script src="/javascripts/jqplot/jqplot.cursor.js" type="text/javascript"></script>
+<%= stylesheet_link_tag "jqplot/jquery.jqplot"%>
+<%= javascript_include_tag "jqplot/jquery.jqplot","jqplot/jqplot.categoryAxisRenderer","jqplot/jqplot.barRenderer","jqplot/jqplot.cursor"%>
 
 <script type="text/javascript">
 	var data = '<%=@json%>';
 	var unescaped = $('<textarea />').html(data).val();
-	var json	=	$.evalJSON(unescaped);
+	var json	=	jQuery.parseJSON(unescaped);
 	var length	=	json.length;
 	var min_day	=	0;
 	var max_day	=	0;
