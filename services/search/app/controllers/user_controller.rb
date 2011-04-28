@@ -8,7 +8,7 @@ class UserController < ApplicationController
 
   def socialnetwork
     if @socialnetwork.nil?
-      @socialnetwork = EngineYTranslator.new
+      @socialnetwork = EngineYTranslator.new(session)
     end
     @socialnetwork
   end 
@@ -31,11 +31,13 @@ class UserController < ApplicationController
 
   def sign_out
     socialnetwork.sign_out
+    session[:user] = nil
     reset_session
     respond_with(:status => :ok)
   end
 
-  def index
-    respond_with(session[:user])
+  def groups
+    respond_with(socialnetwork.groups(params[:user_id]))
   end
+
 end
