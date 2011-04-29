@@ -25,9 +25,9 @@ class EngineYTranslator
     http = Net::HTTP.new(url.host, url.port)
     http.read_timeout = timeout
     http.open_timeout = timeout
-    response = http.start {|http| http.post(url.to_s, "{ 'login': '#{username}', 'password': '#{password}', 'remember_me': '1', 'format': 'json' }", { 'Content-Type' => 'application/json'}) }
+    response = http.start {|http| http.post(url.to_s, { :login => "#{username}", :password => "#{password}", :remember_me => "1", :format => "json" }.to_json, { 'Content-Type' => 'application/json'}) }
 
-    check_response(response)    
+    response.value    
 
     self.storage = response['set-cookie']
     @user = user_from_enginey(response.body)
@@ -40,11 +40,18 @@ class EngineYTranslator
   end
 
   def groups(user_id)
+    groups_from_enginey(post_json(groups_uri, { :user_id => "#{user_id}" }))
+  end
 
-    groups_from_enginey(post_json(groups_uri, "{ 'user_id': '#{user_id}', 'format': 'json' }"))
+  def logged_in?
+    post_json(signed_in_uri)
   end
   
   private
+
+  def signed_in_uri
+    "http://#{@server_address}/sessions/logged_in"
+  end
 
   def groups_uri
     "http://#{@server_address}/groups/index"
@@ -81,20 +88,19 @@ class EngineYTranslator
     response = Net::HTTP.start(url.host, url.port) { |http| http.request(request) }
 
     check_response(response)
-
     response.body
   end
 
-  def post_json(uri, body)
+  def post_json(uri, json_hash={})
+    json_hash.merge!(:format => "json")
     url = URI.parse(uri)
     request = Net::HTTP::Post.new(url.path)
-    request.body = body
+    request.body = json_hash.to_json
     request.content_type = 'application/json'
     request['cookie'] = self.storage
     response = Net::HTTP.start(url.host, url.port) {|http| http.request(request)}
     
-    check_response(response)
-
+    response.value    
     response.body
   end
 
