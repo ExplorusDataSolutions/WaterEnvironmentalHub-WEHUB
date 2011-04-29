@@ -27,7 +27,7 @@
 	day_key		=	new Array();
 	day_val		=	new Array();
 	key 		=	0;
-	min_day		=	138;
+	min_day		=	140;
 	max_day		=	150;
 	for(i = min_day; i <= max_day; i++){
 		day_key[i]		=	key;
@@ -65,7 +65,8 @@ $(document).ready(function(){
 	}
 	
 	plot1 = $.jqplot('chart1', bars, {
-	    legend:{show:true, location:'ne'},title:'WEHub',
+	    legend:{show:true, location:'ne'},title: {text: 'Rainfall', show: true},
+
 	    series:lseries,
 	    axes:{
 	        xaxis:{renderer:$.jqplot.CategoryAxisRenderer,ticks: day_val}, 
@@ -95,5 +96,216 @@ $(document).ready(function(){
 </script>
 
 
-<div id="chart1" class="plot" style="width:1000px;height:560px;"></div>
-<div id="chart2" class="plot" style="width:1000px;height:60px;"></div>
+<div class="tab-menu-body">
+	<div class="tab-menu">
+		<a href="#">WE Data Map</a>
+	</div>
+	<div class="tab-menu tab-menu-select">
+		<a href="#">WE Data Graphs</a>
+	</div>
+	<div class="tab-menu">
+		<a href="#">Developers</a>
+	</div>
+</div>
+<div class="clear"></div>
+
+<div class="sub-content-body">
+	<div class="sub-content-left">
+		<div class="left-tab-body">
+			<div class="left-tab tab-select">
+				<a href="#">Bar</a>
+			</div>
+			<div class="left-tab">
+				<a href="#">Line</a>
+			</div>
+			<div class="left-tab">
+				<a href="#">Pie</a>
+			</div>
+			<div class="left-tab">
+				<a href="#">Table</a>
+			</div>
+		</div>
+		<div class="clear"></div>
+		<div id="filter-container">
+			<div class="filter-part">
+				<div class="filter-left">
+					<input type="checkbox">
+				</div>
+				<div class="filter-right">
+					<div>
+						<select class="select-box-1">
+							<option>Dataset</option>
+						</select>
+					</div>
+					<div>
+						<select class="select-box-2">
+							<option>X-axis</option>
+						</select>
+					</div>
+					<div>
+						<select class="select-box-2">
+							<option>Y-axis</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+			
+			<div class="filter-part">
+				<div class="filter-left">
+					<input type="checkbox">
+				</div>
+				<div class="filter-right">
+					<div>
+						<select class="select-box-1">
+							<option>Dataset</option>
+						</select>
+					</div>
+					<div>
+						<select class="select-box-2">
+							<option>X-axis</option>
+						</select>
+					</div>
+					<div>
+						<select class="select-box-2">
+							<option>Y-axis</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+			
+			<div class="filter-part">
+				<div class="filter-left">
+					&nbsp;
+				</div>
+				<div class="filter-right">
+					<div>
+						<span class="button">
+							<button>Graph</button>
+						</span>
+						<span class="button">
+							<button>Remove</button>
+						</span>
+					</div>
+					<div>
+						<span class="button">
+							<button>+ Dataset</button>
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+			
+			
+			
+			
+		</div>
+	</div>
+	<div class="sub-content-center">
+		<div class="chart-body">
+			<div class="chart">
+				<div id="chart1" class="plot" style="width:530px;height:360px;"></div>
+				<div id="chart2" class="plot" style="width:530px;height:60px;"></div>
+			</div>
+			
+		</div>
+		
+	</div>
+	<div class="sub-content-right">
+		<div class="right-content">
+			<div class="main-head">
+				<div class="float-left"><img src="/images/my-collection.jpg" alt="my collection" title="my collection" width="20" height="20"></div>
+				<div class="float-left"><h1>My Collection</h1></div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+			<div class="contents">
+				<div>
+					<h2>Shap Import Test 1</h2>
+				</div>
+				<div>
+					<a href="#">Add</a>
+				</div>
+				<div class="date">
+					2011-04-04 15:25:03 UTC
+				</div>
+			</div>
+			<div class="clear"></div>
+			<div class="contents">
+				<div>
+					<h2>Natural Polar Ecosystems</h2>
+				</div>
+				<div>
+					<a href="#">Add</a>
+				</div>
+				<div class="date">
+					2011-04-04 15:25:03 UTC
+				</div>
+			</div>
+			<div class="clear"></div>
+			<div class="contents">
+				<div>
+					<h2>Shap Import Test 2</h2>
+				</div>
+				<div>
+					<a href="#">Add</a>
+				</div>
+				<div class="date">
+					2011-04-04 15:25:03 UTC
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+		
+		<div class="right-content">
+			<div class="main-head">
+				<div class="float-left"><img src="/images/recently-viewed.jpg" alt="recently viewed" title="recently viewed" width="20" height="20"></div>
+				<div class="float-left"><h1>Recently Viewed</h1></div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+			<div class="contents">
+				<div>
+					<h2>Shap Import Test 1</h2>
+				</div>
+				<div>
+					<a href="#">Add</a>
+				</div>
+				<div class="date">
+					2011-04-04 15:25:03 UTC
+				</div>
+			</div>
+			<div class="clear"></div>
+			<div class="contents">
+				<div>
+					<h2>Natural Polar Ecosystems</h2>
+				</div>
+				<div>
+					<a href="#">Add</a>
+				</div>
+				<div class="date">
+					2011-04-04 15:25:03 UTC
+				</div>
+			</div>
+			<div class="clear"></div>
+			<div class="contents">
+				<div>
+					<h2>Shap Import Test 2</h2>
+				</div>
+				<div>
+					<a href="#">Add</a>
+				</div>
+				<div class="date">
+					2011-04-04 15:25:03 UTC
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+		
+	</div>
+	<div class="clear"></div>
+</div>
+

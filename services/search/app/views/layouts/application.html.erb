@@ -57,7 +57,7 @@
 						<li>
 							<a href="#">WE Data Catalogue</a>
 						</li>
-						<li>
+						<li class="selected">
 							<a href="#">WE Tools</a>
 						</li>
 						<li>
@@ -75,7 +75,14 @@
 			<div class="clear"></div>
 			<div id="content-body">
 				<div class="content">
-					<div id="tabs">
+					<div class="breadcrumb-body">
+						<span>WE Tools</span>
+						<span class="braedcrumb-sep">></span>
+						<span class="breadcrumb-select">WE Data Graph</span>
+					</div>
+					<div class="clear"></div>
+					
+					<!--div id="tabs">
 						<ul>
 							<li><a href="#tabs-1">About</a></li>
 							<li><a href="#tabs-2">WE Data Catalogue</a></li>
@@ -84,13 +91,15 @@
 						</ul>
 						<div id="tabs-1">About</div>
 						<div id="tabs-2">
-						<!-- content -->      
-						<%= yield %>
-						<!-- end of content -->      
+						   
 						</div>
 						<div id="tabs-3">WE Tools</div>
 						<div id="tabs-4">Contact Us</div>
-					</div>
+					</div-->
+					
+					<!-- content -->      
+					<%= yield %>
+					<!-- end of content -->   
 				</div>
 			</div>
 			<div class="clear"></div>
