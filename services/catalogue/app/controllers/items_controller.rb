@@ -69,7 +69,7 @@ class ItemsController < ApplicationController
     errors = {}
       
     spreadsheet = params[:spreadsheet]
-    
+
     if errors.empty?
       filename = Rails.root.join('public', 'uploads', spreadsheet.original_filename)    
       File.open(filename, 'wb') do |file|
@@ -79,10 +79,13 @@ class ItemsController < ApplicationController
       dataset = Dataset.create(:name => params[:name], :description => params[:description], :feature_type => feature_type(params[:feature_type]), :feature_source => feature_source('catalogue'))
       
       if dataset.valid?
+        owner = owner(params[:owner])
         begin
           dataset.feature.create(spreadsheet.original_filename)
+          dataset.owner = owner
         rescue Exception => e
           Dataset.destroy(dataset.id)
+          Owner.destroy(owner.id)
           
           errors.store('spreadsheet', e)
         end
@@ -135,6 +138,11 @@ class ItemsController < ApplicationController
   
   def feature_source(feature_source)
     FeatureSource.find_by_name(feature_source)
+  end
+
+  def owner(owner)
+    owner.delete_if {|key, value| key == "group_id" && value == "0" }
+    Owner.create(owner)
   end
     
 end

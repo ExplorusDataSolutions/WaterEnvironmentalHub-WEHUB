@@ -33,8 +33,6 @@
   td.additional {
     font-style: italic;
   }
-  
-  
 </style>
 
 <script>
@@ -72,7 +70,7 @@ $(document).ready(function() {
 </script>
 
 <form accept-charset="UTF-8" action="http://localhost:3000/items/create" enctype="multipart/form-data" method="post">
-  
+  <input type="hidden" name="owner[user_id]" id="user_id" value="<%= current_user.id %>" />
   <table>
     <tr>
       <td><label for="name">Title</label></td><td><input id="name" name="name" type="text" /></td>
@@ -105,14 +103,14 @@ $(document).ready(function() {
     </tr>
     <tr>
       <td colspan="2"><b>Groups</b><br />
-        <select name="groups" id="groups">
-          <option value="0" style="width: 100px;">loading...</option>
+        <select name="owner[group_id]" id="groups">
+          <option value="0">Default (public)</option>
         </select>
 
         <script>
           $(document).ready(function() {
-            $.get(<%= "'/user/groups?user_id=#{current_user.id}?format=html'" %>, function(data) {
-              $('#groups').html($(data).find('option'))
+            $.get(<%= "'/user/groups?user_id=#{current_user.id}?format=html'" %>, function(html) {
+              $('#groups').html($(html).find('option')).val(0);
             });
           });
         </script>
