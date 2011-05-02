@@ -93,6 +93,13 @@ $(document).ready(function(){
 	});
 	$.jqplot.Cursor.zoomProxy(plot1,controlplot1);  
 });
+
+$(function() {
+	$( "button, input:submit, a", ".button" ).button();
+	$( "a", ".button" ).click(function() { return false; });
+});
+
+
 </script>
 
 
