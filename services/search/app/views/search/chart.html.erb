@@ -1,3 +1,6 @@
+<pre>
+	<%#=YAML::dump @hash%>
+</pre>
 <%= stylesheet_link_tag "jqplot/jquery.jqplot"%>
 <%= javascript_include_tag "jqplot/jquery.jqplot","jqplot/jqplot.categoryAxisRenderer","jqplot/jqplot.barRenderer","jqplot/jqplot.cursor"%>
 
@@ -60,7 +63,7 @@ $(document).ready(function(){
 	for (j = 0; j < 10; j++){
 		lseries[j]	=	new Array();
 		bars[j]	=	eval("list" + j);
-		lseries[j]['label']		=	'Datset ' + j+1;
+		lseries[j]['label']		=	'Datset ' + (j*1 + 1);
 		lseries[j]['renderer']	=	$.jqplot.BarRenderer; 
 	}
 	
@@ -91,7 +94,51 @@ $(document).ready(function(){
 	    	showTooltip: false
 		}
 	});
-	$.jqplot.Cursor.zoomProxy(plot1,controlplot1);  
+	$.jqplot.Cursor.zoomProxy(plot1,controlplot1); 
+	
+	
+	lineplot1 = $.jqplot('line-chart1', bars, {
+	    legend:{show:true, location:'ne'},title: {text: 'Rainfall', show: true},
+
+	    series:'',
+	    axes:{
+	        xaxis:{renderer:$.jqplot.CategoryAxisRenderer,ticks: day_val}, 
+	        yaxis:{min:0}
+	    },
+		cursor:{
+			zoom:true,
+	    	showTooltip: false
+		}
+	});
+	linecontrolplot1 = $.jqplot('line-chart2', bars, {
+	    legend:{show:false, location:'ne'},title:'',
+	    series:'',
+	    axesDefaults:{
+		    tickOptions:{
+		      showLabel:false, 
+		      showMark:false
+		    }
+		},
+		cursor:{
+			zoom:true,
+	    	showTooltip: false
+		}
+	});
+	$.jqplot.Cursor.zoomProxy(lineplot1,linecontrolplot1);
+	$('#line-chart').hide();
+	 
+	$('#bar-chart-div').click(function(){
+		$('#line-chart').hide();
+		$('#bar-chart').show();
+		$('#line-chart-div').removeClass('tab-select');
+		$('#bar-chart-div').addClass('tab-select');
+	});
+	$('#line-chart-div').click(function(){
+		$('#bar-chart').hide();
+		$('#line-chart').show();
+		$('#bar-chart-div').removeClass('tab-select');
+		$('#line-chart-div').addClass('tab-select');
+	});
 });
 
 $(function() {
@@ -119,17 +166,17 @@ $(function() {
 <div class="sub-content-body">
 	<div class="sub-content-left">
 		<div class="left-tab-body">
-			<div class="left-tab tab-select">
-				<a href="#">Bar</a>
+			<div id="bar-chart-div" class="left-tab tab-select">
+				Bar
+			</div>
+			<div id="line-chart-div" class="left-tab">
+				Line
 			</div>
 			<div class="left-tab">
-				<a href="#">Line</a>
+				Pie
 			</div>
 			<div class="left-tab">
-				<a href="#">Pie</a>
-			</div>
-			<div class="left-tab">
-				<a href="#">Table</a>
+				Table
 			</div>
 		</div>
 		<div class="clear"></div>
@@ -211,9 +258,13 @@ $(function() {
 	</div>
 	<div class="sub-content-center">
 		<div class="chart-body">
-			<div class="chart">
+			<div id="bar-chart" class="chart">
 				<div id="chart1" class="plot" style="width:530px;height:360px;"></div>
 				<div id="chart2" class="plot" style="width:530px;height:60px;"></div>
+			</div>
+			<div id="line-chart" class="chart">
+				<div id="line-chart1" class="plot" style="width:530px;height:360px;"></div>
+				<div id="line-chart2" class="plot" style="width:530px;height:60px;"></div>
 			</div>
 			
 		</div>
