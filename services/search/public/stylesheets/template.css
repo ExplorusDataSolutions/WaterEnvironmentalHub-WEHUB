@@ -216,6 +216,7 @@ body {
 } 
 .sub-content-left .left-tab:hover{
 	background-color:#38AA3B;
+	cursor:pointer;
 }
 .sub-content-left .tab-select{
 	background-color:#38AA3B;
