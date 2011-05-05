@@ -15,12 +15,13 @@ def check_response(response)
   case response
   when Net::HTTPSuccess, Net::HTTPRedirection
   else
+    puts response.body
     response.error!  
   end
 end
 
-
 def get_geocens_data(url_param, service_id, layer)
+
   geocens_request = { 
     :request => "getdata", 
     :serviceid => service_id, 
@@ -31,12 +32,12 @@ def get_geocens_data(url_param, service_id, layer)
     },
     :bbox => {
       :upperright => {
-          :latitude => "90",
-          :longitude => "180" 
+          :longitude => "#{layer['bbox']['upperright']['longitude']}",
+          :latitude => "#{layer['bbox']['upperright']['latitude']}"
       },
       :bottomleft => {
-          :latitude => "-90" ,
-          :longitude => "-180" 
+          :longitude => "#{layer['bbox']['bottomleft']['longitude']}",
+          :latitude => "#{layer['bbox']['bottomleft']['latitude']}"
       }
     }
   }
@@ -48,17 +49,10 @@ def get_geocens_data(url_param, service_id, layer)
     http.read_timeout = timeout
     http.open_timeout = timeout
     response = http.start {|http| http.post(url.to_s, geocens_request.to_json, { 'Content-Type' => 'application/json'}) }
-    
+  
     check_response(response)
-    
-    if !response.body.empty?
-      data = (JSON.parse(response.body))['data']
-      if !data.nil? && !data.empty?
-        puts "Layer #{layer['id']} on service #{service_id} returns data"
         
-        return response.body
-      end
-    end
+    return true
   rescue Exception => e
     puts "Failure on layer #{layer['id']} on service #{service_id}\n\t Exception: #{e}"
   end
@@ -69,19 +63,16 @@ end
 def add_to_catalogue(source_uri, service_hash)
   puts "Updating Catalogue"
   
-  keywords = service_hash[:keywords]
-  if keywords.nil? || keywords.empty?
-    keywords = "#{service_hash[:name]} #{service_hash[:provider]}"
-  end
+  keywords = "#{service_hash['keywords']}, #{service_hash['title']}, #{service_hash['providername']}, #{service_hash['authorname']}"
 
   request = { 
     :source => 'geocens', 
-    :name => service_hash[:name], 
-    :description => service_hash[:description], 
+    :name => service_hash['title'], 
+    :description => service_hash['description'], 
     :keywords => keywords, 
     :source_uri => source_uri
   }
-  
+
   url_param = 'http://localhost:3000/items/load_external_meta_content'
   timeout = 500
   url = URI.parse(url_param)
@@ -90,9 +81,9 @@ def add_to_catalogue(source_uri, service_hash)
   http.open_timeout = timeout
   
   response = http.start {|http| http.post(url.to_s, request.to_json, { 'Content-Type' => 'application/json'}) }
-  
+
   check_response(response)
-  
+    
   if response.body.chomp(' ').empty?
     puts "Failure, record for #{source_uri} was not updated"
   else 
@@ -107,6 +98,8 @@ puts "Discovered #{service_list.count} services on #{Time.new}"
 service_list.each do |service|
   service_id = service['id']
   service_uri = "#{geocens_base}/service/#{service_id}"
+  
+  add_to_catalogue(service_uri, service)
   layer_list = (JSON.parse(http_get(service_uri)))['layerlist']
   if layer_list.is_a? Array
     puts "Discovered #{layer_list.count} layers on service #{service_id}"
