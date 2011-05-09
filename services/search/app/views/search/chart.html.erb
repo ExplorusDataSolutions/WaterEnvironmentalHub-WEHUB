@@ -1,5 +1,5 @@
 <%= stylesheet_link_tag "jqplot/jquery.jqplot"%>
-<%= javascript_include_tag "jqplot/jquery.jqplot","jqplot/jqplot.categoryAxisRenderer","jqplot/jqplot.barRenderer","jqplot/jqplot.cursor"%>
+<%= javascript_include_tag "jqplot/jquery.jqplot","jqplot/jqplot.categoryAxisRenderer","jqplot/jqplot.barRenderer","jqplot/jqplot.pieRenderer","jqplot/jqplot.cursor"%>
 
 <script type="text/javascript">
 	var data 		=	'<%=@json%>';
@@ -56,13 +56,26 @@ $.jqplot.config.enablePlugins = true;
 $(document).ready(function(){
 
 	bars		=	new Array();
+	pie		=	new Array();
+	pies		=	new Array();
 	lseries		=	new Array();
 	for (j = 0; j < 10; j++){
 		lseries[j]	=	new Array();
+		pie[j]	=	new Array();
 		bars[j]	=	eval("list" + j);
-		lseries[j]['label']		=	'Datset ' + (j*1 + 1);
+		
+		
+		var label				=	'Datset' + (j*1 + 1);
+		
+		lseries[j]['label']		=	label
 		lseries[j]['renderer']	=	$.jqplot.BarRenderer; 
+		
+		var pie_val				=	eval(bars[j].join('+'));
+		
+		pie[j][0]	=	label;
+		pie[j][1]	=	pie_val;
 	}
+	
 	
 	plot1 = $.jqplot('chart1', bars, {
 	    legend:{show:true, location:'ne'},title: {text: 'Rainfall', show: true},
@@ -122,19 +135,53 @@ $(document).ready(function(){
 		}
 	});
 	$.jqplot.Cursor.zoomProxy(lineplot1,linecontrolplot1);
+	
+	
+	
+    pieplot1 = $.jqplot('pie-chart1', [pie], {
+        gridPadding: {top:0, bottom:38, left:0, right:0},
+      seriesDefaults:{renderer:$.jqplot.PieRenderer, trendline:{show:false}, rendererOptions: { padding: 8, showDataLabels: true}},
+                  legend:{
+                      show:true, 
+                      placement: 'outside', 
+                      rendererOptions: {
+                          numberRows: 2
+                      }, 
+                      location:'s',
+                      marginTop: '10px'
+                  },title: {text: 'Rainfall', show: true}       
+    });
+
+	
+	
+	
+	
 	$('#line-chart').hide();
+	$('#pie-chart').hide();
 	 
 	$('#bar-chart-div').click(function(){
 		$('#line-chart').hide();
+		$('#pie-chart').hide();
 		$('#bar-chart').show();
 		$('#line-chart-div').removeClass('tab-select');
+		$('#pie-chart-div').removeClass('tab-select');
 		$('#bar-chart-div').addClass('tab-select');
 	});
 	$('#line-chart-div').click(function(){
 		$('#bar-chart').hide();
+		$('#pie-chart').hide();
 		$('#line-chart').show();
 		$('#bar-chart-div').removeClass('tab-select');
+		$('#pie-chart-div').removeClass('tab-select');
 		$('#line-chart-div').addClass('tab-select');
+	});
+	$('#pie-chart-div').click(function(){
+		$('#bar-chart').hide();
+		$('#line-chart').hide();
+		$('#pie-chart').show();
+		$('#bar-chart-div').removeClass('tab-select');
+		$('#line-chart-div').removeClass('tab-select');
+		$('#pie-chart-div').addClass('tab-select');
 	});
 });
 
@@ -169,7 +216,7 @@ $(function() {
 			<div id="line-chart-div" class="left-tab">
 				Line
 			</div>
-			<div class="left-tab">
+			<div id="pie-chart-div" class="left-tab">
 				Pie
 			</div>
 			<div class="left-tab">
@@ -262,6 +309,10 @@ $(function() {
 			<div id="line-chart" class="chart">
 				<div id="line-chart1" class="plot" style="width:530px;height:360px;"></div>
 				<div id="line-chart2" class="plot" style="width:530px;height:60px;"></div>
+			</div>
+			
+			<div id="pie-chart" class="chart">
+				<div id="pie-chart1" class="plot" style="width:530px;height:360px;"></div>
 			</div>
 			
 		</div>
