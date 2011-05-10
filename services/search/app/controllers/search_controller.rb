@@ -37,6 +37,13 @@ class SearchController < ApplicationController
   def chart
     f = File.read('public/chart.json')
     @json = f.strip
+    
+    col             = File.read('public/my_collection.json')
+    @my_collection  = JSON.parse(col)
+    
+    recently        = File.read('public/recently_view.json')
+    @recently_view  = JSON.parse(recently)
+     
   end
   
 end

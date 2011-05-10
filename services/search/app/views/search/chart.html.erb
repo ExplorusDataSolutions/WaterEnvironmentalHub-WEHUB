@@ -56,18 +56,20 @@ $.jqplot.config.enablePlugins = true;
 $(document).ready(function(){
 
 	bars		=	new Array();
-	pie		=	new Array();
+	pie			=	new Array();
 	pies		=	new Array();
 	lseries		=	new Array();
+	cseries		=	new Array();
 	for (j = 0; j < 10; j++){
 		lseries[j]	=	new Array();
+		cseries[j]	=	new Array();
 		pie[j]	=	new Array();
 		bars[j]	=	eval("list" + j);
 		
 		
 		var label				=	'Datset' + (j*1 + 1);
 		
-		lseries[j]['label']		=	label
+		cseries[j]['label']		=	label
 		lseries[j]['renderer']	=	$.jqplot.BarRenderer; 
 		
 		var pie_val				=	eval(bars[j].join('+'));
@@ -91,8 +93,16 @@ $(document).ready(function(){
 		}
 	});
 	controlplot1 = $.jqplot('chart2', bars, {
-	    legend:{show:false, location:'ne'},title:'',
-	    series:'',
+	    legend:{
+              show:false, 
+              placement: 'outside', 
+              rendererOptions: {
+                  numberRows: 2
+              }, 
+              location:'s',
+              marginTop: '10px'
+          },title:'',
+	    series:cseries,
 	    axesDefaults:{
 		    tickOptions:{
 		      showLabel:false, 
@@ -326,44 +336,34 @@ $(function() {
 				<div class="clear"></div>
 			</div>
 			<div class="clear"></div>
+			
+			<%  
+			my_collection_count		=	@my_collection['display_count']
+			start_cnt						=	1
+			@my_collection['datas'].each do |collection|
+				if  start_cnt.to_i > my_collection_count.to_i
+					break
+				end
+			%>
 			<div class="contents">
 				<div>
-					<h2>Shap Import Test 1</h2>
+					<h2><%= collection['title']%></h2>
 				</div>
 				<div>
-					<a href="#">Add</a>
+					<a href="<%= collection['add_link']%>">Add</a>
 				</div>
 				<div class="date">
-					2011-04-04 15:25:03 UTC
+					<%= collection['date_time']%>
 				</div>
 			</div>
 			<div class="clear"></div>
-			<div class="contents">
-				<div>
-					<h2>Natural Polar Ecosystems</h2>
-				</div>
-				<div>
-					<a href="#">Add</a>
-				</div>
-				<div class="date">
-					2011-04-04 15:25:03 UTC
-				</div>
-			</div>
-			<div class="clear"></div>
-			<div class="contents">
-				<div>
-					<h2>Shap Import Test 2</h2>
-				</div>
-				<div>
-					<a href="#">Add</a>
-				</div>
-				<div class="date">
-					2011-04-04 15:25:03 UTC
-				</div>
-			</div>
-			<div class="clear"></div>
+			<% 
+				start_cnt += 1
+			end
+			%>
+					
 		</div>
-		<div class="clear"></div>
+		<div class="clear">&nbsp;</div>
 		
 		<div class="right-content">
 			<div class="main-head">
@@ -372,42 +372,34 @@ $(function() {
 				<div class="clear"></div>
 			</div>
 			<div class="clear"></div>
+			
+			<%  
+			recently_view_count		=	@recently_view['display_count']
+			start_cnt				=	1
+			@recently_view['datas'].each do |collection|
+				if  start_cnt.to_i > recently_view_count.to_i
+					break
+				end
+			%>
 			<div class="contents">
 				<div>
-					<h2>Shap Import Test 1</h2>
+					<h2><%= collection['title']%></h2>
 				</div>
 				<div>
-					<a href="#">Add</a>
+					<a href="<%= collection['add_link']%>">Add</a>
 				</div>
 				<div class="date">
-					2011-04-04 15:25:03 UTC
+					<%= collection['date_time']%>
 				</div>
 			</div>
 			<div class="clear"></div>
-			<div class="contents">
-				<div>
-					<h2>Natural Polar Ecosystems</h2>
-				</div>
-				<div>
-					<a href="#">Add</a>
-				</div>
-				<div class="date">
-					2011-04-04 15:25:03 UTC
-				</div>
-			</div>
-			<div class="clear"></div>
-			<div class="contents">
-				<div>
-					<h2>Shap Import Test 2</h2>
-				</div>
-				<div>
-					<a href="#">Add</a>
-				</div>
-				<div class="date">
-					2011-04-04 15:25:03 UTC
-				</div>
-			</div>
-			<div class="clear"></div>
+			<% 
+				start_cnt += 1
+			end
+			%>
+			
+			
+			
 		</div>
 		<div class="clear"></div>
 		
