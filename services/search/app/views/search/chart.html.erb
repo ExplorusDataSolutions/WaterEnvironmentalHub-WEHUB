@@ -340,7 +340,7 @@ $(function() {
 			<%  
 			my_collection_count		=	@my_collection['display_count']
 			start_cnt						=	1
-			@my_collection['datas'].each do |collection|
+			@my_collection['data'].each do |collection|
 				if  start_cnt.to_i > my_collection_count.to_i
 					break
 				end
@@ -376,7 +376,7 @@ $(function() {
 			<%  
 			recently_view_count		=	@recently_view['display_count']
 			start_cnt				=	1
-			@recently_view['datas'].each do |collection|
+			@recently_view['data'].each do |collection|
 				if  start_cnt.to_i > recently_view_count.to_i
 					break
 				end
