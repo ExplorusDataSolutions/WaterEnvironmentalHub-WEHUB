@@ -32,10 +32,6 @@
 				selected: 1
 				});
 			});
-			/*$(function() {
-				$( "button, input:submit, a", ".button" ).button();
-				$( "a", ".button" ).click(function() { return false; });
-			});*/
 		</script>
 		
 	</head>
@@ -47,7 +43,7 @@
         <%= render 'shared/user_dashboard' %>
 
 				<div class="clear"></div>
-				<div class="header-logo"></div>
+				<a href="<%= url_for :root %>"><div class="header-logo"></div></a>
 				<div class="header-tab">
 					<ul>
 						<li class="<%= @main_menu == 'home' ? 'selected' : ''%>">
@@ -96,26 +92,13 @@
 					</div>
 					<div class="clear"></div>
 					<% end%>
-					<!--div id="tabs">
-						<ul>
-							<li><a href="#tabs-1">About</a></li>
-							<li><a href="#tabs-2">WE Data Catalogue</a></li>
-							<li><a href="#tabs-3">WE Tools</a></li>
-							<li><a href="#tabs-4">Contact Us</a></li>
-						</ul>
-						<div id="tabs-1">About</div>
-						<div id="tabs-2">
-						   
-						</div>
-						<div id="tabs-3">WE Tools</div>
-						<div id="tabs-4">Contact Us</div>
-					</div-->
 					
 					<!-- content -->  
 					<div class="yield-body">    
 					<%= yield %>
 					</div>
 					<!-- end of content -->   
+
 				</div>
 			</div>
 			<div class="clear"></div>
