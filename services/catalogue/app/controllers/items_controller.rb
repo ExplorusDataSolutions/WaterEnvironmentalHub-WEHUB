@@ -76,16 +76,26 @@ class ItemsController < ApplicationController
         file.write(spreadsheet.read)
       end
 
-      dataset = Dataset.create(:name => params[:name], :description => params[:description], :feature_type => feature_type(params[:feature_type]), :feature_source => feature_source('catalogue'))
+      dataset = Dataset.create(
+        :name => params[:name], 
+        :description => params[:description], 
+        :source => params[:source],
+        :feature_period => feature_period(params),
+        :feature_type => feature_type(params[:feature_type]), 
+        :feature_source => feature_source('catalogue')
+      )
       
       if dataset.valid?
         owner = owner(params[:owner])
+        author = author(params[:author])
         begin
           dataset.feature.create(spreadsheet.original_filename)
           dataset.owner = owner
+          dataset.author = author
         rescue Exception => e
           Dataset.destroy(dataset.id)
           Owner.destroy(owner.id)
+          Author.destroy(author.id)
           
           errors.store('spreadsheet', e)
         end
@@ -102,14 +112,14 @@ class ItemsController < ApplicationController
         response = response + "#{value}"
       end
     else
-      response = 'Success!'
+      render :json => dataset and return
     end
     
     render :text => response
   end
   
   def load_external_meta_content
-    
+
     meta_content = FeatureMetaContent.find_by_source_uri(params[:source_uri])
     
     if meta_content.nil?
@@ -121,6 +131,10 @@ class ItemsController < ApplicationController
       }
 
       dataset = Dataset.create(dataset_params)
+      if !dataset.errors.empty?
+        render :text => dataset.errors, :status => 500 and return
+      end
+
       dataset.feature.create(params)
     else
       dataset = Dataset.find_by_uuid(meta_content.dataset_uuid)
@@ -132,12 +146,24 @@ class ItemsController < ApplicationController
 
   private
   
+  def author(params)
+    Author.create(:first_name => params[:first_name], :last_name => params[:last_name], :email => params[:email])
+  end
+
   def feature_type(feature_type)
     FeatureType.find_by_id(Integer(feature_type))
   end
   
   def feature_source(feature_source)
     FeatureSource.find_by_name(feature_source)
+  end
+
+  def feature_period(params)
+    if params.key?('bound')
+      params[:bound]
+    else
+      "#{params[:bound_start]} - #{params[:bound_end]}"
+    end
   end
 
   def owner(owner)

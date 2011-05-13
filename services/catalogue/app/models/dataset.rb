@@ -7,6 +7,7 @@ class Dataset < ActiveRecord::Base
   belongs_to :feature_type
   belongs_to :feature_source
   belongs_to :owner
+  has_one :author
 
   validates_presence_of :name, :description, :feature_type
   
@@ -27,7 +28,7 @@ class Dataset < ActiveRecord::Base
   
   def as_json(options={})    
     json = { 
-      :dataset => { :uuid => self.uuid, :name => self.name, :description => self.description, :methodology => self.methodology }, 
+      :dataset => { :uuid => self.uuid, :name => self.name, :description => self.description }, 
       :group => self.dataset_groups.first.as_json(:exclude => self.uuid)
     }
   end

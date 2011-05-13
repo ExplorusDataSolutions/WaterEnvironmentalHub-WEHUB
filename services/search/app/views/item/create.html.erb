@@ -79,7 +79,10 @@ $(document).ready(function() {
       <td><label for="description">Description</label></td><td><textarea id="description" name="description"></textarea></td>
     </tr>
     <tr>
-      <td style="width: 300px;"><label for="file">Upload file.</label></td><td><input id="spreadsheet" name="spreadsheet" type="file" /></td>
+      <td><label for="source">Source</label></td><td><input id="source" name="source" type="text" /></td>
+    </tr>
+    <tr>
+      <td style="width: 300px;"><label for="file">Upload file</label></td><td><input id="spreadsheet" name="spreadsheet" type="file" /></td>
     </tr>
     <tr>
       <td colspan="2" class="additional">Valid uploads include: <strong>Spreadsheets</strong> in .cvs, .ods, .xls, or .xlsx format, or <strong>Shape</strong> files (a .zip file) containing at least a .shp and .dbf file.</td>
@@ -87,7 +90,7 @@ $(document).ready(function() {
     <tr>
       <td colspan="2"><b>Feature type</b>
         <table class="feature_types">
-      <% feature_types = [{:description => 'Temporal (dynamic)', :id => 3}, {:description => 'Non-temporal (static)', :id => 4}] %>
+      <% feature_types = [{:description => 'Non-temporal (static)', :id => 3}, {:description => 'Temporal (dynamic)', :id => 4}] %>
       <% feature_types.each_with_index do |item| %>
         <%= "<tr><td><label for=\"feature_type_#{item[:id]}\">#{item[:description]}</label></td><td>".html_safe -%>
           <%= radio_button_tag 'feature_type', item[:id], false -%>
@@ -102,19 +105,43 @@ $(document).ready(function() {
       </td>
     </tr>
     <tr>
-      <td colspan="2"><b>Groups</b><br />
-        <select name="owner[group_id]" id="groups">
-          <option value="0">Default (public)</option>
-        </select>
+      <td colspan="2">
+        <table class="groups">
+          <tr>
+            <td><b>Groups</b><br /></td>
+          </tr>
+          <tr>
+            <td>
+              <select name="owner[group_id]" id="groups">
+                <option value="0">Default (public)</option>
+              </select>
 
-        <script>
-          $(document).ready(function() {
-            $.get(<%= "'/user/groups?user_id=#{current_user.id}?format=html'" %>, function(html) {
-              $('#groups').html($(html).find('option')).val(0);
-            });
-          });
-        </script>
-
+              <script>
+                $(document).ready(function() {
+                  $.get(<%= "'/user/groups?user_id=#{current_user.id}?format=html'" %>, function(html) {
+                    $('#groups').html($(html).find('option')).val(0);
+                  });
+                });
+              </script>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <table class="author">
+          <tr><td><b>Author</b></td></tr>
+          <tr>
+            <td><label for="author_first_name">First name</label></td><td><input id="author_first_name" name="author[first_name]" /></td>
+          </tr>
+          <tr>
+            <td><label for="author_last_name">Last name</label></td><td><input id="author_last_name" name="author[last_name]" /></td>
+          </tr>
+          <tr>
+            <td><label for="author_email">Email</label></td><td><input id="author_email" name="author[email]" /></td>
+          </tr>
+        </table>
       </td>
     </tr>
 <%
