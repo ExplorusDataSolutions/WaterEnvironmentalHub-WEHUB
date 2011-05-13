@@ -112,7 +112,7 @@ class ItemsController < ApplicationController
         response = response + "#{value}"
       end
     else
-      render :json => dataset and return
+      render :xml => dataset and return
     end
     
     render :text => response

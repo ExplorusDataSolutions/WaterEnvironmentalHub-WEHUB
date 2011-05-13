@@ -2,7 +2,6 @@
 dataset_00001: 
   description: Pam Dataset
   id: 1
-  methodology: 
   name: PAM Dataset
   uuid: fe4460ca-6dec-4b65-93fe-9b5d6e31e6e8
   feature_type_id: 4
@@ -12,7 +11,6 @@ dataset_00001:
 dataset_00002: 
   description: Natural Polar Ecosystems
   id: 2
-  methodology: 
   name: Natural Polar Ecosystems
   uuid: 416ad2bc-04cf-41eb-9c9b-7e440c21673b
   feature_type_id: 4
@@ -21,7 +19,6 @@ dataset_00002:
 dataset_00003: 
   description: IP3 Alpine Tundra Dataset
   id: 3
-  methodology: 
   name: IP3 Alpine Tundra Dataset
   uuid: ed8fb7c0-8e59-4884-a422-a8a3be49982b
   feature_type_id: 4
@@ -30,7 +27,6 @@ dataset_00003:
 dataset_00004: 
   description: CanVec Base Data Buildings
   id: 4
-  methodology: 
   name: CanVec Base Data Buildings
   uuid: 9df5b770-3f73-11e0-9207-0800200c9a66
   feature_type_id: 1
@@ -39,7 +35,6 @@ dataset_00004:
 dataset_00008: 
   description: CanVec Base Data Parks
   id: 8
-  methodology: 
   name: CanVec Base Data Parks
   uuid: c7d1d2f0-3f77-11e0-9207-0800200c9a66
   feature_type_id: 1
@@ -48,7 +43,6 @@ dataset_00008:
 dataset_00016: 
   description: CanVec Base Data WaterBodies
   id: 16
-  methodology: 
   name: CanVec Base Data WaterBodies
   uuid: fd9bb3a0-3f78-11e0-9207-0800200c9a66
   feature_type_id: 1
@@ -57,7 +51,6 @@ dataset_00016:
 dataset_00017: 
   description: CanVec Base Data Watercourse 
   id: 17
-  methodology: 
   name: CanVec Base Data Watercourse 
   uuid: 1d7f9c90-3f79-11e0-9207-0800200c9a66
   feature_type_id: 1
@@ -66,7 +59,6 @@ dataset_00017:
 dataset_00019: 
   description: CanVec Base Data Wetlands
   id: 19
-  methodology: 
   name: CanVec Base Data Wetlands
   uuid: 57a32fe0-3f79-11e0-9207-0800200c9a66
   feature_type_id: 1
@@ -75,7 +67,6 @@ dataset_00019:
 dataset_00021: 
   description: CanVec Base Data Province Boundaries
   id: 21
-  methodology: 
   name: CanVec Base Data Province Boundaries
   uuid: 9388be80-3f79-11e0-9207-0800200c9a66
   feature_type_id: 1
@@ -84,7 +75,6 @@ dataset_00021:
 dataset_00022: 
   description: CanVec Base Data Wetlands Project
   id: 22
-  methodology: 
   name: CanVec Base Data Wetlands Project
   uuid: c7f0bab0-3f79-11e0-9207-0800200c9a66
   feature_type_id: 1
@@ -93,7 +83,6 @@ dataset_00022:
 dataset_00026: 
   description: CanVec Hydro Base Data Lakes
   id: 26
-  methodology: 
   name: CanVec Hydro Base Data Lakes
   uuid: 4ff06730-3f7a-11e0-9207-0800200c9a66
   feature_type_id: 1
@@ -102,7 +91,6 @@ dataset_00026:
 dataset_00027: 
   description: CanVec Hydro Base Data Rivers
   id: 27
-  methodology: 
   name: CanVec Hydro Base Data Rivers
   uuid: 885cad90-3f7a-11e0-9207-0800200c9a66
   feature_type_id: 1
@@ -111,7 +99,6 @@ dataset_00027:
 dataset_00030: 
   description: GeoBase National Road Network Alberta Junctions
   id: 30
-  methodology: 
   name: GeoBase National Road Network Alberta Junctions
   uuid: edb6e020-3f7a-11e0-9207-0800200c9a66
   feature_type_id: 1
@@ -120,7 +107,6 @@ dataset_00030:
 dataset_00031: 
   description: GeoBase National Road Network Alberta Road Segments
   id: 31
-  methodology: 
   name: GeoBase National Road Network Alberta Road Segments
   uuid: 09abdba0-3f7b-11e0-9207-0800200c9a66
   feature_type_id: 1
