@@ -43,7 +43,14 @@ class SearchController < ApplicationController
     
     recently        = File.read('public/recently_view.json')
     @recently_view  = JSON.parse(recently)
-     
+    @breadcrumb     = Array.new
+    @breadcrumb[0]  = 'WE Tools'
+    @breadcrumb[1]  = 'WE Data Graph'
+    @main_menu      = 'we_tools'
   end
   
+  def home
+    @style_sheet          = "pages/home"
+    @main_menu    = 'home'
+  end
 end

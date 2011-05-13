@@ -1,5 +1,8 @@
+<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="jqplot/excanvas.js"></script><![endif]-->
 <%= stylesheet_link_tag "jqplot/jquery.jqplot"%>
-<%= javascript_include_tag "jqplot/jquery.jqplot","jqplot/jqplot.categoryAxisRenderer","jqplot/jqplot.barRenderer","jqplot/jqplot.pieRenderer","jqplot/jqplot.cursor"%>
+<%= javascript_include_tag "jqplot/jquery.jqplot","jqplot/jqplot.cursor","jqplot/jqplot.categoryAxisRenderer","jqplot/jqplot.barRenderer","jqplot/jqplot.pieRenderer","jqplot/jqplot.enhancedLegendRenderer"%>
+
+
 
 <script type="text/javascript">
 	var data 		=	'<%=@json%>';
@@ -80,7 +83,7 @@ $(document).ready(function(){
 	
 	
 	plot1 = $.jqplot('chart1', bars, {
-	    legend:{show:true, location:'ne'},title: {text: 'Rainfall', show: true},
+	    legend:{show:false, location:'ne'},title: {text: 'Rainfall', show: true},
 
 	    series:lseries,
 	    axes:{
@@ -88,13 +91,14 @@ $(document).ready(function(){
 	        yaxis:{min:0}
 	    },
 		cursor:{
-			zoom:true,
+			zoom:false,
 	    	showTooltip: false
 		}
 	});
 	controlplot1 = $.jqplot('chart2', bars, {
 	    legend:{
-              show:false, 
+			  renderer: $.jqplot.EnhancedLegendRenderer,
+              show:true, 
               placement: 'outside', 
               rendererOptions: {
                   numberRows: 2
@@ -118,7 +122,7 @@ $(document).ready(function(){
 	
 	
 	lineplot1 = $.jqplot('line-chart1', bars, {
-	    legend:{show:true, location:'ne'},title: {text: 'Rainfall', show: true},
+	    legend:{show:false, location:'ne'},title: {text: 'Rainfall', show: true},
 
 	    series:'',
 	    axes:{
@@ -131,8 +135,17 @@ $(document).ready(function(){
 		}
 	});
 	linecontrolplot1 = $.jqplot('line-chart2', bars, {
-	    legend:{show:false, location:'ne'},title:'',
-	    series:'',
+	    legend:{
+			  renderer: $.jqplot.EnhancedLegendRenderer,
+              show:true, 
+              placement: 'outside', 
+              rendererOptions: {
+                  numberRows: 2
+              }, 
+              location:'s',
+              marginTop: '10px'
+          },title:'',
+	    series:cseries,
 	    axesDefaults:{
 		    tickOptions:{
 		      showLabel:false, 
@@ -299,7 +312,7 @@ $(function() {
 					<div>
 						<span class="button">
 							<button>+ Dataset</button>
-						</span>
+					</span>
 					</div>
 				</div>
 			</div>
@@ -322,7 +335,7 @@ $(function() {
 			</div>
 			
 			<div id="pie-chart" class="chart">
-				<div id="pie-chart1" class="plot" style="width:530px;height:360px;"></div>
+			<div id="pie-chart1" class="plot" style="width:530px;height:360px;"></div>
 			</div>
 			
 		</div>
@@ -406,4 +419,3 @@ $(function() {
 	</div>
 	<div class="clear"></div>
 </div>
-
