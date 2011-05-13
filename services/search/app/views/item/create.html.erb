@@ -76,8 +76,8 @@
   </head>
   <body>
     <h2>Dataset entry form</h2>
-
-    <form accept-charset="UTF-8" action="http://localhost:3000/items/create" enctype="multipart/form-data" method="post">
+    
+    <form accept-charset="UTF-8" action="http://<%= request.host %>:3000/items/create" enctype="multipart/form-data" method="post">
       <input type="hidden" name="owner[user_id]" id="user_id" value="<%= logged_in? ? current_user.id : 0 %>" />
       <table>
         <tr>
