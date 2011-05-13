@@ -453,7 +453,7 @@ a{
 	line-height:1.5em;
 }
 .dashed-header{
-	background:#DFDFDF;
+	background:url(/images/header-repeat.jpg) repeat-x;
 	height:31px;
 }
 .dashed-header h2{
