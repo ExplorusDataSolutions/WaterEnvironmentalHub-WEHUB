@@ -57,13 +57,13 @@
 				<div class="header-tab">
 					<ul>
 						<li class="<%= @main_menu == 'home' ? 'selected' : ''%>">
-							<a href="#">Home</a>
+							<a href="/search/home">Home</a>
 						</li>
-						<li class="<%= @main_menu == 'we_data_catalogue' ? 'selected' : ''%>">
-							<a href="#">WE Data Catalogue</a>
+						<li class="<%= @main_menu == 'we_catalogue' ? 'selected' : ''%>">
+							<a href="/search/wecatalogue">WE Data Catalogue</a>
 						</li>
 						<li class="<%= @main_menu == 'we_tools' ? 'selected' : ''%>">
-							<a href="#">WE Tools</a>
+							<a href="/search/chart">WE Tools</a>
 						</li>
 						<li class="<%= @main_menu == 'we_community' ? 'selected' : ''%>">
 							<a href="#">WE Community</a>
@@ -117,8 +117,10 @@
 						<div id="tabs-4">Contact Us</div>
 					</div-->
 					
-					<!-- content -->      
+					<!-- content -->  
+					<div class="yield-body">    
 					<%= yield %>
+					</div>
 					<!-- end of content -->   
 				</div>
 			</div>

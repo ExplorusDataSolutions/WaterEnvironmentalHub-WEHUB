@@ -4,7 +4,6 @@
 }
 .home-top{
 	text-align:center;
-	margin:30px 0px;
 	padding:0 20px 35px 20px;
 	border-bottom:solid 2px #E3E3E3;
 }
@@ -130,7 +129,7 @@
 	padding:15px;
 }
 .home-middle{
-	
+	padding:30px 0 0 0;
 }
 .home-middle .home-middle-content{
 	width:310px;
