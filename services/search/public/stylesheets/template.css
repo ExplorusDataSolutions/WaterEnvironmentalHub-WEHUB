@@ -1,8 +1,11 @@
 body {
 	background: #FFFFFF;
-	font-family: Helvetica;      
+	font-family: Arial;      
 	margin: auto;
 	text-align:center;
+}
+a{
+	color:#0062C7;
 }
 .float-right{
 	float:right;
@@ -13,13 +16,18 @@ body {
 .clear{
 	clear:both;
 }
+.no-border{
+	border:none !important;
+}
 #main-body{
 	background:#F6F6F6;
 	text-align:center;
 	
 }
-#header-body{
+.full-width{
 	width:1090px;
+}
+#header-body{
 	text-align:left;
 	height:135px;
 	margin:0 auto;
@@ -57,7 +65,7 @@ body {
 }
 #header-body .header-tab{
 	float:right;
-	width:830px;
+	/*width:830px;*/
 }
 #header-body .header-tab ul{
 	list-style: none;
@@ -73,9 +81,7 @@ body {
 	font-family:Latinaires;
 	font-size:14px;
 }
-#header-body .header-tab li.no-border{
-	border:none !important;
-}
+
 #header-body .header-tab li a{
 	text-decoration:none;
 	color:#808080;
@@ -93,7 +99,6 @@ body {
 }
 #content-body .content{
 	padding:30px 10px;
-	width:1090px;
 	text-align:left;
 	margin:0 auto;
 }
@@ -103,7 +108,6 @@ body {
 	text-align:center;
 }
 #footer-body .footer-content{
-	width:1090px;
 	border-top:solid 1px #E2E2E2;
 	padding-top:34px;
 	font-size:11px;
@@ -122,9 +126,6 @@ body {
 	border-right:solid 1px #C4C9CC;
 	
 }
-#footer-body .footer-content li.no-border{
-	border-right:0px !important;
-}
 #footer-body .footer-content li a{
 	text-decoration:none;
 	color:#C4C9CC;
@@ -132,13 +133,22 @@ body {
 .breadcrumb-body{
 	margin:13px 0 0 0;
 	padding:6px 10px 0 10px;
-	width:1090px;
+	/*width:1090px;*/
 	height:30px;
 	background-color:#EDF7F9;
 	-moz-border-radius-bottomleft:5px;
 	-moz-border-radius-bottomright:5px;
 	-moz-border-radius-topleft:5px;
 	-moz-border-radius-topright:5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	
 	color:#525252;
 	font-family:Arial;
 	font-size:18px;
@@ -161,10 +171,15 @@ body {
 	margin:0 8px 0 0;
 	background-color:#CACAC8;
 	color:#FFFFFF;
-	padding:5px 16px 0 16px;
+	padding:10px 16px 0 16px;
 	-moz-border-radius-topleft:5px;
 	-moz-border-radius-topright:5px;
-	height:35px;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	
+	height:30px;
 	width:auto;
 }
 .tab-menu-body .tab-menu a{
@@ -180,12 +195,20 @@ body {
 .sub-content-body{
 	margin:0px;
 	padding:20px 15px 30px 15px;
-	width:1090px;
+	/*width:1090px;*/
 	border:solid 1px #D3D3D3;
 	-moz-border-radius-bottomleft:5px;
 	-moz-border-radius-bottomright:5px;
 	-moz-border-radius-topleft:5px;
 	-moz-border-radius-topright:5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
 }
 .sub-content-left{
 	float:left;
@@ -202,13 +225,22 @@ body {
 	margin:10px 4px;
 	background-color:#CACAC8;
 	color:#FFFFFF;
-	padding:1px 12px 0 12px;
+	padding:5px 10px 0 10px;
 	-moz-border-radius-bottomleft:5px;
 	-moz-border-radius-bottomright:5px;
 	-moz-border-radius-topleft:5px;
 	-moz-border-radius-topright:5px;
-	height:29px;
+	-webkit-border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	height:25px;
 	width:auto;
+	vertical-align:middle;
 }
 .sub-content-left .left-tab a{
 	color:#FFFFFF;
@@ -267,10 +299,18 @@ body {
 	-moz-border-radius-bottomright:5px;
 	-moz-border-radius-topleft:5px;
 	-moz-border-radius-topright:5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
 }
 .sub-content-center .chart-body .chart{
 	width:530px;
-	padding:20px 
+	padding:20px 20px 50px 20px 
 }
 .sub-content-right{
 	float:left;
@@ -313,3 +353,7 @@ body {
 	color:#AFAFAF;
 	font-size:12px;
 }
+.dotted-light-border{
+	border-bottom:dotted 1px #C4C4C4;
+}
+
