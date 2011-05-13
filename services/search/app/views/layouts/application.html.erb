@@ -3,6 +3,7 @@
 	<head>
 		<title>The Water and Environment Hub (WEHUB)</title>
 		<%= stylesheet_link_tag :all %>
+		<%= stylesheet_link_tag @style_sheet ? @style_sheet : '' %>
 		
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script> 
 		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script> 
@@ -37,13 +38,17 @@
 				selected: 1
 				});
 			});
+			/*$(function() {
+				$( "button, input:submit, a", ".button" ).button();
+				$( "a", ".button" ).click(function() { return false; });
+			});*/
 		</script>
 		
 	</head>
 	<body>
 		
 		<div id="main-body">
-			<div id="header-body">
+			<div id="header-body" class="full-width">
 
         <%= render 'shared/user_dashboard' %>
 
@@ -51,22 +56,22 @@
 				<div class="header-logo"></div>
 				<div class="header-tab">
 					<ul>
-						<li>
-							<a href="#">Home</a>
+						<li class="<%= @main_menu == 'home' ? 'selected' : ''%>">
+							<a href="/search/home">Home</a>
 						</li>
-						<li>
-							<a href="#">WE Data Catalogue</a>
+						<li class="<%= @main_menu == 'we_catalogue' ? 'selected' : ''%>">
+							<a href="/search/wecatalogue">WE Data Catalogue</a>
 						</li>
-						<li class="selected">
-							<a href="#">WE Tools</a>
+						<li class="<%= @main_menu == 'we_tools' ? 'selected' : ''%>">
+							<a href="/search/chart">WE Tools</a>
 						</li>
-						<li>
+						<li class="<%= @main_menu == 'we_community' ? 'selected' : ''%>">
 							<a href="#">WE Community</a>
 						</li>
-						<li>
+						<li class="<%= @main_menu == 'about' ? 'selected' : ''%>">
 							<a href="#">About</a>
 						</li>
-						<li class="no-border">
+						<li class="no-border <%= @main_menu == 'contact_us' ? 'selected' : ''%>">
 							<a href="#">Contact Us</a>
 						</li>
 					</ul>
@@ -74,14 +79,29 @@
 			</div>
 			<div class="clear"></div>
 			<div id="content-body">
-				<div class="content">
+				<div class="content full-width">
+					<% 
+					
+					if !@breadcrumb.nil?
+						breadcrumb_length		=	@breadcrumb.length
+						cnt						=	1
+					%>
 					<div class="breadcrumb-body">
-						<span>WE Tools</span>
+						<% 
+						@breadcrumb.each do|breadcrumb|
+							
+						%>
+						<span <%=  (cnt == breadcrumb_length) ? "class='breadcrumb-select'" : '' %>><%= breadcrumb%></span>
+						<% if breadcrumb_length != cnt%>
 						<span class="braedcrumb-sep">></span>
-						<span class="breadcrumb-select">WE Data Graph</span>
+						<% end%>
+						<% 
+						cnt += 1
+						end
+						%>
 					</div>
 					<div class="clear"></div>
-					
+					<% end%>
 					<!--div id="tabs">
 						<ul>
 							<li><a href="#tabs-1">About</a></li>
@@ -97,14 +117,16 @@
 						<div id="tabs-4">Contact Us</div>
 					</div-->
 					
-					<!-- content -->      
+					<!-- content -->  
+					<div class="yield-body">    
 					<%= yield %>
+					</div>
 					<!-- end of content -->   
 				</div>
 			</div>
 			<div class="clear"></div>
 			<div id="footer-body">
-				<div class="footer-content">
+				<div class="footer-content full-width">
 					<div class="float-left" style="width:36px">
 						<img src="/images/logo-footer.jpg" alt="WE Hub" border="0" align="top">
 					</div>
