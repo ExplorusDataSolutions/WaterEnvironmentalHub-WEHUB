@@ -51,22 +51,22 @@
 				<div class="header-tab">
 					<ul>
 						<li class="<%= @main_menu == 'home' ? 'selected' : ''%>">
-							<a href="/search/home">Home</a>
+              <%= link_to 'Home', :root %>
 						</li>
 						<li class="<%= @main_menu == 'we_catalogue' ? 'selected' : ''%>">
-							<a href="/search/wecatalogue">WE Data Catalogue</a>
+              <%= link_to 'WE Data Catalogue', :controller => 'search' %>
 						</li>
 						<li class="<%= @main_menu == 'we_tools' ? 'selected' : ''%>">
-							<a href="/search/chart">WE Tools</a>
+              <%= link_to 'WE Tools', :controller => 'tools', :action => 'chart' %>
 						</li>
 						<li class="<%= @main_menu == 'we_community' ? 'selected' : ''%>">
-							<a href="#">WE Community</a>
+              <%= link_to 'WE Community', :controller => 'user', :action => 'community' %>
 						</li>
 						<li class="<%= @main_menu == 'about' ? 'selected' : ''%>">
-							<a href="#">About</a>
+              <%= link_to 'About', :controller => 'application', :action => 'about' %>
 						</li>
 						<li class="no-border <%= @main_menu == 'contact_us' ? 'selected' : ''%>">
-							<a href="#">Contact Us</a>
+              <%= link_to 'Contact Us', :controller => 'application', :action => 'contact_us' %>
 						</li>
 					</ul>
 				</div>

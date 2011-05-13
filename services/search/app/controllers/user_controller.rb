@@ -47,4 +47,7 @@ class UserController < ApplicationController
     render :json => socialnetwork.logged_in?
   end
 
+  def community
+  end
+
 end
