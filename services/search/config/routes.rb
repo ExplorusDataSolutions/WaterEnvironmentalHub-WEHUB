@@ -3,7 +3,9 @@ Catalogue::Application.routes.draw do
 
   #resources :search
 
-  root :to => "search#index"
+  root :to => "catalogue#index"
+  
+  match 'catalogue/search' => 'search#index'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -43,4 +43,8 @@ class UserController < ApplicationController
     end
   end
 
+  def signed_in
+    render :json => socialnetwork.logged_in?
+  end
+
 end

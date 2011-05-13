@@ -1,3 +1,14 @@
+<script>
+  $(document).ready(function() {
+    $("input[type=text]:first").focus();
+  });    
+</script>
+<style>
+  #search_submit {
+    display: none;
+  }
+</style>
+
 <div class="home-top">
 	<div class="home-top-left">
 		<div class="home-search-left"></div>
@@ -7,11 +18,11 @@
 				<tr>
 					<td align="center" colspan="2">
 						<div class="home-search-text-container">
-							<div class="home-search-text-left"></div>
-							<div class="home-search-text-center">
-								<input type="text" value="Keyword">
-							</div>
-							<div class="home-search-button"></div>
+							<div class="home-search-text-left"></div>							
+            <%= form_for :search, :url => { :controller => 'search' } do |f| %>
+              <div class="home-search-text-center"><%= f.text_field :query, :name => 'query' %></div>
+              <div class="home-search-button" onclick="$('form').submit();"><%= f.submit :search, :name => 'search' %></div>
+            <% end %>
 						</div>
 					</td>
 				</tr>
