@@ -1,0 +1,251 @@
+<div class="top-back-link">
+		<a href="#">Back to Search Results</a>
+</div>
+<div class="top-container-tab-body" >
+	<div class="top-container-tab">
+		+ Comments
+	</div>
+	<div class="top-container-tab">
+		+ My Collection
+	</div>
+	<div class="top-container-tab">
+		<div class="float-left tab-download">Download</div><div class="float-left tab-download-arrow"></div>
+	</div>
+</div><div class="clear"></div>
+	
+<div class="clear"></div>
+
+<div class="left-container-tab-body">
+	<div class="tab">Map</div>
+	<div class="tab">Graph</div>
+	<div class="tab">Connect</div>
+</div>
+<div class="right-container-body">
+	<div class="right-container-left-body">
+		<div class="dashed-header"><h2>GROUND WATER BODY MAP OF THE CANADIAN</h2></div>
+		<div class="clear"></div>
+		<div class="slight-margin">
+			<h2 class="green-dot-blue-head">Metadata</h2>
+			
+			<div class="float-left width-165 title">Title</div>
+			<div class="float-left width-500 text">Ground water body map of the Canada</div>
+			<div class="clear"></div>
+			
+			<div class="float-left width-165 title">Date</div>
+			<div class="float-left width-500 text">2007-03-07T00:00:00</div>
+			<div class="clear"></div>
+			
+			<div class="float-left width-165 title">Abstract</div>
+			<div class="float-left width-500 text">
+				Ground water body map of the Netherland
+				<br />
+				(source: Department of Waterways and Public Waterdient
+			</div>
+			<div class="clear"></div>
+			<div class="clear height-25"></div>
+			
+			<div class="float-left">
+			<h2 class="green-dot-blue-head">Geographic bounding box</h2>
+				<div class="float-left width-165 title">East Bound Longitude</div>
+				<div class="float-left width-140 text">7.21097</div>
+				<div class="clear"></div>
+				
+				<div class="float-left width-165 title">West Bound Longitude</div>
+				<div class="float-left width-140 text">3.37087</div>
+				<div class="clear"></div>
+				
+				<div class="float-left width-165 title">North Bound Latitude</div>
+				<div class="float-left width-140 text">53.46583</div>
+				<div class="clear"></div>
+				
+				<div class="float-left width-165 title">South Bound Latitude</div>
+				<div class="float-left width-140 text">50.75388</div>
+				<div class="clear height-25"></div>
+			</div>
+			<div class="float-left slight-margin">
+				<img src="/images/temp-map.jpg" title="map" alt="Map" />
+			</div>
+			<div class="clear"></div>
+						
+			<h2 class="green-dot-blue-head">Point of contact</h2>
+			
+			<div class="float-left width-165 title">Individual name</div>
+			<div class="float-left width-500 text">Ronald Vernes</div>
+			<div class="clear"></div>
+			
+			<div class="float-left width-165 title">Organisation name</div>
+			<div class="float-left width-500 text">Deltares/TNO Geological Survey of the Canada</div>
+			<div class="clear"></div>
+			
+			<div class="float-left width-165 title">Email</div>
+			<div class="float-left width-500 text">Ronald.Vernes@tno.nl</div>
+			<div class="clear"></div>
+			
+			<div class="float-left width-165 title">Role</div>
+			<div class="float-left width-500 text">PointOfContact</div>
+			<div class="clear"></div>
+			
+			<div class="float-left width-165 title">Desctiptive keyword</div>
+			<div class="float-left width-500 text">ground water bodievvs. ground water (theme)</div>
+			<div class="clear"></div>
+			
+			<div class="clear height-25"></div>
+			
+			
+			<h2 class="green-dot-blue-head">Distribution information</h2>
+			
+			<div class="float-left width-165 title">Intractive Map</div>
+			<div class="float-left width-500 text">http://www.dinoservice.nl/wms/dinomap/MO8MOO21?format=image/png</div>
+			<div class="clear"></div>
+			
+			<div class="clear height-25"></div>
+			
+			
+			<h2 class="green-dot-blue-head">Indentification Information</h2>
+			
+			<div class="float-left width-165 title">File identifier</div>
+			<div class="float-left width-500 text">6e646flb-6e646flb-6e646flb-6e646flb-6e646flb</div>
+			<div class="clear"></div>
+			
+			<div class="float-left width-165 title">Language</div>
+			<div class="float-left width-500 text">English</div>
+			<div class="clear"></div>
+			
+			<div class="float-left width-165 title">Character set</div>
+			<div class="float-left width-500 text">utf8</div>
+			<div class="clear"></div>
+			
+			<div class="float-left width-165 title">Date stamp</div>
+			<div class="float-left width-500 text">2009-06-26T10:07:03</div>
+			<div class="clear"></div>
+			
+			<div class="float-left width-165 title">Metadata standard name</div>
+			<div class="float-left width-500 text">ISO 19115:2003/19139</div>
+			<div class="clear"></div>
+			
+			<div class="float-left width-165 title">Metadata standard version</div>
+			<div class="float-left width-500 text">1.0</div>
+			<div class="clear"></div>
+			
+			<div class="clear height-25"></div>
+			
+			
+		</div>
+	</div>
+	
+	<div class="sub-content-right">
+		<div class="right-content">
+			<div class="main-head">
+				<div class="float-left"><img src="/images/my-collection.jpg" alt="my collection" title="my collection" width="20" height="20"></div>
+				<div class="float-left"><h1>My Collection</h1></div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+			
+			<%  
+			my_collection_count		=	@my_collection['display_count']
+			start_cnt						=	1
+			@my_collection['data'].each do |collection|
+				if  start_cnt.to_i > my_collection_count.to_i
+					break
+				end
+			%>
+			<div class="contents">
+				<div>
+					<h2><%= collection['title']%></h2>
+				</div>
+				<div>
+					<a href="<%= collection['add_link']%>">Add</a>
+				</div>
+				<div class="date">
+					<%= collection['date_time']%>
+				</div>
+			</div>
+			<div class="clear"></div>
+			<% 
+				start_cnt += 1
+			end
+			%>
+					
+		</div>
+		<div class="clear">&nbsp;</div>
+		
+		<div class="right-content">
+			<div class="main-head">
+				<div class="float-left"><img src="/images/recently-viewed.jpg" alt="recently viewed" title="recently viewed" width="20" height="20"></div>
+				<div class="float-left"><h1>Recently Viewed</h1></div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+			
+			<%  
+			recently_view_count		=	@recently_view['display_count']
+			start_cnt				=	1
+			@recently_view['data'].each do |collection|
+				if  start_cnt.to_i > recently_view_count.to_i
+					break
+				endKazhikkam
+			%>
+			<div class="contents">
+				<div>
+					<h2><%= collection['title']%></h2>
+				</div>
+				<div>
+					<a href="<%= collection['add_link']%>">Add</a>
+				</div>
+				<div class="date">
+					<%= collection['date_time']%>
+				</div>
+			</div>
+			<div class="clear"></div>
+			<% 
+				start_cnt += 1
+			end
+			%>
+			
+			
+			
+		</div>
+		<div class="clear">&nbsp;</div>
+		
+		
+		<div class="right-content">
+			<div class="main-head">
+				<div class="float-left"><img src="/images/icon-comments.jpg" alt="Comments" title="Comments" width="20" height="20"></div>
+				<div class="float-left"><h1>Comments</h1></div>
+				<div class="clear"></div>
+			</div>
+			<div id="star" class="star" align="left">
+				<p class="color" style="width: <%= @rating%>px;text-align:left;">
+				<p class="gray"/>                                  
+			</div>
+			<div class="clear"></div>
+			<div class="contents">
+				Data is taken at a high frequently, however there are many missing measurements.
+			</div>
+			<div class="clear">&nbsp;</div>
+			
+			<div id="star" class="star" align="left">
+				<p class="color" style="width: <%= @rating%>px;text-align:left;">
+				<p class="gray"/>                                  
+			</div>
+			<div class="clear"></div>
+			<div class="contents">
+				Data is taken at a high frequently, however there are many missing measurements.
+			</div>
+			<div class="clear">&nbsp;</div>
+			<span class="button">
+				<button>See All</button>
+			</span>			
+		</div>
+		<div class="clear"></div>
+		
+		
+		
+		
+	</div>
+	<div class="clear"></div>
+	
+</div>
+
+<div class="clear"></div>

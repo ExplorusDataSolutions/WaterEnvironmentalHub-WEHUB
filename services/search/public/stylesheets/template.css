@@ -19,6 +19,75 @@ a{
 .no-border{
 	border:none !important;
 }
+.text-align-center{
+	text-align:center;
+}
+.text-plain-left{
+	float:left;
+	width:5px;
+	height:30px;
+	background:url(/images/text-plain-left.jpg) no-repeat;
+}
+.text-plain-right{
+	float:left;
+	width:5px;
+	height:30px;
+	background:url(/images/text-plain-right.jpg) no-repeat;
+}
+.text-plain-repeat-205{
+	float:left;
+	width:205px;
+	height:30px;
+	background:url(/images/text-plain-repeat.jpg) repeat-x;
+}
+.text-plain-repeat-205 input[type="text"], .text-plain-repeat-205 input[type="password"], .text-plain-repeat-205 select{
+	width:100%;
+	border:none;
+	background:none;
+	height:22px;
+	margin:5px;
+	color:#838282;
+}
+.text-shade-left{
+	float:left;
+	width:5px;
+	height:30px;
+	background:url(/images/text-shade-left.jpg) no-repeat;
+}
+.text-shade-right{
+	float:left;
+	width:5px;
+	height:30px;
+	background:url(/images/text-shade-right.jpg) no-repeat;
+}
+.text-shade-repeat-205{
+	float:left;
+	width:205px;
+	height:30px;
+	background:url(/images/text-shade-repeat.jpg) repeat-x;
+}
+.text-shade-repeat-205 input[type="text"], .text-shade-repeat-205 input[type="password"], .text-shade-repeat-205 select{
+	width:100%;
+	border:none;
+	background:none;
+	height:22px;
+	margin:5px;
+	color:#838282;
+}
+.text-shade-repeat-95{
+	float:left;
+	width:95px;
+	height:30px;
+	background:url(/images/text-shade-repeat.jpg) repeat-x;
+}
+.text-shade-repeat-95 input[type="text"], .text-shade-repeat-95 input[type="password"], .text-shade-repeat-95 select{
+	width:100%;
+	border:none;
+	background:none;
+	height:22px;
+	margin:5px;
+	color:#838282;
+}
 #main-body{
 	background:#F6F6F6;
 	text-align:center;
@@ -472,14 +541,33 @@ a{
 .slight-margin{
 	margin:10px;
 }
+.height-10{
+	height:10px;
+}
+.height-15{
+	height:15px;
+}
+.height-20{
+	height:20px;
+}
 .height-25{
 	height:25px;
+}
+.height-30{
+	height:30px;
 }
 .width-165{
 	width:165px;
 }
 .width-500{
 	width:500px;
+}
+.light-black-head h2{
+	font-size:15px;
+	color:#000000;
+	font-weight:bold;
+	margin:0;
+	padding:0;
 }
 .star { float:left;}
 .star .color { background:transparent url(/images/yellow-stars.jpg) no-repeat scroll 0pt;height:26px;position:absolute;}
@@ -489,3 +577,123 @@ a{
 	padding:0;
 }
 /*we catalogue end*/
+
+/*
+ * Login Style
+ */
+
+.login-body{
+	width:805px;
+	height:503px;
+	text-align:left;
+	margin:0 auto;
+}
+.login-left-part{
+	margin:25px 0;
+	background:url(/images/login-left-logo.jpg) no-repeat;
+	width:513px;
+	height:438px;
+	float:left;
+	
+}
+.login-right-part{
+	float:left;
+	width:258px;
+	height:430px;
+	padding:25px 16px;
+	border:solid 1px #CDD1D2;
+	background:#FFFFFF;
+	color:#838282;
+	font-size:12px;
+	-moz-border-radius-bottomleft:5px;
+	-moz-border-radius-bottomright:5px;
+	-moz-border-radius-topleft:5px;
+	-moz-border-radius-topright:5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+.login-head{
+	border-bottom:solid 2px #BFBFBF;
+	padding-bottom:5px;
+	margin-bottom:30px;
+}
+.login-head h2{
+	font-size:18px;
+	color:#656565;
+	font-weight:normal;
+	margin:0;
+	padding:0;
+}
+.login-head h2 span{
+	color:#02649F;
+	font-weight:bold;
+}
+.login-connect-text{
+	float:left;
+	margin:5px;
+}
+.login-connect-icons{
+	float:left;
+	margin-left:10px;
+}
+.login-connect-icons span{
+	margin-left:10px;
+}
+ /*
+  * Login style End
+  */
+ 
+ /*
+  * Registration
+  */
+ 
+ .full-content{
+ 	width:100%;
+	border:solid 1px #D1D1D1;
+	background:#FFFFFF;
+	-moz-border-radius-bottomleft:5px;
+	-moz-border-radius-bottomright:5px;
+	-moz-border-radius-topleft:5px;
+	-moz-border-radius-topright:5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+ }
+ .registration-content{
+ 	margin:30px 50px;
+ }
+ .registration-header h2{
+ 	font-size:17px;
+	color:#02649F;
+	font-weight:bold;
+	margin:0 0 10px 00;
+	padding:0;
+ }
+.registration-header h2 span{
+	padding:10px 15px;
+	border-bottom:dotted 1px #BFBFBF;
+	border-top:dotted 1px #BFBFBF;
+}
+.registration-table{
+	color:#59595B;
+}
+.registration-table td{
+	padding:18px 15px 0 0;
+}
+.registration-table td span{
+	margin:0 15px 0 0;
+}
+ /*
+  * Registration End
+  */

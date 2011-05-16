@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<title>The Water and Environment Hub (WEHUB)</title>
+		<%= stylesheet_link_tag :all %>
+		<%= stylesheet_link_tag @style_sheet ? @style_sheet : '' %>
+		
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script> 
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script> 
+		<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAR7kR54BVDlqWYhWz74JPDRSZo37HQaflXCiy6TGG4RzVNrC14RSLPfT8dP76-nMO0wjDhCw5H9KnfQ" type="text/javascript"></script>
+		<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+		<script src="http://clients.multimap.com/API/maps/1.1/metacarta_04"></script>
+		
+		<%= javascript_include_tag :all %>
+		<%= csrf_meta_tag %>
+		
+		<style>
+			#dialog-modal {
+				font-size: .8em;
+			}
+			#dialog-modal span {
+				font-weight: bold;
+			}
+			.ui-widget-content {
+				font-size: 1em;
+			}
+		</style>
+		<script>
+			$(document).ready(function() {
+				var tabMenu = $('#tabs');
+				tabMenu.tabs({
+				selected: 1
+				});
+			});
+		</script>
+		
+	</head>
+	<body>
+		
+		<div id="main-body">
+			<div id="header-body" class="full-width">
+
+        <%= render 'shared/user_dashboard' %>
+
+				<div class="clear"></div>
+				<a href="<%= url_for :root %>"><div class="header-logo"></div></a>
+				<div class="header-tab">
+					<ul>
+						<li class="<%= @main_menu == 'home' ? 'selected' : ''%>">
+              <%= link_to 'Home', :root %>
+						</li>
+						<li class="<%= @main_menu == 'we_catalogue' ? 'selected' : ''%>">
+              <%= link_to 'WE Data Catalogue', :controller => 'search' %>
+						</li>
+						<li class="<%= @main_menu == 'we_tools' ? 'selected' : ''%>">
+              <%= link_to 'WE Tools', :controller => 'tools', :action => 'chart' %>
+						</li>
+						<li class="<%= @main_menu == 'we_community' ? 'selected' : ''%>">
+              <%= link_to 'WE Community', :controller => 'user', :action => 'community' %>
+						</li>
+						<li class="<%= @main_menu == 'about' ? 'selected' : ''%>">
+              <%= link_to 'About', :controller => 'application', :action => 'about' %>
+						</li>
+						<li class="no-border <%= @main_menu == 'contact_us' ? 'selected' : ''%>">
+              <%= link_to 'Contact Us', :controller => 'application', :action => 'contact_us' %>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="clear"></div>
+			<div id="content-body">
+				<div class="content full-width">
+					<% 
+					
+					if !@breadcrumb.nil?
+						breadcrumb_length		=	@breadcrumb.length
+						cnt						=	1
+					%>
+					<div class="breadcrumb-body">
+						<% 
+						@breadcrumb.each do|breadcrumb|
+							
+						%>
+						<span <%=  (cnt == breadcrumb_length) ? "class='breadcrumb-select'" : '' %>><%= breadcrumb%></span>
+						<% if breadcrumb_length != cnt%>
+						<span class="braedcrumb-sep">></span>
+						<% end%>
+						<% 
+						cnt += 1
+						end
+						%>
+					</div>
+					<div class="clear"></div>
+					<% end%>
+					
+					<!-- content -->  
+					<div class="yield-body">    
+					<%= yield %>
+					</div>
+					<!-- end of content -->   
+
+				</div>
+			</div>
+			<div class="clear"></div>
+			<div id="footer-body">
+				<div class="footer-content full-width">
+					<div class="float-left" style="width:36px">
+						<img src="/images/logo-footer.jpg" alt="WE Hub" border="0" align="top">
+					</div>
+					<div class="float:left" style="width:1020px; height:36px;">
+						
+						<ul>
+							<li>
+								<a href="#">Legal Notice</a>
+							</li>
+							<li>
+								<a href="#">Terms of Services</a>
+							</li>
+							<li>
+								<a href="#">Privacy</a>
+							</li>
+							<li class="no-border">
+								<a href="#">About WeHub</a>
+							</li>
+						</ul>
+						<br />
+						<div class="float-left" style="padding-left:10px;">
+						&copy; 2010 We Hub.Inc All rights reserved.
+						</div>
+						
+					</div>
+					<div class="clear"></div>
+				</div>
+			
+			</div>
+			<div class="clear"></div>
+		</div>			
+	</body>
+</html>
