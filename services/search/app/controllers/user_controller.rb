@@ -1,7 +1,7 @@
 load 'enginey_translator.rb'
 
 class UserController < ApplicationController
-  layout nil
+  layout :nil
 
   respond_to :html, :only => [:sign_in, :groups]
   respond_to :json, :except => :sign_in
@@ -48,6 +48,20 @@ class UserController < ApplicationController
   end
 
   def community
+  end
+
+  def login
+    @breadcrumb     = Array.new
+    @breadcrumb[0]  = 'Login...'
+    @main_menu      = 'home'
+    render :layout => 'application'
+  end
+  
+  def signup
+    @breadcrumb     = Array.new
+    @breadcrumb[0]  = 'Registration'
+    @main_menu      = 'home'
+    render :layout => 'application'
   end
 
 end
