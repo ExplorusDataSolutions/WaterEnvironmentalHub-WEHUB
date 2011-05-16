@@ -3,7 +3,7 @@ class User
   include ActiveModel::Conversion  
   extend ActiveModel::Naming
 
-  attr_accessor :first_name, :last_name, :display_name, :login, :password, :email, :id
+  attr_accessor :first_name, :last_name, :display_name, :login, :password, :password_confirmation, :email, :id
 
   def initialize(first_name='', last_name='', login='', email='', id='')
     @first_name, @last_name, @login, @email, @id = first_name, last_name, login, email, id

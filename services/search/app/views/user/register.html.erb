@@ -1,3 +1,4 @@
+<%= form_for :user do |f| %>
 <div class="full-content">
 	<div class="registration-content">
 		<table width="100%" border="0" class="registration-table">
@@ -5,13 +6,14 @@
 				<td colspan="2" align="left" class="registration-header">
 					<h2><span>Please fill out the following form to register as a member of the WEHub Community.</span></h2>
 				</td>
+      </tr>
 			<tr>
-				<td align="right" width="150">Name:</td>
+				<td align="right" width="150"><%= label :user, :first_name, 'Name:' %></td>
 				<td align="left">
 					<div class="float-left">
 						<div class="text-shade-left"></div>
 						<div class="text-shade-repeat-205">
-							<input type="text" value="First Name" />
+              <%= f.text_field :first_name %>
 						</div>
 						<div class="text-shade-right"></div>
 					</div>
@@ -19,12 +21,16 @@
 					<div class="float-left">
 						<div class="text-shade-left"></div>
 						<div class="text-shade-repeat-205">
-							<input type="text" value="Last Name" />
+              <%= f.text_field :last_name %>
 						</div>
 						<div class="text-shade-right"></div>
 					</div>
 				</td> 
 			</tr>
+
+<%# The following is a nice to have. Our social network does not support these out of the box %>
+<%
+=begin
 			<tr>
 				<td align="right">Gender:</td>
 				<td align="left">
@@ -100,46 +106,53 @@
 					<div class="text-shade-right"></div>
 				</td>
 			</tr>
+=end
+%>
+
 			<tr>
-				<td align="right">Email:</td>
+				<td align="right"><%= label :user, :email, 'Email:' %></td>
 				<td align="left">
 					<div class="text-shade-left"></div>
 					<div class="text-shade-repeat-205">
-						<input type="text" value="" />
+            <%= f.text_field :email %>
 					</div>
 					<div class="text-shade-right"></div>
 				</td>
 			</tr>
 			<tr>
-				<td align="right">Username:</td>
+				<td align="right"><%= label :user, :login, 'Username:' %></td>
 				<td align="left">
 					<div class="text-shade-left"></div>
 					<div class="text-shade-repeat-205">
-						<input type="text" value="" />
+            <%= f.text_field :login %>
 					</div>
 					<div class="text-shade-right"></div>
 				</td>
 			</tr>
 			<tr>
-				<td align="right">Password:</td>
+				<td align="right"><%= label :user, :password, 'Password:' %></td>
 				<td align="left">
 					<div class="text-shade-left"></div>
 					<div class="text-shade-repeat-205">
-						<input type="password" value="" />
+            <%= f.password_field :password %>
 					</div>
 					<div class="text-shade-right"></div>
 				</td>
 			</tr>
 			<tr>
-				<td align="right">Re-type Password:</td>
+				<td align="right"><%= label :password_confirmation, 'Re-type Password:' %></td>
 				<td align="left">
 					<div class="text-shade-left"></div>
 					<div class="text-shade-repeat-205">
-						<input type="password" value="" />
+            <%= f.password_field :password_confirmation %>
 					</div>
 					<div class="text-shade-right"></div>
 				</td>
 			</tr>
+
+<%# The following is a nice to have. Our social network does not support these out of the box %>
+<%
+=begin
 			<tr>
 				<td align="right">Secret Question:</td>
 				<td align="left">
@@ -178,20 +191,25 @@
 					<div class="text-shade-right"></div>
 				</td>
 			</tr>
+=end
+%>
+
 			<tr>
 				<td align="right">
-					<input type="checkbox" />
+          <%= check_box_tag :eula %>
 				</td>
-				<td align="left">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
+				<td align="left"><%= label_tag :eula, "I agree to the WEHub's Privacy Statement and Terms of Use." %></td>
 			</tr>
 			<tr>
 				<td>&nbsp;</td>
 				<td align="left">
-					<a href="#" >
-						<img src="/images/create-myaccount-button.jpg" alt="Create my account" title="Create my account" border="0" />
-					</a>
+          <div class="create-account-button" onclick="$('form').submit();">
+            <%= f.submit :search, :value => 'Create My Account' %>
+          </div>
 				</td>
 			</tr>
 		</table>
 	</div>
 </div>
+<% end %>
+

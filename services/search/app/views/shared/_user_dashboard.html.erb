@@ -1,40 +1,15 @@
-
-<script>
-  $(document).ready(function() {
-    $('.log-out').click(function(event) {
-      event.preventDefault();
-      $.get('/user/sign_out', function(data) {
-        window.location.reload();
-      });
-    });
-
-    $('.log-in').click(function(event) {
-      event.preventDefault();
-      $.get('/user/sign_in', function(html) {
-        WEHub.dialog('Log in', html);
-      });
-    });
-  });      
-</script>
-
 <div class="user-dashboard">
 <% if !logged_in? %>
   <div class="no-auth" >
-	  <a class="sign-up" href="#">
-		  <img src="/images/signup.jpg" border="0" alt="Sign up">
-	  </a>
+    <%= link_to image_tag('signup.jpg', :alt => 'Register', :border => 0), { :controller => 'user', :action => 'register' }, :class=> 'sign-up' %>
 	  <span class="seperator">|</span>
-	  <a class="log-in" href="#">
-		  <img src="/images/login.jpg" border="0" alt="Log in">
-	  </a>
+    <%= link_to image_tag('login.jpg', :alt => 'Log in', :border => 0), { :controller => 'user', :action => 'log-in' }, :class=> 'log-in' %>
   </div>
 <% else %>
   <div class="auth">
     <span class="banner">Welcome <a href="#" class="profile"><%= current_user.display_name %></a></span>
 	  <span class="seperator">|</span>
-	  <a class="log-out" href="#">
-		  <img src="/images/logout.jpg" border="0" alt="Log out">
-	  </a>
+    <%= link_to image_tag('logout.jpg', :alt => 'Log out', :border => 0), { :controller => 'user', :action => 'logout' }, :class=> 'log-out' %>
 	</div>
 <% end %>
 </div>

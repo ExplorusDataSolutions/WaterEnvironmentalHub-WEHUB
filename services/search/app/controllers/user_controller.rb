@@ -51,17 +51,28 @@ class UserController < ApplicationController
   end
 
   def login
-    @breadcrumb     = Array.new
-    @breadcrumb[0]  = 'Login...'
+    @breadcrumb     = ['Login...']
     @main_menu      = 'home'
     render :layout => 'application'
   end
   
-  def signup
-    @breadcrumb     = Array.new
-    @breadcrumb[0]  = 'Registration'
-    @main_menu      = 'home'
-    render :layout => 'application'
+  def register
+    if request.post?
+      @user = User.new
+      begin
+        @user = socialnetwork.register(params[:user])
+        session[:user] = @user
+        respond_with(@user) do |format|
+          format.html { redirect_to :root }
+        end
+      rescue Net::HTTPServerException => ex
+        @user.errors.add_to_base('User could not be authenticated. Check your Login and Password.')
+      end
+    else
+      @breadcrumb     = ['Registration']
+      @main_menu      = 'home'
+      render :layout => 'application'
+    end    
   end
 
 end

@@ -25,6 +25,12 @@
 				font-size: 1em;
 			}
 		</style>
+    <script>
+      <%#Focus the cursor on the first form input %>
+      $(document).ready(function() {
+        $("input[type=text]:first").focus();
+      });    
+    </script>
 		<script>
 			$(document).ready(function() {
 				var tabMenu = $('#tabs');

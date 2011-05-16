@@ -6,6 +6,7 @@ Catalogue::Application.routes.draw do
   root :to => "catalogue#index"
   
   match 'catalogue/search' => 'search#index'
+  match 'user/log-in' => 'user#login'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
