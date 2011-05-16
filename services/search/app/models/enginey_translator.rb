@@ -41,6 +41,8 @@ class EngineYTranslator
   def register(user)
     url_param = register_uri
 
+    debugger
+
     timeout = 500
     url = URI.parse(url_param)
     http = Net::HTTP.new(url.host, url.port)
@@ -57,6 +59,7 @@ class EngineYTranslator
       },
       :format => "json"
     }.to_json, { 'Content-Type' => 'application/json'}) }
+
 
     response.value    
 
@@ -103,7 +106,7 @@ class EngineYTranslator
   def user_from_enginey(response)
     enginey_user = JSON.parse(response)
 
-    User.new(enginey_user['first_name'], enginey_user['last_name'], enginey_user['login'], enginey_user['email'], enginey_user['id'])
+    User.new(:first_name => enginey_user['first_name'], :last_name => enginey_user['last_name'], :login => enginey_user['login'], :email => enginey_user['email'], :id => enginey_user['id'])
   end
 
   def groups_from_enginey(response)

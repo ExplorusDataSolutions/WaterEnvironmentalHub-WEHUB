@@ -1,27 +1,56 @@
-<style>
-#sign-in label {
-  display: block;
-  width: 100px;  
-}
-#sign-in input {
-  display: block;
-  position: relative;
-  top: -24px;
-  left: 100px;
-}
-</style>
-<% if @user.errors.any? %>  
-<div id="error-explanation">  
-  <ul>  
-  <% @user.errors.full_messages.each do |msg| %>  
-    <li><%= msg %></li>  
-  <% end %>  
-  </ul>  
-</div>  
-<% end %>  
+<%= render 'errors' %>
 
 <%= form_for :user, :html => { :id => 'sign-in' } do |f| %>
-  <%= f.label :login %><%= f.text_field :login %>
-  <%= f.label :password %><%= f.password_field :password %>
-  <%= f.submit :"Sign-in" %>
+<div class="text-align-center">
+	<div class="login-body">
+		<div class="login-left-part"></div>
+		<div class="login-right-part">
+			<div class="login-head">
+				<h2>Log in to <span>WeHub</span></h2>
+			</div>
+			<div class="clear"></div>
+			<div><%= f.label :login, 'Username:' %></div>
+			<div class="clear"></div>
+			<div class="text-plain-left"></div>
+			<div class="text-plain-repeat-205">
+        <%= f.text_field :login %>
+			</div>
+			<div class="text-plain-right"></div>
+			<div class="clear height-20"></div>
+			
+			<div><%= f.label :password, 'Password:' %></div>
+			<div class="clear"></div>
+			<div class="text-plain-left"></div>
+			<div class="text-plain-repeat-205">
+        <%= f.password_field :password %>
+			</div>
+			<div class="text-plain-right"></div>
+			<div class="clear height-20"></div>
+			<div class="float-left login-button" onclick="$('form').submit();">
+        <%= f.submit :"Log-in" %>
+			</div>
+			<div class="float-left" style="margin:8px 20px;">
+        <%= link_to 'Forgot Password?', { :controller => 'user', :action => 'password' } %>
+			</div>
+			<div class="clear height-30"></div>
+			<div class="light-black-head">
+				<h2>Don't have a We Hub Id?</h2>
+			</div>
+			<div class="clear height-20"></div>
+			<div class="float-left">
+        <%= link_to image_tag('create-new-account.jpg', :alt => 'Create new account', :border => 0), { :controller => 'user', :action => 'register' }, :class=> '' %>
+			</div>
+			<div class="clear height-30"></div>
+			<div class="login-connect-text">
+				Connect : 
+			</div>
+			<div class="login-connect-icons">
+				<span><a href="#"><img border="0" alt="Facebook" title="Facebook" src="/images/face_book_icon.jpg"/></a></span>
+				<span><a href="#"><img border="0" alt="Twitter" title="Twitter" src="/images/twitter_icon.jpg"/></a></span>
+				<span><a href="#"><img border="0" alt="Linked In" title="Linked In" src="/images/linked_in_icon.jpg"/></a></span>
+			</div>
+			
+		</div>
+	</div>
+</div>
 <% end %>

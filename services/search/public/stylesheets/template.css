@@ -707,3 +707,10 @@ a{
  /*
   * Registration End
   */
+.login-button {
+    background: url("/images/login-button.jpg") no-repeat scroll 0 0 transparent;
+    cursor: pointer;
+    float: left;
+    height: 33px;
+    width: 76px;
+}

@@ -9,7 +9,7 @@
   <div class="auth">
     <span class="banner">Welcome <a href="#" class="profile"><%= current_user.display_name %></a></span>
 	  <span class="seperator">|</span>
-    <%= link_to image_tag('logout.jpg', :alt => 'Log out', :border => 0), { :controller => 'user', :action => 'logout' }, :class=> 'log-out' %>
+    <%= link_to image_tag('logout.jpg', :alt => 'Log out', :border => 0), { :controller => 'user', :action => 'log-out' }, :class=> 'log-out' %>
 	</div>
 <% end %>
 </div>
