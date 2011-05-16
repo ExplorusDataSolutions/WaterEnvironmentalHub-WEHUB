@@ -1,0 +1,217 @@
+<%= render 'errors' %>
+
+<%= form_for :user do |f| %>
+<div class="full-content">
+	<div class="registration-content">
+		<table width="100%" border="0" class="registration-table">
+			<tr>
+				<td colspan="2" align="left" class="registration-header">
+					<h2><span>Please fill out the following form to register as a member of the WEHub Community.</span></h2>
+				</td>
+      </tr>
+			<tr>
+				<td align="right" width="150"><%= label :user, :first_name, 'Name:' %></td>
+				<td align="left">
+					<div class="float-left">
+						<div class="text-shade-left"></div>
+						<div class="text-shade-repeat-205">
+              <%= f.text_field :first_name %>
+						</div>
+						<div class="text-shade-right"></div>
+					</div>
+					<div class="float-left">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+					<div class="float-left">
+						<div class="text-shade-left"></div>
+						<div class="text-shade-repeat-205">
+              <%= f.text_field :last_name %>
+						</div>
+						<div class="text-shade-right"></div>
+					</div>
+				</td> 
+			</tr>
+
+<%# The following is a nice to have. Our social network does not support these out of the box %>
+<%
+=begin
+			<tr>
+				<td align="right">Gender:</td>
+				<td align="left">
+					<div class="text-shade-left"></div>
+					<div class="text-shade-repeat-205">
+						<select>
+							<option>Male</option>
+							<option>Female</option>
+						</select>
+					</div>
+					<div class="text-shade-right"></div>
+				</td>
+			</tr>
+			<tr>
+				<td align="right">Birthday:</td>
+				<td align="left">
+					<div class="float-left">
+						<div class="text-shade-left"></div>
+						<div class="text-shade-repeat-205">
+							<select>
+								<option>Month</option>
+							</select>
+						</div>
+						<div class="text-shade-right"></div>
+					</div>
+					<div class="float-left">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+					<div class="float-left">
+						<div class="text-shade-left"></div>
+						<div class="text-shade-repeat-95">
+							<input type="text" value="Day" />
+						</div>
+						<div class="text-shade-right"></div>
+					</div>
+					<div class="float-left">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+					<div class="float-left">
+						<div class="text-shade-left"></div>
+						<div class="text-shade-repeat-95">
+							<input type="text" value="Year" />
+						</div>
+						<div class="text-shade-right"></div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td align="right">Country:</td>
+				<td align="left">
+					<div class="text-shade-left"></div>
+					<div class="text-shade-repeat-205">
+						<select>
+							<option>Country</option>
+						</select>
+					</div>
+					<div class="text-shade-right"></div>
+				</td>
+			</tr>
+			<tr>
+				<td align="right">Organization:</td>
+				<td align="left">
+					<div class="text-shade-left"></div>
+					<div class="text-shade-repeat-205">
+						<input type="text" value="" />
+					</div>
+					<div class="text-shade-right"></div>
+				</td>
+			</tr>
+			<tr>
+				<td align="right">Position:</td>
+				<td align="left">
+					<div class="text-shade-left"></div>
+					<div class="text-shade-repeat-205">
+						<input type="text" value="" />
+					</div>
+					<div class="text-shade-right"></div>
+				</td>
+			</tr>
+=end
+%>
+
+			<tr>
+				<td align="right"><%= label :user, :email, 'Email:' %></td>
+				<td align="left">
+					<div class="text-shade-left"></div>
+					<div class="text-shade-repeat-205">
+            <%= f.text_field :email %>
+					</div>
+					<div class="text-shade-right"></div>
+				</td>
+			</tr>
+			<tr>
+				<td align="right"><%= label :user, :login, 'Username:' %></td>
+				<td align="left">
+					<div class="text-shade-left"></div>
+					<div class="text-shade-repeat-205">
+            <%= f.text_field :login %>
+					</div>
+					<div class="text-shade-right"></div>
+				</td>
+			</tr>
+			<tr>
+				<td align="right"><%= label :user, :password, 'Password:' %></td>
+				<td align="left">
+					<div class="text-shade-left"></div>
+					<div class="text-shade-repeat-205">
+            <%= f.password_field :password %>
+					</div>
+					<div class="text-shade-right"></div>
+				</td>
+			</tr>
+			<tr>
+				<td align="right"><%= label :password_confirmation, 'Re-type Password:' %></td>
+				<td align="left">
+					<div class="text-shade-left"></div>
+					<div class="text-shade-repeat-205">
+            <%= f.password_field :password_confirmation %>
+					</div>
+					<div class="text-shade-right"></div>
+				</td>
+			</tr>
+
+<%# The following is a nice to have. Our social network does not support these out of the box %>
+<%
+=begin
+			<tr>
+				<td align="right">Secret Question:</td>
+				<td align="left">
+					<div class="text-shade-left"></div>
+					<div class="text-shade-repeat-205">
+						<select>
+							<option>Lorem Ipsum dolot sit?</option>
+						</select>
+					</div>
+					<div class="text-shade-right"></div>
+				</td>
+			</tr>
+			<tr>
+				<td align="right">Your answer:</td>
+				<td align="left">
+					<div class="text-shade-left"></div>
+					<div class="text-shade-repeat-205">
+						<input type="text" value="" />
+					</div>
+					<div class="text-shade-right"></div>
+				</td>
+			</tr>
+			<tr>
+				<td align="right">&nbsp;</td>
+				<td align="left">
+					<img src="/images/captch-temp-image.jpg" title="Captcha" alt="Captcha" />
+				</td>
+			</tr>
+			<tr>
+				<td align="right">Type the code shown:</td>
+				<td align="left">
+					<div class="text-shade-left"></div>
+					<div class="text-shade-repeat-205">
+						<input type="text" value="" />
+					</div>
+					<div class="text-shade-right"></div>
+				</td>
+			</tr>
+=end
+%>
+
+			<tr>
+				<td align="right">
+          <%= check_box_tag :eula %>
+				</td>
+				<td align="left"><%= label_tag :eula, "I agree to the WEHub's Privacy Statement and Terms of Use." %></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td align="left">
+          <div class="create-account-button" onclick="$('form').submit();">
+            <%= f.submit :search, :value => 'Create My Account' %>
+          </div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<% end %>
+

@@ -25,12 +25,46 @@ class EngineYTranslator
     http = Net::HTTP.new(url.host, url.port)
     http.read_timeout = timeout
     http.open_timeout = timeout
-    response = http.start {|http| http.post(url.to_s, { :login => "#{username}", :password => "#{password}", :remember_me => "1", :format => "json" }.to_json, { 'Content-Type' => 'application/json'}) }
+    response = http.start {|http| http.post(url.to_s, { 
+      :login => "#{username}", 
+      :password => "#{password}", 
+      :remember_me => "1", 
+      :format => "json" 
+    }.to_json, { 'Content-Type' => 'application/json'}) }
 
     response.value    
 
     self.storage = response['set-cookie']
     @user = user_from_enginey(response.body)
+  end
+
+  def register(user)
+    url_param = register_uri
+
+    debugger
+
+    timeout = 500
+    url = URI.parse(url_param)
+    http = Net::HTTP.new(url.host, url.port)
+    http.read_timeout = timeout
+    http.open_timeout = timeout
+    response = http.start {|http| http.post(url.to_s, {
+      :user => {
+        :login => user[:login],
+        :first_name => user[:first_name],
+        :last_name => user[:last_name],
+        :email => user[:email],
+        :password => user[:password],
+        :password_confirmation => user[:password_confirmation]
+      },
+      :format => "json"
+    }.to_json, { 'Content-Type' => 'application/json'}) }
+
+
+    response.value    
+
+    self.storage = response['set-cookie']
+    @user = user_from_enginey(response.body)  
   end
 
   def sign_out
@@ -48,6 +82,10 @@ class EngineYTranslator
   end
   
   private
+
+  def register_uri
+      "http://#{@server_address}/users/create"
+  end
 
   def signed_in_uri
     "http://#{@server_address}/sessions/logged_in"
@@ -68,7 +106,7 @@ class EngineYTranslator
   def user_from_enginey(response)
     enginey_user = JSON.parse(response)
 
-    User.new(enginey_user['first_name'], enginey_user['last_name'], enginey_user['login'], enginey_user['email'], enginey_user['id'])
+    User.new(:first_name => enginey_user['first_name'], :last_name => enginey_user['last_name'], :login => enginey_user['login'], :email => enginey_user['email'], :id => enginey_user['id'])
   end
 
   def groups_from_enginey(response)
