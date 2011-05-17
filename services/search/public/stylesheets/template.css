@@ -679,6 +679,7 @@ a{
 	height:22px;
 	padding:10px 8px 0;
 	color:#FFFFFF;
+	cursor:pointer;
 	-moz-border-radius-topleft:5px;
 	-moz-border-radius-topright:5px;
 	-webkit-border-top-left-radius: 5px;
@@ -710,6 +711,7 @@ a{
 	color:#FFFFFF;
 	padding:8px 0 0 16px;
 	margin:0 0 8px 0;
+	cursor:pointer;
 	-moz-border-radius-bottomleft:5px;
 	-moz-border-radius-topleft:5px;
 	-webkit-border-bottom-left-radius: 5px;
