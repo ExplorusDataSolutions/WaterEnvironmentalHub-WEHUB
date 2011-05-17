@@ -1,6 +1,5 @@
 class CatalogueController < ApplicationController
   def index
-    @style_sheet   = "pages/home"
     @main_menu     = 'home'
   end
 
