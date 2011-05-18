@@ -1,21 +1,38 @@
 require 'rexml/document'
 require 'net/http'
+require 'active_support/core_ext'
 
 class CatalogueTranslator
   attr_accessor :url
   
-  def initialize(url = "http://localhost:3000/items")
+  def initialize(url = "http://localhost:3000")
     @url = url    
   end
   
   def item_uri(id)
-    "#{url}/show/#{id}"
+    "#{url}/items/show/#{id}"
   end
   
   def download_uri(params)
-    "#{url}/download/?id=#{params[:ids]}&format=#{params[:format]}"
+    "#{url}/items/download/?id=#{params[:ids]}&format=#{params[:format]}"
   end
   
+  def add_recently_viewed(user_id, dataset_uuid)
+    timeout = 500
+    url = URI.parse(user_recently_viewed_uri)
+    http = Net::HTTP.new(url.host, url.port)
+    http.read_timeout = timeout
+    http.open_timeout = timeout
+    response = http.start {|http| http.post(url.to_s, { 
+      :user_id => "#{user_id}", 
+      :uuid => "#{dataset_uuid}",
+      :format => "json" 
+    }.to_json, { 'Content-Type' => 'application/json'}) }
+
+    response.value
+    response.body
+  end
+
   def find_by_id(id)
     get(item_uri(id))
   end
@@ -29,6 +46,15 @@ class CatalogueTranslator
   end
   
   def create_uri
-    "#{url}/create"
+    "#{url}/items/create"
   end
+
+  def user_collection_uri
+    "#{url}/user/collection"
+  end 
+
+  def user_recently_viewed_uri
+    "#{url}/user/recently_viewed"
+  end 
+
 end
