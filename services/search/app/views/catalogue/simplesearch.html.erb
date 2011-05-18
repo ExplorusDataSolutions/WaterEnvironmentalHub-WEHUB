@@ -1,0 +1,234 @@
+<script>
+  $(document).ready(function() {
+
+    $('button').button();
+    
+    function download() {
+      var format = $('[name=download-format]:checked').val();
+      var ids = [];
+      $('[type=checkbox][name=download]:checked').each(function() { ids.push($(this).val()); })
+      window.location = '/item/download/?ids=' + ids + '&format=' + format;
+    }
+        
+    function bindDownloadButtonset() {
+      var formatSelector = $('.format-selector');
+      formatSelector.buttonset();    
+
+      $('button[name=download]')
+        .button()
+        .click(function() {
+          formatSelector.hide();
+          download();
+        })
+        .next()
+          .button({ text: false, icons: { primary: 'ui-icon-triangle-1-s' }})
+          .click(function() { 
+            formatSelector.toggle();
+           })
+          .parent()
+            .buttonset();
+            
+      $('[name=download-format]')
+        .click(function() {
+          formatSelector.hide();
+          download();
+        });
+    }
+    bindDownloadButtonset()
+
+    
+   
+
+  })
+</script>
+
+<div class="top-search-result">
+	<span class="grey">Search Result:</span>&nbsp;<span class="black">Alpine Tundra</span>
+</div>
+<div class="clear height-10"></div>
+
+<div class="search-box">
+	<div class="clear height-10"></div>
+	<div class="text-shade-left"></div>
+	<div class="text-shade-repeat-205">
+		<input type="text" value="Keyword" />
+	</div>
+	<div class="text-shade-right"></div>
+	<div class="clear height-10"></div>
+	<div class="search-shared-check">
+		<input type="checkbox" />
+		<label>My Shared Data</label>
+	</div>
+	<div class="search-shared-check">
+		<input type="checkbox" />
+		<label>Data Shared with Me</label>
+	</div>
+	<div class="clear height-15"></div>
+	<div class="search-button" onclick="">
+	    <input type="submit" value="Search" id="search_submit">
+	</div>
+	<div class="float-right slight-margin">
+		<a href="#">Advanced Search</a>
+	</div>
+	<div class="clear height-25"></div>
+</div>
+<div class="search-center-container">
+	<div>
+		<img src="/images/temp-gmap.jpg" title="Temp Gmap" alt="Temp Gmap" border="0" />
+	</div>
+	<div class="clear height-15"></div>
+	<div class="dashed-header"><h2>Search results:</h2></div>
+	<div class="clear height-15"></div>
+	
+	<% for i in 0..3%>
+	<div class="search-result-each <%= i % 2 == 0 ? 'search-alt' : ''%>">
+		<div class="search-checkbox">
+			<input type="checkbox" />
+		</div>
+		<div class="search-text">
+			<span class="search-title">
+				Shape Import Test
+			</span>&nbsp;
+			<span class="search-date">
+				2011-04-04 15:25:03 UTC
+			</span>
+			<p>
+				<span class="head">Abstract:</span>
+				<span>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula. Fusce vestibulum, ipsum eget imperdiet rhoncus, augue leo semper massa, non porta velit massa nec massa. Sed venenatis velit et odio iaculis vulputate fermentum mi volutpat. Suspendisse velit massa, pharetra ultricies lacinia sed, cursus quis erat.
+				</span>
+			</p>
+			<p>
+				<div class="third-sep">
+					<span class="head">Author: </span>
+					<span>Lorem ipsum</span>
+				</div>
+				<div class="third-sep">
+					<span class="head">Start Date: </span>
+					<span>2010-03-10</span>
+				</div>
+				<div class="third-sep">
+					<span class="head">End Date: </span>
+					<span>2010-05-05</span>
+				</div>
+				<div class="clear"></div>
+			</p>
+			<p>
+				<span class="head">Number of Observed Properties: </span>
+				<span>Flow Speed, Temperature, Phosphate</span><br />
+				<span class="head">Number of Features: </span>
+				<span>3Lorem ipsum dolor sit amet</span>
+			</p>
+			<div class="search-btm-image-link">
+				<a href="#">
+					<img src="/images/1.png" border="0" />
+				</a>
+				<a href="#">
+					<img src="/images/2.png" border="0" />
+				</a>
+				<a href="#">
+					<img src="/images/3.png" border="0" />
+				</a>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div class="clear"></div>
+	<% end%>
+	<div class="clear height-10"></div>
+	<span id="download-buttonset-fragment">
+        <span>
+          <button name="download">Download</button>
+          <button name="select-download-format">Select Format</button>
+        </span>   
+	</span>
+	
+	<button name="my-collection">+ My collection</button>
+	<button name="clear">Clear</button>
+	
+	
+	<div class="clear height-25"></div>
+	<div class="pagination">
+		<span class="disabled prev_page">Previous</span>
+		<span class="current">1</span>
+		<a rel="next" href="/view/1?page=2">2</a>
+		<a href="/view/1?page=3">3</a>
+		......
+		<a href="/view/1?page=98">98</a>
+		<a href="/view/1?page=99">99</a>
+		<a rel="next" class="next_page" href="/view/1?page=2">Next</a>
+	</div>
+</div>
+<div class="search-box">
+	<div class="clear height-10"></div>
+	<div class="sub-content-right" style="width:210px;">
+		<div class="right-content">
+			<div class="main-head">
+				<div class="float-left"><img src="/images/my-collection.jpg" alt="my collection" title="my collection" width="20" height="20"></div>
+				<div class="float-left"><h1>My Collection</h1></div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+			
+			<%  
+			my_collection_count		=	@my_collection['display_count']
+			start_cnt						=	1
+			@my_collection['data'].each do |collection|
+				if  start_cnt.to_i > my_collection_count.to_i
+					break
+				end
+			%>
+			<div class="contents">
+				<div>
+					<h2><%= collection['title']%></h2>
+				</div>
+				<div class="date">
+					<%= collection['date_time']%>
+				</div>
+			</div>
+			<div class="clear"></div>
+			<% 
+				start_cnt += 1
+			end
+			%>
+					
+		</div>
+		<div class="clear">&nbsp;</div>
+		
+		<div class="right-content">
+			<div class="main-head">
+				<div class="float-left"><img src="/images/recently-viewed.jpg" alt="recently viewed" title="recently viewed" width="20" height="20"></div>
+				<div class="float-left"><h1>Recently Viewed</h1></div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+			
+			<%  
+			recently_view_count		=	@recently_view['display_count']
+			start_cnt				=	1
+			@recently_view['data'].each do |collection|
+				if  start_cnt.to_i > recently_view_count.to_i
+					break
+				end
+			%>
+			<div class="contents">
+				<div>
+					<h2><%= collection['title']%></h2>
+				</div>
+				<div class="date">
+					<%= collection['date_time']%>
+				</div>
+			</div>
+			<div class="clear"></div>
+			<% 
+				start_cnt += 1
+			end
+			%>
+			
+			
+			
+		</div>
+		<div class="clear">&nbsp;</div>
+	</div>
+</div>
+<div class="clear"></div>

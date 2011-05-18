@@ -35,4 +35,28 @@ class CatalogueController < ApplicationController
     
     @rating         = (4*138)/5; 
   end
+  
+  def simplesearch
+    col             = File.read('public/my_collection.json')
+    @my_collection  = JSON.parse(col)
+    
+    recently        = File.read('public/recently_view.json')
+    @recently_view  = JSON.parse(recently)
+    
+    @breadcrumb     = Array.new
+    @breadcrumb[0]  = 'WE Catalogue'
+    
+  end
+  
+  def advancesearch
+    col             = File.read('public/my_collection.json')
+    @my_collection  = JSON.parse(col)
+    
+    recently        = File.read('public/recently_view.json')
+    @recently_view  = JSON.parse(recently)
+    
+    @breadcrumb     = Array.new
+    @breadcrumb[0]  = 'WE Catalogue'
+    
+  end
 end
