@@ -1,0 +1,15 @@
+---
+user_dataset_collection_00001:
+  id: 1
+  user_id: 1
+  uuid: fe4460ca-6dec-4b65-93fe-9b5d6e31e6e8
+
+user_dataset_collection_00002:
+  id: 2
+  user_id: 1
+  uuid: 416ad2bc-04cf-41eb-9c9b-7e440c21673b
+
+user_dataset_collection_00003:
+  id: 3
+  user_id: 1
+  uuid: fd9bb3a0-3f78-11e0-9207-0800200c9a66

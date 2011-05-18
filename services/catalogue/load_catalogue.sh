@@ -8,6 +8,8 @@ rake db:fixtures:load MODEL=dataset_group
 rake db:fixtures:load MODEL=dataset_group_dataset
 rake db:fixtures:load MODEL=feature_source
 rake db:fixtures:load MODEL=feature_type
+rake db:fixtures:load MODEL=user_dataset_collection
+rake db:fixtures:load MODEL=user_viewed_dataset
 createlang -U catalogue plpgsql catalogue_development
 psql -U catalogue -d catalogue_development -f /usr/share/postgresql/8.4/contrib/postgis-1.5/postgis.sql
 psql -U catalogue -d catalogue_development -f /usr/share/postgresql/8.4/contrib/postgis-1.5/spatial_ref_sys.sql

@@ -1,0 +1,20 @@
+---
+user_viewed_dataset_00001:
+  id: 1
+  user_id: 1
+  uuid: 57a32fe0-3f79-11e0-9207-0800200c9a66
+
+user_viewed_dataset_00002:
+  id: 2
+  user_id: 1
+  uuid: 9388be80-3f79-11e0-9207-0800200c9a66
+
+user_viewed_dataset_00003:
+  id: 3
+  user_id: 1
+  uuid: 4ff06730-3f7a-11e0-9207-0800200c9a66
+
+user_viewed_dataset_00004:
+  id: 4
+  user_id: 1
+  uuid: 885cad90-3f7a-11e0-9207-0800200c9a66
