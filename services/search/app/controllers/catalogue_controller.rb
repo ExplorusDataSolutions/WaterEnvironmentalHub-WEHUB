@@ -1,4 +1,20 @@
 class CatalogueController < ApplicationController
+
+  def catalogue
+    if @catalogue.nil?
+      @catalogue = CatalogueTranslator.new
+    end
+    @catalogue
+  end
+
+  def search_instance
+    if @search_instance.nil?
+      @search_instance = Search.new
+    end
+    @search_instance
+  end
+
+
   def index
     @main_menu     = 'home'
   end
@@ -59,4 +75,21 @@ class CatalogueController < ApplicationController
     @breadcrumb[0]  = 'WE Catalogue'
     
   end
+
+  def recently_viewed_datasets
+    render :json => search_results_from_datasets(JSON.parse(catalogue.find_recently_viewed(params[:user_id])))
+  end
+
+  def user_datasets
+    render :json => search_results_from_datasets(JSON.parse(catalogue.find_collection(params[:user_id])))
+  end
+
+  def search_results_from_datasets(datasets)
+    results = []
+    datasets.each do |dataset| 
+      results.push(search_instance.info(dataset['dataset']['uuid']))
+    end
+    results
+  end
+
 end

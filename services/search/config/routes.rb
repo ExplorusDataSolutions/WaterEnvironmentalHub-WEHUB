@@ -9,6 +9,9 @@ Catalogue::Application.routes.draw do
   match 'user/log-in' => 'user#sign_in'
   match 'user/log-out' => 'user#sign_out'
 
+  match 'user/collections' => 'catalogue#user_datasets'
+  match 'catalogue/recently-viewed' => 'catalogue#recently_viewed_datasets'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

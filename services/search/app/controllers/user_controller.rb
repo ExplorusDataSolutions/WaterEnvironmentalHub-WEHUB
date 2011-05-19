@@ -70,5 +70,5 @@ class UserController < ApplicationController
 
   def community
   end
-  
+
 end

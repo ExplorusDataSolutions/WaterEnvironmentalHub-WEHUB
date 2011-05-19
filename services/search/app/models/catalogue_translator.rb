@@ -36,6 +36,14 @@ class CatalogueTranslator
   def find_by_id(id)
     get(item_uri(id))
   end
+
+  def find_recently_viewed(user_id)
+    get("#{user_recently_viewed_uri}?user_id=#{user_id}")
+  end
+
+  def find_collection(user_id)
+    get("#{user_collection_uri}?user_id=#{user_id}")
+  end
   
   def get(uri)
     url = URI.parse(uri)
