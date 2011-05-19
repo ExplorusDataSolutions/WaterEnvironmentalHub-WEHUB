@@ -19,6 +19,9 @@ a{
 .no-border{
 	border:none !important;
 }
+.font-bold{
+	font-weight:bold;
+}
 .text-align-center{
 	text-align:center;
 }
@@ -755,13 +758,29 @@ a{
 }
 .dashed-header{
 	background:url(/images/header-repeat.jpg) repeat-x;
-	height:31px;
+	height:23px;
+	padding:8px 0 0 0;
 }
 .dashed-header h2{
 	margin:0;
-	padding:8px 0 0 15px;
+	margin:0 5px 0 15px;
 	font-size:14px;
 	font-weight:bold;
+	float:left;
+}
+.dashed-header a{
+	color:#525252;
+	text-decoration:none;
+	margin:0 5px;
+	padding:8px 0 0 0;
+}
+.dashed-header a:hover{
+	color:#111111;
+	text-decoration:underline;
+}
+.dashed-header a.selected{
+	color:#111111;
+	text-decoration:underline;
 }
 .green-dot-blue-head{
 	background:url(/images/green-square.jpg) left no-repeat;
@@ -1132,6 +1151,33 @@ a{
 	font-weight:bold;
 	text-decoration:underline;
 	margin:10px 0;
+}
+.search-box-right-length{
+	float:left;
+	padding:20px 10px 20px 5px;
+	margin:0 0 0 20px;
+	border:solid 1px #D5D6D8;
+	background:#FFFFFF;
+	color:#535353;
+	font-size:13px;
+	-moz-border-radius-bottomleft:5px;
+	-moz-border-radius-bottomright:5px;
+	-moz-border-radius-topleft:5px;
+	-moz-border-radius-topright:5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+.dataset-head{
+	background:url(/images/dataset-search-icon.jpg) no-repeat scroll 0 0 transparent;
+	padding:0 0 10px 25px;
+	border-bottom:solid 1px #D8D8D8;
+	font-size:16px;
 }
  /*
  * Catalogue Search End

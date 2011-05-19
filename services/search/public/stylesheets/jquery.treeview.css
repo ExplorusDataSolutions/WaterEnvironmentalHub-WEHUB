@@ -5,7 +5,7 @@
 }
 
 .treeview ul {
-	background-color: white;
+	/*background-color: white;*/
 	margin-top: 4px;
 }
 
@@ -34,11 +34,21 @@
 
 #treecontrol { margin: 1em 0; display: none; }
 
-.treeview .hover { color: red; cursor: pointer; }
+/*.treeview .hover { color: red; cursor: pointer; }*/
 
 .treeview li { background: url(/images/treeview-default-line.gif) 0 0 no-repeat; }
-.treeview li.collapsable, .treeview li.expandable { background-position: 0 -176px; }
+.treeview li.collapsable, .treeview li.expandable { background-position: 0 -176px; font-weight:bold; }
 
+/**
+ * 
+ */
+
+.treeview li.collapsable ul, .treeview li.expandable ul,{font-weight:normal;}
+.treeview a {font-weight:normal; color:#000000; text-decoration:none !important;}
+.treeview a:hover {text-decoration:underline !important;}
+/**
+ * 
+ */
 .treeview .expandable-hitarea { background-position: -80px -3px; }
 
 .treeview li.last { background-position: 0 -1766px }

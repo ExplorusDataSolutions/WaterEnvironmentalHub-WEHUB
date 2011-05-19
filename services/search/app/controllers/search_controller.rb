@@ -33,5 +33,24 @@ class SearchController < ApplicationController
     search_instance.refresh
     render :text => 'Success!'
   end
+  
+  def dataset
+    col             = File.read('public/my_collection.json')
+    @my_collection  = JSON.parse(col)
+    
+    recently        = File.read('public/recently_view.json')
+    @recently_view  = JSON.parse(recently)
+    
+    @breadcrumb     = Array.new
+    @breadcrumb[0]  = 'WE Catalogue'
+    
+    query = 'all'
+    if params[:query] != nil
+      query = params[:query]
+    end
+
+    @search = search_instance.do_query(query)
+    
+  end
       
 end
