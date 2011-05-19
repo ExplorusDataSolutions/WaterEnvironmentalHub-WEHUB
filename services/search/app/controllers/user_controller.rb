@@ -70,5 +70,9 @@ class UserController < ApplicationController
 
   def community
   end
-
+  
+  def my_profile
+    @breadcrumb     = ['My Profile']
+    @main_menu      = 'we_community'
+  end
 end
