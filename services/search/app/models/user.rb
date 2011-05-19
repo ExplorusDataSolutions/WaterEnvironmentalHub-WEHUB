@@ -15,6 +15,7 @@ class User
       @email = params[:email]
       @password = params[:password]
       @password_confirmation = params[:password_confirmation]
+      @id = params[:id]
     end
   end
 

@@ -1,7 +1,7 @@
 class UserController < ApplicationController
   respond_to :json, :xml
 
-  def collection
+  def saved
     @datasets = UserDatasetCollection.new
     if request.post?
       begin

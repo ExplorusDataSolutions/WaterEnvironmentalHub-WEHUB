@@ -41,8 +41,8 @@ class CatalogueTranslator
     get("#{user_recently_viewed_uri}?user_id=#{user_id}")
   end
 
-  def find_collection(user_id)
-    get("#{user_collection_uri}?user_id=#{user_id}")
+  def find_saved(user_id)
+    get("#{user_saved_uri}?user_id=#{user_id}")
   end
   
   def get(uri)
@@ -57,8 +57,8 @@ class CatalogueTranslator
     "#{url}/items/create"
   end
 
-  def user_collection_uri
-    "#{url}/user/collection"
+  def user_saved_uri
+    "#{url}/user/saved"
   end 
 
   def user_recently_viewed_uri

@@ -1,0 +1,23 @@
+<div class="right-content">
+	<div class="main-head">
+		<div class="float-left"><img src="/images/recently-viewed.jpg" alt="recently viewed" title="recently viewed" width="20" height="20"></div>
+		<div class="float-left"><h1>Recently Viewed</h1></div>
+		<div class="clear"></div>
+	</div>
+	<div class="clear"></div>
+	
+	<% @user_saved_search_results.each do |item| %>
+	<div class="contents" onclick="<%= link_to_details(item.id) %>">
+		<div>
+			<h2><%= item.title %></h2>
+		</div>
+		<div class="date">
+			<%= item.publication_date %>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<% end %>
+	
+</div>
+<div class="clear">&nbsp;</div>
+

@@ -161,76 +161,9 @@
 			<a rel="next" class="next_page" href="/view/1?page=2">Next</a>
 		</div>
 	</div>
-	
-	<div class="sub-content-right">
-		<div class="right-content">
-			<div class="main-head">
-				<div class="float-left"><img src="/images/my-collection.jpg" alt="my collection" title="my collection" width="20" height="20"></div>
-				<div class="float-left"><h1>My Collection</h1></div>
-				<div class="clear"></div>
-			</div>
-			<div class="clear"></div>
-			
-			<%  
-			my_collection_count		=	@my_collection['display_count']
-			start_cnt						=	1
-			@my_collection['data'].each do |collection|
-				if  start_cnt.to_i > my_collection_count.to_i
-					break
-				end
-			%>
-			<div class="contents">
-				<div>
-					<h2><%= collection['title']%></h2>
-				</div>
-				<div class="date">
-					<%= collection['date_time']%>
-				</div>
-			</div>
-			<div class="clear"></div>
-			<% 
-				start_cnt += 1
-			end
-			%>
-					
-		</div>
-		<div class="clear">&nbsp;</div>
-		
-		<div class="right-content">
-			<div class="main-head">
-				<div class="float-left"><img src="/images/recently-viewed.jpg" alt="recently viewed" title="recently viewed" width="20" height="20"></div>
-				<div class="float-left"><h1>Recently Viewed</h1></div>
-				<div class="clear"></div>
-			</div>
-			<div class="clear"></div>
-			
-			<%  
-			recently_view_count		=	@recently_view['display_count']
-			start_cnt				=	1
-			@recently_view['data'].each do |collection|
-				if  start_cnt.to_i > recently_view_count.to_i
-					break
-				end
-			%>
-			<div class="contents">
-				<div>
-					<h2><%= collection['title']%></h2>
-				</div>
-				<div class="date">
-					<%= collection['date_time']%>
-				</div>
-			</div>
-			<div class="clear"></div>
-			<% 
-				start_cnt += 1
-			end
-			%>
-			
-			
-			
-		</div>
-		<div class="clear">&nbsp;</div>
-	</div>
 
+	<div class="sub-content-right">
+    <%= render 'shared/right_panel' %>
+	</div>
 </div>
 <div class="clear"></div>

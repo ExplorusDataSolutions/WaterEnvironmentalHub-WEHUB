@@ -41,8 +41,6 @@ class EngineYTranslator
   def register(user)
     url_param = register_uri
 
-    debugger
-
     timeout = 500
     url = URI.parse(url_param)
     http = Net::HTTP.new(url.host, url.port)
