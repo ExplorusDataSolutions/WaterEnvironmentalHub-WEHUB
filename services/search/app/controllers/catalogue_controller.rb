@@ -16,39 +16,24 @@ class CatalogueController < ApplicationController
 
 
   def index
-    @main_menu     = 'home'
+    @main_menu = 'home'
   end
 
   def search
   end
 
   def details   
-    @breadcrumb     = Array.new
-    @breadcrumb[0]  = 'WE Catalogue'
-    @breadcrumb[1]  = 'Detail View'
+    @breadcrumb = ['WE Catalogue', 'Detail View']
     @main_menu      = 'we_catalogue'
     
     @rating         = (4*138)/5; 
   end
   
   def comment    
-    @breadcrumb     = Array.new
-    @breadcrumb[0]  = 'WE Catalogue'
-    @breadcrumb[1]  = 'Detail View'
+    @breadcrumb = ['WE Catalogue', 'Detail View']
     @main_menu      = 'we_catalogue'
     
     @rating         = (4*138)/5; 
   end
   
-  def simplesearch   
-    @breadcrumb     = Array.new
-    @breadcrumb[0]  = 'WE Catalogue'
-    
-  end
-  
-  def advancesearch    
-    @breadcrumb     = Array.new
-    @breadcrumb[0]  = 'WE Catalogue'
-  end
-
 end

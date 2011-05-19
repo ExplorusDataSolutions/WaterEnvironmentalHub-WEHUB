@@ -34,9 +34,8 @@ class SearchController < ApplicationController
     render :text => 'Success!'
   end
   
-  def dataset
-    @breadcrumb     = Array.new
-    @breadcrumb[0]  = 'WE Catalogue'
+  def results
+    @breadcrumb = ['WE Catalogue']
     
     query = 'all'
     if params[:query] != nil
@@ -44,7 +43,15 @@ class SearchController < ApplicationController
     end
 
     @search = search_instance.do_query(query)
+  end
+
+  def simple
+    @breadcrumb = ['WE Catalogue']
     
+  end
+  
+  def advanced
+    @breadcrumb = ['WE Catalogue']
   end
       
 end
