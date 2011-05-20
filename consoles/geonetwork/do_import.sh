@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[[ "`/usr/bin/tty`" == "not a tty" ]] && . ~/.profile
+[[ "`/usr/bin/tty`" == "not a tty" ]] && . ~/.bash_profile
 
 DIRECTORY=$(cd `dirname $0` && pwd)
 
