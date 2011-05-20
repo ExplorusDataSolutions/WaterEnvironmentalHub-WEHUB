@@ -1,10 +1,12 @@
-load 'mef_factory.rb'
-load 'importer.rb'
+require_relative 'mef_factory.rb'
+require_relative 'importer.rb'
+require 'pathname'
 
-temp_directory = 'tmp/mefs'
+temp_directory = "#{Pathname.new(File.dirname(__FILE__))}/tmp/mefs"
 
 puts "Deleting old mefs"
-%x[rm #{temp_directory}/*.mef]
+%x[rm -rf #{temp_directory}]
+%x[mkdir -p #{temp_directory}]
 
 MefFactory.new(temp_directory).build_all
 Importer.new(temp_directory).upload_all
