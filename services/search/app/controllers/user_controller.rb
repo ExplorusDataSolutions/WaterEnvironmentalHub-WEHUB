@@ -75,4 +75,9 @@ class UserController < ApplicationController
     @breadcrumb     = ['My Profile']
     @main_menu      = 'we_community'
   end
+  
+  def profile_activity
+    @breadcrumb     = ['Profile','Kashif Anjum']
+    @main_menu      = 'we_community'
+  end
 end

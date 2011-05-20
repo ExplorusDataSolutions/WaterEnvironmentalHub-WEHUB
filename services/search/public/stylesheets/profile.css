@@ -131,16 +131,17 @@
 	padding-left:18px;
 }
 .profile-text{
-	float:left;
-	width:175px;
-	margin:5px 5px 5px 0;
 	background:url(/images/icon-profile.jpg) no-repeat scroll 0 0 transparent;
 	padding-left:18px;
 }
 .speak-text{
-	
 	background:url(/images/icon-speak.jpg) no-repeat scroll 0 0 transparent;
 	padding-left:18px;
+}
+.comments-activity-text{
+	background:url(/images/icon-comment-grey.jpg) no-repeat scroll 0 0 transparent;
+	padding-left:24px;
+	height:21px;
 }
 .profile-sub-head{
 	height:19px;
@@ -168,4 +169,56 @@
 .profile-friend-each .text{
 	float:left;
 	padding-left:8px;
+}
+.profile-activity-post-box{
+	padding:10px;
+	background:#EBEBEB;
+}
+.activity-content-box{
+	padding:15px 15px 5px;
+	margin:5px 0 10px;
+	border:solid 1px #E2E1DD;
+	-moz-border-radius-bottomleft:5px;
+	-moz-border-radius-bottomright:5px;
+	-moz-border-radius-topleft:5px;
+	-moz-border-radius-topright:5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+.activity-content-box .activity-image{
+	float:left;
+	margin:0 5px 0 0;
+}
+.activity-content-box .activity-text{
+	float:left;
+	margin:0 10px 0 0;
+	color:#525252;
+	font-size:13px;
+}
+.activity-content-box .activity-text div{
+	margin:0 0 5px 0;
+}
+.activity-content-box .activity-text .title{
+	color:#000000;
+	font-size:14px;
+	font-weight:bold;
+}
+.activity-content-box .activity-text .dataset{
+	color:#0462A0;
+}
+.activity-content-box .activity-text .group{
+	color:#0462A0;
+	text-decoration:underline;
+}
+.activity-content-box .activity-ago{
+	float:right;
+	margin:0 10px;
+	color:#AFAFAF;
+	font-size:12px;
 }
