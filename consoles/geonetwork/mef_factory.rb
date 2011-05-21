@@ -29,25 +29,28 @@ class MefFactory
   
   def build(uuid)
     puts "\nBuilding Mef file for #{uuid}"
-    
-    files = {}
-    files.store('metadata.xml', metadata(uuid))
-    files.store('info.xml', info(uuid))
-    
-    directories = ['private', 'public']
-    
-    Zip::ZipFile.open(filepath(uuid), Zip::ZipFile::CREATE) do |zip|
-      files.each do |key, value|
-        zip.get_output_stream("#{key}") { |f| f.puts value }  
-      end
-      directories.each do |directory|
-        if !zip.find_entry(directory)
-          zip.mkdir(directory)
+    begin    
+      files = {}
+      files.store('metadata.xml', metadata(uuid))
+      files.store('info.xml', info(uuid))
+      
+      directories = ['private', 'public']
+      
+      Zip::ZipFile.open(filepath(uuid), Zip::ZipFile::CREATE) do |zip|
+        files.each do |key, value|
+          zip.get_output_stream("#{key}") { |f| f.puts value }  
+        end
+        directories.each do |directory|
+          if !zip.find_entry(directory)
+            zip.mkdir(directory)
+          end
         end
       end
+      
+      puts "Success, mef #{filepath(uuid)} was built"
+    rescue
+      puts "Failure, mef #{uuid} could not be built"
     end
-    
-    puts "Success! Mef #{filepath(uuid)} was built"    
   end
   
   def build_all
@@ -60,7 +63,7 @@ class MefFactory
   end
   
   def http_get(uri)
-    puts "Getting #{uri}"
+    puts "\tGetting #{uri}"
     url = URI.parse(uri)    
     http = Net::HTTP.new(url.host, url.port)
     http.read_timeout = timeout
@@ -69,9 +72,8 @@ class MefFactory
     
     case response
     when Net::HTTPSuccess, Net::HTTPRedirection
-      puts "Success!"
     else
-      response.error!  
+      puts "\tFailure, #{uri} could not be retrieved"
     end
 
     response.body
