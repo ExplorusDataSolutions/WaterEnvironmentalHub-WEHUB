@@ -3,7 +3,7 @@ require 'net/http'
 class Importer
   attr_accessor :cookies, :server_address, :temp_directory, :username, :password, :boundary
   
-  def initialize(temp_directory='tmp/mefs', server_address='174.129.10.37:8080', username='development', password='development')
+  def initialize(temp_directory="#{Dir.getwd}/tmp/mefs", server_address='174.129.10.37:8080', username='development', password='development')
     @server_address = server_address
     @temp_directory = temp_directory
     @username = username
@@ -87,7 +87,7 @@ class Importer
   def upload_all
     authenticate
     
-    mef_files = Dir.glob("#{Dir.getwd}/#{temp_directory}/*.mef")
+    mef_files = Dir.glob("#{temp_directory}/*.mef")
     puts "#{mef_files.count} Mef file(s) queued for upload"
     mef_files.each do |file|
       upload_mef(file)

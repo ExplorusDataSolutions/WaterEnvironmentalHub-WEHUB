@@ -74,6 +74,7 @@ class MefFactory
     when Net::HTTPSuccess, Net::HTTPRedirection
     else
       puts "\tFailure, #{uri} could not be retrieved"
+      response.error!
     end
 
     response.body
