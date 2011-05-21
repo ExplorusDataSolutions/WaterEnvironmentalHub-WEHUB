@@ -5,7 +5,7 @@ require 'active_support/core_ext'
 class MefFactory
   attr_accessor :server_address, :temp_directory, :timeout
   
-  def initialize(temp_directory='tmp/mefs', server_address='localhost:3000', timeout=300)
+  def initialize(temp_directory="#{Dir.getwd}/tmp/mefs", server_address='localhost:3000', timeout=300)
     @server_address = server_address
     @temp_directory = temp_directory
     @timeout = timeout
@@ -20,7 +20,7 @@ class MefFactory
   end
   
   def filepath(uuid)
-    "#{Dir.getwd}/#{temp_directory}/#{filename(uuid)}"
+    "#{temp_directory}/#{filename(uuid)}"
   end
   
   def filename(uuid)
