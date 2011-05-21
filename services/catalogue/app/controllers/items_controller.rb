@@ -144,8 +144,46 @@ class ItemsController < ApplicationController
     render :text => dataset.uuid
   end
 
+  def load_geoserver_content
+    uuid = params[:uuid]
+    if !uuid.scan(/^([\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})$/).empty?
+      dataset = Dataset.find_by_uuid(uuid)
+      dataset_params = {
+        :uuid => uuid,
+        :name => params[:name],
+        :description => params[:description],
+        :feature_type => FeatureType.find_by_name('base_data_static'),
+        :feature_source => FeatureSource.find_by_name('geoserver'),
+      }
+      
+      dataset_group = find_dataset_group(params[:name])
+      if !dataset_group.nil?
+        dataset_params[:dataset_groups] = [dataset_group]
+      end
+
+      if dataset.nil?
+        dataset = Dataset.create(dataset_params)
+      else       
+        dataset.update_attributes(dataset_params)
+        dataset.save
+      end
+
+      render :text => dataset.uuid and return
+    end
+    render :text => uuid, :status => 500 and return
+  end
+
   private
   
+  def find_dataset_group(name)
+    DatasetGroup.all.each do |group|
+      if !name.scan(/#{group.name}/i).empty? 
+        return group
+      end
+    end
+    nil
+  end
+
   def author(params)
     Author.create(:first_name => params[:first_name], :last_name => params[:last_name], :email => params[:email])
   end
