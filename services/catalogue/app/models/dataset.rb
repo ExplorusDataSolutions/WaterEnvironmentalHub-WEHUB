@@ -16,7 +16,9 @@ class Dataset < ActiveRecord::Base
   attr_accessor :feature
   
   def generate_uuid
-    self.uuid = UUIDTools::UUID.timestamp_create().to_s
+    if self.uuid.nil?
+      self.uuid = UUIDTools::UUID.timestamp_create().to_s
+    end
   end
 
   def feature
