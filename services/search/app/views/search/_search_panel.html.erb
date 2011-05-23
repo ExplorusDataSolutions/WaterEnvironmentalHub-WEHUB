@@ -40,6 +40,7 @@
 	  </div>
   </div>
 
+  <% if !current_user.nil? %>
 	<div class="search-shared-check">
 		<input type="checkbox" />
 		<label>My Shared Data</label>
@@ -48,6 +49,8 @@
 		<input type="checkbox" />
 		<label>Data Shared with Me</label>
 	</div>
+  <% end %>
+
 	<div class="clear height-15"></div>
 	<div class="search-button" onclick="$('form').submit();">
       <%= f.submit :search, :name => 'search' %>

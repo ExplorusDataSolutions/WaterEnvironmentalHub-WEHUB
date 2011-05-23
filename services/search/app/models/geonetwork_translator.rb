@@ -96,6 +96,7 @@ class GeoNetworkTranslator
       doc.elements.each('Metadata') do |item|
         
         related_search_results = []
+=begin
         relations = JSON.parse(item.elements['additionalInfo'].text)['relations']
         if !relations.empty?
           relations.each do |uuid|
@@ -104,7 +105,8 @@ class GeoNetworkTranslator
           
           result.relations = related_search_results
         end        
-        
+=end
+        result.relations = []        
         result.description = item.elements['dataIdInfo/idAbs'].text
         result.title = item.elements['dataIdInfo/idCitation/resTitle'].text
       end

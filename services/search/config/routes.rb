@@ -5,7 +5,6 @@ Catalogue::Application.routes.draw do
 
   root :to => "catalogue#index"
   
-  match 'catalogue/search' => 'search#index'
   match 'user/log-in' => 'user#sign_in'
   match 'user/log-out' => 'user#sign_out'
 
