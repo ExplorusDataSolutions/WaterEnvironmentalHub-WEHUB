@@ -80,4 +80,9 @@ class UserController < ApplicationController
     @breadcrumb     = ['Profile','Kashif Anjum']
     @main_menu      = 'we_community'
   end
+  
+  def we_community
+    @breadcrumb     = ['WE Community']
+    @main_menu      = 'we_community'
+  end
 end

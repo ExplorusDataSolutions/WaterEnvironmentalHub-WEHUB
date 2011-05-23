@@ -222,3 +222,40 @@
 	color:#AFAFAF;
 	font-size:12px;
 }
+.community-landing-content{
+	margin:35px 10px;
+}
+.community-landing-tab-body{
+	float:left;
+	margin:10px 10px;
+	border:solid 1px #E2E1DD;
+	-moz-border-radius-bottomleft:5px;
+	-moz-border-radius-bottomright:5px;
+	-moz-border-radius-topleft:5px;
+	-moz-border-radius-topright:5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+.community-landing-tab-body .community-landing-tab{
+	background:url(/images/community-tab-arrow.png) no-repeat right center;
+	width:308px;
+	height:67px;
+	margin:10px 15px;
+}
+.community-landing-tab-body .community-landing-tab .community-landing-tab-image{
+	float:left;
+	width:64px;
+	margin:0 10px 0 0;
+}
+.community-landing-tab-body .community-landing-tab .community-landing-tab-text{
+	float:left;
+	width:205px;
+	margin:5px 5px 0 0;
+	color:#5F5F5F;
+}
