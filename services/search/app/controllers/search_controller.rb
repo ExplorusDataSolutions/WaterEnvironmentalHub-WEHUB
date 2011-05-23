@@ -44,14 +44,5 @@ class SearchController < ApplicationController
 
     @search = search_instance.do_query(query)
   end
-
-  def simple
-    @breadcrumb = ['WE Catalogue']
-    
-  end
-  
-  def advanced
-    @breadcrumb = ['WE Catalogue']
-  end
       
 end

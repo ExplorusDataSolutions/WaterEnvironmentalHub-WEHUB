@@ -1,9 +1,0 @@
-<style>
-		#search_query {
-			width: 100px;
-		}
-</style>
-<%= form_for :search do |f| %>
-  <%= f.text_field :query, :name => 'query' %>
-  <%= f.submit :search, :name => 'search' %>
-<% end %>
