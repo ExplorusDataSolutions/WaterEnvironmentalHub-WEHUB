@@ -1,4 +1,3 @@
-
 <script>
   $(document).ready(function() {
 
@@ -37,135 +36,70 @@
     }
     bindDownloadButtonset()
 
-    $('[for=download-format-JSON]').addClass('ui-state-active');
-    
-    $('[name=search][type=submit]')
-      .button()
-      .click(function(e) { 
-        e.preventDefault();
-        var keywords = $('#search_query').val()
-        $.get('/search/query', { keywords: keywords }, function(data) {
-          $('#results').html(data);
-          $('.keyword').text(keywords);
-        });      
-        return false;
-      });    
-    
-    $('#results, #dataset-navigation').click(function(e) {      
-      if (e.target.hash) {
-        e.preventDefault();
-        var id = e.target.hash.replace(/#\!\//, '');
-        var keywords = $('#search_query').val();
-        $.getJSON('/search/info/', { id: id }, function(data) {
-          if (data) { 
-            downloadPartial = $('#download-buttonset-fragment').clone().prepend('<br />').html();
-            WEHub.dialog('More details', '<span>name:</span> ' + data.title + '<br /><span>description:</span> ' + data.description + '<br /><span>date:</span> ' + data.publication_date + downloadPartial);
-
-            bindDownloadButtonset();
-          }
-        });
-        return false;
+  });
+</script>
+<script>
+  $(document).ready(function() {
+    var opened = false;
+    var searchMode = $('#search-mode');
+    searchMode.click(function(event) {
+      event.preventDefault();
+      $('#advanced-search-panel').toggle();
+      if (!opened) {
+        searchMode.text('Simple Search');
+        opened = true;
+      } else {
+        opened = false;
+        searchMode.text('Advanced Search');
       }
     });
-
-    
-
-    $("#dataset-navigation").treeview({
-      persist: "location",
-      unique: true
-    });
-
-  })
+  });  
 </script>
-<style>
-  #dataset-navigation {
-    font-size: .7em;
-    height: 281px;    
-    overflow: auto;
-    border: solid 1px #D4D4D4;
-  }
-  h2 {
-    font-size: .8em;
-  }
-  #download-buttonset-fragment .format-selector {
-    position: absolute;
-    font-size: .8em;
-    padding: 10px;
-    left: 403px;
-    margin-top: 2px;
-    z-index: 100;
-  }
-  .ui-dialog .format-selector {
-    position: absolute;
-    font-size: .8em;
-    padding: 10px;
-    left: 137px;
-    margin-top: 2px;
-  }
-  table .search-result td {
-    padding-bottom: 20px;
-  }
-</style>
-<table>
-  <tr>
-    <td rowspan="2" valign="top" style="width: 250px; border-right: solid 1px grey; padding-right: 5px; padding-bottom: 20px;">
-      <h2>Browse:</h2>      
-      <ul id="dataset-navigation"> 
-        <li>Base Data
-          <ul>
-      <% @search.base_data.each_with_index do |result, index| %>         
-            <li><a href="/#!/<%= result.id %>" onclick="return false;"><%= result.title %></a></li>
-      <% end %>
-          </ul>
-        </li>
-        <li class="closed">Observation Data
-          <ul>
-      <% @search.observation_data.each_with_index do |result, index| %>         
-            <li><a href="/#!/<%= result.id %>" onclick="return false;"><%= result.title %></a></li>
-      <% end %>
-          </ul>
-        </li>        
-      </ul>
-      
-      <h2>Search:</h2>
-      <%= render "search" %>
-      
-    </td>
-    <td style="padding-left: 5px;" valign="top">
-      <%= render "map" %>
-      <h2>Results for '<span class='keyword'><%= @search.query %></span>'</h2>  
 
-      <div id='results'>
-        <%= render "search_results" %>
-      </div>
-      
-    </td>
-  </tr>
-  <tr>
-    <td valign="bottom">
-      <span id="download-buttonset-fragment">
+<div class="top-search-result">
+	<span class="grey">Search Result:</span>&nbsp;<span class="black"><%= @search.query %></span>
+</div>
+<div class="clear height-10"></div>
+
+<%= render 'search_panel' %>
+
+<div class="search-center-container">
+	<div>
+		<img src="/images/temp-gmap.jpg" title="Temp Gmap" alt="Temp Gmap" border="0" />
+	</div>
+	<div class="clear height-15"></div>
+	<div class="dashed-header"><h2>Search results:</h2></div>
+	<div class="clear height-15"></div>
+	
+  <%= render "search_results" %>
+
+	<div class="clear height-10"></div>
+	<span id="download-buttonset-fragment">
         <span>
           <button name="download">Download</button>
           <button name="select-download-format">Select Format</button>
-        </span>      
-        <span style="display: none;" class="format-selector ui-widget-content ui-corner-all ui-state-active">
-          Select format
-          <%
-            formats = ['JSON', 'Shape']
-            formats.each do |format|
-          %>
-            <label for="download-format-<%= format %>"><%= format %></label><input type="radio" name="download-format" value="<%= format %>" id="download-format-<%= format %>" />
-          <%
-            end
-          %>
-        </span>
-      </span>
-      <button name="graph">Graph</button>
-      <button name="map-view">Map View</button>
-      <button name="clear">Clear</button>
-
-    </td>
-  </tr>
-</table>
-
-<%= render "dialog" %>
+        </span>   
+	</span>
+	
+	<button name="my-collection">+ My collection</button>
+	<button name="clear">Clear</button>	
+	
+	<div class="clear height-25"></div>
+	<div class="pagination">
+		<span class="disabled prev_page">Previous</span>
+		<span class="current">1</span>
+		<a rel="next" href="/view/1?page=2">2</a>
+		<a href="/view/1?page=3">3</a>
+		......
+		<a href="/view/1?page=98">98</a>
+		<a href="/view/1?page=99">99</a>
+		<a rel="next" class="next_page" href="/view/1?page=2">Next</a>
+	</div>
+</div>
+<div class="search-box">
+	<div class="clear height-10"></div>
+	<div class="sub-content-right" style="width:210px;">
+    <%= render 'shared/right_panel' %>
+	</div>
+</div>
+<div class="clear"></div>

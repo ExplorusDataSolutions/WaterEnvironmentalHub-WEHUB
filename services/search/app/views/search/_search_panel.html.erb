@@ -1,0 +1,60 @@
+<%= form_for :search do |f| %>
+<div class="search-box">
+	<div class="clear height-10"></div>
+	<div class="text-shade-left"></div>
+	<div class="text-shade-repeat-205">
+		  <%= f.text_field :query, :name => 'query' %>
+	</div>
+	<div class="text-shade-right"></div>
+	<div class="clear height-10"></div>
+
+  <div id="advanced-search-panel" style="display: none;">
+	  <div class="text-shade-left"></div>
+	  <div class="text-shade-repeat-205">
+		  <select>
+			  <option>Geographic Area</option>
+		  </select>
+	  </div>
+	  <div class="text-shade-right"></div>
+	  <div class="clear height-10"></div>
+	
+	  <div class="text-shade-left"></div>
+	  <div class="text-shade-repeat-205">
+		  <select>
+			  <option>Start Date</option>
+		  </select>
+	  </div>
+	  <div class="text-shade-right"></div>
+	  <div class="clear height-10"></div>
+	
+	  <div class="text-shade-left"></div>
+	  <div class="text-shade-repeat-205">
+		  <select>
+			  <option>End Date</option>
+		  </select>
+	  </div>
+	  <div class="text-shade-right"></div>
+	  <div class="clear height-15"></div>
+	  <div class="bounding-box-text">
+		  bounding box
+	  </div>
+  </div>
+
+	<div class="search-shared-check">
+		<input type="checkbox" />
+		<label>My Shared Data</label>
+	</div>
+	<div class="search-shared-check">
+		<input type="checkbox" />
+		<label>Data Shared with Me</label>
+	</div>
+	<div class="clear height-15"></div>
+	<div class="search-button" onclick="$('form').submit();">
+      <%= f.submit :search, :name => 'search' %>
+	</div>
+	<div class="float-right slight-margin">
+		<a href="#" id="search-mode">Advanced Search</a>
+	</div>
+	<div class="clear height-25"></div>
+</div>
+<% end %>

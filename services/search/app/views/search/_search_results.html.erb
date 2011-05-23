@@ -1,19 +1,43 @@
-<table class="search-result">
-<% @search.results.each do |result| %>  
-  <tr>
-    <td><input type='checkbox' name='download' value='<%= result.id %>' /></td>
-    <td>      
-      <a href="/#!/<%= result.id %>" onclick="return false;"><%= result.title %></a><br />
-      <%= result.publication_date %> ... <%= result.description %><br />
-      <% if !result.relations.nil? %>
-        Related results:
-        <select>
-        <% result.relations.each do |related_result| %>
-          <option><%= related_result.title %></option>
-        <% end %>
-        </select>
-      <% end %>
-    </td>
-  </tr>
-<% end %>  
-</table>
+<% @search.results.each_with_index do |result, index| %>
+<div class="search-result-each <%= (index % 2 == 0) ? 'search-alt' : '' %>">
+	<div class="search-checkbox">
+		<input type='checkbox' name='download' value='<%= result.id %>' />
+	</div>
+	<div class="search-text">
+		<span class="search-title"><%= result.title %></span>&nbsp;
+		<span class="search-date"><%= result.publication_date %></span>
+		<p>
+			<span class="head">Abstract:</span>
+			<span><%= result.description %></span>
+		</p>
+		<p>
+			<div class="third-sep">
+				<span class="head">Author: </span>
+				<span><%= result.author %></span>
+			</div>
+			<div class="third-sep">
+				<span class="head">Start Date: </span>
+				<span><%= result.start_date %></span>
+			</div>
+			<div class="third-sep">
+				<span class="head">End Date: </span>
+				<span><%= result.end_date %></span>
+			</div>
+			<div class="clear"></div>
+		</p>
+		<p>
+			<span class="head">Number of Observed Properties: </span>
+			<span><%= result.observed_properties %></span><br />
+			<span class="head">Number of Features: </span>
+			<span><% result.features.count %></span>
+		</p>
+		<div class="search-btm-image-link">
+      <%= link_to image_tag('1.png', :alt => 'Map this', :border => 0), { :controller => 'tools', :action => 'chart', :id => result.id } %>
+      <%= link_to image_tag('2.png', :alt => 'Map this', :border => 0), { :controller => 'tools', :action => 'map', :id => result.id } %>
+      <%= link_to image_tag('3.png', :alt => 'More details', :border => 0), { :controller => 'catalogue', :action => 'details', :id => result.id } %>
+		</div>
+	</div>
+	<div class="clear"></div>
+</div>
+<div class="clear"></div>
+<% end %>

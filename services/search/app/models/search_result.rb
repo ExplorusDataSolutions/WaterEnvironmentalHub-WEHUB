@@ -1,7 +1,9 @@
 class SearchResult
-  attr_accessor :description, :title, :publication_date, :id, :relations
+  attr_accessor :description, :title, :publication_date, :id, :relations, :author, :start_date, :end_date, :features, :observed_properties
   
   def initialize(description, title, publication_date, id)
+    @author = @start_date = @end_date = @observed_properties = ''
+    @features = []
     if description == nil
       @description = ''
     elsif description.length < 255
