@@ -85,4 +85,20 @@ class UserController < ApplicationController
     @breadcrumb     = ['WE Community']
     @main_menu      = 'we_community'
   end
+  
+  def we_community_share_friends
+    @breadcrumb     = ['WE Community','Friends']
+    @main_menu      = 'we_community'
+  end
+  
+  def we_community_share_groups
+    @breadcrumb     = ['WE Community','Friends']
+    @main_menu      = 'we_community'
+  end
+  
+  def we_community_share_you
+    @breadcrumb     = ['WE Community','Friends']
+    @main_menu      = 'we_community'
+  end
+  
 end

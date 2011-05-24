@@ -1,0 +1,274 @@
+<script>
+  $(document).ready(function() {
+
+    $('button').button();
+    
+    function download() {
+      var format = $('[name=download-format]:checked').val();
+      var ids = [];
+      $('[type=checkbox][name=download]:checked').each(function() { ids.push($(this).val()); })
+      window.location = '/item/download/?ids=' + ids + '&format=' + format;
+    }
+        
+    function bindDownloadButtonset() {
+      var formatSelector = $('.format-selector');
+      formatSelector.buttonset();    
+
+      $('button[name=download]')
+        .button()
+        .click(function() {
+          formatSelector.hide();
+          download();
+        })
+        .next()
+          .button({ text: false, icons: { primary: 'ui-icon-triangle-1-s' }})
+          .click(function() { 
+            formatSelector.toggle();
+           })
+          .parent()
+            .buttonset();
+            
+      $('[name=download-format]')
+        .click(function() {
+          formatSelector.hide();
+          download();
+        });
+    }
+    bindDownloadButtonset()
+
+    $("#dataset-navigation").treeview({
+      persist: "location",
+      unique: true
+    });
+   
+
+  })
+</script>
+<div class="profile-left-box">
+	<div class="profile-left-head">
+		<span>Welcome </span>
+		<span class="head-name">Joe!</span>
+	</div>
+	<div class="clear"></div>
+	<table width="100%" cellpadding="5">
+		<tr>
+			<td align="left" width="25%">
+				Name:
+			</td>
+			<td align="left" class="font-bold" width="75%" >
+				Joe Pooky
+			</td>
+		</tr>
+		<tr>
+			<td align="left">
+				Email:
+			</td>
+			<td align="left">
+				justoprint@gmail.com
+			</td>
+		</tr>
+		<tr>
+			<td align="left">
+				Organization:
+			</td>
+			<td align="left" class="font-bold">
+				ikreates
+			</td>
+		</tr>
+		<tr>
+			<td align="left" valign="top">
+				Friends:
+			</td>
+			<td align="left">
+				<% for i in 1..7%>
+				<div class="profile-left-friends-list">
+					<img src="/images/friend-small-thumb.jpg" alt="Friends" title="Friends" border="0" />
+				</div>
+				<% end%>
+				<div class="profile-left-friends-list-more">
+					+<br />More
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td align="left">
+				Group:
+			</td>
+			<td align="left" class="font-bold">
+				ikreates
+			</td>
+		</tr>
+		<tr>
+			<td align="left">
+				Dataset:
+			</td>
+			<td align="left" class="font-bold">
+				ip3
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="profile-right-container">
+	<div class="community-tab-ul">
+		<ul>
+			<li class="news">
+				<a href="#">
+					<img src="/images/spacer.gif" border="0" width="51" height="65" /><br />
+					News
+				</a>
+			</li>
+			<li class="friends">
+				<a href="#">
+					<img src="/images/spacer.gif" border="0" width="51" height="65" /><br />
+					Friends
+				</a>
+			</li>
+			<li class="groups">
+				<a href="#">
+					<img src="/images/spacer.gif" border="0" width="51" height="65" /><br />
+					Groups
+				</a>
+			</li>
+			<li class="datasets-selected">
+				<a href="#">
+					<img src="/images/spacer.gif" border="0" width="51" height="65" /><br />
+					Share Datasets
+				</a>
+			</li>
+		</ul>
+	</div>
+	<div class="community-tab-right">
+		<div class="profile-tab profile-tab-select">
+			Profile
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div class="profile-content-container">
+		<div class="share-search-box">
+			<div class="float-left">
+				<a href="#">
+					<img src="/images/sahre-dataset.jpg" border="0" alt="Share a Dataset" title="Share a Dataset" />
+				</a>
+			</div>
+			<div class="float-right">
+				<div class="share-find-text">
+					Find Datasets:
+				</div>
+				
+				<div class="share-search-text">
+					<input type="text" />
+				</div>
+				
+				<div class="float-left">
+					<a href="#">
+						<img src="/images/community-search.jpg" border="0" alt="Search" title="Search" />
+					</a>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+		<div class="share-middle-filter">
+			<a href="#">Files Friends have Shared</a>
+			<a href="#">Files Groups have Shared</a>
+			<a href="#" class="selected">Files You have Shared</a>
+			<a href="#">Contribute</a>
+		</div>
+		<div class="clear"></div>
+		<% for i in 0..3%>
+		<div class="search-result-each search-result-each-box">
+			<div class="search-checkbox">
+				<input type="checkbox" />
+			</div>
+			<div class="search-text">
+				<div class="float-left">
+					<span class="search-title">
+						Shape Import Test
+					</span>&nbsp;
+					<span class="search-date">
+						2011-04-04 15:25:03 UTC
+					</span>
+				</div>
+				<div class="float-right">
+					<a href="#">
+						<img src="/images/group-community-small-buttom.jpg" alt="Group" title="Group" border="0" />
+					</a>
+					<a href="#">
+						<img src="/images/edit-community-small-buttom.jpg" alt="Edit" title="Edit" border="0" />
+					</a>
+				</div>
+				<div class="clear"></div>
+				<p>
+					<span class="head">Abstract:</span>
+					<span>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula. Fusce vestibulum, ipsum eget imperdiet rhoncus, augue leo semper massa, non porta velit massa nec massa. Sed venenatis velit et odio iaculis vulputate fermentum mi volutpat. Suspendisse velit massa, pharetra ultricies lacinia sed, cursus quis erat.
+					</span>
+				</p>
+				<p>
+					<div class="third-sep">
+						<span class="head">Author: </span>
+						<span>Lorem ipsum</span>
+					</div>
+					<div class="third-sep">
+						<span class="head">Start Date: </span>
+						<span>2010-03-10</span>
+					</div>
+					<div class="third-sep">
+						<span class="head">End Date: </span>
+						<span>2010-05-05</span>
+					</div>
+					<div class="clear"></div>
+				</p>
+				<p>
+					<span class="head">Number of Observed Properties: </span>
+					<span>Flow Speed, Temperature, Phosphate</span><br />
+					<span class="head">Number of Features: </span>
+					<span>3Lorem ipsum dolor sit amet</span>
+				</p>
+				<div class="search-btm-image-link">
+					<a href="#">
+						<img src="/images/1.png" border="0" />
+					</a>
+					<a href="#">
+						<img src="/images/2.png" border="0" />
+					</a>
+					<a href="#">
+						<img src="/images/3.png" border="0" />
+					</a>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+		<% end%>
+		
+		
+		<div class="clear height-10"></div>
+		<div class="text-align-center">
+			<span id="download-buttonset-fragment">
+		        <span>
+		          <button name="download">Download</button>
+		          <button name="select-download-format">Select Format</button>
+		        </span>   
+			</span>
+			
+			<button name="my-collection">+ My collection</button>
+			<button name="clear">Clear</button>
+		</div>
+		
+		<div class="clear height-25"></div>
+		<div class="pagination">
+			<span class="disabled prev_page">Previous</span>
+			<span class="current">1</span>
+			<a rel="next" href="/view/1?page=2">2</a>
+			<a href="/view/1?page=3">3</a>
+			......
+			<a href="/view/1?page=98">98</a>
+			<a href="/view/1?page=99">99</a>
+			<a rel="next" class="next_page" href="/view/1?page=2">Next</a>
+		</div>
+	
+		
+	</div>
+</div>
+<div class="clear"></div>
