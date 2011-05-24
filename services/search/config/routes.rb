@@ -11,6 +11,8 @@ Catalogue::Application.routes.draw do
   match 'user/collections' => 'catalogue#user_datasets'
   match 'catalogue/recently-viewed' => 'catalogue#recently_viewed_datasets'
 
+  match 'user/' => 'user#profile'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

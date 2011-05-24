@@ -79,10 +79,26 @@ class EngineYTranslator
     post_json(signed_in_uri)
   end
   
-  private
+  def friends(user_id)
+    get("#{friends_uri}/?user_id=#{user_id}&format=xml")
+  end
 
+  def profile(user_id)
+    get("#{profile_uri}/#{user_id}?format=xml")
+  end
+  
+  private
+  
+  def friends_uri
+    "http://#{@server_address}/friends"
+  end
+
+  def profile_uri
+    "http://#{@server_address}/users"
+  end
+  
   def register_uri
-      "http://#{@server_address}/users/create"
+    "http://#{@server_address}/users/create"
   end
 
   def signed_in_uri
@@ -136,7 +152,7 @@ class EngineYTranslator
     request['cookie'] = self.storage
     response = Net::HTTP.start(url.host, url.port) {|http| http.request(request)}
     
-    response.value    
+    response.value
     response.body
   end
 

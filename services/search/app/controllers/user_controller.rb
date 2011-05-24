@@ -68,37 +68,16 @@ class UserController < ApplicationController
     render :json => socialnetwork.logged_in?
   end
 
-  def community
-  end
-  
-  def my_profile
+  def profile
+    @profile = xml_to_mash(socialnetwork.profile(current_user.id))['user']
+    @friends = xml_to_mash(socialnetwork.friends(current_user.id))['users']
+#    @groups = 
     @breadcrumb     = ['My Profile']
     @main_menu      = 'we_community'
   end
   
-  def profile_activity
-    @breadcrumb     = ['Profile','Kashif Anjum']
-    @main_menu      = 'we_community'
+  def xml_to_mash(value)
+    Hashie::Mash.new(Hash.from_xml(value))
   end
-  
-  def we_community
-    @breadcrumb     = ['WE Community']
-    @main_menu      = 'we_community'
-  end
-  
-  def we_community_share_friends
-    @breadcrumb     = ['WE Community','Friends']
-    @main_menu      = 'we_community'
-  end
-  
-  def we_community_share_groups
-    @breadcrumb     = ['WE Community','Friends']
-    @main_menu      = 'we_community'
-  end
-  
-  def we_community_share_you
-    @breadcrumb     = ['WE Community','Friends']
-    @main_menu      = 'we_community'
-  end
-  
+
 end
