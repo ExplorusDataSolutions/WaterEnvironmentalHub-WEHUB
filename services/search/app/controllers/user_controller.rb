@@ -70,7 +70,7 @@ class UserController < ApplicationController
 
   def profile
     @profile = xml_to_mash(socialnetwork.profile(current_user.id))['user']
-    @friends = xml_to_mash(socialnetwork.friends(current_user.id))['users']
+#    @friends = xml_to_mash(socialnetwork.friends(current_user.id))['users']
 #    @groups = 
     @breadcrumb     = ['My Profile']
     @main_menu      = 'we_community'
