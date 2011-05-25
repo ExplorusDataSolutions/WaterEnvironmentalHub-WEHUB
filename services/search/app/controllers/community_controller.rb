@@ -24,5 +24,15 @@ class CommunityController < ApplicationController
     @breadcrumb     = ['WE Community','Friends']
     @main_menu      = 'we_community'
   end
+  
+  def find_friends
+    @breadcrumb     = ['WE Community','Friends']
+    @main_menu      = 'we_community'
+  end
 
+  def edit_friends
+    @breadcrumb     = ['WE Community','Friends']
+    @main_menu      = 'we_community'
+  end
+  
 end
