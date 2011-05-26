@@ -248,6 +248,7 @@
 	width:308px;
 	height:67px;
 	margin:10px 15px;
+	cursor:pointer;
 }
 .community-landing-tab-body .community-landing-tab .community-landing-tab-image{
 	float:left;
