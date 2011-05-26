@@ -1,70 +1,10 @@
-<div class="profile-left-box">
-	<div class="profile-left-head">
-		<span>Welcome </span>
-		<span class="head-name">Joe!</span>
-	</div>
-	<div class="clear"></div>
-	<table width="100%" cellpadding="5">
-		<tr>
-			<td align="left" width="25%">
-				Name:
-			</td>
-			<td align="left" class="font-bold" width="75%" >
-				Joe Pooky
-			</td>
-		</tr>
-		<tr>
-			<td align="left">
-				Email:
-			</td>
-			<td align="left">
-				justoprint@gmail.com
-			</td>
-		</tr>
-		<tr>
-			<td align="left">
-				Organization:
-			</td>
-			<td align="left" class="font-bold">
-				ikreates
-			</td>
-		</tr>
-		<tr>
-			<td align="left" valign="top">
-				Friends:
-			</td>
-			<td align="left">
-				<% for i in 1..7%>
-				<div class="profile-left-friends-list">
-					<img src="/images/friend-small-thumb.jpg" alt="Friends" title="Friends" border="0" />
-				</div>
-				<% end%>
-				<div class="profile-left-friends-list-more">
-					+<br />More
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td align="left">
-				Group:
-			</td>
-			<td align="left" class="font-bold">
-				ikreates
-			</td>
-		</tr>
-		<tr>
-			<td align="left">
-				Dataset:
-			</td>
-			<td align="left" class="font-bold">
-				ip3
-			</td>
-		</tr>
-	</table>
-</div>
+<%= render '/shared/left_panel' %>
+
 <div class="profile-right-container">
 	<div class="community-landing-content">
-		<div class="community-landing-tab-body">
+<%
+=begin %>
+		<div class="community-landing-tab-body" onclick="<%= onclick_link_to :controller => 'community', :action => 'news' %>">
 			<div class="community-landing-tab">
 				<div class="community-landing-tab-image">
 					<img src="/images/community-news-blue.png" alt="News" title="News" border="0" />
@@ -74,7 +14,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="community-landing-tab-body">
+<%
+=end %>
+		<div class="community-landing-tab-body" onclick="<%= onclick_link_to :controller => 'community', :action => 'friends' %>">
 			<div class="community-landing-tab">
 				<div class="community-landing-tab-image">
 					<img src="/images/community-friends-blue.png" alt="Friends" title="Friends" border="0" />
@@ -85,7 +27,7 @@
 			</div>
 		</div>
 		<div class="clear"></div>
-		<div class="community-landing-tab-body">
+		<div class="community-landing-tab-body" onclick="<%= onclick_link_to :controller => 'community', :action => 'datasets' %>">
 			<div class="community-landing-tab">
 				<div class="community-landing-tab-image">
 					<img src="/images/community-groups-blue.png" alt="Shares" title="Shares" border="0" />
@@ -95,7 +37,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="community-landing-tab-body">
+		<div class="community-landing-tab-body" onclick="<%= onclick_link_to :controller => 'community', :action => 'groups' %>">
 			<div class="community-landing-tab">
 				<div class="community-landing-tab-image">
 					<img src="/images/community-datasets-blue.png" alt="Shares" title="Shares" border="0" />

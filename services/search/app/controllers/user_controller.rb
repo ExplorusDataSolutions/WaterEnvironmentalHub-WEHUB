@@ -69,15 +69,9 @@ class UserController < ApplicationController
   end
 
   def profile
-    @profile = xml_to_mash(socialnetwork.profile(current_user.id))['user']
-#    @friends = xml_to_mash(socialnetwork.friends(current_user.id))['users']
-#    @groups = 
+    @profile = socialnetwork.profile(current_user.id)
     @breadcrumb     = ['My Profile']
     @main_menu      = 'we_community'
   end
   
-  def xml_to_mash(value)
-    Hashie::Mash.new(Hash.from_xml(value))
-  end
-
 end

@@ -1,5 +1,6 @@
 require 'net/http'
 require 'active_support/core_ext'
+require 'rexml/document'
 
 class EngineYTranslator
 
@@ -84,7 +85,19 @@ class EngineYTranslator
   end
 
   def profile(user_id)
-    get("#{profile_uri}/#{user_id}?format=xml")
+    xml_to_mash(get("#{profile_uri}/#{user_id}?format=xml"))['user']
+  end
+
+  def user_groups(user_id)
+    xml_to_mash(get("#{profile_uri}/#{user_id}/groups?format=xml"))['groups']
+  end
+
+  def group_create(params)
+    json_to_mash(post_json("#{groups_uri}/create", params))
+  end
+  
+  def membership_create(params)
+    post_json("#{memberships_uri}/create", params)
   end
   
   private
@@ -106,9 +119,13 @@ class EngineYTranslator
   end
 
   def groups_uri
-    "http://#{@server_address}/groups/index"
+    "http://#{@server_address}/groups"
   end
 
+  def memberships_uri
+    "http://#{@server_address}/memberships"
+  end
+  
   def sign_in_uri
     "http://#{@server_address}/sessions/create"
   end
@@ -163,4 +180,13 @@ class EngineYTranslator
       response.error!  
     end
   end
+
+  def xml_to_mash(value)
+    Hashie::Mash.new(Hash.from_xml(value))
+  end
+
+  def json_to_mash(value)
+    Hashie::Mash.new(JSON.parse(value))
+  end
+
 end

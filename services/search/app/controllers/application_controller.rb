@@ -1,3 +1,5 @@
+load 'enginey_translator.rb'
+
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
@@ -35,6 +37,12 @@ class ApplicationController < ActionController::Base
     @catalogue
   end
 
+  def socialnetwork_instance
+    if @socialnetwork.nil?
+      @socialnetwork = EngineYTranslator.new(session)
+    end
+    @socialnetwork
+  end
 
   private
 

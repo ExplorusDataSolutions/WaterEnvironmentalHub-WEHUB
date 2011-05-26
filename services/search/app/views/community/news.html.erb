@@ -1,0 +1,28 @@
+<%= render '/shared/left_panel' %>
+
+<div class="profile-right-container">
+  <%= render 'menu_horizontal_tabs' %>
+	<div class="community-tab-right">
+		<div class="profile-tab profile-tab-select">
+				<%= link_to 'Profile', :controller => 'user', :action => 'profile' %>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div class="profile-content-container">		
+				
+		<div class="clear height-25"></div>
+		<div class="pagination">
+			<span class="disabled prev_page">Previous</span>
+			<span class="current">1</span>
+			<a rel="next" href="/view/1?page=2">2</a>
+			<a href="/view/1?page=3">3</a>
+			......
+			<a href="/view/1?page=98">98</a>
+			<a href="/view/1?page=99">99</a>
+			<a rel="next" class="next_page" href="/view/1?page=2">Next</a>
+		</div>
+	
+		
+	</div>
+</div>
+<div class="clear"></div>

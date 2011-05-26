@@ -1,0 +1,69 @@
+<div class="profile-left-box">
+	<div class="profile-left-head">
+		<span>Welcome </span>
+		<span class="head-name"><%= current_user.login %></span>
+	</div>
+	<div class="clear"></div>
+	<table width="100%" cellpadding="5">
+		<tr>
+			<td align="left" width="25%">
+				Name:
+			</td>
+			<td align="left" class="font-bold" width="75%" >
+				<%= current_user.display_name  %>
+			</td>
+		</tr>
+		<tr>
+			<td align="left">
+				Email:
+			</td>
+			<td align="left">
+        <%= current_user.email %>
+			</td>
+		</tr>
+		<tr>
+			<td align="left">
+				Organization:
+			</td>
+			<td align="left" class="font-bold">
+				<%#= link_to @profile.organization, @profile.organization_url  %>
+			</td>
+		</tr>
+		<tr>
+			<td align="left" valign="top">
+				Friends:
+			</td>
+			<td align="left">
+				<% for i in 1..7%>
+				<div class="profile-left-friends-list">
+					<img src="/images/friend-small-thumb.jpg" alt="Friends" title="Friends" border="0" />
+				</div>
+				<% end%>
+<%
+=begin %>
+				<div class="profile-left-friends-list-more">
+					+<br />More
+				</div>
+<%
+=end %>
+			</td>
+		</tr>
+		<tr>
+			<td align="left">
+				Groups:
+			</td>
+			<td align="left" class="font-bold">
+				ikreates
+			</td>
+		</tr>
+		<tr>
+			<td align="left">
+				Dataset:
+			</td>
+			<td align="left" class="font-bold">
+				ip3
+			</td>
+		</tr>
+	</table>
+</div>
+

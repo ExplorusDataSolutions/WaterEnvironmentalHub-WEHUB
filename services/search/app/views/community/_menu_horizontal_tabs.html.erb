@@ -1,0 +1,36 @@
+<%
+  action_name = self.action_name
+%>
+<div class="community-tab-ul">
+	<ul>
+<%
+=begin %>
+		<li class="<%= action_name == 'news' ? 'news-selected' : 'news' %>" onclick="<%= onclick_link_to :controller => 'community', :action => 'news' %>">
+			<a href="<%= link_to :controller => 'community', :action => 'news' %>">
+				<img src="/images/spacer.gif" border="0" width="51" height="65" /><br />
+				News
+			</a>
+		</li>
+<%
+=end %>
+		<li class="<%= action_name == 'friends' ? 'friends-selected' : 'friends' %>" onclick="<%= onclick_link_to :controller => 'community', :action => 'friends' %>">
+			<a href="<%= url_for :controller => 'community', :action => 'friends' %>">
+				<img src="/images/spacer.gif" border="0" width="51" height="65" /><br />
+				Friends
+			</a>
+		</li>
+		<li class="<%= action_name == 'groups' ? 'groups-selected' : 'groups' %>" onclick="<%= onclick_link_to :controller => 'community', :action => 'groups' %>">
+			<a href="<%= url_for :controller => 'community', :action => 'groups' %>">
+				<img src="/images/spacer.gif" border="0" width="51" height="65" /><br />
+				Groups
+			</a>
+		</li>
+		<li class="<%= action_name == 'datasets' ? 'datasets-selected' : 'datasets' %>" onclick="<%= onclick_link_to :controller => 'community', :action => 'datasets' %>">
+			<a href="<%= url_for :controller => 'community', :action => 'datasets' %>">
+				<img src="/images/spacer.gif" border="0" width="51" height="65" /><br />
+				Share Datasets
+			</a>
+		</li>
+	</ul>
+</div>
+
