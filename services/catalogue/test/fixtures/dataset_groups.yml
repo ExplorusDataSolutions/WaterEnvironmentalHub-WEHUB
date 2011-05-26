@@ -5,7 +5,7 @@ dataset_group_00001:
 
 dataset_group_00002: 
   id: 2
-  name: Canvec Base Data
+  name: CanVec Base Data
 
 dataset_group_00003: 
   id: 3
@@ -17,4 +17,20 @@ dataset_group_00004:
 
 dataset_group_00005: 
   id: 5
-  name: Canvec Hydro Data
+  name: CanVec Hydro Data
+
+dataset_group_00006: 
+  id: 6
+  name: National Hydro Network
+
+dataset_group_00007: 
+  id: 7
+  name: CanVec Boundary Data
+
+dataset_group_00008: 
+  id: 8
+  name: CanVec Boundary Data
+
+dataset_group_00009: 
+  id: 9
+  name: GeoBase National Road Network

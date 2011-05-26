@@ -68,10 +68,10 @@
               <%= link_to 'WE Community', :controller => 'community' %>
 						</li>
 						<li class="<%= @main_menu == 'about' ? 'selected' : ''%>">
-              <%= link_to 'About', :controller => 'application', :action => 'about' %>
+              <%= link_to 'About', :controller => 'about' %>
 						</li>
 						<li class="no-border <%= @main_menu == 'contact_us' ? 'selected' : ''%>">
-              <%= link_to 'Contact Us', :controller => 'application', :action => 'contact_us' %>
+              <%= link_to 'Contact Us', :controller => 'about', :action => 'contact_us' %>
 						</li>
 					</ul>
 				</div>

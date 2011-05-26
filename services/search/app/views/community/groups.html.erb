@@ -56,7 +56,7 @@
           <span class="head">This group is <%= group.private? ? 'private' : 'public' %></span>          
         </div>
         <div>
-          <%= link_to 'Edit', { :controller => 'groups', :action => 'edit' } %>
+          <%= link_to 'Manage this group', { :controller => 'groups', :action => 'edit', :id => group.id } %>
 			  </div>
 			  <div class="clear"></div>
 		  </div>

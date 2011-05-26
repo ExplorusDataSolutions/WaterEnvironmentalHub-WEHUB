@@ -36,4 +36,15 @@ class CatalogueController < ApplicationController
     @rating         = (4*138)/5; 
   end
   
+  def browse
+    @breadcrumb = ['WE Catalogue', 'Browse']
+    
+    query = 'all'
+    if params[:query] != nil
+      query = params[:query]
+    end
+
+    @search = search_instance.do_query(query)
+  end
+
 end

@@ -33,16 +33,5 @@ class SearchController < ApplicationController
     search_instance.refresh
     render :text => 'Success!'
   end
-  
-  def results
-    @breadcrumb = ['WE Catalogue']
-    
-    query = 'all'
-    if params[:query] != nil
-      query = params[:query]
-    end
-
-    @search = search_instance.do_query(query)
-  end
-      
+        
 end

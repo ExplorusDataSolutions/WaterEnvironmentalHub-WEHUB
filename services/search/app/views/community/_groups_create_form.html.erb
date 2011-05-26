@@ -1,5 +1,5 @@
 <div id="edit-group-form" style="display: none;">
-<%= form_for :group, :url => { :action => 'create' } do |f| %>
+<%= form_for :group, :url => { :action => 'groups' } do |f| %>
   <%= label :name, 'Name' %><%=  f.text_field :name %><br />
   <%= label :description, 'Description' %><%=  f.text_field :description %><br />
   <%= label :private, 'Is group private?' %><%= f.check_box :private %><br />

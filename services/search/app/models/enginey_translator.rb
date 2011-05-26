@@ -89,7 +89,7 @@ class EngineYTranslator
   end
 
   def user_groups(user_id)
-    xml_to_mash(get("#{profile_uri}/#{user_id}/groups?format=xml"))['groups']
+    xml_to_mash(get("#{profile_uri}/#{user_id}/groups?format=xml"))['groups'].sort_by { |group| group.name }
   end
 
   def group_create(params)
