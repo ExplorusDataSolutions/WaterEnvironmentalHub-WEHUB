@@ -1,6 +1,3 @@
-<%
-  action_name = self.action_name
-%>
 <div class="community-tab-ul">
 	<ul>
 <%
@@ -19,7 +16,7 @@
 				Friends
 			</a>
 		</li>
-		<li class="<%= action_name == 'groups' or action_name == 'group_view' ? 'groups-selected' : 'groups' %>" onclick="<%= onclick_link_to :controller => 'community', :action => 'groups' %>">
+		<li class="<%= (action_name == 'groups' || controller_name == 'groups' || action_name == 'group_view') ? 'groups-selected' : 'groups' %>" onclick="<%= onclick_link_to :controller => 'community', :action => 'groups' %>">
 			<a href="<%= url_for :controller => 'community', :action => 'groups' %>">
 				<img src="/images/spacer.gif" border="0" width="51" height="65" /><br />
 				Groups

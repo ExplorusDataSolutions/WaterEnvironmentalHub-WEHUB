@@ -1,8 +1,6 @@
 Catalogue::Application.routes.draw do
   get "user/sign_in"
 
-  #resources :search
-
   root :to => "catalogue#index"
   
   match 'user/log-in' => 'user#sign_in'
@@ -14,6 +12,7 @@ Catalogue::Application.routes.draw do
   match 'user/' => 'user#profile'
 
   match 'groups/' => 'groups#show'
+  match 'community/groups' => 'groups#mine'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

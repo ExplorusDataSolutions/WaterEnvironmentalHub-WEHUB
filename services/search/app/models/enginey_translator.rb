@@ -89,17 +89,52 @@ class EngineYTranslator
   end
 
   def user_groups(user_id)
-    xml_to_mash(get("#{profile_uri}/#{user_id}/groups?format=xml"))['groups'].sort_by { |group| group.name }
+    groups = xml_to_mash(get("#{profile_uri}/#{user_id}/groups?format=xml"))['groups']
+    groups.sort_by! { |group| group.name } unless groups.nil?
+    groups
   end
 
   def group_create(params)
-    json_to_mash(post_json("#{groups_uri}/create", params))
+    json_to_mash(post_json("#{groups_uri}/create?", params))
+  end
+
+  def group_update(params)
+    params.merge!(:id => params[:group][:id])
+    json_to_mash(post_json("#{groups_uri}/update", params))
+  end
+
+  def group(group_id)
+    group = xml_to_mash(get("#{groups_uri}/#{group_id}?format=xml"))
+    group['group'] unless group.nil?
+  end
+  
+  def group_members(group_id)
+    members = xml_to_mash(get("#{groups_uri}/user_data?group_id=#{group_id}&format=xml"))
+    members['hash']['items'] unless members.nil?
   end
   
   def membership_create(params)
     post_json("#{memberships_uri}/create", params)
   end
+
+  def membership_delete(params)
+    user_ids = []
+    params[:members].each { |k,v| user_ids.push(k) }    
+    post_json("#{memberships_uri}/destroy", { :user_ids => user_ids, :group_id => params[:group][:id] })
+  end
+
+  def membership_promote(params)
+    user_ids = []
+    params[:members].each { |k,v| user_ids.push(k) }    
+    post_json("#{memberships_uri}/update", { :user_ids => user_ids, :group_id => params[:group][:id], :task => 'promote' })
+  end
   
+  def membership_authorize(params)
+    user_ids = []
+    params[:members].each { |k,v| user_ids.push(k) }    
+    post_json("#{memberships_uri}/authorize", { :user_ids => user_ids, :group_id => params[:group][:id] })
+  end
+
   private
   
   def friends_uri

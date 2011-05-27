@@ -15,17 +15,6 @@ class CommunityController < ApplicationController
     @main_menu      = 'we_community'
   end
   
-  def groups
-    if request.post?
-      group = socialnetwork_instance.group_create(params)
-      socialnetwork_instance.membership_create({ :user_id => current_user.id, :group_id => group.id })
-    end
-
-    @breadcrumb     = ['WE Community','Groups']
-    @main_menu      = 'we_community'
-    @groups = socialnetwork_instance.user_groups(current_user.id)
-  end
-
   def datasets
     @breadcrumb     = ['WE Community','Datasets']
     @main_menu      = 'we_community'

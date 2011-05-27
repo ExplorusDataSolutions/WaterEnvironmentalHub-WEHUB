@@ -1,0 +1,61 @@
+<%= render '/shared/left_panel' %>
+
+<div class="profile-right-container">
+  <%= render '/shared/menu_horizontal_tabs' %>
+	<div class="community-tab-right">
+		<div class="profile-tab profile-tab-select">
+			<%= link_to 'Profile', :controller => 'user', :action => 'profile' %>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div class="profile-content-container">
+		<div class="clear"></div>
+
+<h2>Edit Group</h2>
+<%= form_for :group, :url => { :action => 'edit' } do |f| %>
+  <%= f.hidden_field :id %>
+  <table
+    <tr><th>Group details</th></tr>
+    <tr><td><%= f.label :name, 'Name' %></td><td><%=  f.text_field :name %></td></tr>
+    <tr><td><%= f.label :description, 'Description' %></td><td><%=  f.text_area :description %></td></tr>
+    <tr><td><%= f.label :private, 'Is group private?' %></td><td><%= f.check_box :private %></td></tr>
+    <tr>
+      <td colspan="2">
+    <%= f.submit 'Update Group', { :id => 'group_update', :name => 'update' } %>
+      </td>
+    </tr>
+  </table>
+<% end %>
+
+<div style="height: 30px;"></div>
+
+<h2>Edit Members</h2>
+<%= form_for :members, :url => { :action => 'members' } do |f| %>
+  <%= hidden_field_tag "group[id]", @group.id %>
+  <table>
+    <tr><th>Active members</th></tr>
+  <% if !(@members_auth.nil?  || @members_auth.empty?) %>
+    <% @members_auth.each do |member| %>
+      <tr><td><%= label_tag "members[#{member.id}]", "#{member.name} (#{member.email})" %></td><td><%= check_box_tag "members[#{member.id}]", member.authorized %></td><td><%= member.role.scan(/user/).empty? ? "Administrator" : "" %></td></tr>
+    <% end %>
+  <% end %>
+  <% if !(@members_no_auth.nil?  || @members_no_auth.empty?) %>
+    <tr><th>Members pending authorization</th></tr>
+    <% @members_no_auth.each do |member| %>
+    <tr><td><%= label_tag "members[#{member.id}]", "#{member.name} (#{member.email})" %></td><td><%= check_box_tag "members[#{member.id}]", member.authorized %></td></tr>
+    <% end %>
+  <% end %>
+    <tr>
+      <td colspan="2">
+    <%= f.submit 'Authorize Members', { :id => 'members_delete', :name => 'authorize' }%>
+    <%= f.submit 'Remove Members', { :id => 'members_delete', :name => 'delete' } %>
+    <%= f.submit 'Promote to Group Administrator', { :id => 'members_promote', :name => 'promote' } %>
+      </td>
+    </tr>
+  </table>
+<% end %>
+
+	</div>
+</div>
+<div class="clear"></div>
+

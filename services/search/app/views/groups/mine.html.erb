@@ -18,7 +18,7 @@
 <%= render '/shared/left_panel' %>
 
 <div class="profile-right-container">
-  <%= render 'menu_horizontal_tabs' %>
+  <%= render '/shared/menu_horizontal_tabs' %>
 	<div class="community-tab-right">
 		<div class="profile-tab profile-tab-select">
 			<%= link_to 'Profile', :controller => 'user', :action => 'profile' %>
@@ -49,14 +49,14 @@
 				  <p>
 					  <span class="head">Description:</span>
 					  <span>
-              <%= raw group.description %>
+              <%= group.description %>
 					  </span>
 
 				  </p>
           <span class="head">This group is <%= group.private? ? 'private' : 'public' %></span>          
         </div>
         <div>
-          <%= link_to 'Manage this group', { :controller => 'groups', :action => 'edit', :id => group.id } %>
+          <%= link_to 'Edit group', { :controller => 'groups', :action => 'edit', :id => group.id } %>
 			  </div>
 			  <div class="clear"></div>
 		  </div>
@@ -64,7 +64,7 @@
 		  <% end %>			
     <% end %>
 		</div>
-    <%= render 'groups_create_form' %>
+    <%= render 'create_form' %>
 	</div>
 </div>
 <div class="clear"></div>
