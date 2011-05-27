@@ -1,8 +1,11 @@
 <div id="edit-group-form" style="display: none;">
+<table>
+  <tr><th>Create Group</th></tr>
 <%= form_for :group, :url => { :action => 'groups' } do |f| %>
-  <%= label :name, 'Name' %><%=  f.text_field :name %><br />
-  <%= label :description, 'Description' %><%=  f.text_field :description %><br />
-  <%= label :private, 'Is group private?' %><%= f.check_box :private %><br />
-  <%= f.submit 'Create Group' %>
+  <tr><td><%= f.label :name, 'Name' %></td><td><%=  f.text_field :name %></td></tr>
+  <tr><td><%= f.label :description, 'Description' %></td><td><%=  f.text_field :description %></td></tr>
+  <tr><td><%= f.label :private, 'Is group private?' %></td><td><%= f.check_box :private %></td></tr>
+  <tr><td><%= f.submit 'Create Group' %></td></tr>
 <% end %>
+</table>
 </div>
