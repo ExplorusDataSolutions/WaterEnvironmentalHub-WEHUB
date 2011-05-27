@@ -19,13 +19,13 @@
 				Friends
 			</a>
 		</li>
-		<li class="<%= action_name == 'groups' ? 'groups-selected' : 'groups' %>" onclick="<%= onclick_link_to :controller => 'community', :action => 'groups' %>">
+		<li class="<%= action_name == 'groups' or action_name == 'group_view' ? 'groups-selected' : 'groups' %>" onclick="<%= onclick_link_to :controller => 'community', :action => 'groups' %>">
 			<a href="<%= url_for :controller => 'community', :action => 'groups' %>">
 				<img src="/images/spacer.gif" border="0" width="51" height="65" /><br />
 				Groups
 			</a>
 		</li>
-		<li class="<%= action_name == 'datasets' ? 'datasets-selected' : 'datasets' %>" onclick="<%= onclick_link_to :controller => 'community', :action => 'datasets' %>">
+		<li class="<%= action_name == 'datasets' or action_name == 'dataset_upload' ? 'datasets-selected' : 'datasets' %>" onclick="<%= onclick_link_to :controller => 'community', :action => 'datasets' %>">
 			<a href="<%= url_for :controller => 'community', :action => 'datasets' %>">
 				<img src="/images/spacer.gif" border="0" width="51" height="65" /><br />
 				Share Datasets

@@ -1,0 +1,158 @@
+
+<%= render '/shared/left_panel' %>
+
+<div class="profile-right-container">
+  <%= render 'menu_horizontal_tabs' %>
+	<div class="community-tab-right">
+		<div class="profile-tab profile-tab-select">
+				<%= link_to 'Profile', :controller => 'user', :action => 'profile' %>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div class="profile-content-container">
+		<div class="share-middle-filter">
+			<a href="#">Files Friends have Shared</a>
+			<a href="#">Files Groups have Shared</a>
+			<a href="#">Files You have Shared</a>
+			<a href="#" class="selected">Contribute</a>
+		</div>
+		<div class="clear"></div>
+		
+		<div class="dataset-upload-container">
+			<table width="100%" cellpadding="8" cellspacing="0" border="0">
+				<tr>
+					<td align="right" width="20%">
+						Title
+					</td>
+					<td align="left" width="80%">
+						<div class="text-plain-left"></div>
+						<div class="text-plain-repeat-280">
+							<input type="text" />
+						</div>
+						<div class="text-plain-right"></div>
+						<div class="float-left width-20">&nbsp;</div>
+						<div class="text-plain-left"></div>
+						<div class="text-plain-repeat-205">
+							<input type="text" value="Author" />
+						</div>
+						<div class="text-plain-right"></div>
+					</td>
+				</tr>
+				
+				<tr>
+					<td align="right" valign="top">
+						Description
+					</td>
+					<td align="left">
+						<div class="textarea-plain-left"></div>
+						<div class="textarea-plain-repeat-280">
+							<textarea></textarea>
+						</div>
+						<div class="textarea-plain-right"></div>
+						<div class="float-left width-20">&nbsp;</div>
+						<div class="float-left">
+							<div class="text-plain-left"></div>
+							<div class="text-plain-repeat-205">
+								<input type="text" value="Url(optional)" />
+							</div>
+							<div class="text-plain-right"></div>
+							<div class="clear height-5"></div>
+							<div class="text-plain-left"></div>
+							<div class="text-plain-repeat-205">
+								<input type="text" value="Email(optional)" />
+							</div>
+							<div class="text-plain-right"></div>
+						</div>
+					</td>
+				</tr>
+				
+				
+				<tr>
+					<td align="right" valign="top">
+						Upload file:
+					</td>	
+					<td align="left">
+						<input type="file" />
+						<div class="">
+							Valid uploads includes: Spreadsheet in .cvs, .ods, .xls, or .xlsx format, or Shape files (a .zip file) containing atleast a .shp and .dbf file <a href="#">file specification</a>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">
+						Feature type:
+					</td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td align="right" valign="top">
+						Non-temporal(static):
+					</td>
+					<td align="left">
+						<div class="float-left">
+							<input type="radio">
+						</div>
+						<div class="float-left width-5">&nbsp;</div>
+						<div class="float-left">
+							Date/time
+						</div>
+						<div class="float-left width-5">&nbsp;</div>
+						<div class="float-left">
+							<div class="text-plain-left"></div>
+							<div class="text-plain-repeat-280">
+								<input type="text" />
+							</div>
+							<div class="text-plain-right"></div>
+						</div>
+					</td>
+				</tr>
+				
+				<tr>
+					<td align="right" valign="top">
+						Temporal(dynamic):
+					</td>
+					<td align="left">
+						<div class="float-left">
+							<input type="radio">
+						</div>
+						<div class="float-left width-5">&nbsp;</div>
+						<div class="float-left">
+							Date/time
+						</div>
+						<div class="float-left width-5">&nbsp;</div>
+						<div class="float-left">
+							<div class="text-plain-left"></div>
+							<div class="text-plain-repeat-135">
+								<input type="text" />
+							</div>
+							<div class="text-plain-right"></div>
+						</div>
+						<div class="float-left width-5">&nbsp;</div>
+						<div class="float-left">
+							<div class="text-plain-left"></div>
+							<div class="text-plain-repeat-135">
+								<input type="text" />
+							</div>
+							<div class="text-plain-right"></div>
+						</div>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>&nbsp;</td>
+					<td align="left">
+						<a href="#">
+							<img src="/images/upload-button.jpg" border="0" alt="Upload" title="Upload" />
+						</a>
+					</td>
+				</tr>
+				
+			</table>
+		</div>
+		<div class="clear"></div>
+		
+	
+		
+	</div>
+</div>
+<div class="clear"></div>

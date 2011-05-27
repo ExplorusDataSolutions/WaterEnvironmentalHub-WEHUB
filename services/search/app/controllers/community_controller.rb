@@ -41,4 +41,13 @@ class CommunityController < ApplicationController
     @main_menu      = 'we_community'
   end
   
+  def group_view
+    @breadcrumb     = ['WE Community','Groups']
+    @main_menu      = 'we_community'
+  end
+  def dataset_upload
+    @breadcrumb     = ['WE Community','Datasets']
+    @main_menu      = 'we_community'
+  end  
+  
 end

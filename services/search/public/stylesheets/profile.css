@@ -45,6 +45,10 @@
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
 }
+.profile-tab-container .profile-tab a,.community-tab-right .profile-tab a{
+	color:#FFFFFF;
+	text-decoration:none;
+}
 .profile-tab-container .profile-tab:hover,.profile-tab-container .profile-tab-select,.community-tab-right .profile-tab:hover,.community-tab-right .profile-tab-select{
 	background:#61C1F3 !important;
 }
@@ -144,6 +148,13 @@
 	padding-left:24px;
 	height:21px;
 }
+.comments-activity-text a{
+	color:#626166;
+	text-decoration:none;
+}
+.comments-activity-text a:hover{
+	text-decoration:underline;
+}
 .profile-sub-head{
 	height:19px;
 	padding:3px 5px;
@@ -222,6 +233,17 @@
 	margin:0 10px;
 	color:#AFAFAF;
 	font-size:12px;
+}
+.comment-content-box{
+	float:right;
+	width:650px;
+}
+.comment-content-box .comment-content{
+	background:#F9F9F9 url(/images/icon-comment-view.jpg) no-repeat 3px 8px;
+	padding:5px 0 5px 25px;
+	border-bottom:solid 1px #C1C1C1;
+	color:#626262;
+	font-size:13px;
 }
 .community-landing-content{
 	margin:35px 10px;
@@ -490,4 +512,7 @@
 }
 .activity-content-box .friends-edit-delete a{
 	margin:0 5px;
+}
+.dataset-upload-container{
+	color:#616161;
 }
