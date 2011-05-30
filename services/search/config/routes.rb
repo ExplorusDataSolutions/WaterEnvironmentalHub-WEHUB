@@ -12,7 +12,7 @@ Catalogue::Application.routes.draw do
   match 'user/' => 'user#profile'
 
   match 'groups/' => 'groups#show'
-  match 'community/groups' => 'groups#mine'
+  match 'community/groups' => 'groups#show'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

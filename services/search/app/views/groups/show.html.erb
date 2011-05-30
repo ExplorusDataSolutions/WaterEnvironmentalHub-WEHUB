@@ -1,0 +1,58 @@
+<script>
+  $(document).ready(function() {
+    function eventId(event) { return event.target.id }
+    $('#create-group, #my-groups, #all-groups').click(function(event) {
+      event.preventDefault();
+      var selectedClassName = 'selected';
+      $('.share-middle-filter').children().removeClass(selectedClassName)
+      switch (eventId(event))
+      {
+        case 'create-group': 
+          $('#edit-group-form').show();
+          $('#my-group-list, #all-group-list').hide();
+          $('#create-group').addClass(selectedClassName);
+          break;
+        case 'my-groups': 
+          $('#my-group-list').show();
+          $('#edit-group-form, #all-group-list').hide();
+          $('#my-groups').addClass(selectedClassName);
+          break;
+        case 'all-groups': 
+          $('#all-group-list').show();
+          $('#edit-group-form, #my-group-list').hide();
+          $('#all-groups').addClass(selectedClassName);
+        break;
+        default:
+      }
+    });
+  });
+</script>
+
+<%= render '/shared/left_panel' %>
+
+<div class="profile-right-container">
+  <%= render '/shared/menu_horizontal_tabs' %>
+	<div class="community-tab-right">
+		<div class="profile-tab profile-tab-select">
+			<%= link_to 'Profile', :controller => 'user', :action => 'profile' %>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div class="profile-content-container">
+		<div class="clear"></div>
+		<div class="share-middle-filter">
+			<a href="#" class="selected" id="all-groups">All Groups</a>
+			<a href="#" id="my-groups">My Groups</a>
+			<a href="#" id="create-group">Create Group</a>
+		</div>
+		<div class="clear"></div>
+    <div id="all-group-list">
+      <%= render 'all_groups' %>
+    </div>
+    <div id="my-group-list" style="display: none;">
+      <%= render 'my_groups' %>
+    </div>
+    <%= render 'create_form' %>
+	</div>
+</div>
+<div class="clear"></div>

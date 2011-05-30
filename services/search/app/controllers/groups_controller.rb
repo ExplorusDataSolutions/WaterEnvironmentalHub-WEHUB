@@ -18,13 +18,20 @@ class GroupsController < ApplicationController
       @members_no_auth = @members.select { |k,v| k[:authorized] != true }
     end
   end
+
+  def create
+    if request.post?
+      group = socialnetwork_instance.group_create(params)
+      socialnetwork_instance.membership_create({ :user_id => current_user.id, :group_id => group.id })
+    end
+  end
   
   # This should be in its own controller
   def members
     if request.post?
       if params.key? :authorize
         socialnetwork_instance.membership_authorize(params)
-      elsif params.key? :delete
+      elsif params.key? :delete        
         socialnetwork_instance.membership_delete(params)
       elsif params.key? :promote
         socialnetwork_instance.membership_promote(params)
@@ -33,15 +40,21 @@ class GroupsController < ApplicationController
     end
   end
   
-  def mine
-    if request.post?
-      group = socialnetwork_instance.group_create(params)
-      socialnetwork_instance.membership_create({ :user_id => current_user.id, :group_id => group.id })
-    end
-
+  def show
     @breadcrumb     = ['WE Community','Groups']
     @main_menu      = 'we_community'
-    @groups = socialnetwork_instance.user_groups(current_user.id)
+
+    @my_groups = socialnetwork_instance.user_groups(current_user.id)
+    all_groups = socialnetwork_instance.groups_all
+    @groups = ((@my_groups | all_groups) - @my_groups)
+  end
+
+  def join
+    begin
+      socialnetwork_instance.membership_create({ :user_id => current_user.id, :group_id => params[:id] })
+    rescue
+    end
+    redirect_to :action => 'show'
   end
 
 end

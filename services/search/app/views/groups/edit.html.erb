@@ -47,7 +47,9 @@
   <% end %>
     <tr>
       <td colspan="2">
-    <%= f.submit 'Authorize Members', { :id => 'members_delete', :name => 'authorize' }%>
+    <% if !(@members_no_auth.nil?  || @members_no_auth.empty?) %>
+      <%= f.submit 'Authorize Members', { :id => 'members_delete', :name => 'authorize' }%>
+    <% end %>
     <%= f.submit 'Remove Members', { :id => 'members_delete', :name => 'delete' } %>
     <%= f.submit 'Promote to Group Administrator', { :id => 'members_promote', :name => 'promote' } %>
       </td>

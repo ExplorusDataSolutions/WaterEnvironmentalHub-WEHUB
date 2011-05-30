@@ -94,6 +94,12 @@ class EngineYTranslator
     groups
   end
 
+  def groups_all
+    groups = xml_to_mash(get("#{groups_uri}/?format=xml"))['groups']
+    groups.sort_by! { |group| group.name } unless groups.nil?
+    groups
+  end
+
   def group_create(params)
     json_to_mash(post_json("#{groups_uri}/create?", params))
   end
