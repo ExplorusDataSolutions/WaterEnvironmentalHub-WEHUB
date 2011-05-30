@@ -46,5 +46,10 @@ class CatalogueController < ApplicationController
 
     @search = search_instance.do_query(query)
   end
+  
+  def my_collection
+    @breadcrumb     = ['My Collection']
+    @main_menu      = 'we_catalogue'
+  end
 
 end

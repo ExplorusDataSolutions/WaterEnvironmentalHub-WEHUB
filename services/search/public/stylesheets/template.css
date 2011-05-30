@@ -435,6 +435,7 @@ a{
 .tab-menu-body .tab-menu-select{
 	background-color:#5EBEF0;
 }
+
 .sub-content-body{
 	margin:0px;
 	padding:20px 15px 30px 15px;
@@ -1385,3 +1386,27 @@ a{
  /*
  * Catalogue Search End
  */
+
+ .full-content-body{
+	margin:0px;
+	padding:35px 15px 30px 25px;
+	background:#FFFFFF;
+	border:solid 1px #D3D3D3;
+	-moz-border-radius-bottomleft:5px;
+	-moz-border-radius-bottomright:5px;
+	-moz-border-radius-topleft:5px;
+	-moz-border-radius-topright:5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+.full-content-body .full-content-left{
+	float:left;
+	width:835px;
+	margin:0 15px 0 0;
+}

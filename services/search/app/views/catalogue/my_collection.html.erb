@@ -1,0 +1,150 @@
+<script>
+  $(document).ready(function() {
+
+    $('button').button();
+    
+    function download() {
+      var format = $('[name=download-format]:checked').val();
+      var ids = [];
+      $('[type=checkbox][name=download]:checked').each(function() { ids.push($(this).val()); })
+      window.location = '/item/download/?ids=' + ids + '&format=' + format;
+    }
+        
+    function bindDownloadButtonset() {
+      var formatSelector = $('.format-selector');
+      formatSelector.buttonset();    
+
+      $('button[name=download]')
+        .button()
+        .click(function() {
+          formatSelector.hide();
+          download();
+        })
+        .next()
+          .button({ text: false, icons: { primary: 'ui-icon-triangle-1-s' }})
+          .click(function() { 
+            formatSelector.toggle();
+           })
+          .parent()
+            .buttonset();
+            
+      $('[name=download-format]')
+        .click(function() {
+          formatSelector.hide();
+          download();
+        });
+    }
+    bindDownloadButtonset()
+
+    $("#dataset-navigation").treeview({
+      persist: "location",
+      unique: true
+    });
+   
+
+  })
+</script>
+<div class="full-content-body">
+	<div class="full-content-left">
+		<div class="dashed-header">
+			<h2>Sort By: </h2>
+			<span><a href="#" class="selected">Most Recent</a></span>
+			<span><a href="#">Date</a></span>
+			<span><a href="#">Author</a></span>
+			<span><a href="#">Title</a></span>
+		</div>
+		<div class="clear"></div>
+		
+		<% for i in 0..4%>
+		<div class="search-result-each search-result-each-box">
+			<div class="search-checkbox">
+				<input type="checkbox" />
+			</div>
+			<div class="search-text">
+				<div class="float-left">
+					<span class="search-title">
+						Shape Import Test
+					</span>&nbsp;
+					<span class="search-date">
+						2011-04-04 15:25:03 UTC
+					</span>
+				</div>
+				<div class="clear"></div>
+				<p>
+					<span class="head">Abstract:</span>
+					<span>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula. Fusce vestibulum, ipsum eget imperdiet rhoncus, augue leo semper massa, non porta velit massa nec massa. Sed venenatis velit et odio iaculis vulputate fermentum mi volutpat. Suspendisse velit massa, pharetra ultricies lacinia sed, cursus quis erat.
+					</span>
+				</p>
+				<p>
+					<div class="third-sep">
+						<span class="head">Author: </span>
+						<span>Lorem ipsum</span>
+					</div>
+					<div class="third-sep">
+						<span class="head">Start Date: </span>
+						<span>2010-03-10</span>
+					</div>
+					<div class="third-sep">
+						<span class="head">End Date: </span>
+						<span>2010-05-05</span>
+					</div>
+					<div class="clear"></div>
+				</p>
+				<p>
+					<span class="head">Number of Observed Properties: </span>
+					<span>Flow Speed, Temperature, Phosphate</span><br />
+					<span class="head">Number of Features: </span>
+					<span>3Lorem ipsum dolor sit amet</span>
+				</p>
+				<div class="search-btm-image-link">
+					<a href="#">
+						<img src="/images/1.png" border="0" />
+					</a>
+					<a href="#">
+						<img src="/images/2.png" border="0" />
+					</a>
+					<a href="#">
+						<img src="/images/3.png" border="0" />
+					</a>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+		<% end%>
+		
+		
+		<div class="clear height-10"></div>
+		<div class="text-align-center">
+			<span id="download-buttonset-fragment">
+		        <span>
+		          <button name="download">Download</button>
+		          <button name="select-download-format">Select Format</button>
+		        </span>   
+			</span>
+			
+			<button name="my-collection">+ My collection</button>
+			<button name="clear">Clear</button>
+		</div>
+		
+		<div class="clear height-25"></div>
+		<div class="pagination">
+			<span class="disabled prev_page">Previous</span>
+			<span class="current">1</span>
+			<a rel="next" href="/view/1?page=2">2</a>
+			<a href="/view/1?page=3">3</a>
+			......
+			<a href="/view/1?page=98">98</a>
+			<a href="/view/1?page=99">99</a>
+			<a rel="next" class="next_page" href="/view/1?page=2">Next</a>
+		</div>
+		
+		
+	</div>
+	<div class="sub-content-right">
+    <%= render 'shared/right_panel' %>				
+	</div>
+	
+	<div class="clear"></div>
+</div>
