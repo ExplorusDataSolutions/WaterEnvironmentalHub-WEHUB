@@ -13,6 +13,7 @@ Catalogue::Application.routes.draw do
 
   match 'groups/' => 'groups#show'
   match 'community/groups' => 'groups#show'
+  match 'community/datasets' => 'datasets#index'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

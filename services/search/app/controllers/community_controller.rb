@@ -15,11 +15,6 @@ class CommunityController < ApplicationController
     @main_menu      = 'we_community'
   end
   
-  def datasets
-    @breadcrumb     = ['WE Community','Datasets']
-    @main_menu      = 'we_community'
-  end
-
   def news
     @breadcrumb     = ['WE Community','News']
     @main_menu      = 'we_community'
@@ -34,9 +29,5 @@ class CommunityController < ApplicationController
     @breadcrumb     = ['WE Community','Groups']
     @main_menu      = 'we_community'
   end
-  def dataset_upload
-    @breadcrumb     = ['WE Community','Datasets']
-    @main_menu      = 'we_community'
-  end  
   
 end
