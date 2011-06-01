@@ -14,5 +14,10 @@ class ToolsController < ApplicationController
     @breadcrumb     = ['WE Tools','We Data Map']
     @main_menu      = 'we_tools'
   end
+  
+  def developers
+    @breadcrumb     = ['WE Tools','Developers']
+    @main_menu      = 'we_tools'
+  end
 
 end
