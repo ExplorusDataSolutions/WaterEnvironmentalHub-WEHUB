@@ -81,7 +81,7 @@ class EngineYTranslator
   end
   
   def friends(user_id)
-    get("#{friends_uri}/?user_id=#{user_id}&format=xml")
+    friends = profile(user_id)['friend']
   end
 
   def profile(user_id)

@@ -30,4 +30,26 @@ class UserController < ApplicationController
     end
      respond_with(@datasets) 
   end
+
+  def datasets
+    if params[:user_ids]
+      @datasets = []
+      params[:user_ids].split(',').each do |id| 
+        owner = Owner.find_by_user_id(id)
+        if owner
+          @datasets.concat(Dataset.find(:all, :conditions => ['owner_id = ?', owner.id])) 
+        end
+      end
+    elsif params[:group_ids]
+      @datasets = []
+      params[:group_ids].split(',').each do |id|
+        owner = Owner.find_by_group_id(id) 
+        if owner
+          @datasets.concat(Dataset.find(:all, :conditions => ['owner_id = ?', owner.id]))
+        end
+      end
+    end
+
+    respond_with(@datasets)
+  end
 end

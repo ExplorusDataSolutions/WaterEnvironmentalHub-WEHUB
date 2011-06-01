@@ -45,6 +45,14 @@ class CatalogueTranslator
     get("#{user_saved_uri}?user_id=#{user_id}")
   end
   
+  def find_datasets_by_user(user_ids)
+    xml_to_mash(get("#{user_datasets_uri}?user_ids=#{user_ids}&format=xml"))['datasets']
+  end
+
+  def find_datasets_by_group(group_ids)
+    xml_to_mash(get("#{user_datasets_uri}?group_ids=#{group_ids}&format=xml"))['datasets']
+  end
+
   def get(uri)
     url = URI.parse(uri)
     request = Net::HTTP::Get.new(url.to_s)    
@@ -64,5 +72,17 @@ class CatalogueTranslator
   def user_recently_viewed_uri
     "#{url}/user/recently_viewed"
   end 
+  
+  def user_datasets_uri
+    "#{url}/user/datasets"
+  end
+
+  def xml_to_mash(value)
+    Hashie::Mash.new(Hash.from_xml(value))
+  end
+
+  def json_to_mash(value)
+    Hashie::Mash.new(JSON.parse(value))
+  end
 
 end
