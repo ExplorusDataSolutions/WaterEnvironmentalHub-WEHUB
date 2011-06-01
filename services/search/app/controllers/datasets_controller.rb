@@ -21,7 +21,6 @@ class DatasetsController < ApplicationController
     group_ids = []
     groups = socialnetwork_instance.user_groups(current_user.id)
     groups.each { |group| group_ids.push(group.id) }
-    debugger
 
     @group_datasets = catalogue_instance.find_datasets_by_group(group_ids.join(','))
   end

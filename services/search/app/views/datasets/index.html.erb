@@ -1,8 +1,3 @@
-Friend's Datasets<%= @friend_datasets %><br>
-My Datasets<%= @my_datasets %><br>
-Group Datasets<%= @group_datasets %><br>
-
-
 <%= render '/shared/left_panel' %>
 
 <div class="profile-right-container">
@@ -24,65 +19,17 @@ Group Datasets<%= @group_datasets %><br>
 			<a href="#">Contribute</a>
 		</div>
 		<div class="clear"></div>
-		<% for i in 0..3%>
-		<div class="search-result-each search-result-each-box">
-			<div class="search-checkbox">
-				<input type="checkbox" />
-			</div>
-			<div class="search-text">
-				<div class="float-left">
-					<span class="search-title">
-						Shape Import Test
-					</span>&nbsp;
-					<span class="search-date">
-						2011-04-04 15:25:03 UTC
-					</span>
-				</div>
-				<div class="clear"></div>
-				<p>
-					<span class="head">Abstract:</span>
-					<span>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula. Fusce vestibulum, ipsum eget imperdiet rhoncus, augue leo semper massa, non porta velit massa nec massa. Sed venenatis velit et odio iaculis vulputate fermentum mi volutpat. Suspendisse velit massa, pharetra ultricies lacinia sed, cursus quis erat.
-					</span>
-				</p>
-				<p>
-					<div class="third-sep">
-						<span class="head">Author: </span>
-						<span>Lorem ipsum</span>
-					</div>
-					<div class="third-sep">
-						<span class="head">Start Date: </span>
-						<span>2010-03-10</span>
-					</div>
-					<div class="third-sep">
-						<span class="head">End Date: </span>
-						<span>2010-05-05</span>
-					</div>
-					<div class="clear"></div>
-				</p>
-				<p>
-					<span class="head">Number of Observed Properties: </span>
-					<span>Flow Speed, Temperature, Phosphate</span><br />
-					<span class="head">Number of Features: </span>
-					<span>3Lorem ipsum dolor sit amet</span>
-				</p>
-				<div class="search-btm-image-link">
-					<a href="#">
-						<img src="/images/1.png" border="0" />
-					</a>
-					<a href="#">
-						<img src="/images/2.png" border="0" />
-					</a>
-					<a href="#">
-						<img src="/images/3.png" border="0" />
-					</a>
-				</div>
-			</div>
-			<div class="clear"></div>
-		</div>
-		<div class="clear"></div>
-		<% end%>
-						
+
+    <div id="friend-dataset-list">
+    <%= render :partial => 'dataset', :collection => @friend_datasets %>
+    </div>
+    <div id="group-dataset-list">
+    <%= render :partial => 'dataset', :collection => @group_datasets %>
+    </div>
+    <div id="my-dataset-list">
+    <%= render :partial => 'dataset', :collection => @my_datasets %>
+    </div>
+
 	</div>
 </div>
 <div class="clear"></div>
