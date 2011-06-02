@@ -1,8 +1,6 @@
-
-
 <div class="search-result-each search-result-each-box">
 	<div class="search-checkbox">
-		<input type="checkbox" />
+		<input type='checkbox' name='download' value='<%= dataset.id %>' />
 	</div>
 	<div class="search-text">
 		<div class="float-left">
@@ -40,18 +38,11 @@
 			<span class="head">Number of Features: </span><span>TBD</span>
 		</p>
 		<div class="search-btm-image-link">
-			<a href="#">
-				<img src="/images/1.png" border="0" />
-			</a>
-			<a href="#">
-				<img src="/images/2.png" border="0" />
-			</a>
-			<a href="#">
-				<img src="/images/3.png" border="0" />
-			</a>
+      <%= link_to image_tag('1.png', :alt => 'Map this', :border => 0), { :controller => 'tools', :action => 'chart', :id => dataset.id } %>
+      <%= link_to image_tag('2.png', :alt => 'Map this', :border => 0), { :controller => 'tools', :action => 'map', :id => dataset.id } %>
+      <%= link_to image_tag('3.png', :alt => 'More details', :border => 0), { :controller => 'catalogue', :action => 'details', :id => dataset.id } %>
 		</div>
 	</div>
 	<div class="clear"></div>
 </div>
 <div class="clear"></div>
-

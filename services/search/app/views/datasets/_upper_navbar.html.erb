@@ -1,9 +1,11 @@
+<%
+=begin %>
+
 <div class="share-search-box">
 	<div class="float-left">
-		<a href="#">
-			<img src="/images/sahre-dataset.jpg" border="0" alt="Share a Dataset" title="Share a Dataset" />
-		</a>
+    <%= link_to image_tag('share-dataset.jpg', :alt => 'Share a Dataset', :border => 0), { :controller => 'datasets', :action => 'create' } %>
 	</div>
+<%# In this context, what does the search button do? Search through the private datasets that are available to this user? Search through all public datasets? Search through both? %>
 	<div class="float-right">
 		<div class="share-find-text">
 			Find Datasets:
@@ -21,3 +23,6 @@
 	</div>
 	<div class="clear"></div>
 </div>
+
+<%
+=end %>

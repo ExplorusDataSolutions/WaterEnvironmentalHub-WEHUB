@@ -1,0 +1,66 @@
+<script>
+  $(document).ready(function() {
+    $('#group-dataset-list, #my-dataset-list').hide();
+    function eventId(event) { return event.target.id }
+    $('#friend-datasets, #group-datasets, #my-datasets').click(function(event) {
+      event.preventDefault();
+      var selectedClassName = 'selected';
+      $('.share-middle-filter').children().removeClass(selectedClassName)
+      switch (eventId(event))
+      {
+        case 'friend-datasets': 
+          $('#friend-dataset-list').show();
+          $('#group-dataset-list, #my-dataset-list').hide();
+          $('#friend-datasets').addClass(selectedClassName);
+          break;
+        case 'group-datasets': 
+          $('#group-dataset-list').show();
+          $('#friend-dataset-list, #my-dataset-list').hide();
+          $('#group-datasets').addClass(selectedClassName);
+          break;
+        case 'my-datasets': 
+          $('#my-dataset-list').show();
+          $('#friend-dataset-list, #group-dataset-list').hide();
+          $('#all-groups').addClass(selectedClassName);
+        break;
+        default:
+      }
+    });
+  });
+</script>
+
+<%= render '/shared/left_panel' %>
+
+<div class="profile-right-container">
+  <%= render '/shared/menu_horizontal_tabs' %>
+	<div class="community-tab-right">
+		<div class="profile-tab profile-tab-select">
+				<%= link_to 'Profile', :controller => 'user', :action => 'profile' %>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div class="profile-content-container">
+    <%= render 'upper_navbar' %>
+
+		<div class="clear"></div>
+		<div class="share-middle-filter">
+			<a href="#" id="friend-datasets" class="selected">Files friends have shared</a>
+			<a href="#" id="group-datasets">Files groups have shared</a>
+			<a href="#" id="my-datasets">Files you have shared</a>
+      <%= link_to 'Contribute (share your dataset)', :controller => 'datasets', :action => 'create' %>
+		</div>
+		<div class="clear"></div>
+
+    <div id="friend-dataset-list">
+    <%= render :partial => 'dataset', :collection => @friend_datasets %>
+    </div>
+    <div id="group-dataset-list">
+    <%= render :partial => 'dataset', :collection => @group_datasets %>
+    </div>
+    <div id="my-dataset-list">
+    <%= render :partial => 'dataset', :collection => @my_datasets %>
+    </div>
+
+	</div>
+</div>
+<div class="clear"></div>
