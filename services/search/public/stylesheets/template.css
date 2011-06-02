@@ -1325,8 +1325,15 @@ a{
     height: 28px;
     width: 117px;	
 }
-#search_submit {
+#search_submit, #dataset_submit {
   visibility: hidden;
+}
+.create-dataset-button {
+	background: url("/images/upload-button.jpg") no-repeat scroll 0 0 transparent;
+  cursor: pointer;
+  float: left;
+  height: 31px;
+  width: 66px;	
 }
 .search-result-each{
 	margin:15px 0 0 0;

@@ -19,21 +19,17 @@
 		<div class="clear"></div>
 		
 		<div class="dataset-upload-container">
+<%= form_for :dataset, :multipart => true do |f| %>
+
 			<table width="100%" cellpadding="8" cellspacing="0" border="0">
 				<tr>
 					<td align="right" width="20%">
-						Title
+            <%= f.label :name, 'Title' %>
 					</td>
 					<td align="left" width="80%">
 						<div class="text-plain-left"></div>
 						<div class="text-plain-repeat-280">
-							<input type="text" />
-						</div>
-						<div class="text-plain-right"></div>
-						<div class="float-left width-20">&nbsp;</div>
-						<div class="text-plain-left"></div>
-						<div class="text-plain-repeat-205">
-							<input type="text" value="Author" />
+							<%= f.text_field :name %>
 						</div>
 						<div class="text-plain-right"></div>
 					</td>
@@ -41,38 +37,60 @@
 				
 				<tr>
 					<td align="right" valign="top">
-						Description
+						<%= f.label :description, 'Description' %>
 					</td>
 					<td align="left">
 						<div class="textarea-plain-left"></div>
 						<div class="textarea-plain-repeat-280">
-							<textarea></textarea>
+              <%= f.text_area :description %>
 						</div>
-						<div class="textarea-plain-right"></div>
-						<div class="float-left width-20">&nbsp;</div>
-						<div class="float-left">
-							<div class="text-plain-left"></div>
-							<div class="text-plain-repeat-205">
-								<input type="text" value="Url(optional)" />
-							</div>
-							<div class="text-plain-right"></div>
-							<div class="clear height-5"></div>
-							<div class="text-plain-left"></div>
-							<div class="text-plain-repeat-205">
-								<input type="text" value="Email(optional)" />
-							</div>
-							<div class="text-plain-right"></div>
-						</div>
+            <div class="textarea-plain-right"></div>
 					</td>
 				</tr>
-				
+
+        <tr>
+					<td align="right" valign="top">
+            <%= f.label :author, 'Author (optional)' %>
+          </td>
+          <td>
+						<div class="text-plain-left"></div>
+						<div class="text-plain-repeat-280">
+							<%= f.text_field :author %>
+						</div>
+						<div class="text-plain-right"></div>
+          </td>
+        </tr>				
+        <tr>
+					<td align="right" valign="top">
+            <%= f.label :url, 'Url (optional)' %>
+          </td>
+          <td>
+						<div class="text-plain-left"></div>
+						<div class="text-plain-repeat-280">
+							<%= f.text_field :url %>
+						</div>
+						<div class="text-plain-right"></div>
+          </td>
+        </tr>
+        <tr>
+					<td align="right" valign="top">
+              <%= f.label :email, 'Email (optional)' %>
+          </td>
+          <td>
+						<div class="text-plain-left"></div>
+						<div class="text-plain-repeat-280">
+							<%= f.text_field :email %>
+						</div>
+						<div class="text-plain-right"></div>
+          </td>
+        </tr>
 				
 				<tr>
 					<td align="right" valign="top">
-						Upload file:
+            <%= f.label :file, 'File' %>
 					</td>	
 					<td align="left">
-						<input type="file" />
+            <%= f.file_field :file %>
 						<div class="">
 							Valid uploads includes: Spreadsheet in .cvs, .ods, .xls, or .xlsx format, or Shape files (a .zip file) containing atleast a .shp and .dbf file <a href="#">file specification</a>
 						</div>
@@ -80,17 +98,17 @@
 				</tr>
 				<tr>
 					<td align="right">
-						Feature type:
+						<strong>Feature type<strong>
 					</td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td align="right" valign="top">
-						Non-temporal(static):
+            <%= f.label :feature_type_static, 'Non-temporal (static)' %>
 					</td>
 					<td align="left">
 						<div class="float-left">
-							<input type="radio">
+              <%= f.radio_button :feature_type, :static %>
 						</div>
 						<div class="float-left width-5">&nbsp;</div>
 						<div class="float-left">
@@ -109,11 +127,11 @@
 				
 				<tr>
 					<td align="right" valign="top">
-						Temporal(dynamic):
+            <%= f.label :feature_type_dynamic, 'Temporal (dynamic)' %>
 					</td>
 					<td align="left">
 						<div class="float-left">
-							<input type="radio">
+              <%= f.radio_button :feature_type, :dynamic %>
 						</div>
 						<div class="float-left width-5">&nbsp;</div>
 						<div class="float-left">
@@ -137,17 +155,54 @@
 						</div>
 					</td>
 				</tr>
+
+				<tr>
+					<td align="right">
+						<strong>Permissions<strong>
+					</td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+          <td></td>
+					<td align="" valign="top">
+          <table>
+            <tr>
+              <td>
+                <%= label_tag :permission_group, 'Share with one of your groups' %>
+              </td>
+              <td>       
+                <%= radio_button_tag :permission, :group %>
+                Groups
+                <select name="owner[group_id]" id="groups">
+                  <option value="0">Loading...&nbsp;&nbsp;</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <%= label_tag :permission_public, 'Share with the everyone' %>
+              </td>
+              <td>
+                <%= radio_button_tag :permission, :public %>
+              </td>
+            </tr>
+          </table>
+					</td>
+				</tr>
 				
 				<tr>
 					<td>&nbsp;</td>
 					<td align="left">
-						<a href="#">
-							<img src="/images/upload-button.jpg" border="0" alt="Upload" title="Upload" />
-						</a>
+            <div class="create-dataset-button" onclick="$('form').submit();">
+                <%= f.submit :search, :name => 'search' %>
+            </div>
 					</td>
 				</tr>
 				
 			</table>
+
+<% end %>
+
 		</div>
 		<div class="clear"></div>
 		
