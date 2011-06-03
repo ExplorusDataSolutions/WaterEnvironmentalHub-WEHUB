@@ -39,40 +39,6 @@
       }
     </style>
 
-    <script>
-    $(document).ready(function() {
-      function fragmentId(id) {
-        return $(id + '_fragment');
-      }
-      function fragment(id) {
-        var fragment = fragmentId(id);
-        return {id: id};
-      }
-      
-      var fragments = []
-      fragments.push(fragment('#feature_type_3'))
-      fragments.push(fragment('#feature_type_4'))
-      
-      $('[name="feature_type"]').change(function(event) {
-        var targetId = '#' + event.target.id;
-        $.each(fragments, function(idex, fragment){
-          var parent = fragmentId(fragment.id);
-          var inputs = parent.find('input');
-          if (fragment.id === targetId) {      	        
-            parent.removeClass('disabled');
-            inputs.removeAttr('disabled');
-          } else {
-            parent.addClass('disabled');
-            inputs.attr('disabled', true);
-          }
-        });
-      });
-      
-      $('#feature_type_3').attr('checked', true).trigger('change');
-      
-    });
-    </script>
-
   </head>
   <body>
     <h2>Dataset entry form</h2>
@@ -81,16 +47,16 @@
       <input type="hidden" name="owner[user_id]" id="user_id" value="<%= logged_in? ? current_user.id : 0 %>" />
       <table>
         <tr>
-          <td><label for="name">Title</label></td><td><input id="name" name="name" type="text" /></td>
+          <td><label for="name">Title</label></td><td><input id="name" name="dataset[name]" type="text" /></td>
         </tr>
         <tr>
-          <td><label for="description">Description</label></td><td><textarea id="description" name="description"></textarea></td>
+          <td><label for="description">Description</label></td><td><textarea id="description" name="dataset[description]"></textarea></td>
         </tr>
         <tr>
-          <td><label for="source">Source</label></td><td><input id="source" name="source" type="text" /></td>
+          <td><label for="source">Source</label></td><td><input id="source" name="dataset[source]" type="text" /></td>
         </tr>
         <tr>
-          <td style="width: 300px;"><label for="file">Upload file</label></td><td><input id="spreadsheet" name="spreadsheet" type="file" /></td>
+          <td style="width: 300px;"><label for="file">Upload file</label></td><td><input id="spreadsheet" name="filename" type="file" /></td>
         </tr>
         <tr>
           <td colspan="2" class="additional">Valid uploads include: <strong>Spreadsheets</strong> in .cvs, .ods, .xls, or .xlsx format, or <strong>Shape</strong> files (a .zip file) containing at least a .shp and .dbf file.</td>
@@ -98,10 +64,10 @@
         <tr>
           <td colspan="2"><b>Feature type</b>
             <table class="feature_types">
-          <% feature_types = [{:description => 'Non-temporal (static)', :id => 3}, {:description => 'Temporal (dynamic)', :id => 4}] %>
+          <% feature_types = [{:description => 'Non-temporal (static)', :id => 3, :name => 'observation_data_static'}, {:description => 'Temporal (dynamic)', :id => 4, :name => 'observation_data_dynamic'}] %>
           <% feature_types.each_with_index do |item| %>
-            <%= "<tr><td><label for=\"feature_type_#{item[:id]}\">#{item[:description]}</label></td><td>".html_safe -%>
-              <%= radio_button_tag 'feature_type', item[:id], false -%>
+            <%= "<tr><td><label for=\"feature_type_#{item[:name]}\">#{item[:description]}</label></td><td>".html_safe -%>
+              <%= radio_button_tag 'dataset[feature_type]', item[:name], false -%>
               <% if item[:id] == 3 %>
                 <%= render 'static_observation' %>
               <% else %>
@@ -113,34 +79,10 @@
           </td>
         </tr>
         <tr>
-          <td colspan="2"><b>User Group</b> (optional) 
-            <table class="group">
-              <tr>
-                <td>
-                  <select name="owner[group_id]" id="groups">
-                    <option value="0">Public (Log in to select one of your groups)</option>
-                  </select>
-
-                  <script>
-                    $(document).ready(function() {
-                      $.get(<%= "'/user/groups?user_id=#{logged_in? ? current_user.id : 0}?format=html'" %>, function(html) {
-                        $('#groups').html($(html).find('option')).val(0);
-                      });
-                    });
-                  </script>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
           <td colspan="2"><b>Author</b> (optional)
             <table class="author">
               <tr>
-                <td><label for="author_first_name">First name</label></td><td><input id="author_first_name" name="author[first_name]" /></td>
-              </tr>
-              <tr>
-                <td><label for="author_last_name">Last name</label></td><td><input id="author_last_name" name="author[last_name]" /></td>
+                <td><label for="author_name">Name</label></td><td><input id="author_name" name="author[name]" /></td>
               </tr>
               <tr>
                 <td><label for="author_email">Email</label></td><td><input id="author_email" name="author[email]" /></td>
@@ -148,24 +90,6 @@
             </table>
           </td>
         </tr>
-<%
-# This commented out section will be moved to another page
-=begin %>
-    <tr>
-      <td colspan="2"><b>Dataset groups</b>
-        <table>
-    <% datasets = ['PAM Dataset Group', 'Canvec Base Data', 'National Road Network', 'Geological Survey of Canada', 'Geological Survey of Canada', 'Canvec Hydro Data']%>  
-    <% datasets.each_with_index do |item, index| %>
-      <% index = index + 1 %>
-      <%= "<tr><td><label for=\"dataset_groups_#{index}\">#{item}</label></td><td>".html_safe -%>
-        <%= check_box_tag "dataset_groups[#{index}]", index, false -%>
-      <%= "</td></tr>".html_safe %>
-    <% end %>
-        </table>
-      </td>
-    </tr>
-<%
-=end %>    
         <tr>
           <td><input name="upload" type="submit" value="Upload" /></td>
         </tr>
