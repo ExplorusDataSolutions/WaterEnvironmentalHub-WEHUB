@@ -26,3 +26,25 @@
 
 <%
 =end %>
+<script>
+  $('document').ready(function() {
+    var selected = 'selected';
+
+    var nav = $('#dataset-upper-nav');
+    nav.children().removeClass(selected);
+
+    nav.find('a').each(function(k,v) { 
+      var item = $(v);
+      if (item.attr('href').search(window.location.hash) > 0) {
+        item.addClass(selected);
+      }
+    });
+  });
+</script>
+<div class="clear"></div>
+<div class="share-middle-filter" id="dataset-upper-nav">
+  <%= link_to 'Files friends have shared', {:controller => 'datasets', :action => 'show', :anchor => 'friends'}, {:id => 'friend-datasets'} %>
+  <%= link_to 'Files groups have shared', {:controller => 'datasets', :action => 'show', :anchor => 'groups'}, {:id => 'group-datasets'} %>
+  <%= link_to 'Files you have shared', {:controller => 'datasets', :action => 'show', :anchor => 'mine'}, {:id => 'my-datasets'} %>
+  <%= link_to 'Contribute (share your dataset)', :controller => 'datasets', :action => 'create', :anchor => 'share' %>
+</div>

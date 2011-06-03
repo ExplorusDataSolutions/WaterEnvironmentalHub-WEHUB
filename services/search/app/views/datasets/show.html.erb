@@ -4,24 +4,24 @@
     function eventId(event) { return event.target.id }
     $('#friend-datasets, #group-datasets, #my-datasets').click(function(event) {
       event.preventDefault();
-      var selectedClassName = 'selected';
-      $('.share-middle-filter').children().removeClass(selectedClassName)
+      var selected = 'selected';
+      $('.share-middle-filter').children().removeClass(selected)
       switch (eventId(event))
       {
         case 'friend-datasets': 
           $('#friend-dataset-list').show();
           $('#group-dataset-list, #my-dataset-list').hide();
-          $('#friend-datasets').addClass(selectedClassName);
+          $('#friend-datasets').addClass(selected);
           break;
         case 'group-datasets': 
           $('#group-dataset-list').show();
           $('#friend-dataset-list, #my-dataset-list').hide();
-          $('#group-datasets').addClass(selectedClassName);
+          $('#group-datasets').addClass(selected);
           break;
         case 'my-datasets': 
           $('#my-dataset-list').show();
           $('#friend-dataset-list, #group-dataset-list').hide();
-          $('#all-groups').addClass(selectedClassName);
+          $('#all-groups').addClass(selected);
         break;
         default:
       }
@@ -42,13 +42,6 @@
 	<div class="profile-content-container">
     <%= render 'upper_navbar' %>
 
-		<div class="clear"></div>
-		<div class="share-middle-filter">
-			<a href="#" id="friend-datasets" class="selected">Files friends have shared</a>
-			<a href="#" id="group-datasets">Files groups have shared</a>
-			<a href="#" id="my-datasets">Files you have shared</a>
-      <%= link_to 'Contribute (share your dataset)', :controller => 'datasets', :action => 'create' %>
-		</div>
 		<div class="clear"></div>
 
     <div id="friend-dataset-list">

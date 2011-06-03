@@ -1573,3 +1573,6 @@ a{
 .border-bottom-none{
 	border-bottom:none !important;
 }
+.disabled input[type="text"] {
+  background-color: #efefef;
+}

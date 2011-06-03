@@ -1,3 +1,47 @@
+<script>
+  $(document).ready(function() {
+    function fragmentId(id) {
+      return $(id + '_fragment');
+    }
+    function fragment(id) {
+      var fragment = fragmentId(id);
+      return {id: id};
+    }
+    
+    var fragments = []
+    fragments.push(fragment('#dataset_feature_type_static'))
+    fragments.push(fragment('#dataset_feature_type_dynamic'))
+    
+    $('[name="dataset[feature_type]"]').change(function(event) {
+      var targetId = '#' + event.target.id;
+      $.each(fragments, function(idex, fragment){
+        var parent = fragmentId(fragment.id);
+        var inputs = parent.find('input');
+        if (fragment.id === targetId) {      	        
+          parent.removeClass('disabled');
+          inputs.removeAttr('disabled');
+        } else {
+          parent.addClass('disabled');
+          inputs.attr('disabled', true);
+        }
+      });
+    });
+    
+    $('#dataset_feature_type_static').attr('checked', true).trigger('change');
+    $('#permission_public').attr('checked', true);
+
+    $('#groups').click(function(event) {
+      $('#permission_group').attr('checked', true);
+    });
+  });
+
+  $(document).ready(function() {
+    $.get(<%= "'/user/groups?user_id=#{logged_in? ? current_user.id : 0}&format=html'" %>, function(html) {
+      $('#groups').html($(html).find('option')).val(0);
+    });
+  });
+</script>
+
 
 <%= render '/shared/left_panel' %>
 
@@ -10,16 +54,10 @@
 	</div>
 	<div class="clear"></div>
 	<div class="profile-content-container">
-		<div class="share-middle-filter">
-			<a href="#">Files Friends have Shared</a>
-			<a href="#">Files Groups have Shared</a>
-			<a href="#">Files You have Shared</a>
-			<a href="#" class="selected">Contribute</a>
-		</div>
-		<div class="clear"></div>
+    <%= render 'upper_navbar' %>
 		
 		<div class="dataset-upload-container">
-<%= form_for :dataset, :multipart => true do |f| %>
+<%= form_for :dataset, :url => "http://#{request.host}:3000/items/create", :html => {:multipart => true} do |f| %>
 
 			<table width="100%" cellpadding="8" cellspacing="0" border="0">
 				<tr>
@@ -47,55 +85,64 @@
             <div class="textarea-plain-right"></div>
 					</td>
 				</tr>
-
+				<tr>
+					<td align="right" valign="top">
+            <%= label_tag :filename, 'File' %>
+					</td>	
+					<td align="left">
+            <%= file_field_tag :filename %>
+						<div class="">
+							Valid uploads includes: Spreadsheet in .cvs, .ods, .xls, or .xlsx format, or Shape files (a .zip file) containing atleast a .shp and .dbf file
+						</div>
+					</td>
+				</tr>
         <tr>
 					<td align="right" valign="top">
-            <%= f.label :author, 'Author (optional)' %>
+            <%= f.label :source, 'Source (optional)' %>
           </td>
           <td>
 						<div class="text-plain-left"></div>
 						<div class="text-plain-repeat-280">
-							<%= f.text_field :author %>
+							<%= f.text_field :source %>
+						</div>
+						<div class="text-plain-right"></div>
+						<div class="clear">
+							The source could be a link, name of a friend, email address, organization...
+						</div>
+          </td>
+        </tr>
+
+				<tr>
+					<td align="right">
+						<strong>Author<strong>
+					</td>
+					<td>&nbsp;</td>
+				</tr>
+        <tr>
+					<td align="right" valign="top">
+            <%= label_tag "author[name]", 'Author name (optional)' %>
+          </td>
+          <td>
+						<div class="text-plain-left"></div>
+						<div class="text-plain-repeat-280">
+							<%= text_field_tag "author[name]" %>
 						</div>
 						<div class="text-plain-right"></div>
           </td>
         </tr>				
         <tr>
 					<td align="right" valign="top">
-            <%= f.label :url, 'Url (optional)' %>
+              <%= label_tag "author[email]", 'Email (optional)' %>
           </td>
           <td>
 						<div class="text-plain-left"></div>
 						<div class="text-plain-repeat-280">
-							<%= f.text_field :url %>
-						</div>
-						<div class="text-plain-right"></div>
-          </td>
-        </tr>
-        <tr>
-					<td align="right" valign="top">
-              <%= f.label :email, 'Email (optional)' %>
-          </td>
-          <td>
-						<div class="text-plain-left"></div>
-						<div class="text-plain-repeat-280">
-							<%= f.text_field :email %>
+							<%= text_field_tag "author[email]" %>
 						</div>
 						<div class="text-plain-right"></div>
           </td>
         </tr>
 				
-				<tr>
-					<td align="right" valign="top">
-            <%= f.label :file, 'File' %>
-					</td>	
-					<td align="left">
-            <%= f.file_field :file %>
-						<div class="">
-							Valid uploads includes: Spreadsheet in .cvs, .ods, .xls, or .xlsx format, or Shape files (a .zip file) containing atleast a .shp and .dbf file <a href="#">file specification</a>
-						</div>
-					</td>
-				</tr>
 				<tr>
 					<td align="right">
 						<strong>Feature type<strong>
@@ -108,20 +155,9 @@
 					</td>
 					<td align="left">
 						<div class="float-left">
-              <%= f.radio_button :feature_type, :static %>
+              <%= f.radio_button :feature_type, :observation_data_static, { :id => :dataset_feature_type_static } %>
 						</div>
-						<div class="float-left width-5">&nbsp;</div>
-						<div class="float-left">
-							Date/time
-						</div>
-						<div class="float-left width-5">&nbsp;</div>
-						<div class="float-left">
-							<div class="text-plain-left"></div>
-							<div class="text-plain-repeat-280">
-								<input type="text" />
-							</div>
-							<div class="text-plain-right"></div>
-						</div>
+            <%= render 'static_observation' %>
 					</td>
 				</tr>
 				
@@ -130,29 +166,11 @@
             <%= f.label :feature_type_dynamic, 'Temporal (dynamic)' %>
 					</td>
 					<td align="left">
-						<div class="float-left">
-              <%= f.radio_button :feature_type, :dynamic %>
-						</div>
-						<div class="float-left width-5">&nbsp;</div>
-						<div class="float-left">
-							Date/time
-						</div>
-						<div class="float-left width-5">&nbsp;</div>
-						<div class="float-left">
-							<div class="text-plain-left"></div>
-							<div class="text-plain-repeat-135">
-								<input type="text" />
-							</div>
-							<div class="text-plain-right"></div>
-						</div>
-						<div class="float-left width-5">&nbsp;</div>
-						<div class="float-left">
-							<div class="text-plain-left"></div>
-							<div class="text-plain-repeat-135">
-								<input type="text" />
-							</div>
-							<div class="text-plain-right"></div>
-						</div>
+            <div class="float-left">
+              <%= f.radio_button :feature_type, :observation_data_dynamic, { :id => :dataset_feature_type_dynamic } %>
+            </div>
+            <div class="float-left width-5">&nbsp;</div>
+            <%= render 'dynamic_observation' %>
 					</td>
 				</tr>
 
@@ -163,27 +181,25 @@
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
-          <td></td>
-					<td align="" valign="top">
+          <td colspan="2" style="padding-left:50px;">
           <table>
             <tr>
-              <td>
+              <td align="right">
                 <%= label_tag :permission_group, 'Share with one of your groups' %>
               </td>
               <td>       
                 <%= radio_button_tag :permission, :group %>
-                Groups
-                <select name="owner[group_id]" id="groups">
-                  <option value="0">Loading...&nbsp;&nbsp;</option>
-                </select>
+                select group
+                <%= select :owner, :group_id, ['Loading...'], {}, { :id => 'groups' } %>
+                <%= hidden_field_tag "owner[user_id]", current_user.id %>
               </td>
             </tr>
             <tr>
-              <td>
-                <%= label_tag :permission_public, 'Share with the everyone' %>
+              <td align="right">
+                <%= label_tag :permission_public, 'Don\'t let anyone but myself view this data' %>
               </td>
               <td>
-                <%= radio_button_tag :permission, :public %>
+                <%= radio_button_tag :permission, :private %>
               </td>
             </tr>
           </table>
@@ -204,10 +220,7 @@
 <% end %>
 
 		</div>
-		<div class="clear"></div>
-		
-	
-		
+		<div class="clear"></div>		
 	</div>
 </div>
 <div class="clear"></div>

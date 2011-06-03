@@ -58,7 +58,7 @@ class UserController < ApplicationController
   end
 
   def groups
-    @groups = socialnetwork.groups(params[:user_id])
+    @groups = socialnetwork.user_groups(params[:user_id])
     respond_with(@groups) do |format|
       format.html { render :partial => 'groups' }
     end

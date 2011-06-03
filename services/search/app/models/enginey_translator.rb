@@ -72,10 +72,6 @@ class EngineYTranslator
     @user = nil
   end
 
-  def groups(user_id)
-    groups_from_enginey(post_json(groups_uri, { :user_id => "#{user_id}" }))
-  end
-
   def logged_in?
     post_json(signed_in_uri)
   end
@@ -179,17 +175,6 @@ class EngineYTranslator
     enginey_user = JSON.parse(response)
 
     User.new(:first_name => enginey_user['first_name'], :last_name => enginey_user['last_name'], :login => enginey_user['login'], :email => enginey_user['email'], :id => enginey_user['id'])
-  end
-
-  def groups_from_enginey(response)
-    enginey_groups = JSON.parse(response)
-
-    groups = []
-    enginey_groups.each do |item|
-      groups.push(Group.new(item['id'], item['name'], item['private'], item['description']))
-    end
-
-    groups
   end
 
   def get(uri)

@@ -1,6 +1,1 @@
-<select name="groups" id="groups">
-  <option value="0">Default (public)</option>
-<% @groups.each do |group| %>
-  <%=raw "<option value=\"#{group.id}\">#{group.name.capitalize} (#{group.private ? 'private' : 'public' }) </option>" %> 
-<% end %>
-</select>
+<%= select :owner, :group_id, @groups.collect {|g| [ "#{g.name.capitalize} (#{g.private ? 'private' : 'public' })", g.id ] }, { :include_blank => true }, { :id => 'groups' } %>
