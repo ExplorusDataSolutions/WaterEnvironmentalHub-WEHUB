@@ -67,29 +67,22 @@ class ItemsController < ApplicationController
   
   def create
     errors = {}
-      
-    spreadsheet = params[:spreadsheet]
+
+    uploaded_file = params[:filename]
 
     if errors.empty?
-      filename = Rails.root.join('public', 'uploads', spreadsheet.original_filename)    
+      filename = Rails.root.join('public', 'uploads', uploaded_file.original_filename)    
       File.open(filename, 'wb') do |file|
-        file.write(spreadsheet.read)
+        file.write(uploaded_file.read)
       end
-
-      dataset = Dataset.create(
-        :name => params[:name], 
-        :description => params[:description], 
-        :source => params[:source],
-        :feature_period => feature_period(params),
-        :feature_type => feature_type(params[:feature_type]), 
-        :feature_source => feature_source('catalogue')
-      )
+      
+      dataset = Dataset.create(dataset_params(params))
       
       if dataset.valid?
         owner = owner(params[:owner])
         author = author(params[:author])
         begin
-          dataset.feature.create(spreadsheet.original_filename)
+          dataset.feature.create(uploaded_file.original_filename)
           dataset.owner = owner
           dataset.author = author
         rescue Exception => e
@@ -185,28 +178,53 @@ class ItemsController < ApplicationController
   end
 
   def author(params)
-    Author.create(:first_name => params[:first_name], :last_name => params[:last_name], :email => params[:email])
-  end
 
-  def feature_type(feature_type)
-    FeatureType.find_by_id(Integer(feature_type))
+    first = ''
+    last = ''
+    email = params[:email]
+    if params.key?('name')
+      name = params[:name]
+      if name.scan(' ').count > 0
+        names = name.split(' ')
+        (0..names.count-2).each do |i|
+          first << "#{names[i]} "
+        end
+        first.chop!
+        last = names[names.count-1]
+      else
+        last = name
+      end
+    end
+
+    if !(first.empty? || last.empty? || email.empty?)
+      return Author.create(:first_name => first, :last_name => last, :email => email)
+    else 
+      retun nil
+    end
   end
   
-  def feature_source(feature_source)
-    FeatureSource.find_by_name(feature_source)
-  end
-
   def feature_period(params)
-    if params.key?('bound')
-      params[:bound]
+    if params.key?('feature_period')
+      params[:feature_period]
     else
-      "#{params[:bound_start]} - #{params[:bound_end]}"
+      "#{params[:feature_period_start]} - #{params[:feature_period_end]}"
     end
   end
 
   def owner(owner)
-    owner.delete_if {|key, value| key == "group_id" && value == "0" }
+    owner.delete_if {|key, value| key == "group_id" && (value == "0" || value == "") }
     Owner.create(owner)
+  end
+
+  def dataset_params(params)
+    dataset_params = params[:dataset]
+
+    dataset_params[:feature_period] = feature_period(dataset_params)
+    dataset_params.delete_if {|key, value| key == 'feature_period_start' || key == 'feature_period_end' }
+    dataset_params[:feature_type] =  FeatureType.find_by_name(dataset_params[:feature_type])
+    dataset_params[:feature_source] = FeatureSource.find_by_name('catalogue')
+
+    dataset_params
   end
     
 end
