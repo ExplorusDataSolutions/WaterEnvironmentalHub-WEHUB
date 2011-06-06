@@ -23,6 +23,7 @@ class GroupsController < ApplicationController
     if request.post?
       group = socialnetwork_instance.group_create(params)
       socialnetwork_instance.membership_create({ :user_id => current_user.id, :group_id => group.id })
+      redirect_to :action => 'show', :anchor => 'mine'
     end
   end
   
@@ -46,7 +47,11 @@ class GroupsController < ApplicationController
 
     @my_groups = socialnetwork_instance.user_groups(current_user.id)
     all_groups = socialnetwork_instance.groups_all
-    @groups = ((@my_groups | all_groups) - @my_groups)
+    if @my_groups
+      @groups = ((@my_groups | all_groups) - @my_groups) 
+    else
+      @groups = all_groups
+    end
   end
 
   def join
