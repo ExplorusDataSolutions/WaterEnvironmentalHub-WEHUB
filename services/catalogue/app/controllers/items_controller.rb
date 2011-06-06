@@ -85,6 +85,7 @@ class ItemsController < ApplicationController
           dataset.feature.create(uploaded_file.original_filename)
           dataset.owner = owner
           dataset.author = author
+          dataset.save
         rescue Exception => e
           Dataset.destroy(dataset.id)
           Owner.destroy(owner.id)
@@ -199,7 +200,7 @@ class ItemsController < ApplicationController
     if !(first.empty? || last.empty? || email.empty?)
       return Author.create(:first_name => first, :last_name => last, :email => email)
     else 
-      retun nil
+      return nil
     end
   end
   
