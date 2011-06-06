@@ -106,6 +106,9 @@ class ItemsController < ApplicationController
         response = response + "#{value}"
       end
     else
+      if request.referer.scan(/datasets\/create/).count == 1
+          redirect_to "#{request.referer.slice(0..request.referer.rindex('/'))}success" and return
+      end
       render :xml => dataset and return
     end
     

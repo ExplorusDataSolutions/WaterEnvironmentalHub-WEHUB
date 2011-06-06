@@ -1,31 +1,39 @@
 <script>
   $(document).ready(function() {
-    $('#group-dataset-list, #my-dataset-list').hide();
-    function eventId(event) { return event.target.id }
-    $('#friend-datasets, #group-datasets, #my-datasets').click(function(event) {
-      event.preventDefault();
+    function toggleViews(eventId) {
+      console.debug(eventId);
       var selected = 'selected';
       $('.share-middle-filter').children().removeClass(selected)
-      switch (eventId(event))
+      window.location.hash = eventId;
+      switch (eventId)
       {
-        case 'friend-datasets': 
+        case 'friends': 
           $('#friend-dataset-list').show();
           $('#group-dataset-list, #my-dataset-list').hide();
           $('#friend-datasets').addClass(selected);
           break;
-        case 'group-datasets': 
+        case 'groups': 
           $('#group-dataset-list').show();
           $('#friend-dataset-list, #my-dataset-list').hide();
           $('#group-datasets').addClass(selected);
           break;
-        case 'my-datasets': 
+        case 'mine': 
           $('#my-dataset-list').show();
           $('#friend-dataset-list, #group-dataset-list').hide();
-          $('#all-groups').addClass(selected);
+          $('#my-datasets').addClass(selected);
         break;
         default:
       }
+    }
+
+    $('#friend-datasets, #group-datasets, #my-datasets').click(function(event) {
+      event.preventDefault();
+      var eventId = $(event.target).attr('href').split('#')[1];
+      toggleViews(eventId);
     });
+
+    toggleViews(window.location.hash !== '' ? window.location.hash.replace('#','') : 'friends');
+    
   });
 </script>
 
@@ -45,13 +53,13 @@
 		<div class="clear"></div>
 
     <div id="friend-dataset-list">
-    <%= render :partial => 'dataset', :collection => @friend_datasets %>
+    <%= render(:partial => 'dataset', :collection => @friend_datasets) || render('no_results') %>
     </div>
     <div id="group-dataset-list">
-    <%= render :partial => 'dataset', :collection => @group_datasets %>
+    <%= render(:partial => 'dataset', :collection => @group_datasets) || render('no_results') %>
     </div>
     <div id="my-dataset-list">
-    <%= render :partial => 'dataset', :collection => @my_datasets %>
+    <%= render(:partial => 'dataset', :collection => @my_datasets) || render('no_results') %>
     </div>
 
 	</div>

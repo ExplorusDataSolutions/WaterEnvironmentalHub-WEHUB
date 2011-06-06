@@ -46,11 +46,15 @@ class CatalogueTranslator
   end
   
   def find_datasets_by_user(user_ids)
-    xml_to_mash(get("#{user_datasets_uri}?user_ids=#{user_ids}&format=xml"))['datasets']
+    datasets = xml_to_mash(get("#{user_datasets_uri}?user_ids=#{user_ids}&format=xml"))['datasets']
+    datasets.sort_by! { |dataset| dataset.date }.reverse! unless datasets.nil?
+    datasets
   end
 
   def find_datasets_by_group(group_ids)
-    xml_to_mash(get("#{user_datasets_uri}?group_ids=#{group_ids}&format=xml"))['datasets']
+    datasets = xml_to_mash(get("#{user_datasets_uri}?group_ids=#{group_ids}&format=xml"))['datasets']
+    datasets.sort_by! { |dataset| dataset.date }.reverse! unless datasets.nil?
+    datasets
   end
 
   def get(uri)
