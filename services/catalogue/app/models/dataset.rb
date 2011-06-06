@@ -34,5 +34,37 @@ class Dataset < ActiveRecord::Base
       :group => self.dataset_groups.first.as_json(:exclude => self.uuid)
     }
   end
+
+  def to_xml(options = {})
+    options[:indent] ||= 2
+    xml = options[:builder] ||= Builder::XmlMarkup.new(:indent => options[:indent])
+    xml.instruct! unless options[:skip_instruct]
+    xml.dataset do 
+      xml.tag!(:date, created_at)
+      xml.tag!(:description, description)
+      if !feature_period.nil?
+        xml.tag!(:period, feature_period)
+      end
+      xml.tag!(:name, name)
+      xml.tag!(:source, source)
+      xml.tag!(:uuid, uuid)
+      xml.owner do
+        if !owner.user_id.nil?
+          xml.tag!(:user_id, owner.user_id)
+        end
+        if !owner.group_id.nil?
+          xml.tag!(:group_id, owner.group_id)
+        end
+      end
+      xml.author do        
+        xml.tag!(:name, "#{author.first_name} #{author.last_name}")
+        xml.tag!(:email, author.email)
+      end unless author.nil?
+      if feature.keywords
+        xml.tag!(:properties, feature.keywords.join(', ').chop!)
+      end
+    end
+  end
+
    
 end
