@@ -1,3 +1,22 @@
+<script type="text/javascript">
+    var lon = 76.97776794434;
+    var lat = 8.5111641883850;
+    var zoom = 12;
+    var map, layer;
+
+    $(document).ready(function() {
+        map = new OpenLayers.Map( 'map' );
+        layer = new OpenLayers.Layer.MapServer( "OpenLayers WMS", 
+                "http://vmap0.tiles.osgeo.org/wms/vmap0", {layers: 'basic'},
+                {gutter: 15});
+        map.addLayer(layer);
+
+        map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
+        map.addControl( new OpenLayers.Control.LayerSwitcher() );
+    });
+    
+</script>
+	
 <div class="tab-menu-body">
 	<div class="tab-menu tab-menu-select">
 		<a href="#">WE Data Map</a>
@@ -110,12 +129,13 @@
 					<button>Remove</button>
 				</span>
 			</div>
-					
+				
 					
 		</div>
 	</div>
 	<div class="sub-content-center">
-		<img src="/images/temp-data-map.jpg" border="0" alt="Temp Map" title="Map">		
+		<div id="map" style="width:564px;"></div>
+		<!--img src="/images/temp-data-map.jpg" border="0" alt="Temp Map" title="Map"-->		
 	</div>
 	<div class="sub-content-right">
     <%= render 'shared/right_panel' %>		
