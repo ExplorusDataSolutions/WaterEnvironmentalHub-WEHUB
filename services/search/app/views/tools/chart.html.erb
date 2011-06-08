@@ -91,7 +91,7 @@ $(document).ready(function(){
 	        yaxis:{min:0}
 	    },
 		cursor:{
-			zoom:false,
+			zoom:true,
 	    	showTooltip: false
 		}
 	});
@@ -107,6 +107,10 @@ $(document).ready(function(){
               marginTop: '10px'
           },title:'',
 	    series:cseries,
+		axes:{
+	        xaxis:{renderer:$.jqplot.CategoryAxisRenderer,ticks: day_val}, 
+	        yaxis:{min:0}
+	    },
 	    axesDefaults:{
 		    tickOptions:{
 		      showLabel:false, 
@@ -115,7 +119,8 @@ $(document).ready(function(){
 		},
 		cursor:{
 			zoom:true,
-	    	showTooltip: false
+	    	showTooltip: false,
+          	constrainZoomTo: 'y'
 		}
 	});
 	$.jqplot.Cursor.zoomProxy(plot1,controlplot1); 
@@ -154,7 +159,8 @@ $(document).ready(function(){
 		},
 		cursor:{
 			zoom:true,
-	    	showTooltip: false
+	    	showTooltip: false,
+          	constrainZoomTo: 'y'
 		}
 	});
 	$.jqplot.Cursor.zoomProxy(lineplot1,linecontrolplot1);
