@@ -37,8 +37,8 @@
     bindDownloadButtonset()
 
   });
-</script>
-<script>
+
+
   $(document).ready(function() {
     var opened = false;
     var searchMode = $('#search-mode');
@@ -54,6 +54,24 @@
       }
     });
   });  
+
+
+    var lon = 76.97776794434;
+    var lat = 8.5111641883850;
+    var zoom = 12;
+    var map, layer;
+
+    $(document).ready(function() {
+        map = new OpenLayers.Map( 'map' );
+        layer = new OpenLayers.Layer.MapServer( "OpenLayers WMS", 
+                "http://vmap0.tiles.osgeo.org/wms/vmap0", {layers: 'basic'},
+                {gutter: 15});
+        map.addLayer(layer);
+
+        map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
+        map.addControl( new OpenLayers.Control.LayerSwitcher() );
+    });
+    
 </script>
 
 <div class="top-search-result">
@@ -64,9 +82,10 @@
 <%= render 'search_panel' %>
 
 <div class="search-center-container">
-	<div>
+	<div id="map" style="width:577px;"></div>
+	<!--div>
 		<img src="/images/temp-gmap.jpg" title="Temp Gmap" alt="Temp Gmap" border="0" />
-	</div>
+	</div-->
 	<div class="clear height-15"></div>
 	<div class="dashed-header"><h2>Search results:</h2></div>
 	<div class="clear height-15"></div>
