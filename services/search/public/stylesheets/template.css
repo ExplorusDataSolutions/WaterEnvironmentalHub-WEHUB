@@ -1576,3 +1576,7 @@ a{
 .disabled input[type="text"] {
   background-color: #efefef;
 }
+.right-container{
+	color:#535353;
+	font-size:13px;
+}
