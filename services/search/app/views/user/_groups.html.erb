@@ -1,1 +1,5 @@
-<%= select :owner, :group_id, @groups.collect {|g| [ "#{g.name.capitalize} (#{g.private ? 'private' : 'public' })", g.id ] }, { :include_blank => true }, { :id => 'groups' } %>
+<% if @groups %>
+  <%= select :owner, :group_id, @groups.collect {|g| [ "#{g.name.capitalize} (#{g.private ? 'private' : 'public' })", g.id ] }, { :prompt => 'Select Group' }, { :id => 'groups' } %>
+<% else %>
+  <%= select :owner, :group_id, {}, { :prompt => 'You\'re not a member of any groups' }, { :id => 'groups' } %>
+<% end %>

@@ -45,10 +45,12 @@
       <% end %>
 			<div class="clear"></div>
 		</p>
-		<p>
+    <% if dataset.properties %>
+		<p>      
 			<span class="head">Number of Observed Properties: </span><span><%= dataset.properties.scan(/,/).count %></span><br />
 			<span class="head">Number of Features: </span><span><%= dataset.properties %></span>
 		</p>
+    <% end %>
 		<div class="search-btm-image-link">
       <%= link_to image_tag('1.png', :alt => 'Map this', :border => 0), { :controller => 'tools', :action => 'chart', :id => dataset.id } %>
       <%= link_to image_tag('2.png', :alt => 'Map this', :border => 0), { :controller => 'tools', :action => 'map', :id => dataset.id } %>
