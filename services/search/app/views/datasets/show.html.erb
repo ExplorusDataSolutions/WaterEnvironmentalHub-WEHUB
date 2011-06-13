@@ -61,6 +61,10 @@
     <%= render(:partial => 'dataset', :collection => @my_datasets) || render('no_results') %>
     </div>
 
+    <% if @friend_datasets || @group_datasets || @my_datasets %>
+      <%= render '/shared/download_panel_bottom' %>
+    <% end %>   
+
 	</div>
 </div>
 <div class="clear"></div>

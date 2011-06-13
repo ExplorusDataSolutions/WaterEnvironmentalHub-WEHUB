@@ -1,0 +1,56 @@
+<script>
+  $(document).ready(function() {
+
+    $('button').button();
+    
+    function download() {
+      var format = $('[name=download-format]:checked').val();
+      var ids = [];
+      $('[type=checkbox][name=download]:checked').each(function() { ids.push($(this).val()); })
+      window.location = '/item/download/?ids=' + ids + '&format=' + format;
+    }
+        
+    function bindDownloadButtonset() {
+      var formatSelector = $('.format-selector');
+      formatSelector.buttonset();    
+
+      $('button[name=download]')
+        .button()
+        .click(function() {
+          formatSelector.hide();
+          download();
+        })
+        .next()
+          .button({ text: false, icons: { primary: 'ui-icon-triangle-1-s' }})
+          .click(function() { 
+            formatSelector.toggle();
+           })
+          .parent()
+            .buttonset();
+            
+      $('[name=download-format]')
+        .click(function() {
+          formatSelector.hide();
+          download();
+        });
+    }
+    bindDownloadButtonset()
+
+    $("#dataset-navigation").treeview({
+      persist: "location",
+      unique: true
+    });
+   
+
+  })
+</script>
+
+<span id="download-buttonset-fragment">
+      <span>
+        <button name="download">Download</button>
+        <button name="select-download-format">Select Format</button>
+      </span>   
+</span>
+
+<button name="my-collection">+ My collection</button>
+<button name="clear">Clear</button>

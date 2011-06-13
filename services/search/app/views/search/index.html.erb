@@ -1,45 +1,5 @@
 <script>
-  $(document).ready(function() {
-
-    $('button').button();
-    
-    function download() {
-      var format = $('[name=download-format]:checked').val();
-      var ids = [];
-      $('[type=checkbox][name=download]:checked').each(function() { ids.push($(this).val()); })
-      window.location = '/item/download/?ids=' + ids + '&format=' + format;
-    }
-        
-    function bindDownloadButtonset() {
-      var formatSelector = $('.format-selector');
-      formatSelector.buttonset();    
-
-      $('button[name=download]')
-        .button()
-        .click(function() {
-          formatSelector.hide();
-          download();
-        })
-        .next()
-          .button({ text: false, icons: { primary: 'ui-icon-triangle-1-s' }})
-          .click(function() { 
-            formatSelector.toggle();
-           })
-          .parent()
-            .buttonset();
-            
-      $('[name=download-format]')
-        .click(function() {
-          formatSelector.hide();
-          download();
-        });
-    }
-    bindDownloadButtonset()
-
-  });
-
-
-  $(document).ready(function() {
+ $(document).ready(function() {
     var opened = false;
     var searchMode = $('#search-mode');
     searchMode.click(function(event) {
@@ -55,22 +15,21 @@
     });
   });  
 
+  var lon = 76.97776794434;
+  var lat = 8.5111641883850;
+  var zoom = 12;
+  var map, layer;
 
-    var lon = 76.97776794434;
-    var lat = 8.5111641883850;
-    var zoom = 12;
-    var map, layer;
+  $(document).ready(function() {
+      map = new OpenLayers.Map( 'map' );
+      layer = new OpenLayers.Layer.MapServer( "OpenLayers WMS", 
+              "http://vmap0.tiles.osgeo.org/wms/vmap0", {layers: 'basic'},
+              {gutter: 15});
+      map.addLayer(layer);
 
-    $(document).ready(function() {
-        map = new OpenLayers.Map( 'map' );
-        layer = new OpenLayers.Layer.MapServer( "OpenLayers WMS", 
-                "http://vmap0.tiles.osgeo.org/wms/vmap0", {layers: 'basic'},
-                {gutter: 15});
-        map.addLayer(layer);
-
-        map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
-        map.addControl( new OpenLayers.Control.LayerSwitcher() );
-    });
+      map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
+      map.addControl( new OpenLayers.Control.LayerSwitcher() );
+  });
     
 </script>
 
@@ -92,16 +51,7 @@
 	
   <%= render "search_results" %>
 
-	<div class="clear height-10"></div>
-	<span id="download-buttonset-fragment">
-        <span>
-          <button name="download">Download</button>
-          <button name="select-download-format">Select Format</button>
-        </span>   
-	</span>
-	
-	<button name="my-collection">+ My collection</button>
-	<button name="clear">Clear</button>	
+  <%= render '/shared/download_panel_bottom' %>
 	
 	<div class="clear height-25"></div>
 	<div class="pagination">

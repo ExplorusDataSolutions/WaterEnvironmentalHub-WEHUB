@@ -28,6 +28,7 @@
     });
     
     $('#dataset_feature_type_static').attr('checked', true).trigger('change');
+
     $('#permission_public').attr('checked', true);
 
     $('#groups').click(function(event) {
@@ -199,7 +200,7 @@
                 <%= label_tag :permission_public, 'Make this data public' %>
               </td>
               <td>
-                <%= radio_button_tag :permission, :private %>
+                <%= radio_button_tag :permission, :public %>
               </td>
             </tr>
           </table>
