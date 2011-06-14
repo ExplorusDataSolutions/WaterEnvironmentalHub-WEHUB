@@ -18,6 +18,8 @@ class ToolsController < ApplicationController
   end
   
   def map
+    f = File.read('public/line.json')
+    @json = f.strip
     @breadcrumb     = ['WE Tools','We Data Map']
     @main_menu      = 'we_tools'
   end
