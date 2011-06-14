@@ -14,6 +14,9 @@ class SearchController < ApplicationController
       query = params[:query]
     end
 
+    f = File.read('public/point.json')
+    @json = f.strip
+    
     @search = search_instance.do_query(query)
   end
   

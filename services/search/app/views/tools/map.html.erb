@@ -1,19 +1,27 @@
 <script type="text/javascript">
-    var lon = 76.97776794434;
-    var lat = 8.5111641883850;
-    var zoom = 12;
-    var map, layer;
+    var lon = -113.98650539999994;
+	var lat = 49.07069879900007;
+	var zoom = 5;
+	var map, layer;
+	
+	var data 		=	'<%= @json%>';
+	var unescaped 	=	$('<textarea />').html(data).val();
+	var json_map	=	jQuery.parseJSON(unescaped);
 
-    $(document).ready(function() {
-        map = new OpenLayers.Map( 'map' );
-        layer = new OpenLayers.Layer.MapServer( "OpenLayers WMS", 
-                "http://vmap0.tiles.osgeo.org/wms/vmap0", {layers: 'basic'},
-                {gutter: 15});
-        map.addLayer(layer);
+  $(document).ready(function() {
+      map = new OpenLayers.Map( 'map' );
+            layer = new OpenLayers.Layer.WMS( "OpenLayers WMS", 
+                    "http://vmap0.tiles.osgeo.org/wms/vmap0",
+                    {layers: 'basic'} );
+            map.addLayer(layer);
+            map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
+            var featurecollection = json_map;
+           var geojson_format = new OpenLayers.Format.GeoJSON();
+           var vector_layer = new OpenLayers.Layer.Vector(); 
+           map.addLayer(vector_layer);
+           vector_layer.addFeatures(geojson_format.read(featurecollection));
 
-        map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
-        map.addControl( new OpenLayers.Control.LayerSwitcher() );
-    });
+  });
     
 </script>
 	
