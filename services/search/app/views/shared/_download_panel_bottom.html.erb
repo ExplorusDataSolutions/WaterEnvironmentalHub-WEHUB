@@ -1,3 +1,12 @@
+<style>
+  .format-selector {
+    font-size: .8em;
+    padding: 10px;
+    margin-left: 128px;
+    z-index: 100;
+  }
+</style>
+
 <script>
   $(document).ready(function() {
 
@@ -7,7 +16,9 @@
       var format = $('[name=download-format]:checked').val();
       var ids = [];
       $('[type=checkbox][name=download]:checked').each(function() { ids.push($(this).val()); })
-      window.location = '/item/download/?ids=' + ids + '&format=' + format;
+      if (ids.length != 0) {
+        window.location = '/item/download/?ids=' + ids + '&format=' + format;
+      }
     }
         
     function bindDownloadButtonset() {
@@ -40,17 +51,26 @@
       persist: "location",
       unique: true
     });
-   
-
   })
 </script>
 
-<span id="download-buttonset-fragment">
+<div style="text-align: center; padding-top: 20px;">
+  <div style="padding-bottom: 5px;">
+    <span id="download-buttonset-fragment">
       <span>
         <button name="download">Download</button>
         <button name="select-download-format">Select Format</button>
-      </span>   
-</span>
+      </span>
+    </span>
 
-<button name="my-collection">+ My collection</button>
-<button name="clear">Clear</button>
+    <button name="my-collection">+ My collection</button>
+    <button name="clear">Clear</button>
+  </div>
+
+  <span style="display: none;" class="format-selector ui-widget-content ui-corner-all ui-state-active">
+    Select format
+    <% ['JSON', 'Shape', 'XML'].each do |format| %>
+      <%= label_tag "download-format[#{format}]", format %><%= radio_button_tag 'download-format', format %>
+    <% end %>
+  </span>
+</div>
