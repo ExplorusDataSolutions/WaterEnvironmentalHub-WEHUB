@@ -32,7 +32,7 @@ class ApplicationController < ActionController::Base
 
   def catalogue_instance
     if @catalogue.nil?
-      @catalogue = CatalogueTranslator.new
+      @catalogue = CatalogueTranslator.new("http://#{request.host}:3000")
     end
     @catalogue
   end

@@ -11,7 +11,7 @@ class FeatureFormatFactory
     when 'json'
       data = data.to_json
     when 'xml'
-      data = data.to_xml
+      data = JSON.parse(data.to_json).to_xml
     else
       raise ArgumentError, "Feature type of #{feature_type} is not implemented"
     end
