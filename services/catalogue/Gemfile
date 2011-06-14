@@ -40,5 +40,5 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'ar_fixtures'
   gem 'ruby-debug19'
-# gem 'webrat'
+  gem "mongrel", '>= 1.2.0.pre2'
 end
