@@ -46,7 +46,7 @@ class CatalogueTranslator
   end
   
   def find_datasets_by_user(user_ids)
-    datasets = xml_to_mash(get("#{user_datasets_uri}?user_ids=#{user_ids}&format=xml"))['datasets']
+    datasets = xml_to_mash(get("#{user_datasets_uri}?user_ids=#{user_ids}&format=xml"))['datasets'] 
     datasets.sort_by! { |dataset| dataset.date }.reverse! unless datasets.nil?
     datasets
   end
@@ -58,11 +58,7 @@ class CatalogueTranslator
   end
 
   def get(uri)
-    url = URI.parse(uri)
-    request = Net::HTTP::Get.new(url.to_s)    
-    response = Net::HTTP.start(url.host, url.port) { |http| http.request(request) }
-    
-    response.body    
+    Net::HTTP::get(URI.parse(uri))
   end
   
   def create_uri
