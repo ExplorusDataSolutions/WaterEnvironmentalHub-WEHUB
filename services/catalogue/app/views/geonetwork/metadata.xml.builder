@@ -39,7 +39,15 @@ xml.Metadata('xmlns:geonet' => 'http://www.fao.org/geonetwork') do
   message = {:relations => relations}
   
   if !@dataset.owner.nil?    
-    message.update({:owner => {:group_id => @dataset.owner.group_id, :source => @dataset.owner.source }})
+    message.update({:owner => {:group_id => @dataset.owner.group_id, :owner_id => @dataset.owner.user_id, :source => @dataset.owner.source }})
+  end
+
+  if !@dataset.feature_period.nil?
+    message.update({:period => @dataset.feature_period})
+  end
+
+  if !@dataset.author.nil?
+    message.update({:author => {:name => "#{@dataset.author.first_name} #{@dataset.author.last_name}", :email => @dataset.author.email}})
   end
 
   xml.additionalInfo(message.to_json)
