@@ -1,13 +1,5 @@
 class SearchController < ApplicationController
-  
-  
-  def search_instance
-    if @search_instance == nil
-      @search_instance = Search.new
-    end
-    @search_instance
-  end
-  
+    
   def index
     query = 'all'
     if params[:query] != nil

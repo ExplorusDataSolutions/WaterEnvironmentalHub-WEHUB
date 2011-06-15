@@ -52,13 +52,13 @@
 		<div class="clear"></div>
 
     <div id="friend-dataset-list">
-    <%= render(:partial => 'dataset', :collection => @friend_datasets) || render('no_results') %>
+    <%= render(:partial => '/shared/dataset', :collection => @friend_datasets) || render('/shared/no_results') %>
     </div>
     <div id="group-dataset-list">
-    <%= render(:partial => 'dataset', :collection => @group_datasets) || render('no_results') %>
+    <%= render(:partial => '/shared/dataset', :collection => @group_datasets) || render('/shared/no_results') %>
     </div>
     <div id="my-dataset-list">
-    <%= render(:partial => 'dataset', :collection => @my_datasets) || render('no_results') %>
+    <%= render(:partial => '/shared/dataset', :collection => @my_datasets) || render('/shared/no_results') %>
     </div>
 
     <% if @friend_datasets || @group_datasets || @my_datasets %>

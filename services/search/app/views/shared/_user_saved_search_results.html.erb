@@ -9,10 +9,10 @@
 	<% @user_saved_search_results.each do |item| %>
 	<div class="contents" onclick="<%= link_to_details(item.id) %>">
 		<div>
-			<h2><%= item.title %></h2>
+			<h2><%= item.name %></h2>
 		</div>
 		<div class="date">
-			<%= item.publication_date %>
+			<%= item.date %>
 		</div>
 	</div>
 	<div class="clear"></div>

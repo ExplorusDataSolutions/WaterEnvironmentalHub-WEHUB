@@ -1,15 +1,17 @@
 <div class="search-result-each search-result-each-box">
 	<div class="search-checkbox">
-		<input type='checkbox' name='download' value='<%= dataset.uuid %>' />
+		<input type='checkbox' name='download' value='<%= dataset.uuid %>' id='<%= "download_#{dataset.uuid}" %>' />
 	</div>
 	<div class="search-text">
 		<div class="float-left">
+      <label for='<%= "download_#{dataset.uuid}" %>'>
 			<span class="search-title">
 				<%= dataset.name %>
 			</span>&nbsp;
 			<span class="search-date">
 				<%= dataset.date %>
 			</span>
+      </label>
 		</div>
 		<div class="clear"></div>
 		<p>
@@ -19,10 +21,10 @@
       </span>
 		</p>
 		<p>
-      <% if dataset.author %>
+      <% if dataset.author && !(dataset.author.name.nil? || dataset.author.email.nil?) %>
 			<div class="third-sep">
 				<span class="head">Author: </span>
-				<span><%= dataset.author.name %></span>
+				<span><%= dataset.author.name %><%= dataset.author.email %></span>
 			</div>
       <% end %>
       <% if dataset.period %>

@@ -1,5 +1,6 @@
 require 'rexml/document'
 require 'net/http'
+require 'active_support/core_ext'
 
 class GeoNetworkTranslator
   attr_accessor :server_address
@@ -66,21 +67,19 @@ class GeoNetworkTranslator
     search_results = []
     doc = REXML::Document.new(xml)
     doc.elements.each('response/metadata/geonet:info') do |item|
-      publication_date = item.elements['createDate'].text
       uuid = item.elements['uuid'].text
-      
-      if !uuid.empty? && !publication_date.empty?
-        search_results.push(SearchResult.new(nil, nil, publication_date, uuid))
+
+      if !uuid.empty?
+        result = SearchResult.new(uuid)
+        result.date = item.elements['createDate'].text
+
+        search_results.push(result)
       end
     end
 
     search_results.each_with_index do |result, i|
+
       search_results[i] = augment_search_result(search_results[i])
-      if !(search_results[i].relations.nil? || search_results[i].relations.empty?)
-        search_results[i].relations.each_with_index do |related_result, j|
-          search_results[i].relations[j] = augment_search_result(search_results[i].relations[j])
-        end
-      end
     end
     
     search_results
@@ -91,29 +90,30 @@ class GeoNetworkTranslator
       result = cached_metadata.fetch(result.id)
     else    
       response = post("xml.metadata.get", "<request><uuid>#{result.id}</uuid></request>")
-      
+
       doc = REXML::Document.new(response.body)
+
       doc.elements.each('Metadata') do |item|
-        
-        related_search_results = []
-=begin
-        relations = JSON.parse(item.elements['additionalInfo'].text)['relations']
-        if !relations.empty?
-          relations.each do |uuid|
-            related_search_results.push(SearchResult.new(nil, nil, nil, uuid))
-          end
-          
-          result.relations = related_search_results
-        end        
-=end
-        result.relations = []        
         result.description = item.elements['dataIdInfo/idAbs'].text
-        result.title = item.elements['dataIdInfo/idCitation/resTitle'].text
+
+        additional_info = JSON.parse(item.elements['additionalInfo'].text)
+        result.period = additional_info['period']
+        result.name = item.elements['dataIdInfo/idCitation/resTitle'].text
+        result.owner = Hashie::Mash.new(additional_info['owner'])
+        result.author = Hashie::Mash.new(additional_info['author'])
+
+        keywords = []
+        item.elements.each('dataIdInfo/descKeys') do |keyword|
+          keywords.push(keyword.elements['keyword'].text)
+        end
+        
+        if !keywords.empty?
+          result.properties = keywords.join(', ').chop!
+        end
       end
       
       cached_metadata.store(result.id, result)
     end
-    
     result    
   end
   

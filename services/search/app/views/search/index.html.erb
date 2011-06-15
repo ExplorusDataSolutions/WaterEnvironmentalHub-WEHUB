@@ -20,23 +20,22 @@
 	var zoom = 5;
 	var map, layer;
 	
-	var data 		=	'<%= @json%>';
-	var unescaped 	=	$('<textarea />').html(data).val();
-	var json_map	=	jQuery.parseJSON(unescaped);
+	var data =	'<%= @json%>';
+	var unescaped	=	$('<textarea />').html(data).val();
+	var json_map = jQuery.parseJSON(unescaped);
 
   $(document).ready(function() {
-      map = new OpenLayers.Map( 'map' );
-            layer = new OpenLayers.Layer.WMS( "OpenLayers WMS", 
-                    "http://vmap0.tiles.osgeo.org/wms/vmap0",
-                    {layers: 'basic'} );
-            map.addLayer(layer);
-            map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
-            var featurecollection = json_map;
-           var geojson_format = new OpenLayers.Format.GeoJSON();
-           var vector_layer = new OpenLayers.Layer.Vector(); 
-           map.addLayer(vector_layer);
-           vector_layer.addFeatures(geojson_format.read(featurecollection));
-
+    map = new OpenLayers.Map( 'map' );
+    layer = new OpenLayers.Layer.WMS( "OpenLayers WMS", 
+      "http://vmap0.tiles.osgeo.org/wms/vmap0",
+      {layers: 'basic'} );
+    map.addLayer(layer);
+    map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
+    var featurecollection = json_map;
+    var geojson_format = new OpenLayers.Format.GeoJSON();
+    var vector_layer = new OpenLayers.Layer.Vector(); 
+    map.addLayer(vector_layer);
+    vector_layer.addFeatures(geojson_format.read(featurecollection));
   });
     
 </script>
@@ -57,7 +56,7 @@
 	<div class="dashed-header"><h2>Search results:</h2></div>
 	<div class="clear height-15"></div>
 	
-  <%= render "search_results" %>
+  <%= render(:partial => '/shared/dataset', :collection => @search.results) || render('/shared/no_results') %>
 
   <%= render '/shared/download_panel_bottom' %>
 	
