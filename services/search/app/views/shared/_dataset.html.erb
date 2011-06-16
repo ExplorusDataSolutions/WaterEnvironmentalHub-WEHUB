@@ -24,7 +24,7 @@
       <% if dataset.author && !(dataset.author.name.nil? || dataset.author.email.nil?) %>
 			<div class="third-sep">
 				<span class="head">Author: </span>
-				<span><%= dataset.author.name %><%= dataset.author.email %></span>
+				<span><%= dataset.author.name %> <%= dataset.author.email %></span>
 			</div>
       <% end %>
       <% if dataset.period %>
