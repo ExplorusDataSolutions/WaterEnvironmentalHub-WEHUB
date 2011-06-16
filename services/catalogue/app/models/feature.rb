@@ -39,7 +39,7 @@ class Feature
         sheet_translator = SpreadsheetTranslator.new(params)
               
         execute("CREATE TABLE #{tablename} (#{sheet_translator.fields_sql})")
-        execute(["COPY #{tablename} FROM ? USING DELIMITERS ','", sheet_translator.filename]);
+        execute(["COPY #{tablename} FROM ? WITH CSV", sheet_translator.filename]);
         
       elsif !params.match(/(\.zip)$/).nil?
         shape_translator = ShapeTranslator.new(params, tablename)

@@ -1,0 +1,2 @@
+FID,Station ID,Latitude,Longitude,DateTime,Date,Discharge (m3/s),Discharge Flag,Manually Measured Discharge (m3/s),Manual Measurement Ice Effect?,Manual Measurement Quality,Data Source
+31,S22,57.28424,-111.315673,17-Jan-89,17-Jan-89,0.306,"A,B", , , ,Unknown
