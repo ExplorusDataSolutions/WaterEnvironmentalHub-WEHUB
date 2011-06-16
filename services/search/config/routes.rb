@@ -16,6 +16,11 @@ Catalogue::Application.routes.draw do
   match 'community/datasets' => 'datasets#show'
   match 'datasets/success' => redirect('/datasets/show#mine')
 
+  match 'contact-us' => 'about#contact_us'
+  match 'terms-of-service' => 'about#terms_of_service'
+  match 'legal-notice' => 'about#legal_notice'
+  match 'privacy' => 'about#privacy'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

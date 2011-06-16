@@ -115,30 +115,26 @@
 			<div class="clear"></div>
 			<div id="footer-body">
 				<div class="footer-content full-width">
-					<div class="float-left" style="width:36px">
-						<img src="/images/logo-footer.jpg" alt="WE Hub" border="0" align="top">
-					</div>
-					<div class="float:left" style="width:1020px; height:36px;">
-						
+          <%= image_tag('partners-650.png', :alt => 'Partners', :style => "width: 650px; float: right") %>
+          <%= image_tag('logo-footer.jpg', :alt => 'WE Hub logo', :style => "padding-top: 4px; float: left;") %>
+					<div style="width:400px; height:36px; padding-top: 8px; float: left;">
 						<ul>
 							<li>
-								<a href="#">Legal Notice</a>
+                <%= link_to "Legal Notice", :controller => "about", :action => "legal_notice" %>
 							</li>
 							<li>
-								<a href="#">Terms of Services</a>
+                <%= link_to "Terms of Service", :controller => "about", :action => "terms_of_service" %>
 							</li>
 							<li>
-								<a href="#">Privacy</a>
+                <%= link_to "Privacy", :controller => "about", :action => "privacy" %>
 							</li>
 							<li class="no-border">
-								<a href="#">About WeHub</a>
+                <%= link_to "About", :controller => "about", :action => "index" %>
 							</li>
 						</ul>
-						<br />
-						<div class="float-left" style="padding-left:10px;">
-						&copy; 2010 We Hub.Inc All rights reserved.
+						<div class="clear" style="padding-left: 10px;">
+						&copy; 2010 We Hub Inc. All rights reserved.
 						</div>
-						
 					</div>
 					<div class="clear"></div>
 				</div>

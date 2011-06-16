@@ -362,6 +362,7 @@ a{
 #footer-body .footer-content ul{
 	list-style: none;
 	margin:0px;
+  padding:0px;
 }
 #footer-body .footer-content li{
 	padding:0 10px;
