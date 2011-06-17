@@ -588,6 +588,7 @@ a{
 	border-bottom:dotted 1px #DCDCDC;
 	padding:0 0 5px 0;
 	margin:0 0 10px 0;
+  cursor: pointer;
 }
 .sub-content-right h2{
 	color:#6A6A6A;

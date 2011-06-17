@@ -8,17 +8,18 @@ class CatalogueController < ApplicationController
   end
 
   def details   
+    @dataset = catalogue_instance.dataset(params[:id])
     @breadcrumb = ['WE Catalogue', 'Detail View']
-    @main_menu      = 'we_catalogue'
+    @main_menu = 'we_catalogue'
     
-    @rating         = (4*138)/5; 
+    @rating = (4*138)/5; 
   end
   
   def comment    
     @breadcrumb = ['WE Catalogue', 'Detail View']
-    @main_menu      = 'we_catalogue'
+    @main_menu = 'we_catalogue'
     
-    @rating         = (4*138)/5; 
+    @rating = (4*138)/5; 
   end
   
   def browse
@@ -33,8 +34,8 @@ class CatalogueController < ApplicationController
   end
   
   def my_collection
-    @breadcrumb     = ['My Collection']
-    @main_menu      = 'we_catalogue'
+    @breadcrumb = ['My Collection']
+    @main_menu = 'we_catalogue'
   end
 
 end

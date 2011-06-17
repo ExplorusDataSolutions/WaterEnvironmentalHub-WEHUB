@@ -74,4 +74,12 @@ class UserController < ApplicationController
     @main_menu      = 'we_community'
   end
   
+  def recently_viewed
+    if request.post?
+      if params[:id]
+        catalogue_instance.add_recently_viewed(current_user.id, params[:id])
+        render :json => 'Success!'
+      end
+    end 
+  end
 end

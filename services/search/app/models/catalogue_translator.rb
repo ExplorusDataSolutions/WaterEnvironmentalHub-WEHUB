@@ -10,7 +10,7 @@ class CatalogueTranslator
   end
   
   def item_uri(id)
-    "#{url}/items/show/#{id}"
+    "#{url}/items/?id=#{id}&format=xml"
   end
   
   def download_uri(params)
@@ -33,8 +33,8 @@ class CatalogueTranslator
     response.body
   end
 
-  def find_by_id(id)
-    get(item_uri(id))
+  def dataset(id)
+    xml_to_mash(get(item_uri(id)))['dataset']
   end
 
   def find_recently_viewed(user_id)

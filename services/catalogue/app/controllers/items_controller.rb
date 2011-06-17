@@ -1,11 +1,12 @@
 require 'zip/zip'
 
 class ItemsController < ApplicationController
+  respond_to :json, :xml
 
   protect_from_forgery :except => :create
   
-  def show
-    render :json => Dataset.find_by_uuid(params[:id]), :callback => params[:callback]
+  def index
+    respond_with(Dataset.find_by_uuid(params[:id])) 
   end
   
   def download
