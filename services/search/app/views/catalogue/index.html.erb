@@ -129,11 +129,11 @@ The Water and Environmental Hub project is creating an open source web platform 
 <div class="home-bottom">
 	<div class="home-bottom-content">
 		<h2>SITE LINKS</h2>
-		<div><a href="#">Home</a></div>
-		<div><a href="#">We Data Catalogue</a></div>
-		<div><a href="#">We Tools</a></div>
-		<div><a href="#">About</a></div>
-		<div><a href="#">Contact Us</a></div>
+		<div><%= link_to "Home", :root %></div>
+		<div><%= link_to "We Data Catalogue", :controller => 'catalogue', :action => 'browse' %></div>
+		<div><%= link_to "We Tools", :controller => 'tools' %></div>
+		<div><%= link_to "About", :controller => 'about' %></div>
+		<div><%= link_to "Contact Us", :controller => 'about', :action => 'contact_us' %></div>
 	</div>
 	<div class="home-bottom-content">
 		<h2>COMPANY</h2>
@@ -148,16 +148,13 @@ The Water and Environmental Hub project is creating an open source web platform 
 		<div><a href="#">All WeHub News</a></div>
 		<div><a href="#">Press Release</a></div>
 		<div><a href="#">WEHub in the Media</a></div>
-		<div><a href="#">Media Kit</a></div>
-		
+		<div><a href="#">Media Kit</a></div>	
 	</div>
 	<div class="home-bottom-content">
 		<h2>OTHER LINKS</h2>
-		<div><a href="#">WeHub.com</a></div>
-		<div><a href="#">Customer Support</a></div>
-		<div><a href="#">Developers Site</a></div>
-		<div><a href="#">Tearms of Service</a></div>
-		<div><a href="#">Privacy</a></div>
+		<div><%= link_to "Developers Site", :controller => 'api' %></div>
+		<div><%= link_to "Tearms of Service", :controller => 'about', :action => 'terms_of_service' %></div>
+		<div><%= link_to "Privacy", :controller => 'about', :action => 'privacy' %></div>
 	</div>
 </div>
 <div class="clear"></div>
