@@ -6,7 +6,7 @@ class ToolsController < ApplicationController
   end
   
   def chart
-    f = File.read('public/chart.json')
+    f = File.read('public/6.json')
     @json = f.strip
     @breadcrumb     = ['WE Tools','We Data Graph']
     @main_menu      = 'we_tools'
