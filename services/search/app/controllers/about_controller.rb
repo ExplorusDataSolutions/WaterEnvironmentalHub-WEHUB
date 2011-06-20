@@ -20,4 +20,9 @@ class AboutController < ApplicationController
     @main_menu = 'we_catalogue'
   end
 
+  def community
+    @breadcrumb = ['Community']
+    @main_menu = 'we_catalogue'
+  end
+
 end

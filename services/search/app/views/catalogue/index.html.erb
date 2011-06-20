@@ -103,9 +103,9 @@ The Water and Environmental Hub project is creating an open source web platform 
 		<div class="home-middle-data">
 			<div class="home-middle-head">WEHub Community</div>
 			<div class="home-middle-text">
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula. Fusce vestibulum, ipsum eget imperdiet rhoncus, augue leo semper massa, non porta velit massa nec massa. Sed venenatis velit et odio iaculis vulputate fermentum mi volutpat. Suspendisse velit massa, pharetra ultricies lacinia sed, cursus quis erat. Nunc a dui at neque vestibulum egestas fringilla quis augue. Praesent id tortor vel urna semper tincidunt vitae eget nisl. Nam facilisis arcu sed neque consequat tincidunt. Maecenas vulputate, mauris vel scelerisque cursus, dolor tellus adipiscing mauris, quis lobortis purus nunc quis orci. 
+        This two year, $1.8 million project is funded by Western Economic Diversification Canada, University of Lethbridge, and Cybera Inc. The project is driven by University of Lethbridge, Cybera Inc., the Alberta WaterPortal, and supported by various water organizations. Project Partners: Western Economic Diversification Canada (WD), University of Lethbridge, Cybera Inc., Alberta WaterPortal. Development Partners: Tesera Systems Inc., University of Calgary Biogeosciences Institute - Dr. Steve Liang (GeoSensorweb Lab). Potential Data Partners: UNGEMS, Groundwater Information Network (GIN).
 			</div>
-			<a href="#">Learn More</a>
+			<%= link_to "Learn More", :controller => "about", :action => "community" %>
 		</div>
 	</div>
 	<div class="home-middle-content no-border">
@@ -159,6 +159,8 @@ The Water and Environmental Hub project is creating an open source web platform 
 		<div><%= link_to "Developers Site", :controller => 'api' %></div>
 		<div><%= link_to "Tearms of Service", :controller => 'about', :action => 'terms_of_service' %></div>
 		<div><%= link_to "Privacy", :controller => 'about', :action => 'privacy' %></div>
+		<div><a href="http://letthedataflow.ca/">Let the data flow</a></div>
+		<div><a href="http://apps4water.ca/">Apps4Water</a></div>
 	</div>
 </div>
 <div class="clear"></div>
