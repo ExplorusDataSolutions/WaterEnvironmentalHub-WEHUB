@@ -1,3 +1,5 @@
+require 'csv_builder_postgresql.rb'
+
 class FeatureFormatFactory
   attr_accessor :feature_type, :feature
   
@@ -12,6 +14,9 @@ class FeatureFormatFactory
       data = data.to_json
     when 'xml'
       data = JSON.parse(data.to_json).to_xml
+    when 'csv'
+      csv_builder = CsvBuilderPostgreSQL.new
+      data = csv_builder.build(feature)
     else
       raise ArgumentError, "Feature type of #{feature_type} is not implemented"
     end
