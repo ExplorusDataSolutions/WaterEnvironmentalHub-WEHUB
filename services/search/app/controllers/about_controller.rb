@@ -15,11 +15,6 @@ class AboutController < ApplicationController
     @main_menu = 'we_catalogue'
   end
 
-  def legal_notice
-    @breadcrumb = ['Legal notice']
-    @main_menu = 'we_catalogue'
-  end
-
   def privacy
     @breadcrumb = ['Privacy']
     @main_menu = 'we_catalogue'
