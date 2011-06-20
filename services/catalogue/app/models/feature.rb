@@ -39,8 +39,25 @@ class Feature
         sheet_translator = SpreadsheetTranslator.new(params)
               
         execute("CREATE TABLE #{tablename} (#{sheet_translator.fields_sql})")
-        execute(["COPY #{tablename} FROM ? WITH CSV", sheet_translator.filename]);
-        
+        execute(["COPY #{tablename} FROM ? WITH CSV", sheet_translator.filename])
+
+        begin
+          first_row = execute("SELECT * FROM #{tablename} LIMIT 1")[0]
+          
+          latitude = ''
+          longitude = ''
+          if first_row
+            latitude = first_row.select { |column| column =~ /^lat/i }.first[1]
+            longitude = first_row.select { |column| column =~ /^long/i }.first[1]
+          end
+          
+          if !(latitude.empty? && longitude.empty?)
+            execute("SELECT addgeometrycolumn('public', '#{tablename}', 'thepoint_lonlat' ,4326 ,'POINT' ,2);")
+            execute("UPDATE public.#{tablename} SET thepoint_lonlat = geometryfromtext('POINT(#{latitude} #{longitude})', 4326);")
+          end
+        rescue Exception => e
+        end
+
       elsif !params.match(/(\.zip)$/).nil?
         shape_translator = ShapeTranslator.new(params, tablename)
             
