@@ -2,7 +2,7 @@ class SearchController < ApplicationController
     
   def index
     query = 'all'
-    if params[:query] != nil
+    if params[:query] != nil && !params[:query].empty?
       query = params[:query]
     end
 
