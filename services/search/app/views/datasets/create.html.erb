@@ -34,6 +34,28 @@
     $('#groups').click(function(event) {
       $('#permission_group').attr('checked', true);
     });
+
+    $('.create-dataset-button').click(function() {
+      var required = ['dataset[feature_type]', 'permission'];
+      $('form .required').each(function(i,e) { required.push($(e).attr('name')); });
+      var form = $('form');
+
+      var errors = []
+      $(required).each(function(i,e) {
+        element = $('form').find('[name="' + e + '"]');
+        if (element.val() === '') {
+          errors.push(element.attr('friendly') ? element.attr('friendly') : e);
+        }
+      });
+
+      if (errors.length > 0) {
+        var errorMsg = ''
+        $(errors).each(function(i,e) { errorMsg += '<li>' + e + ' can\'t be blank</li>'; });
+        $('#error-explanation').html('<ul>' + errorMsg + '</ul>').focus();
+      } else {
+        form.submit();
+      }
+    });
   });
 
   $(document).ready(function() {
@@ -58,6 +80,9 @@
     <%= render 'upper_navbar' %>
 		
 		<div class="dataset-upload-container">
+      <div id="error-explanation" tabindex="100">  
+      </div>  
+
 <%= form_for :dataset, :url => "http://#{request.host}:3000/items/create", :html => {:multipart => true} do |f| %>
 
 			<table width="100%" cellpadding="8" cellspacing="0" border="0">
@@ -68,7 +93,7 @@
 					<td align="left" width="80%">
 						<div class="text-plain-left"></div>
 						<div class="text-plain-repeat-280">
-							<%= f.text_field :name %>
+							<%= f.text_field :name, :class => 'required', :friendly => 'Title' %>
 						</div>
 						<div class="text-plain-right"></div>
 					</td>
@@ -81,7 +106,7 @@
 					<td align="left">
 						<div class="textarea-plain-left"></div>
 						<div class="textarea-plain-repeat-280">
-              <%= f.text_area :description %>
+              <%= f.text_area :description, :class => 'required', :friendly => 'Description' %>
 						</div>
             <div class="textarea-plain-right"></div>
 					</td>
@@ -91,7 +116,7 @@
             <%= label_tag :filename, 'File' %>
 					</td>	
 					<td align="left">
-            <%= file_field_tag :filename %>
+            <%= file_field_tag :filename, :class => 'required', :friendly => 'File' %>
 						<div class="">
 							Valid uploads includes: Spreadsheet in .csv, .ods, .xls, or .xlsx format, or Shape files (a .zip file) containing atleast a .shp and .dbf file
 						</div>
@@ -210,7 +235,7 @@
 				<tr>
 					<td>&nbsp;</td>
 					<td align="left">
-            <div class="create-dataset-button" onclick="$('form').submit();">
+            <div class="create-dataset-button">
                 <%= f.submit :search, :name => 'search' %>
             </div>
 					</td>
