@@ -192,11 +192,11 @@ a{
   height:45px;
   position: absolute;
 }
-.user-dashboard .log-in, .user-dashboard .log-out {
-  padding-left: 10px;
-}
-.user-dashboard .sign-up, .user-dashboard .banner {
+.user-dashboard .log-in, .user-dashboard .banner {
   padding-right: 5px;
+}
+.user-dashboard .sign-up, .user-dashboard .log-out {
+  padding-left: 10px;
 }
 .user-dashboard .banner {
   /*vertical-align: super;*/

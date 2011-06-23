@@ -10,9 +10,9 @@
 <div class="user-dashboard">
 <% if !logged_in? %>
   <div class="no-auth" >
-    <%= link_to image_tag('signup.jpg', :alt => 'Register', :border => 0), { :controller => 'user', :action => 'register' }, :class=> 'sign-up' %>
-	  <span class="seperator">|</span>
     <%= link_to image_tag('login.jpg', :alt => 'Log in', :border => 0), { :controller => 'user', :action => 'log-in' }, :class=> 'log-in' %>
+	  <span class="seperator">|</span>
+    <%= link_to image_tag('signup.jpg', :alt => 'Register', :border => 0), { :controller => 'user', :action => 'register' }, :class=> 'sign-up' %>
   </div>
   <div class="clear"></div>
 <% else %>
