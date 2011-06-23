@@ -1,4 +1,5 @@
 require 'geonetwork_translator.rb'
+require 'catalogue_translator.rb'
 
 class Search
   attr_accessor :results, :query, :base_data, :observation_data
@@ -7,8 +8,13 @@ class Search
     @geonetwork
   end
   
+  def catalogue
+    @catalogue
+  end
+
   def initialize(query='all')
     @geonetwork = GeoNetworkTranslator.new
+    @catalogue = CatalogueTranslator.new
     
     @results = geonetwork.search_results(query)
     @base_data = geonetwork.search_results_by_groups(["20", "21"])
@@ -16,9 +22,24 @@ class Search
     @query = query
   end
   
-  def do_query(query)
-    @results = geonetwork.search_results(query)
-    @query = query
+  def do_query(keywords, target='public', user_id, group_ids)
+    @results = []
+    if target.scan(/mine/).any? && target.scan(/shared/).any?
+      results = catalogue.find_datasets_by_keyword(keywords, user_id, group_ids)
+      @results |= results unless results.nil?
+    elsif target.scan(/mine/).any?
+      results = catalogue.find_datasets_by_keyword(keywords, user_id, nil)
+      @results |= results unless results.nil?
+    elsif target.scan(/shared/).any?
+      results = catalogue.find_datasets_by_keyword(keywords, nil, group_ids)
+      @results |= results unless results.nil?
+    end
+
+    if target.scan(/public/).any?
+      @results |= geonetwork.search_results(keywords)
+    end
+
+    @query = keywords
     
     self
   end

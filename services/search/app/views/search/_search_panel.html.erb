@@ -6,19 +6,36 @@
       $(datasets.split(',')).each(function(i,e) {
         $('form').find('[value="' + e + '"]').attr('checked', true);
       });
+    } else {
+      $('form').find('[value=public]').attr('checked', true);
     }
 
-    $('[name=datasets]').click(function(event) {
+    var keywords = $.url(window.location).param('keywords');
+    if (keywords) {
+      $('[name=query]').val(keywords);
+    }
+
+    function setFormAction() {
       var datasets = []
       $('[name=datasets]').each(function(i,e) { 
         if ($(e).is(':checked')) {
           datasets.push($(e).val());
         }
       });
-      var action = $.url($('form').attr('action')).attr('path');
-      $('form').attr('action', action + '?datasets=' + datasets.join(','));
+      if (datasets.length == 0) {
+        datasets.push('public');
+      }
+
+      var action = $.url($('form').attr('action')).attr('path');      
+      $('form').attr('action', action + '?keywords=' + $('[name=query]').val() + '&datasets=' + datasets.join(','));
+    }
+
+    $('.search-button').click(function() {
+      setFormAction()
+      $('form').submit();
     });
 
+    setFormAction();
   });
 </script>
 
@@ -81,7 +98,7 @@
   <% end %>
 
 	<div class="clear height-15"></div>
-	<div class="search-button" onclick="$('form').submit();">
+	<div class="search-button">
       <%= f.submit :search, :name => 'search' %>
 	</div>
 <%

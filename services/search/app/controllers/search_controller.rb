@@ -8,15 +8,18 @@ class SearchController < ApplicationController
 
     f = File.read('public/4.json')
     @json = f.strip
+
+    user_id = current_user.id
+
+    group_ids = []
+    groups = socialnetwork_instance.user_groups(user_id)
+    groups.each do |group|
+      group_ids.push(group.id)
+    end
+debugger
+    @search = search_instance.do_query(params[:keywords], params[:datasets], user_id, group_ids)
+  end
     
-    @search = search_instance.do_query(query)
-  end
-  
-  def query    
-    @search = search_instance.do_query(params[:keywords])
-    render :partial => "search_results"    
-  end
-  
   def info
     id = params[:id]      
     if id != nil

@@ -47,6 +47,41 @@ class UserController < ApplicationController
     respond_with(@datasets)
   end
 
+  def search
+    @datasets = []
+    keywords = params[:keywords]
+    if keywords
+      if params[:user_ids]
+        params[:user_ids].split(',').each do |id| 
+          @datasets |= datasets_by_ownerships(Owner.find(:all, :conditions => ['user_id = ?', id]))
+        end
+      end
+      if params[:group_ids]
+        params[:group_ids].split(',').each do |id|
+          @datasets |= datasets_by_ownerships(Owner.find(:all, :conditions => ['group_id = ?', id]))
+        end
+      end
+
+      if keywords.scan(/^all$/i).any?
+        @results = @datasets
+      else
+        @results = []
+        @datasets.each do |dataset|
+          regexed_keywords = keywords.gsub(',','|').gsub(' ','|')
+          if dataset.name.scan(/#{regexed_keywords}/i).any? || dataset.description.scan(/#{regexed_keywords}/i).any?
+            @results.push(dataset)
+          else
+            if !dataset.feature.keywords.nil? && dataset.feature.keywords.join(' ').scan(/#{regexed_keywords}/i).any?
+              @results.push(dataset)        
+            end
+          end
+        end
+      end
+    end
+
+    respond_with(@results)
+  end
+
   private 
 
   def datasets_by_ownerships(ownerships)

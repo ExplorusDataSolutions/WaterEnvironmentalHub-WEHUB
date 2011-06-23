@@ -57,6 +57,14 @@ class CatalogueTranslator
     datasets
   end
 
+  def find_datasets_by_keyword(keywords, user_id, group_ids)
+    if group_ids.any?
+      group_ids = group_ids.join(',')
+    end
+    datasets = xml_to_mash(get("#{user_search_datasets_uri}?keywords=#{keywords}&user_ids=#{user_id}&group_ids=#{group_ids}&format=xml"))['datasets']
+    datasets
+  end
+
   def get(uri)
     Net::HTTP::get(URI.parse(uri))
   end
@@ -75,6 +83,10 @@ class CatalogueTranslator
   
   def user_datasets_uri
     "#{url}/user/datasets"
+  end
+
+  def user_search_datasets_uri
+    "#{url}/user/search"
   end
 
   def xml_to_mash(value)
