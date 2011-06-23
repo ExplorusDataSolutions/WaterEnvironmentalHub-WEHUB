@@ -1,5 +1,7 @@
 <script>
  $(document).ready(function() {
+
+    <%# Advanced Search toggle %>
     var opened = false;
     var searchMode = $('#search-mode');
     searchMode.click(function(event) {
@@ -13,6 +15,7 @@
         searchMode.text('Advanced Search');
       }
     });
+
   });  
 
 	var lon = -113.98650539999994;

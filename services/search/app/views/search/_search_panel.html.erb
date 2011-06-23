@@ -1,4 +1,28 @@
-<%= form_for :search do |f| %>
+<script>
+ $(document).ready(function() {
+
+    var datasets = $.url(window.location).param('datasets');
+    if (datasets) {
+      $(datasets.split(',')).each(function(i,e) {
+        $('form').find('[value="' + e + '"]').attr('checked', true);
+      });
+    }
+
+    $('[name=datasets]').click(function(event) {
+      var datasets = []
+      $('[name=datasets]').each(function(i,e) { 
+        if ($(e).is(':checked')) {
+          datasets.push($(e).val());
+        }
+      });
+      var action = $.url($('form').attr('action')).attr('path');
+      $('form').attr('action', action + '?datasets=' + datasets.join(','));
+    });
+
+  });
+</script>
+
+<%= form_for :search, :url => { :datasets => 'public' } do |f| %>
 <div class="search-box">
 	<div class="clear height-10"></div>
 	<div class="text-shade-left"></div>
@@ -40,14 +64,19 @@
 	  </div>
   </div>
 
+	<div class="search-shared-check">
+		<input type="checkbox" name="datasets" value="public" id="data_public" />
+		<label for="data_public">Public Data</label>
+	</div>
+
   <% if !current_user.nil? %>
 	<div class="search-shared-check">
-		<input type="checkbox" />
-		<label>My Shared Data</label>
+		<input type="checkbox" name="datasets" value="mine" id="data_mine" />
+		<label for="data_mine">My Data</label>
 	</div>
 	<div class="search-shared-check">
-		<input type="checkbox" />
-		<label>Data Shared with Me</label>
+		<input type="checkbox" name="datasets" value="shared" id="data_shared" />
+		<label for="data_shared">Data Shared with Me</label>
 	</div>
   <% end %>
 
@@ -55,9 +84,13 @@
 	<div class="search-button" onclick="$('form').submit();">
       <%= f.submit :search, :name => 'search' %>
 	</div>
+<%
+=begin %>
 	<div class="float-right slight-margin">
 		<a href="#" id="search-mode">Advanced Search</a>
 	</div>
+<%
+=end %>
 	<div class="clear height-25"></div>
 </div>
 <% end %>
