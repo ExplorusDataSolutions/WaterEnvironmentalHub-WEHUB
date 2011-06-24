@@ -101,6 +101,7 @@ class GeoNetworkTranslator
         result.name = item.elements['dataIdInfo/idCitation/resTitle'].text
         result.owner = Hashie::Mash.new(additional_info['owner'])
         result.author = Hashie::Mash.new(additional_info['author'])
+        result.coordinates = additional_info['coordinates']
 
         keywords = []
         item.elements.each('dataIdInfo/descKeys') do |keyword|
