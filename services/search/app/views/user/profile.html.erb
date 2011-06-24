@@ -107,18 +107,19 @@
 				</div>
 			</div>
 			<div class="profile-content-para">
-        <% @profile.friend.each do |friend| %>
-				<div class="profile-friend-each">
-					<div class="float-left">
-						<img src="/images/friends/ruby.jpg" title="Friend" alt="Friend" border="0"/>
-					</div>
-					<div class="text">
-						<div><%= friend.name %></div>
-						<div><%= friend.datasets.nil? ? '0' : friend.datasets.count %> datasets</div>
-					</div>
-				</div>
-
-        <% end %>								
+        <% if @profile.friend %>
+          <% @profile.friend.each do |friend| %>
+				  <div class="profile-friend-each">
+					  <div class="float-left">
+						  <img src="/images/friends/ruby.jpg" title="Friend" alt="Friend" border="0"/>
+					  </div>
+					  <div class="text">
+						  <div><%= friend.name %></div>
+						  <div><%= friend.datasets.nil? ? '0' : friend.datasets.count %> datasets</div>
+					  </div>
+				  </div>
+          <% end %>
+        <% end %>
 			</div>
 		</div>
 		<div class="clear"></div>
