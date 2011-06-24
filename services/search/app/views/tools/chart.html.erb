@@ -184,33 +184,37 @@ $(document).ready(function(){
 	
 	
 	
-	
+	$('#bar-chart').hide();
 	$('#line-chart').hide();
 	$('#pie-chart').hide();
+		
+	var tab_select		=	false;
+	if(location.hash){
+		var hash_val	=	location.hash;
+		if (hash_val == '#bar'){
+			chart_show('bar-chart');
+			tab_select	=	true;
+		}else if(hash_val == '#line'){
+			chart_show('line-chart');
+			tab_select	=	true;
+		}else if(hash_val == '#pie'){
+			chart_show('pie-chart');
+			tab_select	=	true;
+		}
+	}
+	
+	if (!tab_select){
+		chart_show('bar-chart');
+	}
 	 
 	$('#bar-chart-div').click(function(){
-		$('#line-chart').hide();
-		$('#pie-chart').hide();
-		$('#bar-chart').show();
-		$('#line-chart-div').removeClass('tab-select');
-		$('#pie-chart-div').removeClass('tab-select');
-		$('#bar-chart-div').addClass('tab-select');
+		chart_show('bar-chart');
 	});
 	$('#line-chart-div').click(function(){
-		$('#bar-chart').hide();
-		$('#pie-chart').hide();
-		$('#line-chart').show();
-		$('#bar-chart-div').removeClass('tab-select');
-		$('#pie-chart-div').removeClass('tab-select');
-		$('#line-chart-div').addClass('tab-select');
+		chart_show('line-chart');
 	});
 	$('#pie-chart-div').click(function(){
-		$('#bar-chart').hide();
-		$('#line-chart').hide();
-		$('#pie-chart').show();
-		$('#bar-chart-div').removeClass('tab-select');
-		$('#line-chart-div').removeClass('tab-select');
-		$('#pie-chart-div').addClass('tab-select');
+		chart_show('pie-chart');
 	});
 });
 
@@ -219,18 +223,28 @@ $(function() {
 	$( "a", ".button" ).click(function() { return false; });
 });
 
-
+function chart_show(chart_id){
+	$('#bar-chart').hide();
+	$('#line-chart').hide();
+	$('#pie-chart').hide();
+	$('#bar-chart-div').removeClass('tab-select');
+	$('#line-chart-div').removeClass('tab-select');
+	$('#pie-chart-div').removeClass('tab-select');
+	
+	$('#'+chart_id).show();
+	$('#'+ chart_id +'-div').addClass('tab-select');
+}
 </script>
 
 <div class="tab-menu-body">
 	<div class="tab-menu">
-		<a href="#">WE Data Map</a>
+		<a href="/tools/map/<%= @id%>">WE Data Map</a>
 	</div>
 	<div class="tab-menu tab-menu-select">
-		<a href="#">WE Data Graphs</a>
+		<a href="/tools/chart/<%= @id%>">WE Data Graphs</a>
 	</div>
 	<div class="tab-menu">
-		<a href="#">Developers</a>
+		<a href="/tools/developers/<%= @id%>">Developers</a>
 	</div>
 </div>
 <div class="clear"></div>
@@ -238,7 +252,7 @@ $(function() {
 <div class="sub-content-body">
 	<div class="sub-content-left">
 		<div class="left-tab-body">
-			<div id="bar-chart-div" class="left-tab tab-select">
+			<div id="bar-chart-div" class="left-tab">
 				Bar
 			</div>
 			<div id="line-chart-div" class="left-tab">
@@ -247,15 +261,17 @@ $(function() {
 			<div id="pie-chart-div" class="left-tab">
 				Pie
 			</div>
-			<div class="left-tab">
-				Table
+			<div id="table-chart-div" class="left-tab">
+				<%= link_to 'Table', :controller => 'tools', :action => 'table' %>
 			</div>
 		</div>
 		<div class="clear"></div>
 		<div id="filter-container">
+		 <div id="filter-content">
+		  <div id="filter-1">
 			<div class="filter-part">
 				<div class="filter-left">
-					<input type="checkbox">
+					<input type="checkbox" id="filter-check-1" name="filter-check" value="1">
 				</div>
 				<div class="filter-right">
 					<div>
@@ -276,10 +292,11 @@ $(function() {
 				</div>
 			</div>
 			<div class="clear"></div>
-			
+		  </div>
+		  <div id="filter-2">
 			<div class="filter-part">
 				<div class="filter-left">
-					<input type="checkbox">
+					<input type="checkbox" id="filter-check-2" name="filter-check" value="2">
 				</div>
 				<div class="filter-right">
 					<div>
@@ -300,7 +317,8 @@ $(function() {
 				</div>
 			</div>
 			<div class="clear"></div>
-			
+		  </div>
+		 </div>
 			<div class="filter-part">
 				<div class="filter-left">
 					&nbsp;
@@ -311,12 +329,12 @@ $(function() {
 							<button>Graph</button>
 						</span>
 						<span class="button">
-							<button>Remove</button>
+							<button onclick="javascript:remove_dataset();">Remove</button>
 						</span>
 					</div>
 					<div>
 						<span class="button">
-							<button>+ Dataset</button>
+							<button onclick="javascript:add_new_dataset();">+ Dataset</button>
 						</span>
 					</div>
 				</div>
@@ -325,6 +343,7 @@ $(function() {
 			
 		</div>
 	</div>
+	<input type="hidden" name="hid_last_cnt" id="hid_last_cnt" value="2">
 	<div class="sub-content-center">
 		<div class="chart-body">
 			<div id="bar-chart" class="chart">
@@ -340,6 +359,7 @@ $(function() {
 			<div id="pie-chart1" class="plot" style="width:530px;height:360px;"></div>
 			</div>
 			
+					
 		</div>
 		
 	</div>

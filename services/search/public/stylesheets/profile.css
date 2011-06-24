@@ -182,6 +182,10 @@
 	float:left;
 	padding-left:8px;
 }
+.profile-friend-each .close{
+	float:left;
+	padding-left:3px;
+}
 .profile-activity-post-box{
 	padding:10px;
 	background:#EBEBEB;
@@ -515,4 +519,11 @@
 }
 .dataset-upload-container{
 	color:#616161;
+}
+.profile-edit-para-div{
+	padding:10px;
+}
+.button-div{
+	padding:25px 0 0 10px;
+	float:left;
 }

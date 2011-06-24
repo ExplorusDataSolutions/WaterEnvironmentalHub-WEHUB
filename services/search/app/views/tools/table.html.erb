@@ -15,16 +15,16 @@
 	<div class="sub-content-left">
 		<div class="left-tab-body">
 			<div id="bar-chart-div" class="left-tab">
-				Bar
+				<%= link_to 'Bar', :controller => 'tools', :action => 'chart', :anchor => 'bar' %>
 			</div>
 			<div id="line-chart-div" class="left-tab">
-				Line
+				<%= link_to 'Line', :controller => 'tools', :action => 'chart', :anchor => 'line' %>
 			</div>
 			<div id="pie-chart-div" class="left-tab">
-				Pie
+				<%= link_to 'Pie', :controller => 'tools', :action => 'chart', :anchor => 'pie' %>
 			</div>
 			<div class="left-tab tab-select">
-				Table
+				<%= link_to 'Table', :controller => 'tools', :action => 'table' %>
 			</div>
 		</div>
 		<div class="clear"></div>

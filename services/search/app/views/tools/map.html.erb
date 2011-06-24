@@ -27,13 +27,13 @@
 	
 <div class="tab-menu-body">
 	<div class="tab-menu tab-menu-select">
-		<a href="#">WE Data Map</a>
+		<a href="/tools/map/<%= @id%>">WE Data Map</a>
 	</div>
 	<div class="tab-menu">
-		<a href="#">WE Data Graphs</a>
+		<a href="/tools/chart/<%= @id%>">WE Data Graphs</a>
 	</div>
 	<div class="tab-menu">
-		<a href="#">Developers</a>
+		<a href="/tools/developers/<%= @id%>">Developers</a>
 	</div>
 	<div class="tab-menu-right">
 		<div class="top-container-tab">
@@ -55,8 +55,10 @@
 		</div>
 		<div class="clear"></div>
 		<div id="filter-container">
+		 <div id="filter-content">
+		  <div id="filter-1">
 			<div class="float-left">
-				<input type="checkbox" />
+				<input type="checkbox" id="filter-check-1" name="filter-check" value="1">
 			</div>
 			<div class="float-left width-5">&nbsp;</div>
 			<div class="float-left">
@@ -72,9 +74,11 @@
 				</div>
 			</div>
 			<div class="clear height-5">&nbsp;</div>
-			
+		  </div>
+		  
+		  <div id="filter-2">
 			<div class="float-left">
-				<input type="checkbox" />
+				<input type="checkbox" id="filter-check-2" name="filter-check" value="2">
 			</div>
 			<div class="float-left width-5">&nbsp;</div>
 			<div class="float-left">
@@ -90,10 +94,11 @@
 				</div>
 			</div>
 			<div class="clear height-5">&nbsp;</div>
-			
-			
+		  </div>
+		  
+		  <div id="filter-3">			
 			<div class="float-left">
-				<input type="checkbox" />
+				<input type="checkbox" id="filter-check-3" name="filter-check" value="3">
 			</div>
 			<div class="float-left width-5">&nbsp;</div>
 			<div class="float-left">
@@ -109,10 +114,11 @@
 				</div>
 			</div>
 			<div class="clear height-5">&nbsp;</div>
-			
-			
+		  </div>
+		  
+		  <div id="filter-4">			
 			<div class="float-left">
-				<input type="checkbox" />
+				<input type="checkbox" id="filter-check-4" name="filter-check" value="4">
 			</div>
 			<div class="float-left width-5">&nbsp;</div>
 			<div class="float-left">
@@ -127,20 +133,23 @@
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula.
 				</div>
 			</div>
-			<div class="clear height-50">&nbsp;</div>
-			
+			<div class="clear height-5">&nbsp;</div>
+		  </div>
+		 </div>
+		 <div class="clear height-50">&nbsp;</div>
 			<div>
 				<span class="button">
-					<button>+ Dataset</button>
+					<button onclick="javascript:add_new_dataset_map();">+ Dataset</button>
 				</span>
 				<span class="button">
-					<button>Remove</button>
+					<button onclick="javascript:remove_dataset_map();">Remove</button>
 				</span>
 			</div>
 				
 					
 		</div>
 	</div>
+	<input type="hidden" name="hid_last_cnt" id="hid_last_cnt" value="4">
 	<div class="sub-content-center">
 		<div id="map" style="width:564px;"></div>
 		<!--img src="/images/temp-data-map.jpg" border="0" alt="Temp Map" title="Map"-->		
