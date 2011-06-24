@@ -58,7 +58,7 @@ class CatalogueTranslator
   end
 
   def find_datasets_by_keyword(keywords, user_id, group_ids)
-    if group_ids.any?
+    if !group_ids.nil?
       group_ids = group_ids.join(',')
     end
     datasets = xml_to_mash(get("#{user_search_datasets_uri}?keywords=#{keywords}&user_ids=#{user_id}&group_ids=#{group_ids}&format=xml"))['datasets']
