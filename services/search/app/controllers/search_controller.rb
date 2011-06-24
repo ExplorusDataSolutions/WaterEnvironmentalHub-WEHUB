@@ -13,7 +13,7 @@ class SearchController < ApplicationController
 
     group_ids = []
     groups = socialnetwork_instance.user_groups(user_id)
-    if groups.any?
+    if !groups.nil?
       groups.each do |group|
         group_ids.push(group.id)
       end
