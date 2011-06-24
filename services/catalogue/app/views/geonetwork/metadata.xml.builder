@@ -50,6 +50,10 @@ xml.Metadata('xmlns:geonet' => 'http://www.fao.org/geonetwork') do
     message.update({:author => {:name => "#{@dataset.author.first_name} #{@dataset.author.last_name}", :email => @dataset.author.email}})
   end
 
+  if !@dataset.feature.nil? && !@dataset.feature.latitude_longitude.nil?
+    message.update({:coordinates => "#{@dataset.feature.latitude_longitude}"})
+  end
+
   xml.additionalInfo(message.to_json)
   
 end

@@ -31,6 +31,23 @@ class Feature
     end
   end
     
+  def latitude_longitude
+    latitude = ''
+    longitude = ''
+
+    begin
+      first_row = execute("SELECT * FROM #{tablename} LIMIT 1")[0]
+
+      if first_row
+        latitude = first_row.select { |column| column =~ /^lat/i }.first[1]
+        longitude = first_row.select { |column| column =~ /^long/i }.first[1]
+      end
+    rescue
+    end
+
+    !(latitude.empty? && longitude.empty?) ? "#{latitude},#{longitude}" : nil            
+  end
+
   def create(params)
     
     if is_a_file?(params)
@@ -42,16 +59,12 @@ class Feature
         execute(["COPY #{tablename} FROM ? WITH CSV", sheet_translator.filename])
 
         begin
-          first_row = execute("SELECT * FROM #{tablename} LIMIT 1")[0]
-          
-          latitude = ''
-          longitude = ''
-          if first_row
-            latitude = first_row.select { |column| column =~ /^lat/i }.first[1]
-            longitude = first_row.select { |column| column =~ /^long/i }.first[1]
-          end
-          
-          if !(latitude.empty? && longitude.empty?)
+          if !latitude_longitude.nil?
+
+            lat_long_split = latitude_longitude.split(',')
+            latitude = lat_long_split[0]
+            longitude = lat_long_split[1]
+
             execute("SELECT addgeometrycolumn('public', '#{tablename}', 'thepoint_lonlat' ,4326 ,'POINT' ,2);")
             execute("UPDATE public.#{tablename} SET thepoint_lonlat = geometryfromtext('POINT(#{latitude} #{longitude})', 4326);")
           end

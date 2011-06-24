@@ -46,7 +46,7 @@ class Dataset < ActiveRecord::Base
         xml.tag!(:period, feature_period)
       end
       xml.tag!(:name, name)
-      xml.tag!(:source, source)
+      xml.tag!(:source, source) unless source.nil?
       xml.tag!(:uuid, uuid)
       xml.owner do
         if !owner.user_id.nil?
@@ -62,6 +62,9 @@ class Dataset < ActiveRecord::Base
       end unless author.nil?
       if feature.keywords
         xml.tag!(:properties, feature.keywords.join(', ').chop!)
+      end
+      if feature.latitude_longitude
+        xml.tag!(:coordinates, feature.latitude_longitude)
       end
     end
   end
