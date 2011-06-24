@@ -23,6 +23,9 @@ class Search
   end
   
   def do_query(keywords, target='public', user_id, group_ids)
+    if target.nil?
+      target = 'public'
+    end
     @results = []
     if target.scan(/mine/).any? && target.scan(/shared/).any?
       results = catalogue.find_datasets_by_keyword(keywords, user_id, group_ids)
