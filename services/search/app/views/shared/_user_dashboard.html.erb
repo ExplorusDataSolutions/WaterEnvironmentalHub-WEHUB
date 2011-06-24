@@ -1,3 +1,5 @@
+<%
+=begin %>
 <script>
 	$(document).ready(function(){
 		$("#notification-icon-image").click( function(){
@@ -7,6 +9,8 @@
 		});
 	});
 </script>
+<%
+=end %>
 <div class="user-dashboard">
 <% if !logged_in? %>
   <div class="no-auth" >
@@ -18,9 +22,11 @@
 <% else %>
   <div class="user-welcome-box">
   		<div  class="welcome-name">
-  			Hi, <a href="#" class="profile"><%= current_user.display_name %></a>
+  			Hi, <%= link_to current_user.display_name, :controller => 'user', :action => 'profile' %>
   		</div>
-		
+
+<%
+=begin %>		
 		<div class="float-left">
 			<div id="notification-number" class="notification-number" style="display:block">
 				2
@@ -50,7 +56,8 @@
 				<div class="clear"></div>
 			</div>
 		</div>
-		
+<%
+=end %>		
 		<div class="float-left">
 			<%= link_to image_tag('logout.jpg', :alt => 'Log out', :border => 0), { :controller => 'user', :action => 'log-out' }, :class=> 'log-out' %>
 		</div>

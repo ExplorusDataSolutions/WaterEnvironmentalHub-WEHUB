@@ -223,7 +223,7 @@ a{
 .user-dashboard .user-welcome-box .welcome-name{
 	float:left;
 	color:#7F7F7F;
-	background:url(/images/welcome-arrow.jpg) no-repeat right center;
+/*	background:url(/images/welcome-arrow.jpg) no-repeat right center; */
 	padding:0 15px 0 0;
 }
 .user-dashboard .user-welcome-box .welcome-name a{
