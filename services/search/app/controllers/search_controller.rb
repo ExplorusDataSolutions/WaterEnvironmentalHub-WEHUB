@@ -13,10 +13,12 @@ class SearchController < ApplicationController
 
     group_ids = []
     groups = socialnetwork_instance.user_groups(user_id)
-    groups.each do |group|
-      group_ids.push(group.id)
+    if groups.any?
+      groups.each do |group|
+        group_ids.push(group.id)
+      end
     end
-debugger
+
     @search = search_instance.do_query(params[:keywords], params[:datasets], user_id, group_ids)
   end
     
