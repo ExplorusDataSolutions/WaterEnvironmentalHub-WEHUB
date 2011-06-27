@@ -27,13 +27,13 @@
 	
 <div class="tab-menu-body">
 	<div class="tab-menu tab-menu-select">
-		<a href="/tools/map/<%= @id%>">WE Data Map</a>
+		<%= link_to 'WE Data Map', :controller => 'tools', :action => 'map', :id => @id %>
 	</div>
 	<div class="tab-menu">
-		<a href="/tools/chart/<%= @id%>">WE Data Graphs</a>
+		<%= link_to 'WE Data Graphs', :controller => 'tools', :action => 'chart', :id => @id %>
 	</div>
 	<div class="tab-menu">
-		<a href="/tools/developers/<%= @id%>">Developers</a>
+		<%= link_to 'Developers', :controller => 'tools', :action => 'developers', :id => @id %>
 	</div>
 	<div class="tab-menu-right">
 		<div class="top-container-tab">
@@ -139,10 +139,10 @@
 		 <div class="clear height-50">&nbsp;</div>
 			<div>
 				<span class="button">
-					<button onclick="javascript:add_new_dataset_map();">+ Dataset</button>
+					<button onclick="add_new_dataset_map(); return false;">+ Dataset</button>
 				</span>
 				<span class="button">
-					<button onclick="javascript:remove_dataset_map();">Remove</button>
+					<button onclick="remove_dataset_map(); return false;">Remove</button>
 				</span>
 			</div>
 				

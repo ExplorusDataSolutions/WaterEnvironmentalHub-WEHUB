@@ -85,3 +85,31 @@ function profile_skills_edit(){
 function close_friends(friends_cnt){
 	$('#profile-friend-'+friends_cnt).hide(1000);
 }
+
+function update_about_me(){
+	var about_me	=	$('#about_me').val();
+	$.ajax({
+      url: "/user/ajax_update_about_me/",
+      type:'POST',
+      dataType:'html',
+      data:{"about_me": about_me},
+      success: function(data) {
+                         $('#about-me-edit').hide(1000);
+                      },
+      error: function (data){alert("An error occurred:");}
+    });
+}
+
+function update_skills(){
+	var skills	=	$('#skills').val();
+	$.ajax({
+      url: "/user/ajax_update_skills/",
+      type:'POST',
+      dataType:'html',
+      data:{"skills": skills},
+      success: function(data) {
+                         $('#skills-edit').hide(1000);
+                      },
+      error: function (data){alert("An error occurred:");}
+    });
+}

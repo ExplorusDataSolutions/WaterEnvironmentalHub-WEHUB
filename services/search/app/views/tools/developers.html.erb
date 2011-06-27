@@ -1,12 +1,12 @@
 <div class="tab-menu-body">
 	<div class="tab-menu">
-		<a href="/tools/map/<%= @id%>">WE Data Map</a>
+		<%= link_to 'WE Data Map', :controller => 'tools', :action => 'map', :id => @id %>
 	</div>
 	<div class="tab-menu">
-		<a href="/tools/chart/<%= @id%>">WE Data Graphs</a>
+		<%= link_to 'WE Data Graphs', :controller => 'tools', :action => 'chart', :id => @id %>
 	</div>
 	<div class="tab-menu tab-menu-select">
-		<a href="/tools/developers/<%= @id%>">Developers</a>
+		<%= link_to 'Developers', :controller => 'tools', :action => 'developers', :id => @id %>
 	</div>
 </div>
 <div class="clear"></div>

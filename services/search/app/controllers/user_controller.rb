@@ -69,7 +69,7 @@ class UserController < ApplicationController
   end
 
   def profile
-    @profile = socialnetwork.profile(current_user.id)
+    #@profile = socialnetwork.profile(current_user.id)
     @breadcrumb     = ['My Profile']
     @main_menu      = 'we_community'
   end
@@ -82,4 +82,20 @@ class UserController < ApplicationController
       end
     end 
   end
+  
+  def edit_profile
+    @breadcrumb     = ['Edit Profile']
+    @main_menu      = 'home'
+  end
+  
+  def ajax_update_about_me
+    about_me    = params[:about_me]
+    render :nothing => true
+  end
+  
+  def ajax_update_skills
+    skills    = params[:skills]
+    render :nothing => true
+  end
+  
 end

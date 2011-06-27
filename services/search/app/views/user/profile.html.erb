@@ -23,9 +23,8 @@
 				<%= @profile.name  %>
 			</div>
 			<div class="float-right">
-				<a href="#">
-					<img src="/images/edit-profile-button.jpg" alt="Edit Profile" title="Edit Profile" border="0" />
-				</a>
+				<%= link_to image_tag("/images/edit-profile-button.jpg", :border =>0, :alt => "Edit Profile", :title => "Edit Profile"), :controller => 'user', :action => 'edit_profile' %>
+				
 			</div>
 			<div class="clear"></div>
 <%
@@ -55,7 +54,7 @@
 					About me
 				</div>
 				<div class="float-right">
-					<a href="javascript:void(0);" onclick="javascript:profile_about_me_edit();">
+					<a href="#" onclick="profile_about_me_edit(); return false;">
 						<img src="/images/edit-small-button.jpg" alt="edit" title="edit" border="0" />
 					</a>
 				</div>
@@ -65,12 +64,12 @@
 			<div id="about-me-edit" class="profile-edit-para-div" style="display:none;">
 				<div class="textarea-plain-left"></div>
 				<div class="textarea-plain-repeat-280">
-					<textarea><%= @profile.about_me %></textarea>
+					<textarea name="about_me" id="about_me"><%= @profile.about_me %></textarea>
 				</div>
 				<div class="textarea-plain-right"></div>
 				<div class="button-div">
 					<span class="button">
-						<button>Save</button>
+						<button onclick="update_about_me(); return false;">Save</button>
 					</span>
 				</div>
 			</div>
@@ -83,7 +82,7 @@
 					Skills
 				</div>
 				<div class="float-right">
-					<a href="javascript:void(0);" onclick="javascript:profile_skills_edit();">
+					<a href="#" onclick="profile_skills_edit(); return false;">
 						<img src="/images/edit-small-button.jpg" alt="edit" title="edit" border="0" />
 					</a>
 				</div>
@@ -91,12 +90,12 @@
 			<div id="skills-edit" class="profile-edit-para-div" style="display:none;">
 				<div class="textarea-plain-left"></div>
 				<div class="textarea-plain-repeat-280">
-					<textarea><%= @profile.skills %></textarea>
+					<textarea name="skills" id="skills"><%= @profile.skills %></textarea>
 				</div>
 				<div class="textarea-plain-right"></div>
 				<div class="button-div">
 					<span class="button">
-						<button>Save</button>
+						<button onclick="update_skills(); return false;">Save</button>
 					</span>
 				</div>
 			</div>
@@ -148,7 +147,7 @@
 						  <div><%= friend.datasets.nil? ? '0' : friend.datasets.count %> datasets</div>
 					  </div>
 					  <div class="close">
-					  	<a href="javascript:void(0);" onclick="javascript:close_friends(<%= friends_cnt%>)">X</a>
+					  	<a href="#" onclick="close_friends(<%= friends_cnt%>); return false;">X</a>
 					  </div>
 				  </div>
           <% 
