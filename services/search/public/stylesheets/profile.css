@@ -110,14 +110,14 @@
 	line-height:1.2em;
 }
 .profile-content-details .profile-title-head{
-	float:left;
 	font-size:16px;
 	font-weight:bold;
 }
 .profile-content-details .profile-label{
-	float:left;
-	width:175px;
-	margin:5px 5px 5px 0;
+	line-height:2em;
+}
+.profile-label > span {
+  font-weight: bold;
 }
 .calendar-text{
 	background:url(/images/icon-calendar.jpg) no-repeat scroll 0 0 transparent;

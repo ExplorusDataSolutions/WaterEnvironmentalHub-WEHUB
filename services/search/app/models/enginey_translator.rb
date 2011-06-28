@@ -83,6 +83,20 @@ class EngineYTranslator
   def profile(user_id)
     xml_to_mash(get("#{profile_uri}/#{user_id}?format=xml"))['user']
   end
+  
+  def profile_update(user_id, params)
+    timeout = 500
+    url = URI.parse("#{profile_uri}/update?format=json")
+    http = Net::HTTP.new(url.host, url.port)
+    http.read_timeout = timeout
+    http.open_timeout = timeout
+    response = http.start {|http| http.post(url.to_s, {
+      :id => user_id,
+      :user => params[:user],
+      :format => "json"
+    }.to_json, { 'Content-Type' => 'application/json'}) }
+    
+  end
 
   def user_groups(user_id)
     groups = xml_to_mash(get("#{profile_uri}/#{user_id}/groups?format=xml"))['groups']
