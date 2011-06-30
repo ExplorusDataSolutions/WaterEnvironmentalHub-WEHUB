@@ -5,7 +5,7 @@ class GroupImporter
   
   attr_accessor :catalogue_server_address, :geoserver_server_address, :timeout, :username, :password, :cookies
   
-  def initialize(catalogue_server_address='localhost:3000', geoserver_server_address='174.129.10.37:8080', timeout=300, username='development', password='development')
+  def initialize(catalogue_server_address='localhost:3000', geoserver_server_address='50.19.106.48:9090', timeout=300, username='development', password='development')
     @geoserver_server_address = geoserver_server_address
     @catalogue_server_address = catalogue_server_address
     @timeout = timeout

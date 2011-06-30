@@ -8,7 +8,7 @@ class GeoNetworkTranslator
   @@cached_search_query = {}
   @@cached_metadata = {}
   
-  def initialize(server_address = '174.129.10.37:8080')
+  def initialize(server_address = 'localhost:9090')
     @server_address = server_address
   end
 
