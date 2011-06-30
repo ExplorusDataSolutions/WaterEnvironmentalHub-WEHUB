@@ -32,20 +32,24 @@ class Feature
   end
     
   def latitude_longitude
-    latitude = ''
-    longitude = ''
+    if is_data_source?('geoserver')
+      GeoServerTranslator.new.coordinates(uuid)
+    elsif is_data_source?('catalogue')    
+      latitude = ''
+      longitude = ''
 
-    begin
-      first_row = execute("SELECT * FROM #{tablename} LIMIT 1")[0]
+      begin
+        first_row = execute("SELECT * FROM #{tablename} LIMIT 1")[0]
 
-      if first_row
-        latitude = first_row.select { |column| column =~ /^lat/i }.first[1]
-        longitude = first_row.select { |column| column =~ /^long/i }.first[1]
+        if first_row
+          latitude = first_row.select { |column| column =~ /^lat/i }.first[1]
+          longitude = first_row.select { |column| column =~ /^long/i }.first[1]
+        end
+      rescue
       end
-    rescue
+      
+      !(latitude.empty? && longitude.empty?) ? "#{latitude},#{longitude}" : nil            
     end
-
-    !(latitude.empty? && longitude.empty?) ? "#{latitude},#{longitude}" : nil            
   end
 
   def create(params)
