@@ -4,7 +4,7 @@ require 'active_support/core_ext'
 class GeoServerTranslator
   attr_accessor :server_address, :timeout
   
-  def initialize(server_address = 'localhost:8080', timeout=300)
+  def initialize(server_address = '50.19.106.48:8080', timeout=300)
     @server_address = server_address
     @timeout = timeout
   end

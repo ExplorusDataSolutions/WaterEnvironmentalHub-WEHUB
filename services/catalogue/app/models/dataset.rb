@@ -55,7 +55,7 @@ class Dataset < ActiveRecord::Base
         if !owner.group_id.nil?
           xml.tag!(:group_id, owner.group_id)
         end
-      end
+      end unless owner.nil?
       xml.author do        
         xml.tag!(:name, "#{author.first_name} #{author.last_name}")
         xml.tag!(:email, author.email)
