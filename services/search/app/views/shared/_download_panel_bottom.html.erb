@@ -46,6 +46,10 @@
         });
     }
     bindDownloadButtonset()
+    
+    $('[name=clear]').click(function() {
+      $('[type=checkbox][name=download]').attr('checked', false);
+    });
 
     $("#dataset-navigation").treeview({
       persist: "location",
