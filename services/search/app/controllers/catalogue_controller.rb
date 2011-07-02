@@ -30,7 +30,7 @@ class CatalogueController < ApplicationController
       query = params[:query]
     end
 
-    @search = search_instance.do_query(query)
+    @search = search_instance.do_query(query, nil, nil)
   end
   
   def my_collection
