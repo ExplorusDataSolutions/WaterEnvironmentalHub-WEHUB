@@ -14,7 +14,7 @@
 		<li class="closed">Observation Data
 		  <ul>
 		<% @search.observation_data.each_with_index do |result, index| %>         
-		    <li><a href="/#!/<%= result.id %>" onclick="return false;"><%= result.name %></a></li>
+		    <li><%= link_to result.name, :controller => 'catalogue', :action => 'details', :id => result.id %></li>
 		<% end %>
 		  </ul>
 		</li>        
