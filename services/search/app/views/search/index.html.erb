@@ -18,28 +18,68 @@
 
   });  
 
-	var lon = -113.98650539999994;
-	var lat = 49.07069879900007;
-	var zoom = 8;
-	var map, layer;
-	
-	var data =	'<%= @json%>';
-	var unescaped	=	$('<textarea />').html(data).val();
-	var json_map = jQuery.parseJSON(unescaped);
-
   $(document).ready(function() {
-    map = new OpenLayers.Map( 'map' );
-    layer = new OpenLayers.Layer.WMS( "OpenLayers WMS", 
-      "http://vmap0.tiles.osgeo.org/wms/vmap0",
-      {layers: 'basic'} );
-    map.addLayer(layer);
-    map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
-    var featurecollection = json_map;
-    var geojson_format = new OpenLayers.Format.GeoJSON();
-    var vector_layer = new OpenLayers.Layer.Vector(); 
-    map.addLayer(vector_layer);
-    vector_layer.addFeatures(geojson_format.read(featurecollection));
-  });
+  	var map, layer;
+
+    function loadMap() {
+      map = new OpenLayers.Map( 'map' );
+
+      layer = new OpenLayers.Layer.WMS( "OpenLayers WMS", "http://vmap0.tiles.osgeo.org/wms/vmap0", {layers: 'basic'} );
+      map.addLayer(layer);
+
+      map.setCenter(new OpenLayers.LonLat(-114.922485, 56.400224), 5);    
+
+      markers = new OpenLayers.Layer.Markers("Features");
+      map.addLayer(markers);           
+    }
+    
+    function setMarker(lon, lat, html){
+      var lonLatMarker = new OpenLayers.LonLat(lon, lat);
+  
+      var feature = new OpenLayers.Feature(markers, lonLatMarker);
+
+      feature.closeBox = true;
+      feature.data.popupContentHTML = html;
+      feature.data.overflow = "hidden";
+
+      var size = new OpenLayers.Size(21, 25);
+      var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+      var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker-blue.png', size, offset);   
+      var marker = new OpenLayers.Marker(lonLatMarker, icon.clone());
+
+      marker.feature = feature;
+
+      var markerClick = function(evt) {
+          if (this.popup == null) {
+              this.popup = this.createPopup(this.closeBox);
+              map.addPopup(this.popup);
+              this.popup.show();
+          } else {
+              this.popup.toggle();
+          }
+          OpenLayers.Event.stop(evt);
+      };
+      marker.events.register("mousedown", feature, markerClick);
+
+      markers.addMarker(marker);
+    }
+
+    loadMap();    
+    <% 
+    if @search.results && !@search.results.empty? 
+      @search.results.each_with_index do |result, index| 
+        if result.coordinates
+          coords = result.coordinates.split(',') 
+          if coords.length == 2 
+          %>
+      <%= "setMarker(#{coords[1]}, #{coords[0]}, '#{result.name}. <a href=\"/catalogue/details/#{result.uuid}\">More details</a>');".html_safe %>
+          <% 
+          end
+        end
+      end
+    end 
+    %>
+ });
     
 </script>
 
