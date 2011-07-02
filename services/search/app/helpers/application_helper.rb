@@ -9,7 +9,7 @@ module ApplicationHelper
   end
 
   def link_to_details(id) 
-    "location.href = '#{url_for :controller => 'catalogue', :action => 'details'}?id=#{id}'; return false;"
+    "location.href = \'#{url_for :controller => 'catalogue', :action => 'details', :id => id}\'; return false;"
   end
 
   def onclick_link_to(route)
