@@ -91,5 +91,14 @@ class UserController < ApplicationController
       end
     end 
   end
+  
+  def save
+    if request.post?
+      if params[:ids]
+        catalogue_instance.add_saved(current_user.id, params[:ids])
+        render :json => 'Success!'
+      end
+    end
+  end
         
 end

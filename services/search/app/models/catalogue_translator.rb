@@ -33,6 +33,22 @@ class CatalogueTranslator
     response.body
   end
 
+  def add_saved(user_id, dataset_uuids)
+    timeout = 500
+    url = URI.parse(user_saved_uri)
+    http = Net::HTTP.new(url.host, url.port)
+    http.read_timeout = timeout
+    http.open_timeout = timeout    
+    response = http.start {|http| http.post(url.to_s, { 
+      :user_id => "#{user_id}", 
+      :uuids => "#{dataset_uuids}",
+      :format => "json" 
+    }.to_json, { 'Content-Type' => 'application/json'}) }
+
+    response.value
+    response.body
+  end
+
   def dataset(id)
     xml_to_mash(get(item_uri(id)))['dataset']
   end

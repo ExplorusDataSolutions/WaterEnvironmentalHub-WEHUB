@@ -50,7 +50,17 @@
     $('[name=clear]').click(function() {
       $('[type=checkbox][name=download]').attr('checked', false);
     });
-
+    
+    <% if logged_in? %>
+    $('[name=my-collection]').click(function() {
+      var ids = [];
+      $('[type=checkbox][name=download]:checked').each(function() { ids.push($(this).val()); })
+      if (ids.length != 0) {
+        $.post("<%= url_for :controller => 'user', :action => 'save' %>", { ids: ids }); 
+      }
+    });    
+    <% end %>
+    
     $("#dataset-navigation").treeview({
       persist: "location",
       unique: true

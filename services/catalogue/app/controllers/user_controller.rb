@@ -5,7 +5,12 @@ class UserController < ApplicationController
     @datasets = UserDatasetCollection.new
     if request.post?
       begin
-        @datasets = UserDatasetCollection.create(:user_id => params[:user_id], :uuid => params[:uuid])
+        if params[:uuids]
+          uuids = JSON.parse(params[:uuids])
+          uuids.each do |uuid|
+            @datasets = UserDatasetCollection.create(:user_id => params[:user_id], :uuid => uuid)
+          end
+        end
       rescue
         @datasets = nil
       end
