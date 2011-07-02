@@ -1,8 +1,16 @@
 <script>
   $(document).ready(function() {
     $.post('<%= url_for :controller => "user", :action => "recently_viewed" %>', { id: '<%= @dataset.uuid %>' });
+
+    $('#my-collection').click(function() {
+      var ids = [];
+      ids.push('<%= @dataset.uuid %>')
+      $.post("<%= url_for :controller => 'user', :action => 'save' %>", { ids: ids }); 
+    });    
+
   });
 </script>
+
 <div class="top-back-link">
 		<a href="#" onclick="history.go(-1);return false;">Back to Search Results</a>
 </div>
@@ -14,9 +22,9 @@
 	</div>
 <%
 =end %>
-	<div class="top-container-tab">
-		+ My Collection
-	</div>
+<% if logged_in? %>
+	<div class="top-container-tab" id="my-collection">+ My collection</div>
+<% end %>
 	<div class="top-container-tab">
 		<div class="float-left tab-download">Download</div><div class="float-left tab-download-arrow"></div>
 	</div>
