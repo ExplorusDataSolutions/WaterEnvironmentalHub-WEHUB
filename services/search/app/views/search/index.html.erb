@@ -19,6 +19,7 @@
   });  
 
   $(document).ready(function() {
+  	
   	var map, layer;
 
     function loadMap() {
@@ -63,8 +64,13 @@
 
       markers.addMarker(marker);
     }
-
-    loadMap();    
+    <%
+    if !@search.results.empty? 
+    %>
+    loadMap();
+    <%
+    end
+    %>
     <% 
     if @search.results && !@search.results.empty? 
       @search.results.each_with_index do |result, index| 
@@ -101,19 +107,11 @@
 	
   <%= render(:partial => '/shared/dataset', :collection => @search.results) || render('/shared/no_results') %>
 
+  <% if !@search.results.empty? %>
+
   <%= render '/shared/download_panel_bottom' %>
 	
-	<div class="clear height-25"></div>
-	<div class="pagination">
-		<span class="disabled prev_page">Previous</span>
-		<span class="current">1</span>
-		<a rel="next" href="/view/1?page=2">2</a>
-		<a href="/view/1?page=3">3</a>
-		......
-		<a href="/view/1?page=98">98</a>
-		<a href="/view/1?page=99">99</a>
-		<a rel="next" class="next_page" href="/view/1?page=2">Next</a>
-	</div>
+	<% end %>
 </div>
 <div class="search-box">
 	<div class="clear height-10"></div>

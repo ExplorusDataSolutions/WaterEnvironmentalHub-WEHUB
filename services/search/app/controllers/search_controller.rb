@@ -1,13 +1,16 @@
 class SearchController < ApplicationController
     
   def index
+
     query = 'all'
-    if params[:query] != nil && !params[:query].empty?
+    if !(params[:query].nil? || params[:query].empty?)
       query = params[:query]
     end
-
-    f = File.read('public/4.json')
-    @json = f.strip
+    if !(params[:keywords].nil? || params[:keywords].empty?)
+      if query == 'all'
+        query = params[:keywords]
+      end
+    end
 
     user_id = current_user.id
 
@@ -19,7 +22,7 @@ class SearchController < ApplicationController
       end
     end
 
-    @search = search_instance.do_query(params[:keywords], params[:datasets], user_id, group_ids)
+    @search = search_instance.do_query(query, params[:datasets], user_id, group_ids)
   end
     
   def info
