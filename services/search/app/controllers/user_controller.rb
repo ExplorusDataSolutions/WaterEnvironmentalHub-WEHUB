@@ -4,6 +4,8 @@ class UserController < ApplicationController
   respond_to :html, :only => [:sign_in, :groups, :register]
   respond_to :json, :except => :sign_in
 
+  before_filter :verify_logged_in, :only => [:groups, :profile, :save]
+  
   def socialnetwork
     if @socialnetwork.nil?
       @socialnetwork = EngineYTranslator.new(session)

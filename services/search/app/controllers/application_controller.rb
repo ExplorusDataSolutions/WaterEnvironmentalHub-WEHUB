@@ -53,5 +53,11 @@ class ApplicationController < ActionController::Base
     end
     results
   end
+  
+  def verify_logged_in
+    if current_user.nil?
+      redirect_to :controller => 'user', :action => 'sign_in'
+    end
+  end
 
 end

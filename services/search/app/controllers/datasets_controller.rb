@@ -1,5 +1,7 @@
 class DatasetsController < ApplicationController
 
+  before_filter :verify_logged_in
+  
   def create
     @breadcrumb = ['Community', 'Datasets']
     @main_menu = 'we_community'

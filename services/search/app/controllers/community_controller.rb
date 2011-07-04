@@ -1,12 +1,13 @@
 class CommunityController < ApplicationController
-
+  before_filter :verify_logged_in
+  
   def index
     @breadcrumb = ['Community']
     @main_menu = 'we_community'
   end
     
   def profile_activity
-    @breadcrumb = ['Profile', 'Kashif Anjum']
+    @breadcrumb = ['Profile']
     @main_menu = 'we_community'
   end
    
