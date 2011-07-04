@@ -12,13 +12,18 @@ class SearchController < ApplicationController
       end
     end
 
-    user_id = current_user.id
+    user_id = nil
+    group_ids = nil
+    
+    if !current_user.nil?
+      user_id = current_user.id
 
-    group_ids = []
-    groups = socialnetwork_instance.user_groups(user_id)
-    if !groups.nil?
-      groups.each do |group|
-        group_ids.push(group.id)
+      group_ids = []
+      groups = socialnetwork_instance.user_groups(user_id)
+      if !groups.nil?
+        groups.each do |group|
+          group_ids.push(group.id)
+        end
       end
     end
 
