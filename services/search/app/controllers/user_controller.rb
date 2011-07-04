@@ -87,7 +87,7 @@ class UserController < ApplicationController
     if request.post?
       if params[:id]
         catalogue_instance.add_recently_viewed(current_user.id, params[:id])
-        render :json => 'Success!'
+        render :nothing => true
       end
     end 
   end
@@ -96,7 +96,7 @@ class UserController < ApplicationController
     if request.post?
       if params[:ids]
         catalogue_instance.add_saved(current_user.id, params[:ids])
-        render :json => 'Success!'
+        render :nothing => true
       end
     end
   end
