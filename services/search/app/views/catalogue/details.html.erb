@@ -4,8 +4,8 @@
 
     $('#my-collection').click(function() {
       var ids = [];
-      ids.push('<%= @dataset.uuid %>')
-      $.post("<%= url_for :controller => 'user', :action => 'save' %>", { ids: ids }); 
+      ids.push('<%= @dataset.uuid %>');
+      $.post("<%= url_for :controller => 'user', :action => 'save' %>", { ids: ids }, function(data) { alert(data); });
     });    
 
   });

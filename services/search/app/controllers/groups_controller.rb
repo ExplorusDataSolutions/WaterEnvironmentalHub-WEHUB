@@ -8,8 +8,8 @@ class GroupsController < ApplicationController
       end
     end
 
-    @breadcrumb     = ['Groups','Edit']
-    @main_menu      = 'we_community'
+    @breadcrumb = ['Groups', 'Edit']
+    @main_menu = 'we_community'
 
     @group = socialnetwork_instance.group(params[:id])
     @members = socialnetwork_instance.group_members(params[:id])
@@ -42,8 +42,8 @@ class GroupsController < ApplicationController
   end
   
   def show
-    @breadcrumb     = ['WE Community','Groups']
-    @main_menu      = 'we_community'
+    @breadcrumb = ['Community','Groups']
+    @main_menu = 'we_community'
 
     @my_groups = socialnetwork_instance.user_groups(current_user.id)
     all_groups = socialnetwork_instance.groups_all

@@ -73,13 +73,16 @@
               <%= link_to 'Home', :root %>
 						</li>
 						<li class="<%= @main_menu == 'we_catalogue' ? 'selected' : ''%>">
-              <%= link_to 'WE Data Catalogue', :controller => 'search' %>
+              <%= link_to 'Water Data Catalogue', :controller => 'search' %>
 						</li>
 						<li class="<%= @main_menu == 'we_tools' ? 'selected' : ''%>">
-              <%= link_to 'WE Tools', :controller => 'tools' %>
+              <%= link_to 'Tools', :controller => 'tools' %>
 						</li>
 						<li class="<%= @main_menu == 'we_community' ? 'selected' : ''%>">
-              <%= link_to 'WE Community', :controller => 'community' %>
+              <%= link_to 'Community', :controller => 'community' %>
+						</li>
+						<li class="<%= @main_menu == 'api' ? 'selected' : ''%>">
+              <%= link_to 'API', :controller => 'api' %>
 						</li>
 						<li class="<%= @main_menu == 'about' ? 'selected' : ''%>">
               <%= link_to 'About', :controller => 'about' %>

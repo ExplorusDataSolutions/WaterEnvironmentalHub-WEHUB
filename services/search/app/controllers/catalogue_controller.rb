@@ -9,21 +9,21 @@ class CatalogueController < ApplicationController
 
   def details   
     @dataset = catalogue_instance.dataset(params[:id])
-    @breadcrumb = ['WE Catalogue', 'Detail View']
+    @breadcrumb = ['Water Data Catalogue', 'Detail View']
     @main_menu = 'we_catalogue'
     
     @rating = (4*138)/5; 
   end
   
   def comment    
-    @breadcrumb = ['WE Catalogue', 'Detail View']
+    @breadcrumb = ['Water Data Catalogue', 'Detail View']
     @main_menu = 'we_catalogue'
     
     @rating = (4*138)/5; 
   end
   
   def browse
-    @breadcrumb = ['WE Catalogue', 'Browse']
+    @breadcrumb = ['Water Data Catalogue', 'Browse']
     
     query = 'all'
     if params[:query] != nil

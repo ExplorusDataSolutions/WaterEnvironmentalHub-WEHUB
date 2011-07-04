@@ -1,13 +1,13 @@
 class DatasetsController < ApplicationController
 
   def create
-    @breadcrumb     = ['WE Community','Datasets']
-    @main_menu      = 'we_community'
+    @breadcrumb = ['Community', 'Datasets']
+    @main_menu = 'we_community'
   end  
 
   def show
-    @breadcrumb     = ['WE Community','Datasets']
-    @main_menu      = 'we_community'
+    @breadcrumb = ['Community', 'Datasets']
+    @main_menu = 'we_community'
 
     @my_datasets = my_datasets
     @friend_datasets = friend_datasets
