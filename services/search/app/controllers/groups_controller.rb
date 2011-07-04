@@ -1,5 +1,7 @@
 class GroupsController < ApplicationController
 
+  before_filter :verify_logged_in, :fetch_user_groups, :fetch_user_datasets, :fetch_profile
+  
   def edit
     if request.post?
       begin

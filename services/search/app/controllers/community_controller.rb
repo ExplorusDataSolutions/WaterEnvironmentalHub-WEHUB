@@ -1,5 +1,5 @@
 class CommunityController < ApplicationController
-  before_filter :verify_logged_in
+  before_filter :verify_logged_in, :fetch_user_groups, :fetch_user_datasets, :fetch_profile
   
   def index
     @breadcrumb = ['Community']
@@ -30,5 +30,5 @@ class CommunityController < ApplicationController
     @breadcrumb = ['Community','Groups']
     @main_menu = 'we_community'
   end
-  
+    
 end

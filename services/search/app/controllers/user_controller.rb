@@ -5,6 +5,8 @@ class UserController < ApplicationController
   respond_to :json, :except => :sign_in
 
   before_filter :verify_logged_in, :only => [:groups, :profile, :save]
+  before_filter :fetch_user_groups, :fetch_user_datasets, :fetch_profile, :only => [:profile]
+
   
   def socialnetwork
     if @socialnetwork.nil?

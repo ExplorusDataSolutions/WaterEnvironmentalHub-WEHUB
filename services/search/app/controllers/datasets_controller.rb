@@ -1,6 +1,6 @@
 class DatasetsController < ApplicationController
 
-  before_filter :verify_logged_in
+  before_filter :verify_logged_in, :fetch_user_groups, :fetch_user_datasets, :fetch_profile
   
   def create
     @breadcrumb = ['Community', 'Datasets']

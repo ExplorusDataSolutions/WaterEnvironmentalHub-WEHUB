@@ -63,11 +63,12 @@
 			<div class="clear"></div>
 			<div class="profile-label">email: <span class="edit" name="user[email]"><%= @profile.email %></span></div>
 			<div class="clear"></div>
-			<div class="profile-label">organization: <span class="edit" name="user[organization]"><%= @profile.organization %></span> <span class="edit" name="user[company_url]"><%= @profile.organization_url %></span></div>
+			<div class="profile-label">organization name: <span class="edit" name="user[organization]"><%= @profile.organization %></span></div>
+			<div class="clear"></div>			
+			<div class="profile-label">organization url: <span class="edit" name="user[company_url]"><%= @profile.organization_url %></span></div>
 			<div class="clear"></div>			
 			<div class="profile-label">occupation: <span class="edit" name="user[occupation]"><%= @profile.occupation %></span></div>
 			<div class="clear"></div>
-
 <% 
 =begin %>
 			<div class="speak-text profile-label">English, Punjabi, Urdu</div>
@@ -99,8 +100,6 @@
 			<div class="profile-content-para">
         Interest content				 
 			</div>
-<%
-=end %>
 			<div class="clear"></div>
 			<div class="profile-sub-head">
 				<div class="float-left">
@@ -127,6 +126,8 @@
         <% end %>
       <% end %>
 			</div>
+<%
+=end %>			
 		</div>
 		<% end %>
 		<div class="clear"></div>

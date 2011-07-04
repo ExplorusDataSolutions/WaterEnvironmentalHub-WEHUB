@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
       @user_saved_search_results = search_results_from_datasets(catalogue_instance.find_saved(current_user.id))
     end
   end
-
+  
   def current_user
     session[:user]
   end
@@ -59,5 +59,23 @@ class ApplicationController < ActionController::Base
       redirect_to :controller => 'user', :action => 'sign_in'
     end
   end
+
+  def fetch_user_groups
+    if !current_user.nil?
+      @user_profile_groups = socialnetwork_instance.user_groups(current_user.id)
+    end
+  end
+
+  def fetch_user_datasets
+    if !current_user.nil?
+      @user_profile_datasets = catalogue_instance.find_datasets_by_user(current_user.id)
+    end
+  end
+
+  def fetch_profile
+    if !current_user.nil?  
+      @profile = socialnetwork_instance.profile(current_user.id)
+    end
+  end  
 
 end
