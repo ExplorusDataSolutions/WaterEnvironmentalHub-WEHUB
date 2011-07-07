@@ -19,6 +19,8 @@ Catalogue::Application.routes.draw do
   match 'contact-us' => 'about#contact_us'
   match 'terms-of-service' => 'about#terms_of_service'
   match 'privacy' => 'about#privacy'
+  
+  match 'api/' => 'api#builder'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

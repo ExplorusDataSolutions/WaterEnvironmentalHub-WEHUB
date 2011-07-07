@@ -1,0 +1,73 @@
+<script>
+  $('document').ready(function() {
+  
+    var secondaries = $('[name=datasets], [name=info_type], [name=output], [name=commit]');
+    secondaries.attr('disabled', true);
+    
+    $('[name=feature_type]').change(function(event) {
+    
+      var featureTypeId = event.currentTarget.value;
+      var url = "<%= url_for :controller => 'api', :action => 'datasets' %>" + "?feature_type_id=" + featureTypeId + "&format=html";
+      
+      $.get(url, function(data) { 
+        secondaries.removeAttr('disabled');
+        $('[name=datasets]').html($(data).html()); 
+      });
+      
+    });
+    
+    $('[name=commit]').click(function(event) {
+      event.preventDefault();
+      $.get("<%= url_for :controller => 'api', :action => 'builder_response' %>", $('form').serialize(), function(data) {
+        $('#builder_response').show().html(data);
+      });
+    });
+  });
+</script>
+
+<style>
+form div {
+  padding-top: 10px;
+}
+#builder_result, #response div {
+  padding-top: 10px;
+}
+#response div > div {
+  padding-left: 10px;
+}
+#builder_response pre {
+  height: 300px;
+  overflow: scroll;
+  width: 1090px;
+}
+</style>
+<h3>
+WEHub API query builder
+</h3>
+
+<%= form_for :query_builder, :html => { :id => 'query_builder' } do |f| %>
+  <div>
+  <%= label_tag 'feature_type', 'Feature type' %>
+  <%= select_tag 'feature_type', options_from_collection_for_select(@feature_types, 'id', 'description'), { :include_blank => true } %>
+  </div>
+  <div>
+  <%= label_tag 'datasets', 'Dataset' %>
+  <%= select_tag 'datasets', nil, { :include_blank => true } %>
+  </div>
+  <div>
+  <%= label_tag 'info_type', 'Information Request' %>
+  <%= select_tag 'info_type', options_for_select([ ['Dataset Information', 'dataset'], ['Feature Data', 'feature'] ]), { :include_blank => true } %>
+  </div>
+  <div>
+  <%= label_tag 'output', 'Request Format' %>    
+  <%= select_tag 'output', options_for_select([ ['XML', 'xml'], ['JSON', 'json'] ]), { :include_blank => true } %>
+  </div>
+  <div>
+  <%= submit_tag 'Generate API call' %>
+  </div>
+<% end %>
+
+<div id="builder_response" style="display: none;">
+  <%= render 'builder_response' %>
+</div>
+

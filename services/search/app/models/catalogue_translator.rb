@@ -81,8 +81,28 @@ class CatalogueTranslator
     datasets
   end
 
+  def api_feature_types
+    feature_types = xml_to_mash(get("#{api_uri}/feature_types?format=xml"))['feature_types']
+  end
+
+  def api_datasets(feature_type_id)
+    datasets = xml_to_mash(get("#{api_uri}/datasets?feature_type_id=#{feature_type_id}&format=xml"))['datasets']
+  end
+  
+  def api_dataset_raw(dataset_id, format)
+    get("#{api_uri}/dataset?id=#{dataset_id}&format=#{format}")
+  end
+
+  def api_feature_raw(dataset_id, output)
+    get("#{api_uri}/feature?id=#{dataset_id}&output=#{output}")
+  end
+  
   def get(uri)
     Net::HTTP::get(URI.parse(uri))
+  end
+  
+  def api_uri
+    "#{url}/api"
   end
   
   def create_uri

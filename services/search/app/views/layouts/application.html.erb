@@ -24,13 +24,30 @@
 			.ui-widget-content {
 				font-size: 1em;
 			}
+      #loading-dialog {			
+		    position: absolute;
+        width: 100%;
+        height: 100%;
+        background: black url(/images/spinner.gif) center center no-repeat;
+        opacity: .2;
+      }
 		</style>
 	
-	<%#Focus the cursor on the first form input %>
+    <%#Focus the cursor on the first form input %>
     <script>
       $(document).ready(function() {
         $("input[type=text]:first").focus();
-      });    
+        
+        $('#loading-dialog')
+        .hide()  // hide it initially
+        .ajaxStart(function() {
+            $(this).show();
+        })
+        .ajaxStop(function() {
+            $(this).hide();
+        });
+
+      });
     </script>
 		<script>
 			$(document).ready(function() {
@@ -44,6 +61,7 @@
 				$( "a", ".button" ).click(function() { return false; });
 			});
 		</script>
+		
     <script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-24108125-1']);
@@ -59,6 +77,7 @@
     </script>		
 	</head>
 	<body>
+		<div id="loading-dialog" style="display: none;"></div>		
 		
 		<div id="main-body">
 			<div id="header-body" class="full-width">
@@ -155,6 +174,6 @@
 			
 			</div>
 			<div class="clear"></div>
-		</div>			
+		</div>
 	</body>
 </html>

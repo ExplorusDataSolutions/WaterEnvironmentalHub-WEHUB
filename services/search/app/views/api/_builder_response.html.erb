@@ -1,0 +1,18 @@
+
+<div id="response">
+  <div>
+    <strong>API Call</strong>
+    <div id="uri">
+      <% if @info_type == 'dataset' %>
+        <%= CGI.unescape(url_for :controller => 'api', :action => 'dataset', :id => "#{@datasets}?output=#{@output}", :only_path => false) %>      
+      <% else %>
+        <%= CGI.unescape(url_for :controller => 'api', :action => 'feature', :id => "#{@datasets}?output=#{@output}", :only_path => false) %>      
+      <% end %>
+
+    </div>
+  </div>
+  <div>
+    <strong>API Response</strong>
+    <div id="message"><pre><%= @response %></pre></div>
+  </div>
+</div>
