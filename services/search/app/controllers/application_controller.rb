@@ -49,7 +49,8 @@ class ApplicationController < ActionController::Base
   def search_results_from_datasets(datasets)
     results = []
     JSON.parse(datasets).each do |dataset| 
-      results.push(search_instance.info(dataset['dataset']['uuid']))
+      search_result = search_instance.info(dataset['dataset']['uuid'])
+      results.push(search_result) unless !search_result
     end
     results
   end
