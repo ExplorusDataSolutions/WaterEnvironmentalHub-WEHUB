@@ -72,8 +72,9 @@ class ItemsController < ApplicationController
     uploaded_file = params[:filename]
 
     if errors.empty?
-      filename = Rails.root.join('public', 'uploads', uploaded_file.original_filename)    
-      File.open(filename, 'wb') do |file|
+      filename = sanitize_filename(uploaded_file.original_filename)
+      filename_and_path = Rails.root.join('public', 'uploads', filename)
+      File.open(filename_and_path, 'wb') do |file|
         file.write(uploaded_file.read)
       end
       
@@ -83,7 +84,7 @@ class ItemsController < ApplicationController
         owner = owner(params[:owner])
         author = author(params[:author])
         begin
-          dataset.feature.create(uploaded_file.original_filename)
+          dataset.feature.create(filename)
           dataset.owner = owner
           dataset.author = author
           dataset.save
@@ -230,6 +231,17 @@ class ItemsController < ApplicationController
     dataset_params[:feature_source] = FeatureSource.find_by_name('catalogue')
 
     dataset_params
+  end
+  
+  def sanitize_filename(filename)
+    filename.strip.tap do |name|
+      # NOTE: File.basename doesn't work right with Windows paths on Unix
+      # get only the filename, not the whole path
+      name.sub! /\A.*(\\|\/)/, ''
+      # Finally, replace all non alphanumeric, underscore
+      # or periods with underscore
+      name.gsub! /[^\w\.\-]/, '_'
+    end
   end
     
 end
