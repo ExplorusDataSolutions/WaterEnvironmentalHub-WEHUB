@@ -1,3 +1,4 @@
+<% if (params[:id].nil? || params[:id] == current_user.id) %>
 <script>
   $(document).ready(function() {
 
@@ -10,7 +11,8 @@
     }
     $('.edit').editable(function(value, settings) { return serializeToParams(value, settings, this); }, {
       indicator : '<img src="img/indicator.gif">',      
-      style: 'inherit'
+      style: 'inherit', 
+      submit: 'OK'
     });
     $('.edit-textarea').editable(function(value, settings) { return serializeToParams(value, settings, this); }, {
       type: 'textarea',
@@ -19,12 +21,13 @@
     });
   });
 </script>
+<% end %>
 
 <%= render '/shared/left_panel' %>
 
 <div class="profile-right-container">
 	<div class="profile-tab-container">
-		<div class="profile-tab profile-tab-select">
+		<div class="profile-tab profile-tab-select" style="visibility: hidden;">
 			Info
 		</div>
 <%
@@ -47,10 +50,12 @@
 		</div>
 		<div class="profile-content-details">
 			<div class="profile-title-head"><span class="edit" name="user[first_name]" style="display: inline;"><%= @profile.first_name %></span> <span class="edit" name="user[last_name]"><%= @profile.last_name %></span></div>
+      <% if (params[:id].nil? || params[:id] == current_user.id) %>
 			<div class="float-right">
 				Click on fields to edit
 			</div>
 			<div class="clear"></div>
+			<% end %>
 <%
 =begin %>
 			<div class="calendar-text profile-label">Born on August 25, 1984</div>
@@ -77,7 +82,7 @@
 =end %>
 			<div class="profile-sub-head">
 				<div class="float-left">
-					About me
+					About
 				</div>
 				<div class="clear"></div>				
 			</div>

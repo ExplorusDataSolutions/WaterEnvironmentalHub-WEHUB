@@ -74,7 +74,7 @@ class UserController < ApplicationController
       end
       render :text => params['value']
     else
-      @profile = socialnetwork_instance.profile(current_user.id)
+      @profile = socialnetwork_instance.profile(params[:id].nil? ? current_user.id : params[:id])
       @breadcrumb = ['My Profile']
       @main_menu = 'we_community'
     end    
