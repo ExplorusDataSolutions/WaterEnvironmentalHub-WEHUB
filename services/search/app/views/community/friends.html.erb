@@ -1,3 +1,29 @@
+<script>
+  $(document).ready(function() {
+    function eventId(event) { return event.target.id }
+    $('#all-users, #my-friends').click(function(event) {
+      event.preventDefault();
+      var selectedClassName = 'selected';
+      $('.share-middle-filter').children().removeClass(selectedClassName)
+      switch (eventId(event))
+      {
+        case 'all-users': 
+          $('#users').show();
+          $('#friends').hide();
+          $('#all-users').addClass(selectedClassName);
+          break;
+        case 'my-friends': 
+          $('#friends').show();
+          $('#users').hide();
+          $('#my-friends').addClass(selectedClassName);
+          break;
+        break;
+        default:
+      }
+    });
+  });
+</script>
+
 <%= render '/shared/left_panel' %>
 
 <div class="profile-right-container">
@@ -9,16 +35,13 @@
 	</div>
 	<div class="clear"></div>
 	<div class="profile-content-container">
-		<div class="community-sub-tab-ul">
-			<ul>
-				<li class="selected border-background">
-					<a href="#">Find Friends</a>
-				</li>
-				<li>
-					<a href="#">Edit Current Friends</a>
-				</li>
-			</ul>
+		<div class="share-middle-filter">
+				<a id="all-users" class="selected" href="#">All Users</a>
+				<a id="my-friends" href="#">My Friends</a>
 		</div>
+
+<%
+=begin %>		
 		<div class="clear"></div>
 		<div class="share-search-box">
 			
@@ -38,12 +61,21 @@
 				</div>
 				<div class="clear"></div>
 			</div>
-			
 		</div>
 		<div class="clear height-10"></div>
 		<div class="border-dotted"></div>
-		<div class="clear height-10"></div>
-		
+<%
+=end %>			
+		<div class="clear height-10"></div>		
+
+    <div id="users">
+    <%= render(:partial => 'user', :collection => @users) %>
+    </div>
+    
+    <div id="friends" style="display: none;">
+    <%= render(:partial => 'user', :collection => @friends) %>
+    </div>
+    
 <% 
 =begin %>
 		<div class="activity-content-box">

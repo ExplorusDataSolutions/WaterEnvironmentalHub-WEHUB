@@ -1,0 +1,37 @@
+<div class="activity-content-box">
+
+<%
+=begin %>			
+	<div class="activity-image">
+		<img src="/images/friends/pro-kashif.jpg" alt="Activity" title="Activity" border="0" />
+	</div>
+<%
+=end %>			
+
+	<div class="share-text">
+		<div class="title">
+			<%= link_to user.name, { :controller => 'user', :action => 'profile', :id => user.id } %>
+		</div>
+		<div class="">
+			<span class="head">Datasets: </span>
+			<span class="content-text">IP3</span>
+			<span class="content-text">Apline</span>
+		</div>
+
+<%
+=begin %>
+		<div class="">
+			<span class="head">Groups:</span>
+			<span class="content-text">Waterworks</span>
+		</div>
+<%
+
+=end %>				
+	</div>
+	<div class="float-right">
+    <%= link_to image_tag('add-friend-button.jpg', :alt => 'Create new account' ), { :controller => 'user', :action => 'befriend', :id => user.id } %>
+	</div>
+	<div class="clear"></div>
+</div>
+<div class="clear"></div>		
+

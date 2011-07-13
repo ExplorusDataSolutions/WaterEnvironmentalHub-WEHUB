@@ -77,9 +77,18 @@ class EngineYTranslator
   end
   
   def friends(user_id)
-    friends = profile(user_id)['friend']
+    xml_to_mash(get("#{friends_uri}/index?user_id=#{user_id}&format=xml"))['users']
+  end
+    
+  def friend_add(friend_id)
+    post_json("#{friends_uri}/create", { :friend_id => friend_id })
+    post_json("#{friends_uri}/update", { :id => friend_id })
   end
 
+  def users
+    xml_to_mash(get("#{profile_uri}?format=xml"))['users']
+  end
+  
   def profile(user_id)
     xml_to_mash(get("#{profile_uri}/#{user_id}?format=xml"))['user']
   end
