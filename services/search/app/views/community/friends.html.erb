@@ -69,11 +69,11 @@
 		<div class="clear height-10"></div>		
 
     <div id="users">
-    <%= render(:partial => 'user', :collection => @users) %>
+    <%= render(:partial => 'user', :collection => @users, :locals => { :edit => false }) || render('no_users') %>
     </div>
     
     <div id="friends" style="display: none;">
-    <%= render(:partial => 'user', :collection => @friends) %>
+    <%= render(:partial => 'user', :collection => @friends, :locals => { :edit => true }) || render('no_users') %>
     </div>
     
 <% 

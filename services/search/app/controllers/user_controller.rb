@@ -104,5 +104,12 @@ class UserController < ApplicationController
       redirect_to :controller => 'community', :action => 'friends'
     end
   end
+
+  def unfriend
+    if params[:id]
+      socialnetwork_instance.friend_remove(current_user.id, params[:id])
+      redirect_to :controller => 'community', :action => 'friends'
+    end
+  end
         
 end

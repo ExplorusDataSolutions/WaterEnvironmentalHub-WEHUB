@@ -32,7 +32,11 @@
 =end %>				
 	</div>
 	<div class="float-right">
-    <%= link_to image_tag('add-friend-button.jpg', :alt => 'Create new account' ), { :controller => 'user', :action => 'befriend', :id => user.id } %>
+    <% if !edit %>
+    <%= link_to image_tag('add-friend-button.jpg', :alt => 'Add Friend' ), { :controller => 'user', :action => 'befriend', :id => user.id } %>
+    <% else %>
+    <%= link_to image_tag('remove-friend-button.jpg', :alt => 'Remove Friend' ), { :controller => 'user', :action => 'unfriend', :id => user.id } %>
+    <% end %>
 	</div>
 	<div class="clear"></div>
 </div>

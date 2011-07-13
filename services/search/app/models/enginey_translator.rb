@@ -84,6 +84,13 @@ class EngineYTranslator
     post_json("#{friends_uri}/create", { :friend_id => friend_id })
     post_json("#{friends_uri}/update", { :id => friend_id })
   end
+  
+  def friend_remove(user_id, friend_id)
+    begin
+      post_json("#{friends_uri}/destroy", { :user_id => user_id, :id => friend_id })
+    rescue
+    end
+  end
 
   def users
     xml_to_mash(get("#{profile_uri}?format=xml"))['users']

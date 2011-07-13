@@ -19,10 +19,10 @@ class CommunityController < ApplicationController
     friends = socialnetwork_instance.friends(current_user.id)
     
     filtered_user_ids = []
-    users.each { |u| filtered_user_ids.push(u.id) }
+    users.each { |u| filtered_user_ids.push(u.id) } unless users.nil?
     
     friend_ids = []
-    friends.each { |u| friend_ids.push(u.id) }
+    friends.each { |u| friend_ids.push(u.id) } unless friends.nil?
     
     filtered_user_ids = (friend_ids | filtered_user_ids) - friend_ids - [current_user.id.to_s]
     
@@ -35,7 +35,7 @@ class CommunityController < ApplicationController
         end
         @users.push(user)
       end
-    end
+    end unless users.nil?
     
     @friends = []
     friends.each do |friend|
@@ -44,7 +44,7 @@ class CommunityController < ApplicationController
         friend.datasets = datasets
       end
       @friends.push(friend)
-    end
+    end unless friends.nil?
 
   end
   
