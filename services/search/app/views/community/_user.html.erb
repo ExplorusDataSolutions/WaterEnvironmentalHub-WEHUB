@@ -12,11 +12,14 @@
 		<div class="title">
 			<%= link_to user.name, { :controller => 'user', :action => 'profile', :id => user.id } %>
 		</div>
+		<% if user.datasets %>
 		<div class="">
 			<span class="head">Datasets: </span>
-			<span class="content-text">IP3</span>
-			<span class="content-text">Apline</span>
+		  <% user.datasets.each do |dataset| %>
+			<span class="content-text"><%= link_to dataset.name, :controller => 'catalogue', :action => 'details', :id => dataset.uuid %></span>
+			<% end %>
 		</div>
+		<% end %>
 
 <%
 =begin %>
