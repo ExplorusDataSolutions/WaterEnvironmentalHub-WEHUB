@@ -21,7 +21,7 @@
         <%= current_user.email %>
 			</td>
 		</tr>
-		<% if !@profile.nil? %>
+		<% if @profile && @profile.organization %>
 		<tr>
 			<td align="left">
 				Organization:
@@ -78,14 +78,13 @@
 			</td>
 			<td align="left" class="font-bold">
       <%
-        dataset_names = []
-        @user_profile_datasets.each { |dataset| dataset_names.push(dataset.name) }
-        
-        if !dataset_names.empty?
+        if @user_profile_datasets
+          @user_profile_datasets.each do |dataset|
       %>
-      <%= dataset_names.join(', ') %>
-      <%
-        end 
+      <%= link_to dataset.name, :controller => 'catalogue', :action => 'details', :id => dataset.uuid %>
+      <%    
+          end        
+        end
       %>
 			</td>
 		</tr>
