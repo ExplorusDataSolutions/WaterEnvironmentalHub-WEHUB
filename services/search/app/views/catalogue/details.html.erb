@@ -10,6 +10,57 @@
 
   });
 </script>
+<style>
+.format-selector {
+  font-size: 0.8em;
+  margin-left: -361px;
+  margin-top: 34px;
+  padding: 1px 8px;
+  position: fixed;
+  z-index: 100;
+}
+</style>
+<script>
+  $(document).ready(function() {
+
+    $('button').button();
+
+    function download() {
+      var format = $('[name=download-format]:checked').val();
+      window.location = '/item/download/?ids=' + ['<%= params[:id] %>'] + '&format=' + format;
+    }
+      
+    var formatSelector = $('.format-selector');  
+    function bindDownloadButtonset() {
+      formatSelector.buttonset();    
+
+      $('button[name=download]')
+        .button()
+        .click(function() {
+          formatSelector.hide();
+          download();
+        })
+        .next()
+          .button({ text: false, icons: { primary: 'ui-icon-triangle-1-s' }})
+          .click(function() { 
+            formatSelector.toggle();
+           })
+          .parent()
+            .buttonset();
+            
+      $('[name=download-format]')
+        .click(function() {
+          formatSelector.hide();
+          download();
+        });
+    }
+    bindDownloadButtonset()
+    
+    $('.tab-download').click(function() {
+      formatSelector.show();
+    });
+  }); 
+</script>
 
 <div class="top-back-link">
 		<a href="#" onclick="history.go(-1);return false;">Back to Search Results</a>
@@ -25,10 +76,20 @@
 <% if logged_in? %>
 	<div class="top-container-tab" id="my-collection">+ My collection</div>
 <% end %>
-	<div class="top-container-tab">
-		<div class="float-left tab-download">Download</div><div class="float-left tab-download-arrow"></div>
+	<div class="top-container-tab tab-download">
+		<div class="float-left">Download</div>
+		<div class="float-left tab-download-arrow"></div>		
 	</div>
-</div><div class="clear"></div>
+
+  <span class="format-selector ui-widget-content ui-corner-all ui-state-active" style="display: none;">
+    Select format
+    <% ['JSON', 'Shape', 'XML', 'CSV'].each do |format| %>
+      <%= label_tag "download-format[#{format}]", format %><%= radio_button_tag 'download-format', format %>
+    <% end %>
+  </span>
+	
+</div>
+<div class="clear"></div>
 	
 <div class="clear"></div>
 
