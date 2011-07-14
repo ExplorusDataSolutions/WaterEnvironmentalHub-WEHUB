@@ -1,38 +1,37 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<title>The Water and Environment Hub (WEHUB)</title>
-		<%= stylesheet_link_tag :all %>
-			
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script> 
-		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script> 
-		<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<%= request.host.match(/.com/).nil? ? "ABQIAAAAR7kR54BVDlqWYhWz74JPDRQ8L4VBsBHgHeJ-srDO_I7KY1F7mhQWPkhkhvU2koeT204050fgQfZG_Q" : "ABQIAAAAR7kR54BVDlqWYhWz74JPDRT2QunhdNtCIqhxNn0_ePlj6WPkcxTMd2Y3sgfD4XHHNqJXsLa2_Awv_A" %>"  type="text/javascript"></script>
-		<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
-		<script src="http://clients.multimap.com/API/maps/1.1/metacarta_04"></script>
-		<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"/>
+    <title>The Water and Environment Hub (WEHUB)</title>
+    <%= stylesheet_link_tag :all %>
+	
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script> 
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script> 
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<%= request.host.match(/.com/).nil? ? "ABQIAAAAR7kR54BVDlqWYhWz74JPDRQ8L4VBsBHgHeJ-srDO_I7KY1F7mhQWPkhkhvU2koeT204050fgQfZG_Q" : "ABQIAAAAR7kR54BVDlqWYhWz74JPDRT2QunhdNtCIqhxNn0_ePlj6WPkcxTMd2Y3sgfD4XHHNqJXsLa2_Awv_A" %>"  type="text/javascript"></script>
+    <meta name="google-site-verification" content="Z1ebLl5nbx8o6c-Nry4ZY7dh6_bE7M4XXqKghYEHHmM" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"/>
 
-		<%= javascript_include_tag :all %>
-		<%= csrf_meta_tag %>
-		
-		<style>
-			#dialog-modal {
-				font-size: .8em;
-			}
-			#dialog-modal span {
-				font-weight: bold;
-			}
-			.ui-widget-content {
-				font-size: 1em;
-			}
+    <%= javascript_include_tag :all %>
+    <%= csrf_meta_tag %>
+
+    <style>
+      #dialog-modal {
+        font-size: .8em;
+      }
+      #dialog-modal span {
+        font-weight: bold;
+      }
+      .ui-widget-content {
+        font-size: 1em;
+      }
       #loading-dialog {			
-		    position: absolute;
+        position: absolute;
         width: 100%;
         height: 100%;
         background: black url(/images/spinner.gif) center center no-repeat;
         opacity: .2;
       }
-		</style>
-	
+    </style>
+
     <%#Focus the cursor on the first form input %>
     <script>
       $(document).ready(function() {
@@ -49,19 +48,19 @@
 
       });
     </script>
-		<script>
-			$(document).ready(function() {
-				var tabMenu = $('#tabs');
-				tabMenu.tabs({
-				selected: 1
-				});
-			});
-			$(function() {
-				$( "button, input:submit, a", ".button" ).button();
-				$( "a", ".button" ).click(function() { return false; });
-			});
-		</script>
-		
+    <script>
+      $(document).ready(function() {
+        var tabMenu = $('#tabs');
+        tabMenu.tabs({
+        selected: 1
+        });
+      });
+      $(function() {
+        $( "button, input:submit, a", ".button" ).button();
+        $( "a", ".button" ).click(function() { return false; });
+      });
+    </script>
+
     <script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-19174368-1']);
@@ -76,104 +75,104 @@
       })();
     </script>		
 	</head>
-	<body>
-		<div id="loading-dialog" style="display: none;"></div>		
-		
-		<div id="main-body">
-			<div id="header-body" class="full-width">
+  <body>
+	  <div id="loading-dialog" style="display: none;"></div>		
+	
+	  <div id="main-body">
+		  <div id="header-body" class="full-width">
 
         <%= render 'shared/user_dashboard' %>
 
-				<div class="clear"></div>
-				<a href="<%= url_for :root %>"><div class="header-logo"></div></a>
-				<div class="header-tab">
-					<ul>
-						<li class="<%= @main_menu == 'home' ? 'selected' : ''%>">
+			  <div class="clear"></div>
+			  <a href="<%= url_for :root %>"><div class="header-logo"></div></a>
+			  <div class="header-tab">
+				  <ul>
+					  <li class="<%= @main_menu == 'home' ? 'selected' : ''%>">
               <%= link_to 'Home', :root %>
-						</li>
-						<li class="<%= @main_menu == 'we_catalogue' ? 'selected' : ''%>">
+					  </li>
+					  <li class="<%= @main_menu == 'we_catalogue' ? 'selected' : ''%>">
               <%= link_to 'Water Data Catalogue', :controller => 'search' %>
-						</li>
-						<li class="<%= @main_menu == 'we_tools' ? 'selected' : ''%>">
+					  </li>
+					  <li class="<%= @main_menu == 'we_tools' ? 'selected' : ''%>">
               <%= link_to 'Tools', :controller => 'tools' %>
-						</li>
-						<li class="<%= @main_menu == 'we_community' ? 'selected' : ''%>">
+					  </li>
+					  <li class="<%= @main_menu == 'we_community' ? 'selected' : ''%>">
               <%= link_to 'Community', :controller => 'community' %>
-						</li>
-						<li class="<%= @main_menu == 'api' ? 'selected' : ''%>">
+					  </li>
+					  <li class="<%= @main_menu == 'api' ? 'selected' : ''%>">
               <%= link_to 'API', :controller => 'api' %>
-						</li>
-						<li class="<%= @main_menu == 'about' ? 'selected' : ''%>">
+					  </li>
+					  <li class="<%= @main_menu == 'about' ? 'selected' : ''%>">
               <%= link_to 'About', :controller => 'about' %>
-						</li>
-						<li class="no-border <%= @main_menu == 'contact_us' ? 'selected' : ''%>">
+					  </li>
+					  <li class="no-border <%= @main_menu == 'contact_us' ? 'selected' : ''%>">
               <%= link_to 'Contact Us', :controller => 'about', :action => 'contact_us' %>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<div class="clear"></div>
-			<div id="content-body">
-				<div class="content full-width">
-					<% 
-					
-					if !@breadcrumb.nil?
-						breadcrumb_length		=	@breadcrumb.length
-						cnt						=	1
-					%>
-					<div class="breadcrumb-body">
-						<% 
-						@breadcrumb.each do|breadcrumb|
-							
-						%>
-						<span <%=  (cnt == breadcrumb_length) ? "class='breadcrumb-select'" : '' %>><%= breadcrumb%></span>
-						<% if breadcrumb_length != cnt%>
-						<span class="braedcrumb-sep">></span>
-						<% end%>
-						<% 
-						cnt += 1
-						end
-						%>
-					</div>
-					<div class="clear"></div>
-					<% end%>
-					
-					<!-- content -->  
-					<div class="yield-body">    
-					<%= yield %>
-					</div>
-					<!-- end of content -->   
+					  </li>
+				  </ul>
+			  </div>
+		  </div>
+		  <div class="clear"></div>
+		  <div id="content-body">
+			  <div class="content full-width">
+				  <% 
+				
+				  if !@breadcrumb.nil?
+					  breadcrumb_length		=	@breadcrumb.length
+					  cnt						=	1
+				  %>
+				  <div class="breadcrumb-body">
+					  <% 
+					  @breadcrumb.each do|breadcrumb|
+						
+					  %>
+					  <span <%=  (cnt == breadcrumb_length) ? "class='breadcrumb-select'" : '' %>><%= breadcrumb%></span>
+					  <% if breadcrumb_length != cnt%>
+					  <span class="braedcrumb-sep">></span>
+					  <% end%>
+					  <% 
+					  cnt += 1
+					  end
+					  %>
+				  </div>
+				  <div class="clear"></div>
+				  <% end%>
+				
+				  <!-- content -->  
+				  <div class="yield-body">    
+				  <%= yield %>
+				  </div>
+				  <!-- end of content -->   
 
-				</div>
-			</div>
-			<div class="clear"></div>
-			<div id="footer-body">       
-				<div class="footer-content full-width">
+			  </div>
+		  </div>
+		  <div class="clear"></div>
+		  <div id="footer-body">       
+			  <div class="footer-content full-width">
           <iframe src="http://www.facebook.com/plugins/like.php?href=<%= request.url %>" scrolling="no" frameborder="0" style="border:none; width:300px; height:27px; float:right;"></iframe>
           <div style="clear:both;"></div>
           <%= image_tag('partners-650.png', :alt => 'Partners', :style => "width: 650px; float: right") %>
           <%= image_tag('logo-footer.jpg', :alt => 'WE Hub logo', :style => "padding-top: 4px; float: left;") %>
-					<div style="width:400px; height:36px; padding-top: 8px; float: left;">
-						<ul>
-							<li>
+				  <div style="width:400px; height:36px; padding-top: 8px; float: left;">
+					  <ul>
+						  <li>
                 <%= link_to "Terms of Service", :controller => "about", :action => "terms_of_service" %>
-							</li>
-							<li>
+						  </li>
+						  <li>
                 <%= link_to "Privacy", :controller => "about", :action => "privacy" %>
-							</li>
-							<li class="no-border">
+						  </li>
+						  <li class="no-border">
                 <%= link_to "About", :controller => "about", :action => "index" %>
-							</li>
-						</ul>
-						<div class="clear" style="padding-left: 10px;">
-						&copy; 2010-2011 WeHub Inc. All rights reserved.
-						</div>
-					</div>
-					<div class="clear"></div>
-				</div>
-			
-			</div>
-			<div class="clear"></div>
-		</div>
-	</body>
+						  </li>
+					  </ul>
+					  <div class="clear" style="padding-left: 10px;">
+					  &copy; 2010-2011 WeHub Inc. All rights reserved.
+					  </div>
+				  </div>
+				  <div class="clear"></div>
+			  </div>
+		
+		  </div>
+		  <div class="clear"></div>
+	  </div>
+  </body>
 </html>
