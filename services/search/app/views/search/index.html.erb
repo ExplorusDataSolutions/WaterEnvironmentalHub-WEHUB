@@ -48,9 +48,9 @@
       feature.data.popupContentHTML = html;
       feature.data.overflow = "hidden";
 
-      var size = new OpenLayers.Size(21, 25);
+      var size = new OpenLayers.Size(20, 34);
       var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-      var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker-blue.png', size, offset);   
+      var icon = new OpenLayers.Icon('/images/marker-blue.png', size, offset);   
       var marker = new OpenLayers.Marker(lonLatMarker, icon.clone());
 
       marker.feature = feature;
@@ -58,6 +58,7 @@
       var markerClick = function(evt) {
           if (this.popup == null) {
               this.popup = this.createPopup(this.closeBox);
+              this.popup.autoSize = true;
               map.addPopup(this.popup);
               this.popup.show();
           } else {
