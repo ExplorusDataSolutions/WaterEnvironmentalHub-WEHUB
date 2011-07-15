@@ -936,13 +936,13 @@ a{
 	margin:0 65px 0 25px;
 }
 .right-container-left-body .title{
-	color:#424242;
+	color:#000;
 	font-weight:bold;
 	font-size:14px;
 	line-height:1.5em;
 }
 .right-container-left-body .text{
-	color:#6C6D6D;
+	color:#424242;
 	font-size:14px;
 	line-height:1.5em;
 }
