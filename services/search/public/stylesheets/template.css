@@ -937,11 +937,12 @@ a{
 }
 .right-container-left-body .title{
 	color:#424242;
+	font-weight:bold;
 	font-size:14px;
 	line-height:1.5em;
 }
 .right-container-left-body .text{
-	color:#C1C1C3;
+	color:#6C6D6D;
 	font-size:14px;
 	line-height:1.5em;
 }
