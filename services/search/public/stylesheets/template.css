@@ -311,7 +311,7 @@ a{
 	float:right;
 	/*width:830px;*/
 }
-#header-body .header-tab ul{
+#header-body .header-tab > ul{
 	list-style: none;
 	float:right;
 	padding-top:30px;
@@ -336,6 +336,17 @@ a{
 #header-body .header-tab li a:hover{
 	text-decoration:none;
 	color:#43AD49;
+}
+ul.catalogue-menu {
+  position: absolute;
+  padding: 3px 0px 0px 0px;
+  width: 158px;
+}
+ul.catalogue-menu li {
+  clear: both;
+  margin: 0px;
+  list-style: none;
+  border: none !important;
 }
 #content-body{
 	background: #FFFFFF url(/images/bg-repeat.jpg) repeat-x;

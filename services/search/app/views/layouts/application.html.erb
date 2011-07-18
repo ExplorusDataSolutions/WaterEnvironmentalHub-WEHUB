@@ -73,7 +73,16 @@
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
-    </script>		
+    </script>
+    <script>
+      $('document').ready(function() {
+        $('#catalogue').click(function(event) {
+          event.preventDefault();
+          $('.catalogue-menu').slideToggle('fast');
+        });
+      });
+    </script>
+    
 	</head>
   <body>
 	  <div id="loading-dialog" style="display: none;"></div>		
@@ -91,7 +100,11 @@
               <%= link_to 'Home', :root %>
 					  </li>
 					  <li class="<%= @main_menu == 'we_catalogue' ? 'selected' : ''%>">
-              <%= link_to 'Water Data Catalogue', :controller => 'search' %>
+              <%= link_to 'Water Data Catalogue', {:controller => 'search'}, :id => 'catalogue' %>
+              <ul class="catalogue-menu" style="display: none;">
+                <li><%= link_to 'Browse', {:controller => 'catalogue', :action =>  'browse'}, :title => 'Browse our catalogue' %></li>
+                <li><%= link_to 'Search', {:controller => 'search'}, :title => 'Search our catalogue' %></li>
+              </ul>              
 					  </li>
 					  <li class="<%= @main_menu == 'we_tools' ? 'selected' : ''%>">
               <%= link_to 'Tools', :controller => 'tools' %>
