@@ -1,10 +1,18 @@
+<script>
+  $('document').ready(function() {
+    $("#dataset-navigation").treeview({
+      persist: "location",
+      unique: true
+    });
+  });
+</script>
 <div class="search-box">
 	<div class="dataset-head">
 		Data Sets
 	</div>
 	<div class="clear"></div>
 	<ul id="dataset-navigation"> 
-		<li>Base Data
+		<li class="closed">Base Data
 		  <ul>
 		<% @search.base_data.each_with_index do |result, index| %>         
 		    <li><%= link_to result.name, :controller => 'catalogue', :action => 'details', :id => result.id %></li>

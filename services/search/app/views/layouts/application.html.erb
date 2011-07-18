@@ -14,12 +14,6 @@
     <%= csrf_meta_tag %>
 
     <style>
-      #dialog-modal {
-        font-size: .8em;
-      }
-      #dialog-modal span {
-        font-weight: bold;
-      }
       .ui-widget-content {
         font-size: 1em;
       }
@@ -45,19 +39,12 @@
         .ajaxStop(function() {
             $(this).hide();
         });
-
       });
     </script>
     <script>
-      $(document).ready(function() {
-        var tabMenu = $('#tabs');
-        tabMenu.tabs({
-        selected: 1
-        });
-      });
       $(function() {
-        $( "button, input:submit, a", ".button" ).button();
-        $( "a", ".button" ).click(function() { return false; });
+        $("button, input:submit, a", ".button").button();
+        $("a", ".button").click(function() { return false; });
       });
     </script>
 
