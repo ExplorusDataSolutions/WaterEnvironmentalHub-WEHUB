@@ -114,41 +114,27 @@
 		  <div class="clear"></div>
 		  <div id="content-body">
 			  <div class="content full-width">
-				  <% 
-				
-				  if !@breadcrumb.nil?
-					  breadcrumb_length		=	@breadcrumb.length
-					  cnt						=	1
-				  %>
+          <iframe src="http://www.facebook.com/plugins/like.php?href=<%= request.url %>" scrolling="no" frameborder="0" style="border:none; width:300px; height:27px; float:right;"></iframe>
+    		  <div class="clear"></div>          
+				  <% if @breadcrumb %>				  
 				  <div class="breadcrumb-body">
-					  <% 
-					  @breadcrumb.each do|breadcrumb|
-						
-					  %>
-					  <span <%=  (cnt == breadcrumb_length) ? "class='breadcrumb-select'" : '' %>><%= breadcrumb%></span>
-					  <% if breadcrumb_length != cnt%>
+					  <% @breadcrumb.each_with_index do |breadcrumb, index| %>
+					  <span class="<%=  (index == @breadcrumb.length-1) ? "breadcrumb-select" : "" %>"><%= breadcrumb%></span>
+  					  <% if index != @breadcrumb.length-1 %>
 					  <span class="braedcrumb-sep">></span>
-					  <% end%>
-					  <% 
-					  cnt += 1
-					  end
-					  %>
-				  </div>
+	  				  <% end %>
+					  <% end %>
+				  </div>				  
 				  <div class="clear"></div>
 				  <% end%>
 				
-				  <!-- content -->  
-				  <div class="yield-body">    
-				  <%= yield %>
-				  </div>
-				  <!-- end of content -->   
+				  <div class="yield-body"><%= yield %></div>
 
 			  </div>
 		  </div>
 		  <div class="clear"></div>
 		  <div id="footer-body">       
 			  <div class="footer-content full-width">
-          <iframe src="http://www.facebook.com/plugins/like.php?href=<%= request.url %>" scrolling="no" frameborder="0" style="border:none; width:300px; height:27px; float:right;"></iframe>
           <div style="clear:both;"></div>
           <%= image_tag('partners-650.png', :alt => 'Partners', :style => "width: 650px; float: right") %>
           <%= image_tag('logo-footer.jpg', :alt => 'WE Hub logo', :style => "padding-top: 4px; float: left;") %>

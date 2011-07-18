@@ -342,7 +342,7 @@ a{
 	text-align:center;
 }
 #content-body .content{
-	padding:30px 10px;
+	padding:10px 10px;
 	text-align:left;
 	margin:0 auto;
 }
@@ -376,7 +376,7 @@ a{
 	color:#C4C9CC;
 }
 .breadcrumb-body{
-	margin:13px 0 0 0;
+	margin:0;
 	padding:6px 10px 0 10px;
 	/*width:1090px;*/
 	height:30px;
