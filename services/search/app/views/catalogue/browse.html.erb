@@ -11,21 +11,55 @@
 		Data Sets
 	</div>
 	<div class="clear"></div>
-	<ul id="dataset-navigation"> 
+	<ul id="dataset-navigation" class="filetree"> 
 		<li class="closed">Base Data
-		  <ul>
-		<% @search.base_data.each_with_index do |result, index| %>         
-		    <li><%= link_to result.name, :controller => 'catalogue', :action => 'details', :id => result.id %></li>
+		  <ul class="filetree">		  
+		<% @base_data.each do |key, value| %>
+		  <% if value.is_a?(Array) && key != 'non_grouped' %>
+		    <% if !value.empty?  %>
+  		  <li class="closed">
+		      <span class="folder"><%= key %></span>
+		      <ul>
+		        <% value.each do |result| %>
+    		    <li><span class="file"><%= link_to result.name, :controller => 'catalogue', :action => 'details', :id => result.id %></span></li>
+    		    <% end %>
+		      </ul>
+  	    </li>
+	      <% end %>
+		  <% else %>
+		    <li>
+        <% value.each do |result| %>
+          <span class="file"><%= link_to result.name, :controller => 'catalogue', :action => 'details', :id => result.id %></span>
+		    <% end %>
+  	    </li>
+	    <% end %>
 		<% end %>
 		  </ul>
 		</li>
 		<li class="closed">Observation Data
-		  <ul>
-		<% @search.observation_data.each_with_index do |result, index| %>         
-		    <li><%= link_to result.name, :controller => 'catalogue', :action => 'details', :id => result.id %></li>
+		  <ul class="filetree">
+		<% @observation_data.each do |key, value| %>
+		  <% if value.is_a?(Array) && key != 'non_grouped' %>
+		    <% if !value.empty?  %>
+  		  <li class="closed">
+		      <span class="folder"><%= key %></span>
+		      <ul>
+		        <% value.each do |result| %>
+    		    <li><span class="file"><%= link_to result.name, :controller => 'catalogue', :action => 'details', :id => result.id %></span></li>
+    		    <% end %>
+		      </ul>
+  	    </li>
+	      <% end %>
+		  <% else %>
+		    <li>
+        <% value.each do |result| %>
+          <span class="file"><%= link_to result.name, :controller => 'catalogue', :action => 'details', :id => result.id %></span>
+		    <% end %>
+  	    </li>
+	    <% end %>
 		<% end %>
 		  </ul>
-		</li>        
+		</li>
 	</ul>
 </div>
 <div class="search-box-right-length">
