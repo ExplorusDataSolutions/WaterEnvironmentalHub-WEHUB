@@ -34,12 +34,19 @@ class CatalogueController < ApplicationController
   
     base_data = @search.base_data
     base_data.sort! { |a,b| a.name.downcase <=> b.name.downcase }
-    @base_data = group(base_data, find_groups(base_data))
+
+    groups = find_groups(base_data)
+    groups.delete('GeoBase National Road Network Alberta Road')
+
+    @base_data = group(base_data, groups)
   
     observation_data = @search.observation_data
     observation_data.sort! { |a,b| a.name.downcase <=> b.name.downcase }
+
     groups = find_groups(observation_data)
     groups.delete('AB')
+    groups.delete('Canadian')
+
     @observation_data = group(observation_data, groups)
   end
   
