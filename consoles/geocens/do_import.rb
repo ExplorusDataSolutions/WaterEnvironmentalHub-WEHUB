@@ -58,7 +58,7 @@ def add_to_catalogue(source_uri, service_hash)
   
 end
 
-geocens_base = 'http://wehub.geocens.ca:8182/wehub'
+geocens_base = 'http://wehub.geocens.ca:8183/wehub'
 service_list = (JSON.parse(http_get("#{geocens_base}/services")))['servicelist']
 puts "Discovered #{service_list.count} services on #{Time.new}"
 service_list.each do |service|
