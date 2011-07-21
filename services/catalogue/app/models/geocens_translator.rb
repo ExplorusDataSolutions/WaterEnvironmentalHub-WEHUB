@@ -10,7 +10,9 @@ class GeoCensTranslator
   end
 
   def data(uuid)
-    meta_content = FeatureMetaContent.find_by_uuid(uuid)
+
+    meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
+
     uri = meta_content.source_uri
     layers = JSON.parse(http_get(uri))['layerlist']
     
