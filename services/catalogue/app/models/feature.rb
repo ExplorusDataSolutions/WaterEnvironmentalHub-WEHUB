@@ -26,6 +26,8 @@ class Feature
       GeoServerTranslator.new.data(uuid)
     elsif is_data_source?('catalogue')
       execute("SELECT * FROM #{tablename}")
+    elsif is_data_source?('geocens')
+      GeoCensTranslator.new.data(uuid)
     else
       raise ArgumentError, "Data could not be retrieved for feature source of type #{feature_source.name}"
     end
