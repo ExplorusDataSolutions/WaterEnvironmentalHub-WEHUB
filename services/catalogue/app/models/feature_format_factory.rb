@@ -21,7 +21,7 @@ class FeatureFormatFactory
       raise ArgumentError, "Feature type of #{feature_type} is not implemented"
     end
 
-    { :filename => "#{feature.filename}.#{feature_type}", :data => data }
+    { :filename => "#{feature.friendly_filename}.#{feature_type}", :data => data }
   end
   
 end

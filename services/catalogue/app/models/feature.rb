@@ -124,6 +124,10 @@ class Feature
     @name
   end
   
+  def friendly_filename
+    name.scan(/\w+/).join('_')
+  end
+  
   def filename
     "#{(name.gsub(' ','_').gsub(/\W/,'')).slice(0,25)}_#{uuid.gsub('-','_')}".downcase
   end
@@ -155,7 +159,7 @@ class Feature
     if uuid.match(/[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12}/) != nil
       uuid_with_underscores = uuid.gsub(/-/, '_')      
       begin
-        tablename = execute("SELECT tablename FROM pg_tables WHERE tablename LIKE '%#{uuid_with_underscores}%'")[0]['tablename']
+        tablename = execute("SELECT tablename FROM pg_tables WHERE tablename LIKE '%#{uuid_with_underscores}%' LIMIT 1")[0]['tablename']
       rescue
         raise ArgumentError, "Observation data for #{uuid} could not be found"  
       end
