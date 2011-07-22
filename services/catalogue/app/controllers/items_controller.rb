@@ -49,9 +49,16 @@ class ItemsController < ApplicationController
       end
     end
     
-    filename = "tmp/zips/#{Time.now.to_s.gsub(/ /,'_').gsub(/:/,'').gsub(/-/,'').gsub(/_/,'').gsub(/\+0000/,'').gsub(/0700/,'')}.zip"
-    
     if results.count != 0
+      unique_id = Time.now.to_s.scan(/\w+/).join.gsub(/\+0000|0600/,'')
+      if results.count == 1
+        result_title = results.keys[0][0,results.keys[0].index('.')]        
+        directory ="tmp/zips/#{unique_id}" 
+        %x[mkdir #{directory}] 
+        filename = "#{directory}/#{result_title}.zip"
+      else
+        filename = "tmp/zips/#{unique_id}.zip"
+      end
       Zip::ZipFile.open(filename, Zip::ZipFile::CREATE) do |zip|
         zip.get_output_stream("README") { |f| f.puts "Thanks for visiting The Water and Enivronmental Hub (http://waterenvironmentalhub.ca)." }
         results.each do |key, value|
