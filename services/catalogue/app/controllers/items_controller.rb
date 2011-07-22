@@ -55,9 +55,9 @@ class ItemsController < ApplicationController
         result_title = results.keys[0][0,results.keys[0].index('.')]        
         directory ="tmp/zips/#{unique_id}" 
         %x[mkdir #{directory}] 
-        filename = "#{directory}/#{result_title}.zip"
+        filename = "#{directory}/WEHub_#{result_title}.zip"
       else
-        filename = "tmp/zips/#{unique_id}.zip"
+        filename = "tmp/zips/WEHub_#{unique_id}.zip"
       end
       Zip::ZipFile.open(filename, Zip::ZipFile::CREATE) do |zip|
         zip.get_output_stream("README") { |f| f.puts "Thanks for visiting The Water and Enivronmental Hub (http://waterenvironmentalhub.ca)." }
