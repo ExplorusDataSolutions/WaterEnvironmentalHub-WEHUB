@@ -53,7 +53,7 @@ class ItemsController < ApplicationController
     
     if results.count != 0
       Zip::ZipFile.open(filename, Zip::ZipFile::CREATE) do |zip|
-        zip.get_output_stream("README") { |f| f.puts "Thanks for visiting WEHub" }
+        zip.get_output_stream("README") { |f| f.puts "Thanks for visiting The Water and Enivronmental Hub (http://waterenvironmentalhub.ca)." }
         results.each do |key, value|
           zip.get_output_stream("#{key}") { |f| f.puts value}  
         end      
