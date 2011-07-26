@@ -11,6 +11,18 @@ WEHub.dialog = function(title, message) {
   });
 }
 
+WEHub.modal = function(title, message) {
+  var modal = $("#dialog-modal");
+  modal.html(message);
+  modal.dialog({
+    zIndex: 2000, /* override Open Layers */
+    height: 200,
+    width: 600,
+    title: title,
+	modal: true
+  });
+}
+
 function add_new_dataset(){
 	var hid_last_cnt	=	$('#hid_last_cnt').val()*1 + 1;
 	$('#hid_last_cnt').val(hid_last_cnt);
