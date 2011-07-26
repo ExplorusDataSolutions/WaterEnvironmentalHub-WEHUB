@@ -1,6 +1,6 @@
 <script>
   $(document).ready(function() {
-//    $.post('<%= url_for :controller => "user", :action => "recently_viewed" %>', { id: '<%= @dataset.uuid %>' });
+    $.post('<%= url_for :controller => "user", :action => "recently_viewed" %>', { id: '<%= @dataset.uuid %>' });
 
     $('#my-collection').click(function() {
       var ids = [];
