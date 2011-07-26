@@ -14,7 +14,15 @@ class CatalogueTranslator
   end
   
   def download_uri(params)
-    "#{url}/items/download/?id=#{params[:ids]}&format=#{params[:format]}"
+    if params[:filename]
+      "#{url}/items/download/?filename=#{params[:filename]}"
+    else
+      "#{url}/items/download/?ids=#{params[:ids]}&format=#{params[:format]}"
+    end
+  end
+  
+  def download(params)
+    get(download_uri(params))
   end
   
   def add_recently_viewed(user_id, dataset_uuid)

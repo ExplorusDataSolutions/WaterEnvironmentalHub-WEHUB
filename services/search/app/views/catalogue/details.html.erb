@@ -1,6 +1,6 @@
 <script>
   $(document).ready(function() {
-    $.post('<%= url_for :controller => "user", :action => "recently_viewed" %>', { id: '<%= @dataset.uuid %>' });
+//    $.post('<%= url_for :controller => "user", :action => "recently_viewed" %>', { id: '<%= @dataset.uuid %>' });
 
     $('#my-collection').click(function() {
       var ids = [];
@@ -27,7 +27,14 @@
 
     function download() {
       var format = $('[name=download-format]:checked').val();
-      window.location = '/item/download/?ids=' + ['<%= params[:id] %>'] + '&format=' + format;
+      var uri = "<%= url_for :controller => 'item', :action => 'download' %>";
+      $.getJSON(uri + '?ids=' + ['<%= params[:id] %>'] + '&format=' + format, function(data) {
+        if (data.success) {
+          window.location = uri + '?filename=' + data.filename; 
+        } else {
+          WEHub.modal("We're Sorry", "This file is not available in " + format + " format. Please try an alternate format.");
+        }
+      });
     }
       
     var formatSelector = $('.format-selector');  

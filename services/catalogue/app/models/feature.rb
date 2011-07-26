@@ -123,13 +123,9 @@ class Feature
   def name
     @name
   end
-  
-  def friendly_filename
-    name.scan(/\w+/).join('_')
-  end
-  
+    
   def filename
-    "#{(name.gsub(' ','_').gsub(/\W/,'')).slice(0,25)}_#{uuid.gsub('-','_')}".downcase
+    name.scan(/\w+/).join('_').downcase
   end
   
   def tablename

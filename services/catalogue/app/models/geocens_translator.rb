@@ -14,6 +14,7 @@ class GeoCensTranslator
     meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
 
     uri = meta_content.source_uri
+    
     layers = JSON.parse(http_get(uri))['layerlist']
     
     splits = uri.split('/')    
@@ -41,6 +42,10 @@ class GeoCensTranslator
         response_hash = Hashie::Mash.new(response)
         data[response_hash.layerid] = response_hash
       end
+    end
+    
+    if data.empty?
+      raise ArgumentError, "No data could be found"
     end
     
     data
@@ -76,5 +81,3 @@ class GeoCensTranslator
   end
 
 end 
-
-#puts GeoCensTranslator.new.data('01586b34-b2f9-11e0-aea8-0050ba2647ec')

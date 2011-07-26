@@ -9,6 +9,7 @@ class CatalogueController < ApplicationController
 
   def details   
     @dataset = catalogue_instance.dataset(params[:id])
+    
     @breadcrumb = ['Water Data Catalogue', 'Detail View']
     @main_menu = 'we_catalogue'
     

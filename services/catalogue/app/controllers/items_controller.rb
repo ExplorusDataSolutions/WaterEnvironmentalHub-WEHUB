@@ -10,11 +10,18 @@ class ItemsController < ApplicationController
   end
   
   def download
+    directory ="tmp/zips/"
+    if params[:filename]
+      send_file "#{directory}#{params[:filename].match(/\w+.zip/)[0]}", :type => "application/zip" and return
+    end
+
+    errors = []
+
     uuids = []
-    if params[:id].match(/,/) != nil
-      uuids = params[:id].split(/,/)
+    if params[:ids].match(/,/) != nil
+      uuids = params[:ids].split(/,/)
     else 
-      uuids.push(params[:id])
+      uuids.push(params[:ids])
     end
     
     format_type = 'json'
@@ -23,7 +30,7 @@ class ItemsController < ApplicationController
     end
     
     result = ''
-    results = {}
+    results = []
     
     shape_factory = ShapeFactory.new
     feature_format_factory = FeatureFormatFactory.new
@@ -34,17 +41,17 @@ class ItemsController < ApplicationController
         feature = dataset.feature
         begin
           if format_type == 'shape'          
-            shape_files = shape_factory.find(feature)
-            
+            shape_files = shape_factory.find(feature)   
             shape_files.each do |filename|
               file_data = IO.read("#{shape_factory.shape_directory}/#{filename}")
-              results.store(filename, file_data)
+              results.push(:filename => filename, :id => uuid, :data => file_data)
             end
           else
             formatted_file = feature_format_factory.find(format_type, feature)
-            results.store(formatted_file[:filename], formatted_file[:data])
+            results.push(:filename => formatted_file[:filename], :id => uuid, :data => formatted_file[:data])
           end
         rescue Exception => e
+          errors.push(e.message)
         end        
       end
     end
@@ -52,25 +59,21 @@ class ItemsController < ApplicationController
     if results.count != 0
       unique_id = Time.now.to_s.scan(/\w+/).join.gsub(/\+0000|0600/,'')
       if results.count == 1
-        result_title = results.keys[0][0,results.keys[0].index('.')]        
-        directory ="tmp/zips/#{unique_id}" 
-        %x[mkdir #{directory}] 
-        filename = "#{directory}/WEHub_#{result_title}.zip"
+        filename = "#{directory}WEHub_#{results[0][:filename][0,results[0][:filename].index('.')]}_#{unique_id}.zip"
       else
-        filename = "tmp/zips/WEHub_#{unique_id}.zip"
+        filename = "#{directory}WEHub_#{unique_id}.zip"
       end
       Zip::ZipFile.open(filename, Zip::ZipFile::CREATE) do |zip|
-        zip.get_output_stream("README") { |f| f.puts "Thanks for visiting The Water and Enivronmental Hub (http://waterenvironmentalhub.ca)." }
-        results.each do |key, value|
-          zip.get_output_stream("#{key}") { |f| f.puts value}  
+        zip.get_output_stream("README") { |f| f.puts "Thanks for visiting The Water and Environmental Hub (http://waterenvironmentalhub.ca)." }
+        results.each do |result|
+          zip.get_output_stream("#{result[:filename]}") { |f| f.puts result[:data]}  
         end      
       end
       
-      send_file filename, :type => "application/zip"
+      render :json => { :success => 'true', :filename => filename.gsub(directory,'') }
     else
-      raise ArgumentError, "No results could be found for #{params}"
+      render :json => { :failure => 'true', :errors => errors }
     end
-    
   end
   
   def create

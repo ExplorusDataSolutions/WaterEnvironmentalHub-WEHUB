@@ -6,7 +6,15 @@ class ItemController < ApplicationController
   end
   
   def download
-    redirect_to catalogue_instance.download_uri(params)
+    begin
+      if params[:filename]
+        send_data catalogue_instance.download(params), :filename => params[:filename], :type => "application/zip"
+      else
+        render :json => catalogue_instance.download(params)
+      end
+    rescue Exception => e
+      render :status => :service_unavailable, :text => e
+    end
   end
   
   def create

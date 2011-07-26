@@ -47,7 +47,7 @@ class ShapeFactory
     shapefiles = []
     
     builder.file_extensions.each do |extension|      
-      shapefiles.push("#{feature.friendly_filename}.#{extension}")
+      shapefiles.push("#{feature.filename}.#{extension}")
     end
     
     shapefiles
