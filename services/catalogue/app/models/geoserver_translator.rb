@@ -18,7 +18,12 @@ class GeoServerTranslator
   
   def coordinates(uuid)
     hash = JSON.parse(http_get("GetFeature&typeName=#{uuid}&maxFeatures=1&outputFormat=json"))
-    hash['features'][0]['geometry']['coordinates'].join(',')
+    coords = hash['features'][0]['geometry']['coordinates']
+    if coords[0] && coords[0].is_a? Array
+      coords[0][0].join(',')
+    else
+      coords.join(',')
+    end
   end
     
   def feature_fields(uuid)
