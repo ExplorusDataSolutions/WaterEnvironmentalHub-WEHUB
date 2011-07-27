@@ -2,7 +2,7 @@ class ShapeBuilderGeoServer
 
   attr_accessor :shape_directory, :zip_directory, :server_address, :timeout
   
-  def initialize(shape_directory, zip_directory='tmp/zips', server_address = '174.129.10.37:8080', timeout=300)
+  def initialize(shape_directory, zip_directory='tmp/zips', server_address = '50.19.106.48:8080', timeout=300)
     @shape_directory = shape_directory
     @zip_directory = zip_directory
     @server_address = server_address
@@ -25,19 +25,25 @@ class ShapeBuilderGeoServer
   def file_extensions
     ['cst', 'dbf', 'prj', 'shp', 'shx']  
   end
+
+  def get_shape(feature)
+    if !(File.exists? filename_and_path)
+      response = http_get("GetFeature&typeName=#{feature.uuid}&maxFeatures=1&outputFormat=SHAPE-ZIP")
+
+      open(filename_and_path, 'wb') do |file|
+        file.write(response)
+      end
+    end
+  end
   
   private 
-    
-  def get_shape(feature)  
-    response = http_get("GetFeature&typeName=#{feature.uuid}&maxFeatures=1&outputFormat=SHAPE-ZIP")
 
-    open("#{zip_directory}/#{feature.filename}.zip", 'wb') do |file|
-      file.write(response)
-    end
+  def filename_and_path
+    "#{zip_directory}/#{feature.filename}.zip"
   end
 
   def unzip_shape(feature)
-    Zip::ZipFile.open("#{zip_directory}/#{feature.filename}.zip") do |zip_file|
+    Zip::ZipFile.open(filename_and_path) do |zip_file|
      zip_file.each do |file|       
        zip_file.extract(file, "#{shape_directory}/#{feature.filename}.#{filename_extension(file.name)}") { true }
      end
