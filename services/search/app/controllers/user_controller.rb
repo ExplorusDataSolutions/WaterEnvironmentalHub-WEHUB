@@ -82,20 +82,20 @@ class UserController < ApplicationController
   
   def recently_viewed
     if request.post?
-      if params[:id]
+      if params[:id] && logged_in?
         catalogue_instance.add_recently_viewed(current_user.id, params[:id])
-        render :nothing => true
       end
     end 
+    render :nothing => true
   end
   
   def save
     if request.post?
-      if params[:ids]
+      if params[:ids] && logged_in?
         catalogue_instance.add_saved(current_user.id, params[:ids])
-        render :nothing => true
       end
     end
+    render :nothing => true
   end
   
   def befriend

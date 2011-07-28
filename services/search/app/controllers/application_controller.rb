@@ -22,6 +22,10 @@ class ApplicationController < ActionController::Base
   def current_user
     session[:user]
   end
+  
+  def logged_in?
+    !current_user.nil?
+  end
 
   def search_instance
     if @search_instance.nil?
