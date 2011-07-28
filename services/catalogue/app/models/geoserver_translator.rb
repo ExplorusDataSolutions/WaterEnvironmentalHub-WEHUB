@@ -12,14 +12,12 @@ class GeoServerTranslator
 
   def data(uuid)
     data = []
-    if !(File.exists? cache_filename(uuid))
+    begin
+      File.open(cache_filename(uuid), 'r') { |f| data = f.read }
+      data = eval(data)
+    rescue Exception => e
       data = JSON.parse(http_get("GetFeature&typeName=#{uuid}&maxFeatures=10000&outputFormat=json"))
-      begin
-        File.open(cache_filename(uuid), 'w') { |f| f.write(data) }
-      rescue
-      end
-    else
-      File.open(cache_filename(uuid), 'r') { |f| data = eval(f.read) }
+      File.open(cache_filename(uuid), 'w') { |f| f.write(data) }
     end
     data
   end
@@ -42,7 +40,7 @@ class GeoServerTranslator
   end
   
   def cache_filename(uuid)
-    "#{cache_directory}/geoserver_#{uuid.gsub('-','_')}.json"
+    "#{cache_directory}/geoserver_#{uuid.gsub('-','_')}.hash"
   end
   
   def get_features(uuid)
