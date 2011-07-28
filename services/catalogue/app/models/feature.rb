@@ -21,9 +21,16 @@ class Feature
     end
   end
   
+  def geoserver_translator
+    if @geoserver_translator.nil?
+      @geoserver_translator = GeoServerTranslator.new
+    end
+    @geoserver_translator
+  end
+  
   def data
     if is_data_source?('geoserver')
-      GeoServerTranslator.new.data(uuid)
+      geoserver_translator.data(uuid)
     elsif is_data_source?('catalogue')
       execute("SELECT * FROM #{tablename}")
     elsif is_data_source?('geocens')
@@ -35,7 +42,7 @@ class Feature
     
   def latitude_longitude
     if is_data_source?('geoserver')
-      GeoServerTranslator.new.coordinates(uuid)
+      geoserver_translator.coordinates(uuid)
     elsif is_data_source?('catalogue')    
       latitude = ''
       longitude = ''
@@ -98,7 +105,7 @@ class Feature
   
   def keywords
     if is_data_source?('geoserver')
-      observation_data = GeoServerTranslator.new.feature_fields(uuid)
+      observation_data = geoserver_translator.feature_fields(uuid)
       keywords = extract_keywords(observation_data)
     elsif is_data_source?('catalogue')
       observation_data = data_lightweight

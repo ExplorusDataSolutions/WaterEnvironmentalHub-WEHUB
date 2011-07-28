@@ -12,8 +12,15 @@ class GeoServerTranslator
 
   def data(uuid)
     data = []
-    data = get_features(uuid)
-    
+    if !(File.exists? cache_filename(uuid))
+      data = JSON.parse(http_get("GetFeature&typeName=#{uuid}&maxFeatures=10000&outputFormat=json"))
+      begin
+        File.open(cache_filename(uuid), 'w') { |f| f.write(data) }
+      rescue
+      end
+    else
+      File.open(cache_filename(uuid), 'r') { |f| data = eval(f.read) }
+    end
     data
   end
   
@@ -39,19 +46,12 @@ class GeoServerTranslator
   end
   
   def get_features(uuid)
-    data = []
-    if !(File.exists? cache_filename(uuid))
-      data = JSON.parse(http_get("GetFeature&typeName=#{uuid}&maxFeatures=10000&outputFormat=json"))
-      begin
-        File.open(cache_filename(uuid), 'w') { |f| f.write(data) }
-      rescue
-      end
-    else
-      File.open(cache_filename(uuid), 'r') { |f| data = eval(f.read) }
+    if @features.nil?
+      @features = JSON.parse(http_get("GetFeature&typeName=#{uuid}&maxFeatures=1&outputFormat=json"))
     end
-    data
+    @features
   end
-      
+          
   def http_get(uri)
     url = URI.parse("http://#{server_address}/geoserver/ows?service=WFS&version=1.0.0&request=#{uri}")    
     puts "Getting #{url}"
