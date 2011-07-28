@@ -106,7 +106,17 @@ class CatalogueTranslator
   end
   
   def get(uri)
-    Net::HTTP::get(URI.parse(uri))
+    timeout = 500
+
+    url = URI.parse(uri)    
+    puts "Getting #{url}"
+    http = Net::HTTP.new(url.host, url.port)
+    http.read_timeout = timeout
+    http.open_timeout = timeout    
+    response = http.start {|http| http.get(url.request_uri) }
+
+    response.value
+    response.body
   end
   
   def api_uri
