@@ -11,13 +11,15 @@ class ShapeBuilderGeoServer
   
   def build(feature)
     begin
-      get_shape(feature)
-    rescue
+      if !(File.exists? filename_and_path(feature))
+        get_shape(feature)
+      end
+    rescue Exception => e
       raise ArgumentError, "Shape files for #{feature.name} could not be retrieved by GeoServer"
     end
     begin
       unzip_shape(feature)
-    rescue
+    rescue Exception => e
       raise ArgumentError, "Shape files for #{feature.name} could not be unzipped by ShapeBuilderGeoServer"
     end
   end
@@ -27,23 +29,21 @@ class ShapeBuilderGeoServer
   end
 
   def get_shape(feature)
-    if !(File.exists? filename_and_path)
-      response = http_get("GetFeature&typeName=#{feature.uuid}&maxFeatures=1&outputFormat=SHAPE-ZIP")
+    response = http_get("GetFeature&typeName=#{feature.uuid}&maxFeatures=1&outputFormat=SHAPE-ZIP")
 
-      open(filename_and_path, 'wb') do |file|
-        file.write(response)
-      end
+    open(filename_and_path(feature), 'wb') do |file|
+      file.write(response)
     end
   end
   
   private 
 
-  def filename_and_path
+  def filename_and_path(feature)
     "#{zip_directory}/#{feature.filename}.zip"
   end
 
   def unzip_shape(feature)
-    Zip::ZipFile.open(filename_and_path) do |zip_file|
+    Zip::ZipFile.open(filename_and_path(feature)) do |zip_file|
      zip_file.each do |file|       
        zip_file.extract(file, "#{shape_directory}/#{feature.filename}.#{filename_extension(file.name)}") { true }
      end
