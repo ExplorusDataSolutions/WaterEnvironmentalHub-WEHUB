@@ -27,6 +27,8 @@ class ShapeBuilderGeoServer
   def file_extensions
     ['cst', 'dbf', 'prj', 'shp', 'shx']  
   end
+  
+  private 
 
   def get_shape(feature)
     response = http_get("GetFeature&typeName=#{feature.uuid}&maxFeatures=1&outputFormat=SHAPE-ZIP")
@@ -35,8 +37,6 @@ class ShapeBuilderGeoServer
       file.write(response)
     end
   end
-  
-  private 
 
   def filename_and_path(feature)
     "#{zip_directory}/#{feature.filename}.zip"
