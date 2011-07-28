@@ -18,8 +18,11 @@
     
     $('[name=commit]').click(function(event) {
       event.preventDefault();
-      $.get("<%= url_for :controller => 'api', :action => 'builder_response' %>", $('form').serialize(), function(data) {
-        $('#builder_response').show().html(data);
+      $.ajax({
+        url: "<%= url_for :controller => 'api', :action => 'builder_response' %>",
+        data: $('form').serialize(),
+        success: function(data) { $('#builder_response').show().html(data); },
+        timeout: 300000
       });
     });
   });
