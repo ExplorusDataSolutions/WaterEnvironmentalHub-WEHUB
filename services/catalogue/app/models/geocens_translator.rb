@@ -10,7 +10,7 @@ class GeoCensTranslator
   end
 
   def is_gin(source_uri)
-    source_uri.match(/service\/6/)
+    source_uri && source_uri.match(/service\/6/)
   end
   
   def data(uuid)
@@ -18,7 +18,6 @@ class GeoCensTranslator
 
     uri = meta_content.source_uri
 
-    uri = 'http://wehub.geocens.ca:8183/wehub/service/5'
     layers = JSON.parse(http_get(uri))['layerlist']
     
     splits = uri.split('/')    
@@ -77,14 +76,10 @@ class GeoCensTranslator
     http = Net::HTTP.new(url.host, url.port)
     http.read_timeout = timeout
     http.open_timeout = timeout
-puts request
     response = http.start {|http| http.post(url.to_s, request.to_json, { 'Content-Type' => 'application/json'}) }
     
     response.value
-    puts     response.body
     response.body
   end
 
 end 
-
-puts GeoCensTranslator.new.data('test')
