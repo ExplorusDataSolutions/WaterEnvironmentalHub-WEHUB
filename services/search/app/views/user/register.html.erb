@@ -200,7 +200,7 @@
 				<td align="right">
           <%= check_box_tag :eula %>
 				</td>
-				<td align="left"><%= label_tag :eula, "I agree to the WEHub's Privacy Statement and Terms of Use." %></td>
+				<td align="left"><%= label_tag :eula, "I agree to the WEHub's Privacy Statement and #{link_to 'Terms of Use', :controller => 'about', :action => 'terms_of_service'}.".html_safe %></td>
 			</tr>
 			<tr>
 				<td>&nbsp;</td>
