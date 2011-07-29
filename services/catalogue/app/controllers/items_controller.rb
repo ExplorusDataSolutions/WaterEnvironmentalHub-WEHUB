@@ -55,7 +55,7 @@ class ItemsController < ApplicationController
         end        
       end
     end
-    
+
     if results.count != 0
       unique_id = Time.now.to_s.scan(/\w+/).join.gsub(/\+0000|0600/,'')
       if results.count == 1
@@ -64,13 +64,17 @@ class ItemsController < ApplicationController
         filename = "#{directory}WEHub_#{unique_id}.zip"
       end
       Zip::ZipFile.open(filename, Zip::ZipFile::CREATE) do |zip|
-        zip.get_output_stream("README") { |f| f.puts "Thanks for visiting The Water and Environmental Hub (http://waterenvironmentalhub.ca)." }
+        read_me_text = "Thanks for visiting The Water and Environmental Hub (http://waterenvironmentalhub.ca).\n\nYou've downloaded the following datasets:\n"
+        results.each do |result|
+          read_me_text += "\thttp://waterenvironmentalhub.ca/catalogue/details/#{result[:id]}\n"
+        end       
+        zip.get_output_stream("README") { |f| f.puts read_me_text }
         results.each do |result|
           zip.get_output_stream("#{result[:filename]}") { |f| f.puts result[:data]}  
-        end      
+        end
       end
-      
-      render :json => { :success => 'true', :filename => filename.gsub(directory,'') }
+            
+      render :json => { :success => 'true', :errors => errors, :filename => filename.gsub(directory,'') }
     else
       render :json => { :failure => 'true', :errors => errors }
     end
@@ -153,6 +157,13 @@ class ItemsController < ApplicationController
     render :text => dataset.uuid
   end
 
+  def list_geoserver_content
+    uuids = []
+    feature_source = FeatureSource.find_by_name('geoserver')
+    Dataset.find_all_by_feature_source_id(feature_source.id).each { |d| uuids.push(d.uuid) }
+    respond_with(uuids)
+  end
+  
   def load_geoserver_content
     uuid = params[:uuid]
     if !uuid.scan(/^([\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12})$/).empty?

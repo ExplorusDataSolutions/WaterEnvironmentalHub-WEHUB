@@ -17,21 +17,22 @@
       var ids = [];
       $('[type=checkbox][name=download]:checked').each(function() { ids.push($(this).val()); })
       if (ids.length != 0) {
-        var uri = "<%= url_for :controller => 'item', :action => 'download' %>";
-        $.getJSON(uri + '?ids=' + ids + '&format=' + format, function(data) {
-          if (data.success) {
-            window.location = uri + '?filename=' + data.filename; 
-          } else {
-            var message = '';
-            if ($(data.errors).length > 0) {
-              $(["test","dude"]).each(function(error) { message += error; });  
+        $.ajax({
+          url: "<%= url_for :controller => 'item', :action => 'download' %>?ids=" + ids + '&format=' + format,
+          timeout: 300000,
+          success: function(data) { 
+            if (data.success) {
+              if (data.errors.length != 0) {
+                WEHub.modal("We're Sorry", "We couldn't convert all your datasets into your desired format, but we included the successful conversions in this download");                
+              }
+              window.location = "<%= url_for :controller => 'item', :action => 'download' %>?filename=" + data.filename; 
+            } else {
+              WEHub.modal("We're Sorry", "Your selected datasets could not be generated with your desired format. Please select a new format and try again");
             }
-            if (message == '') {
-              message = 'A download for these datasets could not be generated.';
-            }
-            WEHub.modal("We're Sorry", message);
-          }
-        });      
+          }          
+        });
+      } else {
+        WEHub.modal("Warning", "No datasets have been selected. Please select a dataset to download");
       }
     }
         
