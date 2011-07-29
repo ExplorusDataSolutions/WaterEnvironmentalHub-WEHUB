@@ -67,6 +67,11 @@ class Dataset < ActiveRecord::Base
       if feature.latitude_longitude
         xml.tag!(:coordinates, feature.latitude_longitude)
       end
+      xml.formats do
+        feature.formats.each do |format|
+          xml.format format
+        end
+      end
     end
   end
 

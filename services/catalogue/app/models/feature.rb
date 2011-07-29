@@ -21,6 +21,18 @@ class Feature
     end
   end
   
+  def formats
+    formats = ['JSON', 'Shape', 'XML', 'CSV']
+    if is_data_source?('geoserver')
+      formats.delete('CSV')
+    elsif is_data_source?('catalogue')
+    elsif is_data_source?('geocens')
+      formats.delete('Shape')
+      formats.delete('CSV')
+    end
+    formats
+  end
+  
   def geoserver_translator
     if @geoserver_translator.nil?
       @geoserver_translator = GeoServerTranslator.new

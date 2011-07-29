@@ -13,8 +13,7 @@
 <style>
 .format-selector {
   font-size: 0.8em;
-  margin-left: -361px;
-  margin-top: 34px;
+  margin-left: -110px;
   padding: 1px 8px;
   position: absolute;
   z-index: 100;
@@ -70,210 +69,210 @@
 </script>
 
 <div class="top-back-link">
-		<a href="#" onclick="history.go(-1);return false;">Back to Search Results</a>
+    <a href="#" onclick="history.go(-1);return false;">Back to Search Results</a>
 </div>
 <div class="top-container-tab-body" >
 <%
 =begin %>
-	<div class="top-container-tab">
-		+ Comments
-	</div>
+  <div class="top-container-tab">
+    + Comments
+  </div>
 <%
 =end %>
 <% if logged_in? %>
-	<div class="top-container-tab" id="my-collection">+ My collection</div>
+  <div class="top-container-tab" id="my-collection">+ My collection</div>
 <% end %>
-	<div class="top-container-tab tab-download">
-		<div class="float-left">Download</div>
-		<div class="float-left tab-download-arrow"></div>		
-	</div>
-
+  <div class="top-container-tab tab-download">
+    <div class="float-left">Download</div>
+    <div class="float-left tab-download-arrow"></div>   
+  </div>
+  <div class="clear"></div>
   <span class="format-selector ui-widget-content ui-corner-all ui-state-active" style="display: none;">
     Select format
-    <% ['JSON', 'Shape', 'XML', 'CSV'].each do |format| %>
+    <% @dataset.formats.format.each do |format| %>
       <%= label_tag "download-format[#{format}]", format %><%= radio_button_tag 'download-format', format %>
     <% end %>
   </span>
-	
+
 </div>
 <div class="clear"></div>
-	
+  
 <div class="clear"></div>
 
 <div class="left-container-tab-body">
-	<div class="tab"><%= link_to 'Map', :controller => 'tools', :action => 'map', :id => @dataset.uuid %></div>
-	<div class="tab"><%= link_to 'Graph', :controller => 'tools', :action => 'chart', :id => @dataset.uuid %></div>
-	<div class="tab"><%= link_to 'Connect', :controller => 'community' %></div>
+  <div class="tab"><%= link_to 'Map', :controller => 'tools', :action => 'map', :id => @dataset.uuid %></div>
+  <div class="tab"><%= link_to 'Graph', :controller => 'tools', :action => 'chart', :id => @dataset.uuid %></div>
+  <div class="tab"><%= link_to 'Connect', :controller => 'community' %></div>
 </div>
 <div class="right-container-body">
-	<div class="right-container-left-body">
-		<div class="dashed-header"><h2><%= @dataset.name %></h2></div>
-		<div class="clear"></div>
-		<div class="slight-margin">
-			<h2 class="green-dot-blue-head">Metadata</h2>
-			
-			<div class="float-left width-165 title">Title</div>
-			<div class="float-left width-500 text"><%= @dataset.name %></div>
-			<div class="clear"></div>
-			
-			<div class="float-left width-165 title">Date</div>
-			<div class="float-left width-500 text"><%= @dataset.date %></div>
-			<div class="clear"></div>
-			
-			<div class="float-left width-165 title">Abstract</div>
-			<div class="float-left width-500 text">
-				<%= @dataset.description %>
+  <div class="right-container-left-body">
+    <div class="dashed-header"><h2><%= @dataset.name %></h2></div>
+    <div class="clear"></div>
+    <div class="slight-margin">
+      <h2 class="green-dot-blue-head">Metadata</h2>
+      
+      <div class="float-left width-165 title">Title</div>
+      <div class="float-left width-500 text"><%= @dataset.name %></div>
+      <div class="clear"></div>
+      
+      <div class="float-left width-165 title">Date</div>
+      <div class="float-left width-500 text"><%= @dataset.date %></div>
+      <div class="clear"></div>
+      
+      <div class="float-left width-165 title">Abstract</div>
+      <div class="float-left width-500 text">
+        <%= @dataset.description %>
         <% if !@dataset.source.nil? %>
-				<br />
+        <br />
         (source: <%= @dataset.source %>)
         <% end %>
-			</div>
-			<div class="clear"></div>
-			<div class="clear height-25"></div>
-			
-			<div class="float-left">
-			<h2 class="green-dot-blue-head">Geographic bounding box</h2>
-				<div class="float-left width-165 title">East Bound Longitude</div>
-				<div class="float-left width-140 text">7.21097</div>
-				<div class="clear"></div>
-				
-				<div class="float-left width-165 title">West Bound Longitude</div>
-				<div class="float-left width-140 text">3.37087</div>
-				<div class="clear"></div>
-				
-				<div class="float-left width-165 title">North Bound Latitude</div>
-				<div class="float-left width-140 text">53.46583</div>
-				<div class="clear"></div>
-				
-				<div class="float-left width-165 title">South Bound Latitude</div>
-				<div class="float-left width-140 text">50.75388</div>
-				<div class="clear height-25"></div>
-			</div>
-			<div class="float-left slight-margin">
-				<img src="/images/temp-map.jpg" title="map" alt="Map" />
-			</div>
-			<div class="clear"></div>
-    <% if !@dataset.author.nil?	%>
-			<h2 class="green-dot-blue-head">Point of contact</h2>
-			
-			<div class="float-left width-165 title">Individual name</div>
-			<div class="float-left width-500 text"><%= @dataset.author.first_name %><%= @dataset.author.last_name %></div>
-			<div class="clear"></div>
+      </div>
+      <div class="clear"></div>
+      <div class="clear height-25"></div>
+      
+      <div class="float-left">
+      <h2 class="green-dot-blue-head">Geographic bounding box</h2>
+        <div class="float-left width-165 title">East Bound Longitude</div>
+        <div class="float-left width-140 text">7.21097</div>
+        <div class="clear"></div>
+        
+        <div class="float-left width-165 title">West Bound Longitude</div>
+        <div class="float-left width-140 text">3.37087</div>
+        <div class="clear"></div>
+        
+        <div class="float-left width-165 title">North Bound Latitude</div>
+        <div class="float-left width-140 text">53.46583</div>
+        <div class="clear"></div>
+        
+        <div class="float-left width-165 title">South Bound Latitude</div>
+        <div class="float-left width-140 text">50.75388</div>
+        <div class="clear height-25"></div>
+      </div>
+      <div class="float-left slight-margin">
+        <img src="/images/temp-map.jpg" title="map" alt="Map" />
+      </div>
+      <div class="clear"></div>
+    <% if !@dataset.author.nil? %>
+      <h2 class="green-dot-blue-head">Point of contact</h2>
+      
+      <div class="float-left width-165 title">Individual name</div>
+      <div class="float-left width-500 text"><%= @dataset.author.first_name %><%= @dataset.author.last_name %></div>
+      <div class="clear"></div>
 
 <%
-=begin %>			
-			<div class="float-left width-165 title">Organisation name</div>
-			<div class="float-left width-500 text">Deltares/TNO Geological Survey of the Canada</div>
-			<div class="clear"></div>
+=begin %>     
+      <div class="float-left width-165 title">Organisation name</div>
+      <div class="float-left width-500 text">Deltares/TNO Geological Survey of the Canada</div>
+      <div class="clear"></div>
 <%
-=end %>			
-			<div class="float-left width-165 title">Email</div>
-			<div class="float-left width-500 text"><%= @dataset.author.email %></div>
-			<div class="clear"></div>
+=end %>     
+      <div class="float-left width-165 title">Email</div>
+      <div class="float-left width-500 text"><%= @dataset.author.email %></div>
+      <div class="clear"></div>
 <%
-=begin %>			
-			<div class="float-left width-165 title">Role</div>
-			<div class="float-left width-500 text">PointOfContact</div>
-			<div class="clear"></div>
+=begin %>     
+      <div class="float-left width-165 title">Role</div>
+      <div class="float-left width-500 text">PointOfContact</div>
+      <div class="clear"></div>
 <%
 =end %>
-    <% end %>			
-			<div class="float-left width-165 title">Descriptive keywords</div>
-			<div class="float-left width-500 text"><%= @dataset.properties %></div>
-			<div class="clear"></div>
-			
-			<div class="clear height-25"></div>
-			
+    <% end %>     
+      <div class="float-left width-165 title">Descriptive keywords</div>
+      <div class="float-left width-500 text"><%= @dataset.properties %></div>
+      <div class="clear"></div>
+      
+      <div class="clear height-25"></div>
+      
 <%
 =begin %>
-			
-			<h2 class="green-dot-blue-head">Distribution information</h2>
-			
-			<div class="float-left width-165 title">Intractive Map</div>
-			<div class="float-left width-500 text">http://www.dinoservice.nl/wms/dinomap/MO8MOO21?format=image/png</div>
-			<div class="clear"></div>
-			
-			<div class="clear height-25"></div>
+      
+      <h2 class="green-dot-blue-head">Distribution information</h2>
+      
+      <div class="float-left width-165 title">Intractive Map</div>
+      <div class="float-left width-500 text">http://www.dinoservice.nl/wms/dinomap/MO8MOO21?format=image/png</div>
+      <div class="clear"></div>
+      
+      <div class="clear height-25"></div>
 <%
-=end %>			
-			
-			<h2 class="green-dot-blue-head">Indentification Information</h2>
-			
-			<div class="float-left width-165 title">File identifier</div>
-			<div class="float-left width-500 text"><%= @dataset.uuid %></div>
-			<div class="clear"></div>
-			
-			<div class="float-left width-165 title">Language</div>
-			<div class="float-left width-500 text">English</div>
-			<div class="clear"></div>
-			
-			<div class="float-left width-165 title">Character set</div>
-			<div class="float-left width-500 text">utf8</div>
-			<div class="clear"></div>
+=end %>     
+      
+      <h2 class="green-dot-blue-head">Indentification Information</h2>
+      
+      <div class="float-left width-165 title">File identifier</div>
+      <div class="float-left width-500 text"><%= @dataset.uuid %></div>
+      <div class="clear"></div>
+      
+      <div class="float-left width-165 title">Language</div>
+      <div class="float-left width-500 text">English</div>
+      <div class="clear"></div>
+      
+      <div class="float-left width-165 title">Character set</div>
+      <div class="float-left width-500 text">utf8</div>
+      <div class="clear"></div>
 <%
-=begin %>			
-			<div class="float-left width-165 title">Date stamp</div>
-			<div class="float-left width-500 text">2009-06-26T10:07:03</div>
-			<div class="clear"></div>
+=begin %>     
+      <div class="float-left width-165 title">Date stamp</div>
+      <div class="float-left width-500 text">2009-06-26T10:07:03</div>
+      <div class="clear"></div>
 <% 
-=end %>			
-			<div class="float-left width-165 title">Metadata standard name</div>
-			<div class="float-left width-500 text">ISO 19115:2003/19139</div>
-			<div class="clear"></div>
-			
-			<div class="float-left width-165 title">Metadata standard version</div>
-			<div class="float-left width-500 text">1.0</div>
-			<div class="clear"></div>
-			
-			<div class="clear height-25"></div>
-			
-			
-		</div>
-	</div>
-	
-	<div class="sub-content-right">
-		<div class="right-content">
+=end %>     
+      <div class="float-left width-165 title">Metadata standard name</div>
+      <div class="float-left width-500 text">ISO 19115:2003/19139</div>
+      <div class="clear"></div>
+      
+      <div class="float-left width-165 title">Metadata standard version</div>
+      <div class="float-left width-500 text">1.0</div>
+      <div class="clear"></div>
+      
+      <div class="clear height-25"></div>
+      
+      
+    </div>
+  </div>
+  
+  <div class="sub-content-right">
+    <div class="right-content">
       <%= render 'shared/right_panel' %>
-    </div>		
+    </div>    
 
 <%
 =begin %>
-		<div class="right-content">
-			<div class="main-head">
-				<div class="float-left"><img src="/images/icon-comments.jpg" alt="Comments" title="Comments" width="20" height="20"></div>
-				<div class="float-left"><h1>Comments</h1></div>
-				<div class="clear"></div>
-			</div>
-			<div id="star" class="star" align="left">
-				<p class="color" style="width: <%= @rating%>px;text-align:left;">
-				<p class="gray"/>                                  
-			</div>
-			<div class="clear"></div>
-			<div class="contents">
-				Data is taken at a high frequently, however there are many missing measurements.
-			</div>
-			<div class="clear">&nbsp;</div>
-			
-			<div id="star" class="star" align="left">
-				<p class="color" style="width: <%= @rating%>px;text-align:left;">
-				<p class="gray"/>                                  
-			</div>
-			<div class="clear"></div>
-			<div class="contents">
-				Data is taken at a high frequently, however there are many missing measurements.
-			</div>
-			<div class="clear">&nbsp;</div>
-			<span class="button">
-				<button>See All</button>
-			</span>			
-		</div>
-		<div class="clear"></div>
+    <div class="right-content">
+      <div class="main-head">
+        <div class="float-left"><img src="/images/icon-comments.jpg" alt="Comments" title="Comments" width="20" height="20"></div>
+        <div class="float-left"><h1>Comments</h1></div>
+        <div class="clear"></div>
+      </div>
+      <div id="star" class="star" align="left">
+        <p class="color" style="width: <%= @rating%>px;text-align:left;">
+        <p class="gray"/>                                  
+      </div>
+      <div class="clear"></div>
+      <div class="contents">
+        Data is taken at a high frequently, however there are many missing measurements.
+      </div>
+      <div class="clear">&nbsp;</div>
+      
+      <div id="star" class="star" align="left">
+        <p class="color" style="width: <%= @rating%>px;text-align:left;">
+        <p class="gray"/>                                  
+      </div>
+      <div class="clear"></div>
+      <div class="contents">
+        Data is taken at a high frequently, however there are many missing measurements.
+      </div>
+      <div class="clear">&nbsp;</div>
+      <span class="button">
+        <button>See All</button>
+      </span>     
+    </div>
+    <div class="clear"></div>
 <%
 =end %>
 
-	</div>
-	<div class="clear"></div>
-	
+  </div>
+  <div class="clear"></div>
+  
 </div>
 
 <div class="clear"></div>
