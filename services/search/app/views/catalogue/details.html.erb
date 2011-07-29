@@ -31,7 +31,18 @@
         if (data.success) {
           window.location = uri + '?filename=' + data.filename; 
         } else {
-          WEHub.modal("We're Sorry", "This file is not available in " + format + " format. Please try an alternate format.");
+          var is_geocens = false
+          $.each(data.errors, function(i, v) { 
+            if (v.match(/GEOCENS:/)) {
+              is_geocens = true;
+            }
+          });
+          
+          if (is_geocens) {
+            WEHub.modal("We're Sorry", "We're having trouble retrieving this feature's data from our an external service. Please try again at a later date.");
+          } else {
+            WEHub.modal("We're Sorry", "We're having trouble generating the " + format + " format for this feature. Please try an alternate format.");
+          }
         }
       });
     }

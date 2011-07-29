@@ -45,7 +45,7 @@ class GeoCensTranslator
     end
     
     if data.empty?
-      raise ArgumentError, "No data could be found"
+      raise ArgumentError, "GEOCENS: No data could be retrieved"
     end
     
     data
