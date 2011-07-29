@@ -9,12 +9,16 @@ class GeoCensTranslator
     @timeout = timeout
   end
 
+  def is_gin(source_uri)
+    source_uri.match(/service\/6/)
+  end
+  
   def data(uuid)
-
     meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
 
     uri = meta_content.source_uri
-    
+
+    uri = 'http://wehub.geocens.ca:8183/wehub/service/5'
     layers = JSON.parse(http_get(uri))['layerlist']
     
     splits = uri.split('/')    
@@ -28,9 +32,9 @@ class GeoCensTranslator
         :serviceid => service_id, 
         :layerid => layer['id'], 
         :time => { :begintime => (Time.parse(date) - 72.hours).utc.iso8601.to_s, :endtime => date}, 
-        :bbox => { 
-          :upperright => { :latitude => layer['bbox']['upperright']['latitude'], :longitude => layer['bbox']['upperright']['longitude'] },
-          :bottomleft => { :latitude => layer['bbox']['bottomleft']['latitude'], :longitude => layer['bbox']['bottomleft']['longitude'] }
+        :bbox => {
+          :upperright => { :latitude => (is_gin(uri)? 49 : layer['bbox']['upperright']['latitude']), :longitude => (is_gin(uri)? -75 : layer['bbox']['upperright']['longitude']) },
+          :bottomleft => { :latitude => (is_gin(uri)? 42 : layer['bbox']['bottomleft']['latitude']), :longitude => (is_gin(uri)? -78 : layer['bbox']['bottomleft']['longitude']) }
         }
       })
     end
@@ -73,11 +77,14 @@ class GeoCensTranslator
     http = Net::HTTP.new(url.host, url.port)
     http.read_timeout = timeout
     http.open_timeout = timeout
-
+puts request
     response = http.start {|http| http.post(url.to_s, request.to_json, { 'Content-Type' => 'application/json'}) }
     
     response.value
+    puts     response.body
     response.body
   end
 
 end 
+
+puts GeoCensTranslator.new.data('test')
