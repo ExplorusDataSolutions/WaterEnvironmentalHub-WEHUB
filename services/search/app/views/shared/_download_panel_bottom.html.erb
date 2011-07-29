@@ -23,7 +23,7 @@
           success: function(data) { 
             if (data.success) {
               if (data.errors.length != 0) {
-                WEHub.modal("We're Sorry", "We couldn't convert all your datasets into your desired format, but we included the successful conversions in this download");                
+                WEHub.modal("We're Sorry", "We've included all the successful conversions in this download, but couldn't convert all your datasets into your selected format");                
               }
               window.location = "<%= url_for :controller => 'item', :action => 'download' %>?filename=" + data.filename; 
             } else {
