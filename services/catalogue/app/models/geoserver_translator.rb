@@ -25,7 +25,7 @@ class GeoServerTranslator
   def coordinates(uuid)
     hash = get_features(uuid)
     coords = hash['features'][0]['geometry']['coordinates'].join(',').split(',')
-    "#{coords[0]},#{coords[1]}"
+    "#{coords[1]},#{coords[0]}"
   end
     
   def feature_fields(uuid)
