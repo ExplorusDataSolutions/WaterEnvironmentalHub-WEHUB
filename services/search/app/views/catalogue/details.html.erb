@@ -80,7 +80,7 @@
 </script>
 <script>
 $(document).ready(function() {
-	
+  
   var map, layer, lon, lat;
 <%
   if @dataset.coordinates && !@dataset.coordinates.empty?
@@ -105,10 +105,11 @@ $(document).ready(function() {
 
     map.addLayers([gphy, gmap, ghyb, gsat]);
     
-    map.setCenter(new OpenLayers.LonLat(lon, lat), 4);
+    map.setCenter(new OpenLayers.LonLat(lon, lat), 3);
 
     markers = new OpenLayers.Layer.Markers("Features");
-    map.addLayer(markers);           
+    map.addLayer(markers);
+
   }
   
   function setMarker(lon, lat){
@@ -124,8 +125,23 @@ $(document).ready(function() {
     markers.addMarker(marker);
   }
   
+  function setLayer(name, uuid){
+    var datasetLayer = new OpenLayers.Layer.WMS(name,  "http://50.19.106.48:8080/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=" + uuid, 
+      { "transparent":"true",
+        "layers":name,
+        "format":"image/png" },
+        { "reproject":"false" });   
+    map.addLayer(datasetLayer);
+  }
+  
   loadMap();
-  setMarker(lon, lat);
+  if (<%= @dataset.wms %>) {
+    setLayer(<%= "'#{@dataset.name}'" %>, <%= "'#{@dataset.uuid}'" %>)
+  } else {
+    setMarker(lon, lat);    
+  }
+
+  
 
 });
 </script>
@@ -221,7 +237,7 @@ $(document).ready(function() {
     <% end %>
       </div>
       <div class="float-left slight-margin">
-        <div id="map" style="width:318px; height:189px"></div>
+        <div id="map" style="width:318px; height:189px"></div>        
       </div>
       <div class="clear"></div>
     <% if !@dataset.author.nil? %>

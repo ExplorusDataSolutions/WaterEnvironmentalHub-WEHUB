@@ -72,6 +72,7 @@ class Dataset < ActiveRecord::Base
           xml.format format
         end
       end
+      xml.tag!(:wms, feature_source == FeatureSource.find_by_name('geoserver'))
     end
   end
 
