@@ -78,7 +78,57 @@
     });
   }); 
 </script>
+<script>
+$(document).ready(function() {
+	
+  var map, layer, lon, lat;
+<%
+  if @dataset.coordinates && !@dataset.coordinates.empty?
+    coords = @dataset.coordinates.split(',') 
+    if coords.length == 2
+%>
+   <%= "lat = #{coords[0]};" %>
+   <%= "lon = #{coords[1]};" %>
+<%
+    end 
+  end  
+%>
 
+  function loadMap() {
+    map = new OpenLayers.Map('map');
+    map.addControl(new OpenLayers.Control.LayerSwitcher());
+    
+    var gphy = new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP});
+    var gmap = new OpenLayers.Layer.Google("Google Streets", {numZoomLevels: 20});
+    var ghyb = new OpenLayers.Layer.Google("Google Hybrid", {type: G_HYBRID_MAP, numZoomLevels: 20});
+    var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, numZoomLevels: 22});
+
+    map.addLayers([gphy, gmap, ghyb, gsat]);
+    
+    map.setCenter(new OpenLayers.LonLat(lon, lat), 4);
+
+    markers = new OpenLayers.Layer.Markers("Features");
+    map.addLayer(markers);           
+  }
+  
+  function setMarker(lon, lat){
+    var lonLatMarker = new OpenLayers.LonLat(lon, lat);
+
+    var feature = new OpenLayers.Feature(markers, lonLatMarker);
+
+    var size = new OpenLayers.Size(20, 34);
+    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+    var icon = new OpenLayers.Icon('/images/marker-blue.png', size, offset);   
+    var marker = new OpenLayers.Marker(lonLatMarker, icon.clone());
+
+    markers.addMarker(marker);
+  }
+  
+  loadMap();
+  setMarker(lon, lat);
+
+});
+</script>
 <div class="top-back-link">
     <a href="#" onclick="history.go(-1);return false;">Back to Search Results</a>
 </div>
@@ -142,7 +192,17 @@
       <div class="clear height-25"></div>
       
       <div class="float-left">
-      <h2 class="green-dot-blue-head">Geographic bounding box</h2>
+    <% if @dataset.coordinates && !@dataset.coordinates.empty? %>
+        <h2 class="green-dot-blue-head">Geographic coordinates</h2>
+        <div class="float-left width-165 title">Latitude</div>
+        <div class="float-left width-140 text"><%= @dataset.coordinates.split(',')[0] %></div>
+        <div class="clear"></div>
+
+        <div class="float-left width-165 title">Longitude</div>
+        <div class="float-left width-140 text"><%= @dataset.coordinates.split(',')[1] %></div>
+        <div class="clear height-25"></div>
+    <% else %>
+        <h2 class="green-dot-blue-head">Geographic bounding box</h2>
         <div class="float-left width-165 title">East Bound Longitude</div>
         <div class="float-left width-140 text">7.21097</div>
         <div class="clear"></div>
@@ -158,9 +218,10 @@
         <div class="float-left width-165 title">South Bound Latitude</div>
         <div class="float-left width-140 text">50.75388</div>
         <div class="clear height-25"></div>
+    <% end %>
       </div>
       <div class="float-left slight-margin">
-        <img src="/images/temp-map.jpg" title="map" alt="Map" />
+        <div id="map" style="width:318px; height:189px"></div>
       </div>
       <div class="clear"></div>
     <% if !@dataset.author.nil? %>
@@ -207,7 +268,7 @@
 <%
 =end %>     
       
-      <h2 class="green-dot-blue-head">Indentification Information</h2>
+      <h2 class="green-dot-blue-head">Identification Information</h2>
       
       <div class="float-left width-165 title">File identifier</div>
       <div class="float-left width-500 text"><%= @dataset.uuid %></div>
@@ -218,7 +279,7 @@
       <div class="clear"></div>
       
       <div class="float-left width-165 title">Character set</div>
-      <div class="float-left width-500 text">utf8</div>
+      <div class="float-left width-500 text">UTF-8</div>
       <div class="clear"></div>
 <%
 =begin %>     
