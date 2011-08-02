@@ -201,7 +201,17 @@ $(document).ready(function() {
         <%= @dataset.description %>
         <% if !@dataset.source.nil? %>
         <br />
-        (source: <%= @dataset.source %>)
+        <% 
+          url = ''
+          if @dataset.source
+            if @dataset.source.match(/http:\/\//)
+              url = @dataset.source
+            else
+              url = "http://#{@dataset.source}"
+            end
+          end
+        %>
+        (source: <%= link_to url, url %>)
         <% end %>
       </div>
       <div class="clear"></div>
