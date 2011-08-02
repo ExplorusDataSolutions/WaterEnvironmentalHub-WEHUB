@@ -30,9 +30,14 @@ def add_to_catalogue(source_uri, service_hash)
     :name => service_hash['title'], 
     :description => service_hash.key?('description') ? service_hash['description'] : keywords, 
     :keywords => keywords, 
-    :source_uri => source_uri
+    :source_uri => source_uri, 
   }
 
+  lat_lon = "#{service_hash['bbox']['upperright']['latitude']},#{service_hash['bbox']['upperright']['longitude']}"
+  if lat_lon.split(',').length == 2
+    request.store(:coordinates, lat_lon)
+  end
+  
   url_param = 'http://localhost:3000/items/load_external_meta_content'
   timeout = 500
   url = URI.parse(url_param)

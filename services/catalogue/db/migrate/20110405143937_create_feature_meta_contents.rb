@@ -4,6 +4,7 @@ class CreateFeatureMetaContents < ActiveRecord::Migration
       t.text :dataset_uuid
       t.text :keywords
       t.text :source_uri
+      t.text :coordinates
 
       t.timestamps
     end

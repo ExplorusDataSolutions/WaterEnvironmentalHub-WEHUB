@@ -105,7 +105,7 @@ class Feature
       end
     else
       meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
-      meta_content_params = {:dataset_uuid => uuid, :keywords => params[:keywords], :source_uri => params[:source_uri]}
+      meta_content_params = {:dataset_uuid => uuid, :keywords => params[:keywords], :source_uri => params[:source_uri], :coordinates => params[:coordinates]}
       if meta_content.nil?
         meta_content = FeatureMetaContent.create(meta_content_params)
       else
