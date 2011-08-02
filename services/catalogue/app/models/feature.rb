@@ -69,7 +69,12 @@ class Feature
       rescue
       end
       
-      !(latitude.empty? && longitude.empty?) ? "#{latitude},#{longitude}" : nil            
+      !(latitude.empty? && longitude.empty?) ? "#{latitude},#{longitude}" : nil
+    elsif is_data_source?('geocens')
+      meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
+      if meta_content
+        meta_content.coordinates
+      end
     end
   end
 
