@@ -45,9 +45,10 @@ class CatalogueController < ApplicationController
     observation_data.sort! { |a,b| a.name.downcase <=> b.name.downcase }
 
     groups = find_groups(observation_data)
+
     groups.delete('AB')
     groups.delete('Canadian')
-
+        
     @observation_data = group(observation_data, groups)
   end
   
@@ -66,8 +67,38 @@ class CatalogueController < ApplicationController
         if !digits.empty?
           last_terms = last_terms[0,last_terms.index(digits[0])]
         end
+
         result_name = result.name
-        common_terms = result_name.scan(/#{last_terms.match(/[\w ]*/)[0].strip.gsub(' ','|')}/)
+        
+        round_brackets = last_terms.scan(/\(|\)/)
+        common_terms = []
+        if !round_brackets.empty?
+          regex = ''
+          scan_terms = last_terms.match(/([\w\d ]*)(\([\w\d:, ]*\))/)
+          if scan_terms
+            if scan_terms[1] && scan_terms[2]
+              bracket_contents = scan_terms[2].match(/\((.*)\)/)[1]
+              if bracket_contents.to_i != 0 || !bracket_contents.scan(/shapefile/i).empty?
+                if result_name.strip.index(scan_terms[1].strip) == 0
+                  groups.push(scan_terms[1].strip)
+                end
+                if result_name.strip.index("#{scan_terms[1]}#{scan_terms[2]}") == 0
+                  groups.push("#{scan_terms[1]}#{scan_terms[2]}")
+                end
+              else
+                if result_name.strip.index("#{scan_terms[1]}#{scan_terms[2]}") == 0
+                  groups.push("#{scan_terms[1]}#{scan_terms[2]}")
+                end
+                if result_name.strip.index(scan_terms[1].strip) == 0
+                  groups.push(scan_terms[1].strip)
+                end
+              end
+            end
+          end
+        else
+          common_terms = result_name.scan(/#{last_terms.match(/[\w' ]*/)[0].strip.gsub(' ','|')}/)
+        end
+        
         if common_terms.count > 0
           if result_name.strip.index(common_terms.join(' ').strip) == 0
             groups.push(common_terms.join(' ').strip)
@@ -86,7 +117,8 @@ class CatalogueController < ApplicationController
     used_ids = []     
     groups.each_with_index do |group, i|
       results.each do |r| 
-        if r && r.name.strip.scan(/#{group}/i).count != 0 && r.name.strip.index(/#{group}/i) == 0
+        regexed_group = group.gsub('(','\(').gsub(')','\)').gsub('-','\-')
+        if r && r.name.strip.scan(/#{regexed_group}/i).count != 0 && r.name.strip.index(/#{regexed_group}/) == 0 
           if grouped_results[group].nil?
             grouped_results[group] = []
           end
