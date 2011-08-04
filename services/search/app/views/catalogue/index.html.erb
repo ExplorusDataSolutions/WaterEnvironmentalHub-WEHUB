@@ -3,167 +3,244 @@
     display: none;
   }
 </style>
+<script>
+ $(document).ready(function() {
+ 	
+ 	var map, layer;
+
+   function loadMap() {
+     map = new OpenLayers.Map('map');
+     map.addControl(new OpenLayers.Control.LayerSwitcher());
+     
+     var gphy = new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP});
+     var gmap = new OpenLayers.Layer.Google("Google Streets", {numZoomLevels: 20});
+     var ghyb = new OpenLayers.Layer.Google("Google Hybrid", {type: G_HYBRID_MAP, numZoomLevels: 20});
+     var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, numZoomLevels: 22});
+
+     map.addLayers([gphy, gmap, ghyb, gsat]);
+     
+     map.setCenter(new OpenLayers.LonLat(-114.922485, 56.400224), 4);
+
+     markers = new OpenLayers.Layer.Markers("Features");
+     map.addLayer(markers);           
+   }
+   
+   function setMarker(lon, lat, html){
+     var lonLatMarker = new OpenLayers.LonLat(lon, lat);
+ 
+     var feature = new OpenLayers.Feature(markers, lonLatMarker);
+
+     feature.closeBox = true;
+     feature.data.popupContentHTML = html;
+     feature.data.overflow = "hidden";
+
+     var size = new OpenLayers.Size(20, 34);
+     var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+     var icon = new OpenLayers.Icon('/images/marker-blue.png', size, offset);   
+     var marker = new OpenLayers.Marker(lonLatMarker, icon.clone());
+
+     marker.feature = feature;
+
+     var markerClick = function(evt) {
+         if (this.popup == null) {
+             this.popup = this.createPopup(this.closeBox);
+             this.popup.autoSize = true;
+             map.addPopup(this.popup);
+             this.popup.show();
+         } else {
+             this.popup.toggle();
+         }
+         OpenLayers.Event.stop(evt);
+     };
+     marker.events.register("mousedown", feature, markerClick);
+
+     markers.addMarker(marker);
+   }
+   <%
+   if !@search.results.empty? 
+   %>
+   loadMap();
+   <%
+   end
+   %>
+   <% 
+   if @search.results && !@search.results.empty? 
+     @search.results.each_with_index do |result, index| 
+       if result.coordinates
+         coords = result.coordinates.split(',') 
+         if coords.length == 2 
+         %>
+   <%= "setMarker(#{coords[1]}, #{coords[0]}, '#{result.name.gsub('\'','')}. <a href=\"/catalogue/details/#{result.uuid}\">More details</a>');".html_safe %>
+         <% 
+         end
+       end
+     end
+   end 
+   %>
+ });
+</script>
 
 <div class="home-top">
-	<div class="home-top-left">
-		<div class="home-search-left"></div>
-		<div class="home-search-center">
-			<h2>Find the data you are looking for now!</h2>
-			<table align="center" width="95%" class="home-search-box-table">
-				<tr>
-					<td align="center" colspan="2">
-						<div class="home-search-text-container">
-							<div class="home-search-text-left"></div>							
+  <div class="home-top-left">
+    <div class="home-search-left"></div>
+    <div class="home-search-center">
+      <h2>Find the data you are looking for now!</h2>
+      <table align="center" width="95%" class="home-search-box-table">
+        <tr>
+          <td align="center" colspan="2">
+            <div class="home-search-text-container">
+              <div class="home-search-text-left"></div>             
             <%= form_for :search, :url => { :controller => 'search' } do |f| %>
               <div class="home-search-text-center"><%= f.text_field :query, :name => 'query' %></div>
               <div class="home-search-button" onclick="$('form').submit();"><%= f.submit :search, :name => 'search' %></div>
             <% end %>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td align="left" width="35%" class="label">Connect:</td>
-					<td align="left" width="65%">
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td align="left" width="35%" class="label">Connect:</td>
+          <td align="left" width="65%">
 <%
 =begin %>
-						<span><a href="#"><img src="/images/face_book_icon.jpg" title="Facebook" alt="Facebook" border="0" /></a></span>
+            <span><a href="#"><img src="/images/face_book_icon.jpg" title="Facebook" alt="Facebook" border="0" /></a></span>
 <%
 =end %>
-						<span><a href="http://twitter.com/letthedataflow"><img src="/images/twitter_icon.jpg" title="Twitter" alt="Twitter" border="0" /></a></span>
-						<span><a href="http://www.linkedin.com/groups/Water-Environmental-Hub-3687237"><img src="/images/linked_in_icon.jpg" title="Linked In" alt="Linked In" border="0" /></a></span>
-					</td>
-				</tr>
-				<tr>
-					<td align="left" width="35%" class="label">How It Works:</td>
-					<td align="left" width="65%">
-						<span><img src="/images/home-video-temp.jpg" title="Home Video Temp" alt="Home Video Temp" /></span>
-					</td>
-				</tr>
-			</table>
-			
-			
-		</div>
-		<div class="home-search-right"></div>
-	</div>
-	<div class="home-top-right">
-		<div class="home-right-head">
-			<div class="float-left"><img src="/images/latest-data-icon.jpg" title="Latest Data" alt="Latest Data" /></div>
-			<div class="float-left">&nbsp;<span>Latest Data</span></div>
-			<div class="clear"></div>
-		</div>
-		<div class="clear"></div>
-		<div class="data-container">
-			<div class="float-left">
-				<img src="/images/data-icon1.jpg" title="icon" alt="icon" />
-			</div>
-			<div class="data-text-content">
-				<span class="slight-head">IP3 Alphine Tundra - 3m tower micrometrological station</span><br />
-				<span class="data-text">
-					Area is a wind  swept, high alphine tundra plateau along the drainage divide at the nothern edge of the basin..
-				</span>
-			</div>
-			<div class="clear"></div>
-		</div>
-		<div class="clear"></div>
-		<div class="data-container">
-			<div class="float-left">
-				<img src="/images/data-icon2.jpg" title="icon" alt="icon" />
-			</div>
-			<div class="data-text-content">
-				<span class="slight-head">Geobase National Hydro Network</span><br />
-				<span class="data-text">
-					The national hydro network (NHN) for which the standard wasa officially adopted by the Canadian Council on..
-				</span>
-			</div>
-			<div class="clear"></div>
-		</div>
-		<div class="clear"></div>
-		<div class="data-button" onclick="<%= onclick_link_to :controller => 'catalogue', :action => 'browse' %>">
-			<span class="button">
-				<button>View All</button>
-			</span>
-		</div>
-	</div>
-	<div class="clear"></div>
+            <span><a href="http://twitter.com/letthedataflow"><img src="/images/twitter_icon.jpg" title="Twitter" alt="Twitter" border="0" /></a></span>
+            <span><a href="http://www.linkedin.com/groups/Water-Environmental-Hub-3687237"><img src="/images/linked_in_icon.jpg" title="Linked In" alt="Linked In" border="0" /></a></span>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div id="map" style="width:520px;"></div>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="home-search-right"></div>
+  </div>
+  <div class="home-top-right">
+    <div class="home-right-head">
+      <div class="float-left"><img src="/images/latest-data-icon.jpg" title="Latest Data" alt="Latest Data" /></div>
+      <div class="float-left">&nbsp;<span>Latest Data</span></div>
+      <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div class="data-container">
+      <div class="float-left">
+        <img src="/images/data-icon1.jpg" title="icon" alt="icon" />
+      </div>
+      <div class="data-text-content">
+        <a href="http://waterenvironmentalhub.ca/catalogue/details/304511d2-a682-11e0-aa6e-12313b015271" style="text-decoration: none;">
+        <span class="slight-head">IP3 (Improved Processes and Parameterization for Prediction in Cold Regions)- Wolf Creek: Alpine Tundra - 3m tower micrometeorological station</span><br />
+        <span class="data-text">
+          Area is a wind swept, high alpine tundra plateau along the drainage divide at the northern edge of the basin..
+        </span>
+        </a>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div class="data-container">
+      <div class="float-left">
+        <img src="/images/data-icon2.jpg" title="icon" alt="icon" />
+      </div>
+      <div class="data-text-content">
+        <a href="http://waterenvironmentalhub.ca/catalogue/details/09abdba0-3f7b-11e0-9207-0800200c9a66" style="text-decoration: none;">
+        <span class="slight-head">GeoBase National Road Network Alberta Road Segments</span><br />
+        <span class="data-text">
+          The National Road Network (NRN) product contains quality geospatial data (current, accurate, consistent..
+        </span>
+        </a>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div class="data-button" onclick="<%= onclick_link_to :controller => 'catalogue', :action => 'browse' %>">
+      <span class="button">
+        <button>View All</button>
+      </span>
+    </div>
+  </div>
+  <div class="clear"></div>
 </div>
 <div class="clear"></div>
 
 <div class="home-middle">
-	<div class="home-middle-content">
-		<div class="float-left"><img src="/images/about-icon.jpg" title="About" alt="About" /></div>
-		<div class="home-middle-data">
-			<div class="home-middle-head">About WEHub</div>
-			<div class="home-middle-text">
-The Water and Environmental Hub project is creating an open source web platform that will aggregate, federate, and connect water data and information enabling users to access, mashup, analyze, model and interpret water data, information, issues and opportunities. By combining water expertise, an open web development approach¸ along with an entrepreneurial foundation, the project will spur economic diversification and benefit both public users and the private sector by improving access to water data, information, and tools for academia, government, industry, NGOs, and the general public.			</div>
+  <div class="home-middle-content">
+    <div class="float-left"><img src="/images/about-icon.jpg" title="About" alt="About" /></div>
+    <div class="home-middle-data">
+      <div class="home-middle-head">About WEHub</div>
+      <div class="home-middle-text">
+The Water and Environmental Hub project is creating an open source web platform that will aggregate, federate, and connect water data and information enabling users to access, mashup, analyze, model and interpret water data, information, issues and opportunities. By combining water expertise, an open web development approach¸ along with an entrepreneurial foundation, the project will spur economic diversification and benefit both public users and the private sector by improving access to water data, information, and tools for academia, government, industry, NGOs, and the general public.     </div>
       <%= link_to "Learn More", :controller => "about", :action => "index" %>
-		</div>
-	</div>
-	<div class="home-middle-content">
-		<div class="float-left"><img src="/images/community-icon.jpg" title="Community" alt="Community" /></div>
-		<div class="home-middle-data">
-			<div class="home-middle-head">WEHub Community</div>
-			<div class="home-middle-text">
+    </div>
+  </div>
+  <div class="home-middle-content">
+    <div class="float-left"><img src="/images/community-icon.jpg" title="Community" alt="Community" /></div>
+    <div class="home-middle-data">
+      <div class="home-middle-head">WEHub Community</div>
+      <div class="home-middle-text">
         This two year, $1.8 million project is funded by Western Economic Diversification Canada, University of Lethbridge, and Cybera Inc. The project is driven by University of Lethbridge, Cybera Inc., the Alberta WaterPortal, and supported by various water organizations. Project Partners: Western Economic Diversification Canada (WD), University of Lethbridge, Cybera Inc., Alberta WaterPortal. Development Partners: Tesera Systems Inc., University of Calgary Biogeosciences Institute - Dr. Steve Liang (GeoSensorweb Lab). Potential Data Partners: UNGEMS, Groundwater Information Network (GIN).
-			</div>
-			<%= link_to "Learn More", :controller => "about", :action => "community" %>
-		</div>
-	</div>
-	<div class="home-middle-content no-border">
-		<div class="float-left"><img src="/images/application-icon.jpg" title="New Application" alt="New Application" /></div>
-		<div class="home-middle-data">
-			<div class="home-middle-head">New Applications</div>
-			<div class="home-middle-text">
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula. Fusce vestibulum, ipsum eget imperdiet rhoncus, augue leo semper massa, non porta velit massa nec massa. 
-			</div>
-			<div class="dotted-light-border">&nbsp;</div>
-			<div class="clear">&nbsp;</div>
-			<div class="float-left"><img src="/images/application-data-icon.jpg" title="icon" alt="icon" /></div>
-			<div class="home-middle-app-data">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula.</div>
-			<div class="clear"></div>
-			<div class="dotted-light-border">&nbsp;</div>
-			<div class="clear">&nbsp;</div>
-			<div class="float-left"><img src="/images/application-data-icon.jpg" title="icon" alt="icon" /></div>
-			<div class="home-middle-app-data">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula.</div>
-			<div class="clear"></div>
-		</div>
-	</div>
+      </div>
+      <%= link_to "Learn More", :controller => "about", :action => "community" %>
+    </div>
+  </div>
+  <div class="home-middle-content no-border">
+    <div class="float-left"><img src="/images/application-icon.jpg" title="New Application" alt="New Application" /></div>
+    <div class="home-middle-data">
+      <div class="home-middle-head">New Applications</div>
+      <div class="home-middle-text">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula. Fusce vestibulum, ipsum eget imperdiet rhoncus, augue leo semper massa, non porta velit massa nec massa. 
+      </div>
+      <div class="dotted-light-border">&nbsp;</div>
+      <div class="clear">&nbsp;</div>
+      <div class="float-left"><img src="/images/application-data-icon.jpg" title="icon" alt="icon" /></div>
+      <div class="home-middle-app-data">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula.</div>
+      <div class="clear"></div>
+      <div class="dotted-light-border">&nbsp;</div>
+      <div class="clear">&nbsp;</div>
+      <div class="float-left"><img src="/images/application-data-icon.jpg" title="icon" alt="icon" /></div>
+      <div class="home-middle-app-data">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula.</div>
+      <div class="clear"></div>
+    </div>
+  </div>
 </div>
 <div class="clear"></div>
 
 <div class="home-bottom">
-	<div class="home-bottom-content">
-		<h2>SITE LINKS</h2>
-		<div><%= link_to "Home", :root %></div>
-		<div><%= link_to "Water Data Catalogue", :controller => 'catalogue', :action => 'browse' %></div>
-		<div><%= link_to "Tools", :controller => 'tools' %></div>
-		<div><%= link_to "About", :controller => 'about' %></div>
-		<div><%= link_to "API", :controller => 'api' %></div>
-		<div><%= link_to "Contact Us", :controller => 'about', :action => 'contact_us' %></div>
-	</div>
-	<div class="home-bottom-content">
-		<h2>ORGANIZATION</h2>
-		<div><a href="http://www.wd.gc.ca/">Western Economic Diversification</a></div>
-		<div><a href="http://www.uleth.ca/">University of Lethbridge</a></div>
-		<div><a href="http://www.cybera.ca/">Cybera Inc.</a></div>
-		<div><a href="http://www.albertawater.com/">Alberta WaterPortal</a></div>
-		<div><a href="http://www.tesera.com/">Tesera Systems Inc.</a></div>
-		<div><a href="http://www.geocens.ca/">University of Calgary - Biogeosciences</a></div>		
-	</div>
-	<div class="home-bottom-content">
-		<h2>NEWSROOM</h2>
-		<div><%= link_to "News", :controller => 'media', :action => 'news' %></div>
-		<div><%= link_to "Press Release", :controller => 'media', :action => 'press' %></div>
-		<div><%= link_to "In the Media", :controller => 'media' %></div>
-		<div><%= link_to "Media Kit", :controller => 'media', :action => 'kit' %></div>
-	</div>
-	<div class="home-bottom-content">
-		<h2>OTHER LINKS</h2>
+  <div class="home-bottom-content">
+    <h2>SITE LINKS</h2>
+    <div><%= link_to "Home", :root %></div>
+    <div><%= link_to "Water Data Catalogue", :controller => 'catalogue', :action => 'browse' %></div>
+    <div><%= link_to "Tools", :controller => 'tools' %></div>
+    <div><%= link_to "About", :controller => 'about' %></div>
+    <div><%= link_to "API", :controller => 'api' %></div>
+    <div><%= link_to "Contact Us", :controller => 'about', :action => 'contact_us' %></div>
+  </div>
+  <div class="home-bottom-content">
+    <h2>ORGANIZATION</h2>
+    <div><a href="http://www.wd.gc.ca/">Western Economic Diversification</a></div>
+    <div><a href="http://www.uleth.ca/">University of Lethbridge</a></div>
+    <div><a href="http://www.cybera.ca/">Cybera Inc.</a></div>
+    <div><a href="http://www.albertawater.com/">Alberta WaterPortal</a></div>
+    <div><a href="http://www.tesera.com/">Tesera Systems Inc.</a></div>
+    <div><a href="http://www.geocens.ca/">University of Calgary - Biogeosciences</a></div>    
+  </div>
+  <div class="home-bottom-content">
+    <h2>NEWSROOM</h2>
+    <div><%= link_to "News", :controller => 'media', :action => 'news' %></div>
+    <div><%= link_to "Press Release", :controller => 'media', :action => 'press' %></div>
+    <div><%= link_to "In the Media", :controller => 'media' %></div>
+    <div><%= link_to "Media Kit", :controller => 'media', :action => 'kit' %></div>
+  </div>
+  <div class="home-bottom-content">
+    <h2>OTHER LINKS</h2>
     <div><%= link_to "Terms of Service", :controller => 'about', :action => 'terms_of_service' %></div>
-		<div><%= link_to "Privacy", :controller => 'about', :action => 'privacy' %></div>
-		<div><a href="http://letthedataflow.ca/">Let the data flow</a></div>
-		<div><a href="http://apps4water.ca/">Apps4Water</a></div>
-		<div><a href="http://www.waterhackathon.org/">Water Hackathon</a></div>
-		<div><a href="https://www.google.com/calendar/b/0/embed?src=cybera.ca_1pmbf24uq55krm03aaeqc0cuj0@group.calendar.google.com&ctz=America/Edmonton&gsessionid=OK">Open Water Data Calendar</a></div>		
-	</div>
+    <div><%= link_to "Privacy", :controller => 'about', :action => 'privacy' %></div>
+    <div><a href="http://letthedataflow.ca/">Let the data flow</a></div>
+    <div><a href="http://apps4water.ca/">Apps4Water</a></div>
+    <div><a href="http://www.waterhackathon.org/">Water Hackathon</a></div>
+    <div><a href="https://www.google.com/calendar/b/0/embed?src=cybera.ca_1pmbf24uq55krm03aaeqc0cuj0@group.calendar.google.com&ctz=America/Edmonton&gsessionid=OK">Open Water Data Calendar</a></div>   
+  </div>
 </div>
 <div class="clear"></div>
