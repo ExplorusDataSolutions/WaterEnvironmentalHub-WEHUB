@@ -2,6 +2,8 @@ class CatalogueController < ApplicationController
 
   def index
     @main_menu = 'home'
+    
+    @search = search_instance.do_query('all', nil, nil, nil)
   end
 
   def search
