@@ -8,15 +8,22 @@ class ApplicationController < ActionController::Base
   before_filter :fetch_recently_viewed_search_results, :fetch_user_saved_search_results
 
   def fetch_recently_viewed_search_results
-    if !current_user.nil?
-      @recently_viewed_search_results = search_results_from_datasets(catalogue_instance.find_recently_viewed(current_user.id))
+    user_id = anonynmous_id
+    if logged_in?
+      user_id = current_user.id
     end
+
+    @recently_viewed_search_results = search_results_from_datasets(catalogue_instance.find_recently_viewed(user_id))
   end
 
   def fetch_user_saved_search_results
-    if !current_user.nil?
+    if logged_in?
       @user_saved_search_results = search_results_from_datasets(catalogue_instance.find_saved(current_user.id))
     end
+  end
+  
+  def anonynmous_id
+    request.remote_ip.scan(/\d+/).join.to_i * -1
   end
   
   def current_user

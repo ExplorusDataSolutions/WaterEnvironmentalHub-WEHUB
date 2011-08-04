@@ -82,8 +82,13 @@ class UserController < ApplicationController
   
   def recently_viewed
     if request.post?
-      if params[:id] && logged_in?
-        catalogue_instance.add_recently_viewed(current_user.id, params[:id])
+      if params[:id]
+        user_id = anonynmous_id
+        if logged_in?
+          user_id = current_user.id
+        end
+
+        catalogue_instance.add_recently_viewed(user_id, params[:id])
       end
     end 
     render :nothing => true

@@ -1,9 +1,6 @@
 <div class="right-container">
-<% if current_user.nil? %>
-  Display copy pertinent to a user that is not logged in here. <br /> <br />
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam porta aliquet placerat. Praesent elit quam, sagittis ac euismod in, fermentum eget magna. Integer ligula mi, congue vel varius in, pretium quis magna. Proin nibh neque, vehicula vitae iaculis vel, dictum eget ante. Aenean eleifend fringilla euismod. Nunc suscipit nibh non tellus gravida dapibus. Pellentesque laoreet gravida tellus in elementum. Maecenas vitae velit nisl. Quisque volutpat consequat mattis. Vestibulum tempus felis vitae metus vulputate suscipit.
- <br /> <br />
-  Sed convallis felis a nisi adipiscing egestas. In in eros odio, eu varius enim. Fusce ultricies nunc tincidunt lacus pretium vestibulum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam enim tortor, malesuada in gravida non, rhoncus id ipsum. Donec eget tortor magna, non rhoncus metus. Praesent sed arcu pharetra nisl dictum ullamcorper. Pellentesque vel semper odio. Vivamus vestibulum sagittis enim, ac convallis sapien adipiscing a. Donec at enim et mauris porttitor aliquam. Quisque in metus et arcu congue mollis mollis nec eros. Cras sed odio nunc. Nunc consectetur purus ut dui rutrum vehicula. Aenean sit amet nulla arcu, quis lobortis metus. In faucibus nibh in est semper mattis. Nullam vel vehicula est.  
+<% if !logged_in? %>
+  <%= render 'shared/user_recently_viewed_search_results' unless @recently_viewed_search_results.nil?  %>	
 <% else %>
   <%= render 'shared/user_recently_viewed_search_results' unless @recently_viewed_search_results.nil?  %>	
   <%= render 'shared/user_saved_search_results' unless @user_saved_search_results.nil? %>
