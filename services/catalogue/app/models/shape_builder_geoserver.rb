@@ -31,7 +31,7 @@ class ShapeBuilderGeoServer
   private 
 
   def get_shape(feature)
-    response = http_get("GetFeature&typeName=#{feature.uuid}&maxFeatures=1&outputFormat=SHAPE-ZIP")
+    response = http_get("GetFeature&typeName=#{feature.uuid}&maxFeatures=10000&outputFormat=SHAPE-ZIP")
 
     open(filename_and_path(feature), 'wb') do |file|
       file.write(response)
