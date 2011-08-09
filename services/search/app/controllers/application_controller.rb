@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
   end
   
   def anonynmous_id
-    request.remote_ip.scan(/\d+/).join.to_i * -1
+    request.remote_ip.scan(/\d+/)[1..3].join.to_i * -1
   end
   
   def current_user
