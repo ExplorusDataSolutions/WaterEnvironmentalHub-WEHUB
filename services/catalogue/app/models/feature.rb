@@ -95,8 +95,8 @@ class Feature
             latitude = lat_long_split[0]
             longitude = lat_long_split[1]
 
-            execute("SELECT addgeometrycolumn('public', '#{tablename}', 'thepoint_lonlat' ,4326 ,'POINT' ,2);")
-            execute("UPDATE public.#{tablename} SET thepoint_lonlat = geometryfromtext('POINT(#{latitude} #{longitude})', 4326);")
+            execute("SELECT addgeometrycolumn('public', '#{tablename}', 'the_geom' ,4326 ,'POINT' ,2);")
+            execute("UPDATE public.#{tablename} SET the_geom = geometryfromtext('POINT(#{latitude} #{longitude})', 4326);")
           end
         rescue Exception => e
         end
