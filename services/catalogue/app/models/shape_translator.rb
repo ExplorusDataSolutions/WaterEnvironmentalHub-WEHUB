@@ -1,13 +1,16 @@
 class ShapeTranslator
   
   def initialize(filename, tablename, srs='4326', uploads_directory='public/uploads', sql_directory='tmp/shape_scripts')
+    @filename = filename
     @uploads_directory = uploads_directory
     
     @filename_sql = "#{path}/#{sql_directory}/#{tablename}.sql"
-    
     filename_shape = unzip(upload_path(filename))
     
     result = %x[shp2pgsql -s 4326 "#{upload_path(filename_shape)}" "#{tablename}" > "#{@filename_sql}"]
+    if $?.exitstatus == 127
+     raise "Executable shp2pgsql could not be found"
+    end
   end
   
   def shape_sql
