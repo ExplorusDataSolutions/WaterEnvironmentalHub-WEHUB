@@ -18,6 +18,10 @@ class ShapeBuilderPostgreSQL
       # Building shape files using Postgis's pgsql2shp cmd
       result = %x[pgsql2shp -f #{filename} -u #{username} -P #{password} -r #{database} #{feature.tablename}]      
       
+      if $?.exitstatus == 127
+       raise "Executable pgsql2shp could not be found"
+      end
+      
       if result.include? 'The DBF file will be created but not the shx or shp files'
         File.delete("#{filename}.dbf")
         throw
