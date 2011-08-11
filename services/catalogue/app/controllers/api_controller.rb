@@ -3,7 +3,7 @@ class ApiController < ApplicationController
   respond_to :json, :xml
   
   def feature_types
-    @feature_types = FeatureType.all
+    @feature_types = FeatureType.where("name = ? OR name = ?", 'base_data_static', 'observation_data_dynamic')
     
     respond_with(@feature_types, :dasherize => false)
   end
@@ -12,7 +12,12 @@ class ApiController < ApplicationController
     feature_type_id = params[:feature_type_id]
     
     if feature_type_id
-      @datasets = Dataset.where(:feature_type_id => feature_type_id).limit(20)
+      results = ActiveRecord::Base.connection.execute("SELECT uuid, name FROM datasets WHERE feature_type_id = #{feature_type_id} ORDER BY name")
+      
+      @datasets = []
+      results.each do |result|
+        @datasets.push(Dataset.new(:uuid => result['uuid'], :name => result['name'], :feature_source => FeatureSource.new(:name => 'light')))
+      end
     end  
     
     respond_with(@datasets)
