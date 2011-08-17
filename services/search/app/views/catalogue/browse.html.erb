@@ -1,3 +1,4 @@
+<%= @groups %>
 <script>
   $('document').ready(function() {
     $("#dataset-navigation").treeview({
@@ -80,7 +81,9 @@
   
 		<div class="clear height-10"></div>
     
-    <%= render '/shared/download_panel_bottom' %>		
+    <%= render '/shared/pagination' %>
+        
+    <%= render '/shared/download_panel_bottom' %>
 		
 	</div>
 

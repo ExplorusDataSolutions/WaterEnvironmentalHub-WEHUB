@@ -34,6 +34,19 @@ class CatalogueController < ApplicationController
     end
 
     @search = search_instance.do_query(query, nil, nil)
+    results = @search.results
+    
+    page = params[:page]
+    if page
+      page = Integer(page)-1
+      @search.results = results[(page*page_size)..(page*page_size+page_size-1)]
+      @current = page+1
+    else
+      @search.results = results[0..page_size-1]
+      @current = 1
+    end
+    
+    @pages = Integer(results.count / page_size)    
   
     base_data = @search.base_data
     base_data.sort! { |a,b| a.name.downcase <=> b.name.downcase }
@@ -52,6 +65,10 @@ class CatalogueController < ApplicationController
     groups.delete('Canadian')
         
     @observation_data = group(observation_data, groups)
+  end
+  
+  def page_size
+    10
   end
   
   def my_collection

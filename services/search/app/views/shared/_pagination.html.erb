@@ -1,0 +1,57 @@
+<%
+if @pages > 3
+%>
+<div class="clear"></div>
+<div class="pagination">
+<%    
+  url_match = request.url.match(/(.*)[\?|&]page=/)
+  if !url_match.nil?
+    url = url_match[1]
+  else
+    url = request.url
+  end
+  
+  url = url.scan(/&/).empty? ? "#{url}?page=" : "#{url}&page="
+
+  if @current-1 != 0
+%>
+  <a rel="previous" class="prev_page" href="<%= "#{url}#{@current-1}" %>">Previous</a>
+<%
+  else
+%>
+  <span class="disabled prev_page">Previous</span>
+<%
+  end
+=begin
+  ellipsis = false
+  (1..@pages).each do |i| 
+	  if i == @current
+  %>
+    <span class="current"><%= i %></span>
+  <%
+    elseif i <= 3 || (@pages - 3) < i
+  %>
+    <a href="<%= "#{url}#{i}" %>"><%= i %></a>
+  <% 
+    elsif @pages > 3 && !ellipsis
+      ellipsis = true
+  %>
+    ...
+  <%
+	  end
+  end
+=end
+  if @current != @pages
+%>
+  <a rel="next" class="next_page" href="<%= "#{url}#{@current+1}" %>">Next</a>
+<%
+  else
+%>
+  <span class="disabled next_page">Next</span>
+<%
+  end
+%>
+</div>
+<%
+end
+%>

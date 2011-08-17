@@ -27,9 +27,26 @@ class SearchController < ApplicationController
       end
     end
 
-    @search = search_instance.do_query(query, params[:datasets], user_id, group_ids)
-  end
+    @search = search_instance.do_query(query, params[:datasets], user_id, group_ids)  
+    results = @search.results
     
+    page = params[:page]
+    if page
+      page = Integer(page)-1
+      @search.results = results[(page*page_size)..(page*page_size+page_size-1)]
+      @current = page+1
+    else
+      @search.results = results[0..page_size-1]
+      @current = 1
+    end
+    
+    @pages = Integer(results.count / page_size)
+  end
+  
+  def page_size
+    10
+  end
+        
   def info
     id = params[:id]      
     if id != nil

@@ -112,8 +112,10 @@
 
   <% if !@search.results.empty? %>
 
+  <%= render '/shared/pagination' %>
+
   <%= render '/shared/download_panel_bottom' %>
-	
+	  
 	<% end %>
 </div>
 <div class="search-box">

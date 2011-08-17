@@ -65,6 +65,10 @@
     $('[name=clear]').click(function() {
       $('[type=checkbox][name=download]').attr('checked', false);
     });
+
+    $('[name=select-all]').click(function() {
+      $('[type=checkbox][name=download]').attr('checked', true);
+    });
     
     <% if logged_in? %>
     $('[name=my-collection]').click(function() {
@@ -88,6 +92,7 @@
     </span>
 
     <button name="my-collection">+ My collection</button>
+    <button name="select-all">Select all</button>
     <button name="clear">Clear</button>
   </div>
 
