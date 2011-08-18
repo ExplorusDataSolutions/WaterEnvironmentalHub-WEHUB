@@ -94,10 +94,10 @@ class UserController < ApplicationController
     render :nothing => true
   end
   
-  def save
+  def modify_collection
     if request.post?
       if params[:ids] && logged_in?
-        catalogue_instance.add_saved(current_user.id, params[:ids])
+        catalogue_instance.user_collections(current_user.id, params[:ids], params[:modifier])
       end
     end
     render :nothing => true

@@ -41,7 +41,7 @@ class CatalogueTranslator
     response.body
   end
 
-  def add_saved(user_id, dataset_uuids)
+  def user_collections(user_id, dataset_uuids, modifier)
     timeout = 500
     url = URI.parse(user_saved_uri)
     http = Net::HTTP.new(url.host, url.port)
@@ -50,6 +50,7 @@ class CatalogueTranslator
     response = http.start {|http| http.post(url.to_s, { 
       :user_id => "#{user_id}", 
       :uuids => "#{dataset_uuids}",
+      :modifier => "#{modifier}",
       :format => "json" 
     }.to_json, { 'Content-Type' => 'application/json'}) }
 

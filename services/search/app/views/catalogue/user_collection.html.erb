@@ -1,5 +1,7 @@
 <div class="full-content-body">
 	<div class="full-content-left">
+<%
+=begin %>
 		<div class="dashed-header">
 			<h2>Sort By: </h2>
 			<span><a href="#" class="selected">Most Recent</a></span>
@@ -8,7 +10,8 @@
 			<span><a href="#">Title</a></span>
 		</div>
 		<div class="clear"></div>
-		
+<%
+=end %>
 		<% for i in 0..4%>
 		<div class="search-result-each search-result-each-box">
 			<div class="search-checkbox">
@@ -68,24 +71,27 @@
 		<div class="clear"></div>
 		<% end%>
 		
-		
 		<div class="clear height-10"></div>
+		
+    <%= render '/shared/pagination' %>
+    
+    <%= render '/shared/download_panel_bottom' %>    
 
-    <%= render '/shared/download_panel_bottom' %>
-		
-		<div class="clear height-25"></div>
-		<div class="pagination">
-			<span class="disabled prev_page">Previous</span>
-			<span class="current">1</span>
-			<a rel="next" href="/view/1?page=2">2</a>
-			<a href="/view/1?page=3">3</a>
-			......
-			<a href="/view/1?page=98">98</a>
-			<a href="/view/1?page=99">99</a>
-			<a rel="next" class="next_page" href="/view/1?page=2">Next</a>
-		</div>
-		
-		
+    <script>
+      $('document').ready(function() {
+        var myCollection = $('[name=my-collection]');
+        myCollection.unbind();
+        myCollection.find('span').text('- My Collection');
+        myCollection.click(function() {
+          var ids = [];
+          $('[type=checkbox][name=download]:checked').each(function() { ids.push($(this).val()); })
+          if (ids.length != 0) {
+            $.post("<%= url_for :controller => 'user', :action => 'modify_collection', :modifier => 'remove' %>", { ids: ids }); 
+          }
+        });
+      });
+    </script>
+    
 	</div>
 	<div class="sub-content-right">
     <%= render 'shared/right_panel' %>				

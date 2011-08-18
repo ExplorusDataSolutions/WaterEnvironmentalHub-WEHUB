@@ -71,9 +71,11 @@ class CatalogueController < ApplicationController
     10
   end
   
-  def my_collection
+  def user_collection
     @breadcrumb = ['My Collection']
     @main_menu = 'we_catalogue'
+    
+    @pages = 1
   end
 
   def find_groups(results)
