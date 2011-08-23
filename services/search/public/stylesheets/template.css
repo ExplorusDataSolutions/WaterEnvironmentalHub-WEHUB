@@ -622,6 +622,9 @@ ul.catalogue-menu li {
   color:#AFAFAF;
   font-size:12px;
 }
+.hand {
+	cursor: pointer;
+}
 .dotted-light-border{
   border-bottom:dotted 1px #C4C4C4;
 }
