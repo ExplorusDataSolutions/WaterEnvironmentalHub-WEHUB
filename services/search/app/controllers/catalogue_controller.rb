@@ -75,8 +75,8 @@ class CatalogueController < ApplicationController
     @breadcrumb = ['My Collection']
     @main_menu = 'we_catalogue'
     
-    @results = catalogue_instance.find_datasets_by_user(current_user.id)
-    
+    @results = fetch_user_saved_search_results
+        
     @pages = 1
   end
 

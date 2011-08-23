@@ -30,7 +30,7 @@
           var ids = [];
           $('[type=checkbox][name=download]:checked').each(function() { ids.push($(this).val()); })
           if (ids.length != 0) {
-            $.post("<%= url_for :controller => 'user', :action => 'modify_collection', :modifier => 'remove' %>", { ids: ids }); 
+            $.post("<%= url_for :controller => 'user', :action => 'modify_collection', :modifier => 'remove' %>", { ids: ids }, function() { location.reload(); }); 
           }
         });
       });
