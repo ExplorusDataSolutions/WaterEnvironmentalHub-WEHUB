@@ -61,14 +61,17 @@ class Dataset < ActiveRecord::Base
         xml.tag!(:name, "#{author.first_name} #{author.last_name}")
         xml.tag!(:email, author.email)
       end unless author.nil?
-    begin      
-      if feature.keywords
-        xml.tag!(:properties, feature.keywords.join(', ').chop!)
+      begin      
+        if feature.keywords
+          xml.tag!(:properties, feature.keywords.join(', ').chop!)
+        end
+      rescue
       end
-    rescue
-    end
       if feature.latitude_longitude
         xml.tag!(:coordinates, feature.latitude_longitude)
+      end
+      if feature.bounding_box
+        xml.tag!(:bounding_box, feature.bounding_box)
       end
       xml.formats do
         feature.formats.each do |format|

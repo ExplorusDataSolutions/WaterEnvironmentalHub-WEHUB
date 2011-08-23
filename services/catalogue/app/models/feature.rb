@@ -66,6 +66,7 @@ class Feature
           latitude = first_row.select { |column| column =~ /^lat/i }.first[1]
           longitude = first_row.select { |column| column =~ /^long/i }.first[1]
         end
+        
       rescue
       end
       
@@ -74,6 +75,15 @@ class Feature
       meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
       if meta_content
         meta_content.coordinates
+      end
+    end
+  end
+
+  def bounding_box
+    if is_data_source?('catalogue')
+      begin
+        execute("SELECT box2d(ST_extent(the_geom)) FROM #{tablename}")[0].select{ |column| column =~ /box2d/ }.first[1].match(/BOX\((.*)\)/)[1]
+      rescue
       end
     end
   end
