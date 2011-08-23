@@ -11,6 +11,7 @@ class UserController < ApplicationController
             if params[:modifier] == 'remove'
               dataset = UserDatasetCollection.find_by_user_id_and_uuid(params[:user_id], uuid) 
               dataset.destroy
+              @datasets = nil
             else
               @datasets = UserDatasetCollection.create(:user_id => params[:user_id], :uuid => uuid)
             end
@@ -22,7 +23,11 @@ class UserController < ApplicationController
     else
       @datasets = UserDatasetCollection.find_all_by_user_id(params[:user_id])
     end
-     respond_with(@datasets) 
+    if @datasets.nil?
+      render :nothing => true
+    else 
+      respond_with(@datasets)
+    end
   end
 
   def recently_viewed
