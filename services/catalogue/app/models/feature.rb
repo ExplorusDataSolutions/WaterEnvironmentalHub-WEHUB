@@ -63,10 +63,17 @@ class Feature
         first_row = execute("SELECT * FROM #{tablename} LIMIT 1")[0]
 
         if first_row
-          latitude = first_row.select { |column| column =~ /^lat/i }.first[1]
-          longitude = first_row.select { |column| column =~ /^long/i }.first[1]
+          geometry_column = first_row.select{ |column| column =~ /^the_geom|thepoint_lonlat/i }.first[0]
+          if geometry_column
+            result = execute("SELECT x(st_centroid(st_extent(#{geometry_column}))), y(st_centroid(st_extent(#{geometry_column}))) FROM #{tablename}")[0]
+
+            latitude = result.select{ |column| column =~ /^y$/i }.first[1]
+            longitude = result.select{ |column| column =~ /^x$/i }.first[1]
+          else
+            latitude = first_row.select{ |column| column =~ /^lat/i }.first[1]
+            longitude = first_row.select{ |column| column =~ /^long/i }.first[1]
+          end
         end
-        
       rescue
       end
       
@@ -82,7 +89,7 @@ class Feature
   def bounding_box
     if is_data_source?('catalogue')
       begin
-        execute("SELECT box2d(ST_extent(the_geom)) FROM #{tablename}")[0].select{ |column| column =~ /box2d/ }.first[1].match(/BOX\((.*)\)/)[1]
+        execute("SELECT box2d(st_extent(the_geom)) FROM #{tablename}")[0].select{ |column| column =~ /box2d/ }.first[1].match(/BOX\((.*)\)/)[1]
       rescue
       end
     end
