@@ -26,8 +26,6 @@ CSV.foreach('dataset_list.csv') do |row|
   if !uuid.nil? && uuid.length == 36
     response = xml_to_hash(get("http://waterenvironmentalhub.ca:3000/items/?id=#{uuid}&format=xml"))
     coordinates = response[:dataset][:coordinates]
-    if coordinates.nil? || coordinates.empty?
-      puts row
-    end
-  ond
+    puts "#{row} #{coordinates}" 
+  end
 end
