@@ -101,7 +101,7 @@ class Feature
         if first_row
           geometry_column = first_row.select{ |column| column =~ /^the_geom|thepoint_lonlat/i }.first[0]
           if geometry_column
-            execute("SELECT box2d(ST_extent(geometry_column)) FROM #{tablename}")[0].select{ |column| column =~ /box2d/ }.first[1].match(/BOX\((.*)\)/)[1]
+            execute("SELECT box2d(ST_extent(#{geometry_column})) FROM #{tablename}")[0].select{ |column| column =~ /box2d/ }.first[1].match(/BOX\((.*)\)/)[1]
          end
         end
       rescue
