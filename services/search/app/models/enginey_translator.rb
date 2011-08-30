@@ -203,8 +203,8 @@ class EngineYTranslator
 
   def user_from_enginey(response)
     enginey_user = JSON.parse(response)
-
-    User.new(:first_name => enginey_user['first_name'], :last_name => enginey_user['last_name'], :login => enginey_user['login'], :email => enginey_user['email'], :id => enginey_user['id'])
+    
+    User.new(:first_name => enginey_user['first_name'], :last_name => enginey_user['last_name'], :login => enginey_user['login'], :email => enginey_user['email'], :id => enginey_user['id'], :api_key => enginey_user['api_key'])
   end
 
   def get(uri)
