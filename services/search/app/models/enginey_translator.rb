@@ -167,6 +167,10 @@ class EngineYTranslator
     post_json("#{memberships_uri}/authorize", { :user_ids => user_ids, :group_id => params[:group][:id] })
   end
 
+  def verify_api_key(api_key)
+    get("#{api_uri}?id=#{api_key}")
+  end
+  
   private
   
   def friends_uri
@@ -199,6 +203,10 @@ class EngineYTranslator
 
   def sign_out_uri
     "http://#{@server_address}/sessions/destroy"
+  end
+  
+  def api_uri
+    "http://#{@server_address}/api_key"  
   end
 
   def user_from_enginey(response)

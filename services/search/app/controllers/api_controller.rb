@@ -4,6 +4,8 @@ class ApiController < ApplicationController
 
   respond_to :html, :only => ['builder_result']
   
+  before_filter :verify_api_key, :only => [:dataset, :feature]
+  
   def builder
     @breadcrumb = ['API']
     @feature_types = catalogue_instance.api_feature_types
@@ -21,7 +23,7 @@ class ApiController < ApplicationController
     render :text => catalogue_instance.api_dataset_raw(params[:id], params[:output])
   end
   
-  def feature
+  def feature  
     render :text => catalogue_instance.api_feature_raw(params[:id], params[:output])
   end
   
@@ -40,5 +42,22 @@ class ApiController < ApplicationController
 
     render :partial => 'builder_response'
   end
-   
+  
+  private
+  
+  def verify_api_key
+    if logged_in?
+      return true
+    else
+
+      key = params[:key]
+      begin
+        socialnetwork_instance.verify_api_key(key) unless key.nil?
+        return true
+      rescue
+        render :status => :forbidden, :text => 'You need to be logged in or use a valid key to gain access to the API' and return
+      end
+    end
+  end 
+  
 end
