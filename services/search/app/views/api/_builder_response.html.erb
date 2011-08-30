@@ -4,9 +4,9 @@
     <strong>API Call</strong>
     <div id="uri">
       <% if @info_type == 'dataset' %>
-        <%= CGI.unescape(url_for :controller => 'api', :action => 'dataset', :id => "#{@datasets}?output=#{@output}", :only_path => false) %>      
+        <%= CGI.unescape(url_for :controller => 'api', :action => 'dataset', :id => "#{@datasets}?key=#{current_user.api_key}&output=#{@output}", :only_path => false) %>      
       <% else %>
-        <%= CGI.unescape(url_for :controller => 'api', :action => 'feature', :id => "#{@datasets}?output=#{@output}", :only_path => false) %>      
+        <%= CGI.unescape(url_for :controller => 'api', :action => 'feature', :id => "#{@datasets}?key=#{current_user.api_key}&output=#{@output}", :only_path => false) %>      
       <% end %>
 
     </div>
