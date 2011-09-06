@@ -50,6 +50,31 @@ class GeoNetworkTranslator
     
     translate_to_search_results(search_terms)
   end
+
+  def search_results_advanced(query, date_start, date_end, south, east, north, west)
+  
+    bounds = ''
+    if ((south && south.empty?) && (east && east.empty?) && (north && north.empty?) && (west && west.empty?)) 
+      bounds = "<eastBL>#{east}</eastBL><southBL>#{south}</southBL><northBL>#{north}</northBL><westBL>#{west}</westBL>"
+    end
+    
+    date = ''
+    if ((date_start && date_start.empty?) && (date_end && date_end.empty?))
+      date_start = Time.parse(date_start).iso8601
+      date_end = Time.parse(date_end).iso8601
+      date = "<dateFrom>#{date_start}</dateFrom><dateTo>#{date_end}</dateTo>"
+    end
+
+    search_terms = nil
+    
+    begin    
+      response = post("xml.search", "<request><any>#{query}</any>#{bounds}#{date}</request>")
+      search_terms = response.body
+    rescue
+    end
+
+    translate_to_search_results(search_terms)
+  end
   
   def search_result(id)
     if cached_metadata.has_key?(id)
@@ -122,7 +147,7 @@ class GeoNetworkTranslator
     if @cookies == nil && uri != "xml.user.login"
       authenticate
     end
-    puts "Posting #{xmlRequest} to #{uri}"
+    puts xmlRequest
     url = URI.parse("http://#{server_address}/geonetwork/srv/en/#{uri}")
     request = Net::HTTP::Post.new(url.path)
     request.body = "<?xml version='1.0' encoding='UTF-8'?>#{xmlRequest}"
@@ -138,8 +163,8 @@ class GeoNetworkTranslator
   def check_response(response)
     case response
     when Net::HTTPSuccess, Net::HTTPRedirection
-      puts "Success!"
     else
+      puts response.body
       response.error!  
     end
   end

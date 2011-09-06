@@ -1,7 +1,6 @@
 class SearchController < ApplicationController
     
   def index
-
     query = 'all'
     if !(params[:query].nil? || params[:query].empty?)
       query = params[:query]
@@ -11,24 +10,29 @@ class SearchController < ApplicationController
         query = params[:keywords]
       end
     end
-
-    user_id = nil
-    group_ids = nil
     
-    if !current_user.nil?
-      user_id = current_user.id
+    if (params[:type].nil? || params[:type] == 'simple')
+      user_id = nil
+      group_ids = nil
+      
+      if !current_user.nil?
+        user_id = current_user.id
 
-      group_ids = []
-      groups = socialnetwork_instance.user_groups(user_id)
-      if !groups.nil?
-        groups.each do |group|
-          group_ids.push(group.id)
+        group_ids = []
+        groups = socialnetwork_instance.user_groups(user_id)
+        if !groups.nil?
+          groups.each do |group|
+            group_ids.push(group.id)
+          end
         end
       end
-    end
 
-    @search = search_instance.do_query(query, params[:datasets], user_id, group_ids)  
-    results = @search.results
+      @search = search_instance.do_query(query, params[:datasets], user_id, group_ids)  
+      results = @search.results
+    else     
+      @search = search_instance.do_query_advanced(query, params[:date_start], params[:date_end], params[:south], params[:east], params[:north], params[:west])
+      results = @search.results    
+    end
     
     page = params[:page]
     if page

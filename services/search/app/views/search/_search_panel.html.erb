@@ -28,7 +28,12 @@
       }
 
       var action = $.url($('form').attr('action')).attr('path');      
-      $('form').attr('action', action + '?keywords=' + $('[name=query]').val() + '&datasets=' + datasets.join(','));
+      var params = '?keywords=' + $('[name=query]').val() + '&datasets=' + datasets.join(',') + '&type=' + $('[name=type]').val()
+      if ($('[name=type]').val() == 'advanced') {
+        params += '&from=' + $('[name=date_start]').val() + '&to=' + $('[name=date_end]').val()
+        params += '&top=' + $('[name="bounding_box[top]"]').val() + '&right=' + $('[name="bounding_box[right]"]').val() + '&bottom=' + $('[name="bounding_box[bottom]"]').val() + '&left=' + $('[name="bounding_box[left]"]').val();
+      }
+      $('form').attr('action', action + params);
     }
 
     $('.search-button').click(function() {
@@ -41,29 +46,22 @@
   <%# Advanced Search toggle %>
     var opened = false;
     var searchMode = $('#search-mode');
+    var searchType = $('[name=type]');
     searchMode.click(function(event) {
       event.preventDefault();
       $('#advanced-search-panel').slideToggle();
       if (!opened) {
         searchMode.text('Simple Search');
+        searchType.val('advanced');
         opened = true;
       } else {
         opened = false;
         searchMode.text('Advanced Search');
+        searchType.val('simple');
         $('[name="bounding_box[top]"],[name="bounding_box[right]"],[name="bounding_box[bottom]"],[name="bounding_box[left]"], #date_start, #date_end').val('');
       }
     });
     
-    $('#box_selector').click(function(event) {
-      event.preventDefault();
-      $('#box_display').slideToggle();
-      if (boxControl.box.active) {
-        boxControl.box.deactivate();
-      } else {
-        boxControl.box.activate();
-      }
-    });
-
   <%# jQuery datepicker %>
 		$("#date_start, #date_end").datepicker();
   });
@@ -74,12 +72,13 @@
 	<div class="clear height-10"></div>
 	<div class="text-shade-left"></div>
 	<div class="text-shade-repeat-205">
-		  <%= f.text_field :query, :name => 'query' %>
+	  <%= f.text_field :query, :name => 'query' %>
 	</div>
 	<div class="text-shade-right"></div>
 	<div class="clear height-10"></div>
 
   <div id="advanced-search-panel" style="display: none;">
+    <%= hidden_field_tag :type, 'simple' %>
 <%
 =begin %>
 	  <div class="text-shade-left"></div>
@@ -94,14 +93,14 @@
 =end %>	
 	  <div class="text-shade-left"></div>
 	  <div class="text-shade-repeat-205">
-	    <input id="date_start" type="text" />
+      <%= text_field_tag :date_start %>
 	  </div>
 	  <div class="text-shade-right"></div>
 	  <div class="clear height-10"></div> 
 	
 	  <div class="text-shade-left"></div>
 	  <div class="text-shade-repeat-205">
-	    <input id="date_end" type="text" />
+	    <%= text_field_tag :date_end %>
 	  </div>
 	  <div class="text-shade-right"></div>
 	  <div class="clear height-15"></div>

@@ -31,6 +31,16 @@
         }
       });
       map.addControl(boxControl);
+      
+      $('#box_selector').click(function(event) {
+        event.preventDefault();
+        $('#box_display').slideToggle();
+        if (boxControl.box.active) {
+          boxControl.box.deactivate();
+        } else {
+          boxControl.box.activate();
+        }
+      });
     }
     
     function setBoundingBox(leftBottom, rightTop) {

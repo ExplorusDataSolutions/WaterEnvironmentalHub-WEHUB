@@ -47,6 +47,15 @@ class Search
     self
   end
   
+  def do_query_advanced(keywords, date_start, date_end, south, east, north, west)
+    @results = geonetwork.search_results_advanced(keywords, date_start, date_end, south, east, north, west)
+
+    @query = keywords
+    
+    self
+  end
+
+  
   def info(id)
     geonetwork.search_result(id)
   end
