@@ -33,49 +33,39 @@
       var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, numZoomLevels: 22});
 
       map.addLayers([gphy, gmap, ghyb, gsat]);
-      
+
       map.setCenter(new OpenLayers.LonLat(-114.922485, 56.400224), 4);
 
       markers = new OpenLayers.Layer.Markers("Features");
       map.addLayer(markers);
-      
-      var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
-      renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
 
-      var vectors = new OpenLayers.Layer.Vector("Vector Layer", {
-        renderers: renderer
+      var boxControl = new OpenLayers.Control();
+      OpenLayers.Util.extend(boxControl, {
+        draw: function () {
+          this.box = new OpenLayers.Handler.Box(boxControl, { "done": function(bounds) { 
+            var leftBottom = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom));
+            var rightTop = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top));
+            setBoundingBox(leftBottom, rightTop);
+          }});
+        }
       });
-      selectFeature = new OpenLayers.Control.SelectFeature(vectors, { 
-          clickout: false, toggle: false,
-          multiple: false, hover: false,
-          toggleKey: "ctrlKey", // ctrl key removes from selection
-          multipleKey: "shiftKey", // shift key adds to selection
-          box: true,
-          eventListeners: { "activate": function() { 
-            handler = new OpenLayers.Handler.Box(this.handlers.box, {
-              "done": function(boundingBox) { setBoundingBox(boundingBox) }
-            }, null);
-            handler.activate();
-          }}
-      });
-
-
-      map.addControl(selectFeature);
-
-      selectFeature.activate();      
+      map.addControl(boxControl);
 
       $('#box_selector').click(function(event) {
         event.preventDefault();
-        if (selectFeature.active) {
-          selectFeature.deactivate();
+        if (boxControl.box.active) {
+          boxControl.box.deactivate();
         } else {
-          selectFeature.activate();
+          boxControl.box.activate();
         }
       });
     }
     
-    function setBoundingBox(boundingBox){
-      console.log(boundingBox);
+    function setBoundingBox(leftBottom, rightTop){
+      $('[name="bounding_box[top]"]').val(rightTop.lat);
+      $('[name="bounding_box[right]"]').val(rightTop.lon);
+      $('[name="bounding_box[bottom]"]').val(leftBottom.lat);
+      $('[name="bounding_box[left]"]').val(leftBottom.lon);
     }   
     
     function setMarker(lon, lat, html){

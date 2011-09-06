@@ -50,6 +50,8 @@
 	<div class="clear height-10"></div>
 
   <div id="advanced-search-panel" style="display: none;">
+<%
+=begin %>
 	  <div class="text-shade-left"></div>
 	  <div class="text-shade-repeat-205">
 		  <select>
@@ -58,7 +60,8 @@
 	  </div>
 	  <div class="text-shade-right"></div>
 	  <div class="clear height-10"></div>
-	
+<%
+=end %>	
 	  <div class="text-shade-left"></div>
 	  <div class="text-shade-repeat-205">
 		  <select>
@@ -66,7 +69,7 @@
 		  </select>
 	  </div>
 	  <div class="text-shade-right"></div>
-	  <div class="clear height-10"></div>
+	  <div class="clear height-10"></div> 
 	
 	  <div class="text-shade-left"></div>
 	  <div class="text-shade-repeat-205">
@@ -76,9 +79,23 @@
 	  </div>
 	  <div class="text-shade-right"></div>
 	  <div class="clear height-15"></div>
-	  <div class="bounding-box-text">
-		  bounding box
+	  <div class="bounding-box-text" id="box_selector">
+		  <a href="#">Bounding Box</a>
 	  </div>
+	  <%= fields_for :bounding_box do |bbox| %>
+	  <table>
+	    <tr>
+	      <td></td><td><%= bbox.text_field :top, :size => 4 %></td><td></td>
+	    </tr>
+	    <tr>
+	      <td><%= bbox.text_field :left, :size => 4 %></td><td></td><td><%= bbox.text_field :right, :size => 4 %></td>
+	    </tr>
+	    <tr>
+	      <td></td><td><%= bbox.text_field :bottom, :size => 4 %></td><td></td>
+	    </tr>
+
+	  </table>
+	  <% end %>
   </div>
 
 	<div class="search-shared-check">
@@ -101,13 +118,11 @@
 	<div class="search-button">
       <%= f.submit :search, :name => 'search' %>
 	</div>
-<%
-=begin %>
+
 	<div class="float-right slight-margin">
 		<a href="#" id="search-mode">Advanced Search</a>
 	</div>
-<%
-=end %>
+
 	<div class="clear height-25"></div>
 </div>
 <% end %>
