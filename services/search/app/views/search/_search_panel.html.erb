@@ -1,6 +1,7 @@
 <script>
  $(document).ready(function() {
 
+  <%# Search param setup %>
     var datasets = $.url(window.location).param('datasets');
     if (datasets) {
       $(datasets.split(',')).each(function(i,e) {
@@ -36,6 +37,35 @@
     });
 
     setFormAction();
+    
+  <%# Advanced Search toggle %>
+    var opened = false;
+    var searchMode = $('#search-mode');
+    searchMode.click(function(event) {
+      event.preventDefault();
+      $('#advanced-search-panel').slideToggle();
+      if (!opened) {
+        searchMode.text('Simple Search');
+        opened = true;
+      } else {
+        opened = false;
+        searchMode.text('Advanced Search');
+        $('[name="bounding_box[top]"],[name="bounding_box[right]"],[name="bounding_box[bottom]"],[name="bounding_box[left]"], #date_start, #date_end').val('');
+      }
+    });
+    
+    $('#box_selector').click(function(event) {
+      event.preventDefault();
+      $('#box_display').slideToggle();
+      if (boxControl.box.active) {
+        boxControl.box.deactivate();
+      } else {
+        boxControl.box.activate();
+      }
+    });
+
+  <%# jQuery datepicker %>
+		$("#date_start, #date_end").datepicker();
   });
 </script>
 
@@ -64,38 +94,35 @@
 =end %>	
 	  <div class="text-shade-left"></div>
 	  <div class="text-shade-repeat-205">
-		  <select>
-			  <option>Start Date</option>
-		  </select>
+	    <input id="date_start" type="text" />
 	  </div>
 	  <div class="text-shade-right"></div>
 	  <div class="clear height-10"></div> 
 	
 	  <div class="text-shade-left"></div>
 	  <div class="text-shade-repeat-205">
-		  <select>
-			  <option>End Date</option>
-		  </select>
+	    <input id="date_end" type="text" />
 	  </div>
 	  <div class="text-shade-right"></div>
 	  <div class="clear height-15"></div>
 	  <div class="bounding-box-text" id="box_selector">
 		  <a href="#">Bounding Box</a>
 	  </div>
-	  <%= fields_for :bounding_box do |bbox| %>
-	  <table>
-	    <tr>
-	      <td></td><td><%= bbox.text_field :top, :size => 4 %></td><td></td>
-	    </tr>
-	    <tr>
-	      <td><%= bbox.text_field :left, :size => 4 %></td><td></td><td><%= bbox.text_field :right, :size => 4 %></td>
-	    </tr>
-	    <tr>
-	      <td></td><td><%= bbox.text_field :bottom, :size => 4 %></td><td></td>
-	    </tr>
-
-	  </table>
+	  <div id="box_display" style="display:none;">
+	  <%= fields_for :bounding_box do |bbox| %>  
+	    <table>
+	      <tr>
+	        <td></td><td><%= bbox.text_field :top, :size => 4 %></td><td></td>
+	      </tr>
+	      <tr>
+	        <td><%= bbox.text_field :left, :size => 4 %></td><td></td><td><%= bbox.text_field :right, :size => 4 %></td>
+	      </tr>
+	      <tr>
+	        <td></td><td><%= bbox.text_field :bottom, :size => 4 %></td><td></td>
+	      </tr>
+	    </table>
 	  <% end %>
+	  </div>
   </div>
 
 	<div class="search-shared-check">

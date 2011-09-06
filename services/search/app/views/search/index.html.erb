@@ -1,23 +1,4 @@
 <script>
- $(document).ready(function() {
-
-    <%# Advanced Search toggle %>
-    var opened = false;
-    var searchMode = $('#search-mode');
-    searchMode.click(function(event) {
-      event.preventDefault();
-      $('#advanced-search-panel').toggle();
-      if (!opened) {
-        searchMode.text('Simple Search');
-        opened = true;
-      } else {
-        opened = false;
-        searchMode.text('Advanced Search');
-      }
-    });
-
-  });  
-
   $(document).ready(function() {
   	
   	var map, layer, selectFeature;
@@ -50,18 +31,9 @@
         }
       });
       map.addControl(boxControl);
-
-      $('#box_selector').click(function(event) {
-        event.preventDefault();
-        if (boxControl.box.active) {
-          boxControl.box.deactivate();
-        } else {
-          boxControl.box.activate();
-        }
-      });
     }
     
-    function setBoundingBox(leftBottom, rightTop){
+    function setBoundingBox(leftBottom, rightTop) {
       $('[name="bounding_box[top]"]').val(rightTop.lat);
       $('[name="bounding_box[right]"]').val(rightTop.lon);
       $('[name="bounding_box[bottom]"]').val(leftBottom.lat);
