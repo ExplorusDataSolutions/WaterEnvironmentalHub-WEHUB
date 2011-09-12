@@ -26,10 +26,18 @@
           this.box = new OpenLayers.Handler.Box(boxControl, { "done": function(bounds) { 
             var leftBottom = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom));
             var rightTop = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top));
-            setBoundingBox(leftBottom, rightTop);
+            setBoundingBox(rightTop.lat, rightTop.lon, leftBottom.lat, leftBottom.lon);
           }});
         }
       });
+      
+      function setBoundingBox(north, east, south, west) {
+        $('[name="bounding_box[north]"]').val(north);
+        $('[name="bounding_box[east]"]').val(east);
+        $('[name="bounding_box[south]"]').val(south);
+        $('[name="bounding_box[west]"]').val(west);
+      }   
+
       map.addControl(boxControl);
       
       $('#box_selector').click(function(event) {
@@ -43,12 +51,6 @@
       });
     }
     
-    function setBoundingBox(leftBottom, rightTop) {
-      $('[name="bounding_box[top]"]').val(rightTop.lat);
-      $('[name="bounding_box[right]"]').val(rightTop.lon);
-      $('[name="bounding_box[bottom]"]').val(leftBottom.lat);
-      $('[name="bounding_box[left]"]').val(leftBottom.lon);
-    }   
     
     function setMarker(lon, lat, html){
       var lonLatMarker = new OpenLayers.LonLat(lon, lat);

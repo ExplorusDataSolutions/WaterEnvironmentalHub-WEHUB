@@ -31,7 +31,7 @@
       var params = '?keywords=' + $('[name=query]').val() + '&datasets=' + datasets.join(',') + '&type=' + $('[name=type]').val()
       if ($('[name=type]').val() == 'advanced') {
         params += '&from=' + $('[name=date_start]').val() + '&to=' + $('[name=date_end]').val()
-        params += '&top=' + $('[name="bounding_box[top]"]').val() + '&right=' + $('[name="bounding_box[right]"]').val() + '&bottom=' + $('[name="bounding_box[bottom]"]').val() + '&left=' + $('[name="bounding_box[left]"]').val();
+        params += '&south=' + $('[name="bounding_box[south]"]').val() + '&east=' + $('[name="bounding_box[east]"]').val() + '&north=' + $('[name="bounding_box[north]"]').val() + '&west=' + $('[name="bounding_box[west]"]').val();
       }
       $('form').attr('action', action + params);
     }
@@ -58,12 +58,34 @@
         opened = false;
         searchMode.text('Advanced Search');
         searchType.val('simple');
-        $('[name="bounding_box[top]"],[name="bounding_box[right]"],[name="bounding_box[bottom]"],[name="bounding_box[left]"], #date_start, #date_end').val('');
+        $('[name="bounding_box[south]"],[name="bounding_box[east]"],[name="bounding_box[north]"],[name="bounding_box[west]"], #date_start, #date_end').val('');
       }
     });
+
+    function searchParam(param) {
+      var inParams = new RegExp(param +'=([\\w-+/]*)', 'i').exec(window.location.search)
+      if (inParams && inParams.length === 2) {
+        return inParams[1];        
+      }
+    }
     
+    function setBoundingBox(north, east, south, west) {
+      $('[name="bounding_box[north]"]').val(north);
+      $('[name="bounding_box[east]"]').val(east);
+      $('[name="bounding_box[south]"]').val(south);
+      $('[name="bounding_box[west]"]').val(west);
+    }   
+
+    if (searchParam('type') === 'advanced') {
+      searchMode.trigger('click');
+      $('#box_selector').trigger('click');
+      setBoundingBox(searchParam('north'), searchParam('east'), searchParam('south'), searchParam('west'));
+      $('#date_start').val(searchParam('from'));
+      $('#date_end').val(searchParam('to'));      
+    }
+
   <%# jQuery datepicker %>
-		$("#date_start, #date_end").datepicker();
+    $("#date_start, #date_end").datepicker();
   });
 </script>
 
@@ -111,13 +133,13 @@
 	  <%= fields_for :bounding_box do |bbox| %>  
 	    <table>
 	      <tr>
-	        <td></td><td><%= bbox.text_field :top, :size => 4 %></td><td></td>
+	        <td></td><td><%= bbox.text_field :north, :size => 4 %></td><td></td>
 	      </tr>
 	      <tr>
-	        <td><%= bbox.text_field :left, :size => 4 %></td><td></td><td><%= bbox.text_field :right, :size => 4 %></td>
+	        <td><%= bbox.text_field :west, :size => 4 %></td><td></td><td><%= bbox.text_field :east, :size => 4 %></td>
 	      </tr>
 	      <tr>
-	        <td></td><td><%= bbox.text_field :bottom, :size => 4 %></td><td></td>
+	        <td></td><td><%= bbox.text_field :south, :size => 4 %></td><td></td>
 	      </tr>
 	    </table>
 	  <% end %>

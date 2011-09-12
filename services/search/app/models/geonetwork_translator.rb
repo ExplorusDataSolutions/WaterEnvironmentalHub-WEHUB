@@ -54,21 +54,23 @@ class GeoNetworkTranslator
   def search_results_advanced(query, date_start, date_end, south, east, north, west)
   
     bounds = ''
-    if ((south && south.empty?) && (east && east.empty?) && (north && north.empty?) && (west && west.empty?)) 
+    if ((south && !south.empty?) && (east && !east.empty?) && (north && !north.empty?) && (west && !west.empty?)) 
       bounds = "<eastBL>#{east}</eastBL><southBL>#{south}</southBL><northBL>#{north}</northBL><westBL>#{west}</westBL>"
     end
     
     date = ''
-    if ((date_start && date_start.empty?) && (date_end && date_end.empty?))
+    if ((date_start && !date_start.empty?) && (date_end && !date_end.empty?))
       date_start = Time.parse(date_start).iso8601
+      date_start = date_start.split('T')[0]
       date_end = Time.parse(date_end).iso8601
+      date_end = date_end.split('T')[0]
       date = "<dateFrom>#{date_start}</dateFrom><dateTo>#{date_end}</dateTo>"
     end
 
     search_terms = nil
     
     begin    
-      response = post("xml.search", "<request><any>#{query}</any>#{bounds}#{date}</request>")
+      response = post("xml.search", "<request><any>#{query}</any>#{bounds}#{date}</request>")  
       search_terms = response.body
     rescue
     end
