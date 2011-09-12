@@ -171,6 +171,10 @@ class EngineYTranslator
     get("#{api_uri}?id=#{api_key}")
   end
   
+  def create_api_key
+    post_json("#{api_uri}s/create", {})
+  end
+  
   private
   
   def friends_uri

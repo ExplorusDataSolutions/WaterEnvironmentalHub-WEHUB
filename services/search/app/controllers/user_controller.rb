@@ -13,7 +13,13 @@ class UserController < ApplicationController
     if request.post?
       begin
         @user = socialnetwork_instance.sign_in(params[:user][:login], params[:user][:password])
+        if @user && @user.api_key.empty?
+          socialnetwork_instance.create_api_key
+          socialnetwork_instance.sign_out
+          @user = socialnetwork_instance.sign_in(params[:user][:login], params[:user][:password])
+        end
         session[:user] = @user
+
         respond_with(@user) do |format|
           format.html { redirect_to :root }
         end
