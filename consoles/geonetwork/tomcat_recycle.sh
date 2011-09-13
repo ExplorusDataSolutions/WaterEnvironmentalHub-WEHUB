@@ -4,7 +4,8 @@
 
 DIRECTORY=$(cd `dirname $0` && pwd)
 
-ps aux | grep tomcat | grep -v grep | awk '{ print $2 }' | xargs kill -9 2> recycle.log
+while pkill -f tomcat; do sleep 1; done
+
 cd /usr/local/tomcat/bin/
 ./startup.sh > $DIRECTORY/recycle.log
 
