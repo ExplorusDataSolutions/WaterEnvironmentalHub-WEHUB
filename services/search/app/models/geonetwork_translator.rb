@@ -64,7 +64,7 @@ class GeoNetworkTranslator
       date_start = date_start.split('T')[0]
       date_end = Time.parse(date_end).iso8601
       date_end = date_end.split('T')[0]
-      date = "<dateFrom>#{date_start}</dateFrom><dateTo>#{date_end}</dateTo>"
+      date = "<extFrom>#{date_start}</extFrom><extTo>#{date_end}</extTo>"      
     end
 
     search_terms = nil
