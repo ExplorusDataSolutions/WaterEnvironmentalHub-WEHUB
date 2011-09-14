@@ -4,9 +4,12 @@
 
 DIRECTORY=$(cd `dirname $0` && pwd)
 
-while pkill -f tomcat; do sleep 1; done
+pkill -f tomcat.*catalina
 
-cd /usr/local/tomcat/bin/
-./startup.sh > $DIRECTORY/recycle.log
+/usr/local/tomcat/bin/startup.sh > $DIRECTORY/recycle.log
+
+sleep 5
+
+ps aux | grep tomcat >> $DIRECTORY/recycle.log
 
 mail -s "Geonetwork's tomcat recycled `date`" adam.kahtava@tesera.com < $DIRECTORY/recycle.log
