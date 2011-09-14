@@ -4,9 +4,13 @@
 
 DIRECTORY=$(cd `dirname $0` && pwd)
 
+/usr/local/tomcat/bin/shutdown.sh > $DIRECTORY/recycle.log
+
+sleep 5
+
 pkill -f tomcat.*catalina
 
-/usr/local/tomcat/bin/startup.sh > $DIRECTORY/recycle.log
+/usr/local/tomcat/bin/startup.sh >> $DIRECTORY/recycle.log
 
 sleep 5
 
