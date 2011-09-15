@@ -63,6 +63,11 @@
       $('#groups').html($(html).find('option')).val(0);
     });
   });
+
+  $(document).ready(function() {
+  <%# jQuery datepicker %>
+    $("[name='dataset[feature_period_start]'], [name='dataset[feature_period_end]'], [name='dataset[feature_period]']").datepicker({ dateFormat: 'dd/mm/yy' });
+  });
 </script>
 
 
