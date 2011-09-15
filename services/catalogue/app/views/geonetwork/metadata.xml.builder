@@ -18,10 +18,10 @@ xml.Metadata('xmlns:geonet' => 'http://www.fao.org/geonetwork') do
     end
     if @bounding_box && !@bounding_box.empty?
       xml.geoBox do
-        xml.northBL(@bounding_box.split(' ')[0])
-        xml.eastBL(@bounding_box.split(' ')[1].split(',')[0])
-        xml.southBL(@bounding_box.split(',')[1].split(' ')[0])
-        xml.westBL(@bounding_box.split(',')[1].split(' ')[1])
+        xml.northBL(@bounding_box[:north])
+        xml.eastBL(@bounding_box[:east])
+        xml.southBL(@bounding_box[:south])
+        xml.westBL(@bounding_box[:west])
       end
     end
     if @temporal_extent
