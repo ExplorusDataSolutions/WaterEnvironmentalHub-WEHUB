@@ -141,6 +141,7 @@ class ItemsController < ApplicationController
         :description => params[:description],
         :feature_type => FeatureType.find_by_name('observation_data_dynamic'),
         :feature_source => FeatureSource.find_by_name(params[:source]),
+        :feature_period => params[:feature_period]
       }
 
       dataset = Dataset.create(dataset_params)

@@ -102,7 +102,13 @@ class Feature
         if first_row
           geometry_column = first_row.select{ |column| column =~ /^the_geom|thepoint_lonlat/i }.first[0]
           if geometry_column
-            execute("SELECT box2d(ST_extent(#{geometry_column})) FROM #{tablename}")[0].select{ |column| column =~ /box2d/ }.first[1].match(/BOX\((.*)\)/)[1]
+            postgis_box = execute("SELECT box2d(ST_extent(#{geometry_column})) FROM #{tablename}")[0].select{ |column| column =~ /box2d/ }.first[1].match(/BOX\((.*)\)/)[1]
+            { 
+              :north => postgis_box.split(',')[1].split(' ')[1], 
+              :east => postgis_box.split(',')[1].split(' ')[0],
+              :south => postgis_box.split(' ')[1].split(',')[0],
+              :west => postgis_box.split(' ')[0]
+            }
          end
         end
       rescue

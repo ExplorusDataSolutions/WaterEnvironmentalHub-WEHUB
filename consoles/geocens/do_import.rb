@@ -24,13 +24,18 @@ def add_to_catalogue(source_uri, service_hash)
   puts "Updating Catalogue"
   
   keywords = "#{service_hash['keywords']}, #{service_hash['title']}, #{service_hash['providername']}, #{service_hash['authorname']}"
-
+  time = "#{Time.parse(service_hash['time']['begintime']).iso8601.split('T')[0]} - #{Time.parse(service_hash['time']['endtime']).iso8601.split('T')[0]}"
+  bbox = service_hash['bbox']
+  bounding_box = "#{bbox['upperright']['longitude']} #{bbox['upperright']['latitude']},#{bbox['bottomleft']['longitude']} #{bbox['bottomleft']['latitude']}"  
+  
   request = { 
     :source => 'geocens', 
     :name => service_hash['title'], 
     :description => service_hash.key?('description') ? service_hash['description'] : keywords, 
     :keywords => keywords, 
-    :source_uri => source_uri, 
+    :source_uri => source_uri,
+    :feature_period  => time,
+    :bounding_box => bounding_box
   }
 
   lat_lon = "#{service_hash['bbox']['upperright']['latitude']},#{service_hash['bbox']['upperright']['longitude']}"
