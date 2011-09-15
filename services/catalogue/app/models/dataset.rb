@@ -24,7 +24,7 @@ class Dataset < ActiveRecord::Base
 
   def feature
     if @feature.nil?
-      @feature = Feature.new(uuid, feature_source, name)
+      @feature = Feature.new(uuid, feature_source, name, feature_period)
     end
     @feature
   end  

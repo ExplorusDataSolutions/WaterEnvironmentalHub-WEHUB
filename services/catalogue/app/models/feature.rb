@@ -3,12 +3,13 @@ class Feature
   include ActiveModel::Conversion  
   extend ActiveModel::Naming
   
-  attr_accessor :uuid, :feature_source, :name
+  attr_accessor :uuid, :feature_source, :name, :feature_period
   
-  def initialize(uuid, feature_source, name='')
+  def initialize(uuid, feature_source, name='', feature_period='')
     @uuid = uuid
     @feature_source = feature_source
     @name = name
+    @feature_period = feature_period
   end
   
   def persisted?
@@ -106,6 +107,14 @@ class Feature
         end
       rescue
       end
+    end
+  end
+  
+  def temporal_extent
+    if is_data_source?('geoserver')
+#      geoserver_translator.temporal_extent(uuid)
+    elsif is_data_source?('catalogue')
+      TemporalExtentTranslator.new(feature_period).temporal_extent
     end
   end
 

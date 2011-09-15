@@ -16,6 +16,30 @@ xml.Metadata('xmlns:geonet' => 'http://www.fao.org/geonetwork') do
         end
       end
     end
+    if @bounding_box && !@bounding_box.empty?
+      xml.geoBox do
+        xml.northBL(@bounding_box.split(' ')[0])
+        xml.eastBL(@bounding_box.split(' ')[1].split(',')[0])
+        xml.southBL(@bounding_box.split(',')[1].split(' ')[0])
+        xml.westBL(@bounding_box.split(',')[1].split(' ')[1])
+      end
+    end
+    if @temporal_extent
+      xml.dataExt do
+        xml.tempEle do
+          xml.TempExtent do
+            xml.exTemp do
+              xml.TM_GeometricPrimitive do
+                xml.TM_Period do
+                  xml.begin(@temporal_extent[:begin])
+                  xml.end(@temporal_extent[:end])
+                end
+              end
+            end
+          end
+        end
+      end
+    end
   end
 
   xml.refSysInfo do
@@ -28,7 +52,7 @@ xml.Metadata('xmlns:geonet' => 'http://www.fao.org/geonetwork') do
       end
     end
   end
-
+  
   relations = []  
   @related_datasets.each do |d|
     if d.uuid != @dataset.uuid

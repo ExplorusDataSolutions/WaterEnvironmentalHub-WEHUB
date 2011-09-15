@@ -15,7 +15,10 @@ class GeonetworkController < ApplicationController
       end
     end    
     
-    @keywords = @dataset.feature.keywords
+    feature = @dataset.feature
+    @keywords = feature.keywords    
+    @bounding_box = feature.bounding_box
+    @temporal_extent = feature.temporal_extent
   end
   
   def info
