@@ -64,11 +64,12 @@ class Feature
         first_row = execute("SELECT * FROM #{tablename} LIMIT 1")[0]
 
         if first_row
-          geometry_column = first_row.select{ |column| column =~ /^the_geom|thepoint_lonlat/i }.first[0]
+          geometry_column = first_row.select{ |column| column =~ /^the_geom|thepoint_lonlat/i }.first
           if geometry_column
-            result = execute("SELECT x(st_centroid(st_extent(#{geometry_column}))), y(st_centroid(st_extent(#{geometry_column}))) FROM #{tablename}")[0]
-
+            geometry_column = geometry_column[0]
+            result = execute("SELECT x(st_centroid(st_extent(#{geometry_column}))), y(st_centroid(st_extent(#{geometry_column}))) FROM #{tablename}")
             if result
+              result = result[0]
               latitude = result.select{ |column| column =~ /^y$/i }.first[1]
               longitude = result.select{ |column| column =~ /^x$/i }.first[1]
               if latitude.to_i.abs > 180
