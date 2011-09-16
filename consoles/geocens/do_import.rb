@@ -23,7 +23,12 @@ end
 def add_to_catalogue(source_uri, service_hash)
   puts "Updating Catalogue"
   
-  keywords = "#{service_hash['keywords']}, #{service_hash['title']}, #{service_hash['providername']}, #{service_hash['authorname']}"
+  keywords = ''
+  if service_hash['keywords'] && !service_hash['keywords'].empty?
+    keywords << "#{service_hash['keywords']}, "
+  end
+  keywords << "#{service_hash['title']}, #{service_hash['providername']}, #{service_hash['authorname']}"
+      
   time = "#{Time.parse(service_hash['time']['begintime']).iso8601.split('T')[0]} - #{Time.parse(service_hash['time']['endtime']).iso8601.split('T')[0]}"
   bbox = service_hash['bbox']
   bounding_box = "#{bbox['upperright']['longitude']} #{bbox['upperright']['latitude']},#{bbox['bottomleft']['longitude']} #{bbox['bottomleft']['latitude']}"  

@@ -99,13 +99,13 @@ class ItemsController < ApplicationController
         author = author(params[:author])
         begin
           dataset.feature.create(filename)
-          dataset.owner = owner
-          dataset.author = author
+          dataset.owner = owner 
+          dataset.author = author 
           dataset.save
         rescue Exception => e
           Dataset.destroy(dataset.id)
-          Owner.destroy(owner.id)
-          Author.destroy(author.id)
+          Owner.destroy(owner.id) unless owner.nil?
+          Author.destroy(author.id) unless author.nil?
           
           errors.store('spreadsheet', e)
         end
@@ -152,6 +152,8 @@ class ItemsController < ApplicationController
       dataset.feature.create(params)
     else
       dataset = Dataset.find_by_uuid(meta_content.dataset_uuid)
+      dataset.description = params[:description]
+      dataset.save
       dataset.feature.create(params)
     end
 
