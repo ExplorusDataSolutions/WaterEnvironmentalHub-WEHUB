@@ -144,8 +144,8 @@ $(document).ready(function() {
 <% if @dataset.bounding_box && !@dataset.bounding_box.empty? %>
   <%=
   "var bounds = new OpenLayers.Bounds();
-  bounds.extend(new OpenLayers.LonLat(#{@dataset.bounding_box.split(',')[0].gsub(' ',',')}));
-  bounds.extend(new OpenLayers.LonLat(#{@dataset.bounding_box.split(',')[1].gsub(' ',',')}));  
+  bounds.extend(new OpenLayers.LonLat(#{@dataset.bounding_box[:east]},#{@dataset.bounding_box[:north]}));
+  bounds.extend(new OpenLayers.LonLat(#{@dataset.bounding_box[:west]},#{@dataset.bounding_box[:south]}));  
   var boxes = new OpenLayers.Layer.Boxes('boxes');
   var box = new OpenLayers.Marker.Box(bounds);
   boxes.addMarker(box);
@@ -231,19 +231,19 @@ $(document).ready(function() {
         <% bbox = @dataset.bounding_box %>
         <h2 class="green-dot-blue-head">Geographic bounding box</h2>
         <div class="float-left width-165 title">East Bound Longitude</div>
-        <div class="float-left width-140 text"><%= bbox.split(',')[0].split(' ')[1] %></div>
+        <div class="float-left width-140 text"><%= bbox[:east] %></div>
         <div class="clear"></div>
 
         <div class="float-left width-165 title">West Bound Longitude</div>
-        <div class="float-left width-140 text"><%= bbox.split(',')[0].split(' ')[1] %></div>
+        <div class="float-left width-140 text"><%= bbox[:west] %></div>
         <div class="clear"></div>
 
         <div class="float-left width-165 title">North Bound Latitude</div>
-        <div class="float-left width-140 text"><%= bbox.split(',')[1].split(' ')[0] %></div>
+        <div class="float-left width-140 text"><%= bbox[:north] %></div>
         <div class="clear"></div>
 
         <div class="float-left width-165 title">South Bound Latitude</div>
-        <div class="float-left width-140 text"><%= bbox.split(',')[1].split(' ')[1] %></div>
+        <div class="float-left width-140 text"><%= bbox[:south] %></div>
         <div class="clear height-25"></div>
     <% elsif @dataset.coordinates && !@dataset.coordinates.empty? %>
         <h2 class="green-dot-blue-head">Geographic coordinates</h2>

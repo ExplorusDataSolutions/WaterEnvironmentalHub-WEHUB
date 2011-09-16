@@ -113,6 +113,16 @@ class Feature
         end
       rescue
       end
+    elsif is_data_source?('geocens')
+      meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
+      if meta_content && !meta_content.bounding_box.empty?
+        { 
+          :north => meta_content.bounding_box.split(',')[1].split(' ')[1], 
+          :east => meta_content.bounding_box.split(',')[1].split(' ')[0],
+          :south => meta_content.bounding_box.split(' ')[1].split(',')[0],
+          :west => meta_content.bounding_box.split(' ')[0]
+        }
+      end
     end
   end
   
@@ -156,7 +166,19 @@ class Feature
       end
     else
       meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
-      meta_content_params = {:dataset_uuid => uuid, :keywords => params[:keywords], :source_uri => params[:source_uri], :coordinates => params[:coordinates]}
+      
+      meta_content_params = {:dataset_uuid => uuid, :keywords => params[:keywords], :source_uri => params[:source_uri], :bounding_box => params[:bounding_box]}
+     
+      if params[:bounding_box]
+        centroid = "centroid('MULTIPOINT(#{params[:bounding_box]})')"
+        result = execute("SELECT x(#{centroid}), y(#{centroid})")[0]
+        if result
+          latitude = result.select{ |column| column =~ /^y$/i }.first[1]
+          longitude = result.select{ |column| column =~ /^x$/i }.first[1]
+        end
+        meta_content_params.store(:coordinates, "#{latitude},#{longitude}")
+      end
+       
       if meta_content.nil?
         meta_content = FeatureMetaContent.create(meta_content_params)
       else

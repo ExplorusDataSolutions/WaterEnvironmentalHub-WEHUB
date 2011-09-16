@@ -37,11 +37,6 @@ def add_to_catalogue(source_uri, service_hash)
     :feature_period  => time,
     :bounding_box => bounding_box
   }
-
-  lat_lon = "#{service_hash['bbox']['upperright']['latitude']},#{service_hash['bbox']['upperright']['longitude']}"
-  if lat_lon.split(',').length == 2
-    request.store(:coordinates, lat_lon)
-  end
   
   url_param = 'http://localhost:3000/items/load_external_meta_content'
   timeout = 500
