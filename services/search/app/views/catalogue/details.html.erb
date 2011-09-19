@@ -141,7 +141,9 @@ $(document).ready(function() {
   } else {
     setMarker(lon, lat);    
   }
-<% if @dataset.bounding_box && !@dataset.bounding_box.empty? %>
+  
+<% if @dataset.bounding_box %>
+
   <%=
   "var bounds = new OpenLayers.Bounds();
   bounds.extend(new OpenLayers.LonLat(#{@dataset.bounding_box[:east]},#{@dataset.bounding_box[:north]}));
