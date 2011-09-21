@@ -1,1 +1,0 @@
-powershell.exe C:\projects\WEHub\consoles\geocens\do_import.ps1
