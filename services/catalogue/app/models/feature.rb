@@ -87,7 +87,7 @@ class Feature
       end
 
       !(latitude.empty? && longitude.empty?) ? "#{latitude},#{longitude}" : nil
-    elsif is_data_source?('geocens')
+    elsif is_data_source?('geocens') || is_data_source?('water_cloud')
       meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
       if meta_content
         meta_content.coordinates
@@ -103,20 +103,23 @@ class Feature
         if first_row
           geometry_column = first_row.select{ |column| column =~ /^the_geom|thepoint_lonlat/i }.first[0]
           if geometry_column
-            postgis_box = execute("SELECT box2d(ST_extent(#{geometry_column})) FROM #{tablename}")[0].select{ |column| column =~ /box2d/ }.first[1].match(/BOX\((.*)\)/)[1]
-            { 
-              :north => postgis_box.split(',')[1].split(' ')[1], 
-              :east => postgis_box.split(',')[1].split(' ')[0],
-              :south => postgis_box.split(' ')[1].split(',')[0],
-              :west => postgis_box.split(' ')[0]
-            }
+            postgis_box = execute("SELECT box2d(ST_extent(#{geometry_column})) FROM #{tablename}")[0].select{ |column| column =~ /box2d/ }.first[1].match(/BOX\((.*)\)/)
+            if post_gis
+              post_gis = postgis[1]
+              { 
+                :north => postgis_box.split(',')[1].split(' ')[1], 
+                :east => postgis_box.split(',')[1].split(' ')[0],
+                :south => postgis_box.split(' ')[1].split(',')[0],
+                :west => postgis_box.split(' ')[0]
+              }
+            end
          end
         end
       rescue
       end
-    elsif is_data_source?('geocens')
+    elsif is_data_source?('geocens') || is_data_source?('water_cloud')
       meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
-      if meta_content && !meta_content.bounding_box.empty?
+      if meta_content && meta_content.bounding_box && !meta_content.bounding_box.empty?
         { 
           :north => meta_content.bounding_box.split(',')[1].split(' ')[1], 
           :east => meta_content.bounding_box.split(',')[1].split(' ')[0],
@@ -198,7 +201,7 @@ class Feature
       if observation_data[:data].count > 0
         keywords = extract_keywords(observation_data[:data][0])
       end
-    elsif is_data_source?('geocens')
+    elsif is_data_source?('geocens') || is_data_source?('water_cloud')
       keywords = FeatureMetaContent.find_by_dataset_uuid(uuid).keywords.split(',')
     else 
       raise ArgumentError, "Keywords could not be retrieved for feature source of type #{feature_source.name}"
