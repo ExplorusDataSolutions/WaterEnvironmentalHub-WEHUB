@@ -30,7 +30,7 @@ def post_json(uri, request)
   case response
   when Net::HTTPSuccess, Net::HTTPRedirection
   else
-    puts service_hash
+    puts request
     puts response.body
     response.error!
   end
