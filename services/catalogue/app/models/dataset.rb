@@ -10,7 +10,7 @@ class Dataset < ActiveRecord::Base
   belongs_to :owner
   has_one :author
 
-  validates_presence_of :name, :description, :feature_type
+  validates_presence_of :name, :description, :feature_type, :feature_source
   
   before_create :generate_uuid
   
