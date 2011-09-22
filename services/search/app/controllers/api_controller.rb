@@ -3,7 +3,8 @@ class ApiController < ApplicationController
   respond_to :json, :xml
 
   respond_to :html, :only => ['builder_result']
-  
+
+  before_filter :verify_logged_in, :only => [:builder, :builder_response]  
   before_filter :verify_api_key, :only => [:dataset, :feature]
   
   def builder

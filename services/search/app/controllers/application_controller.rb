@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   helper ApplicationHelper
 
-  before_filter :fetch_recently_viewed_search_results, :fetch_user_saved_search_results
+  before_filter :fetch_recently_viewed_search_results, :fetch_user_saved_search_results, :except => [:api]
 
   def fetch_recently_viewed_search_results
     user_id = anonynmous_id

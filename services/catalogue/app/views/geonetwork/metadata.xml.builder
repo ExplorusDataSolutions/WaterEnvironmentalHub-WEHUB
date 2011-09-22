@@ -16,7 +16,7 @@ xml.Metadata('xmlns:geonet' => 'http://www.fao.org/geonetwork') do
         end
       end
     end
-    if @bounding_box && !@bounding_box.empty?
+    if @bounding_box && !@bounding_box.nil?
       xml.geoBox do
         xml.northBL(@bounding_box[:north])
         xml.eastBL(@bounding_box[:east])
