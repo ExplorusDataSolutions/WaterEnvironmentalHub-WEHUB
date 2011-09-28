@@ -27,7 +27,7 @@ class Feature
     if is_data_source?('geoserver')
       formats.delete('CSV')
     elsif is_data_source?('catalogue')
-    elsif is_data_source?('geocens')
+    elsif is_data_source_external?
       formats.delete('Shape')
       formats.delete('CSV')
     end
@@ -41,13 +41,13 @@ class Feature
     @geoserver_translator
   end
   
-  def data
+  def data(advanced_search_params=nil)
     if is_data_source?('geoserver')
       geoserver_translator.data(uuid)
     elsif is_data_source?('catalogue')
       execute("SELECT * FROM #{tablename}")
-    elsif is_data_source?('geocens')
-      GeoCensTranslator.new.data(uuid)
+    elsif is_data_source_external?
+      ExternalServiceTranslator.new.data(uuid, advanced_search_params)
     else
       raise ArgumentError, "Data could not be retrieved for feature source of type #{feature_source.name}"
     end
@@ -87,7 +87,7 @@ class Feature
       end
 
       !(latitude.empty? && longitude.empty?) ? "#{latitude},#{longitude}" : nil
-    elsif is_data_source?('geocens') || is_data_source?('water_cloud')
+    elsif is_data_source_external?
       meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
       if meta_content
         meta_content.coordinates
@@ -117,7 +117,7 @@ class Feature
         end
       rescue
       end
-    elsif is_data_source?('geocens') || is_data_source?('water_cloud')
+    elsif is_data_source_external?
       meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
       if meta_content && meta_content.bounding_box && !meta_content.bounding_box.empty?
         { 
@@ -131,9 +131,7 @@ class Feature
   end
   
   def temporal_extent
-    if is_data_source?('geoserver')
-#      geoserver_translator.temporal_extent(uuid)
-    elsif is_data_source?('catalogue')
+    if is_data_source?('catalogue') || is_data_source_external?
       TemporalExtentTranslator.new(feature_period).temporal_extent
     end
   end
@@ -201,7 +199,7 @@ class Feature
       if observation_data[:data].count > 0
         keywords = extract_keywords(observation_data[:data][0])
       end
-    elsif is_data_source?('geocens') || is_data_source?('water_cloud')
+    elsif is_data_source_external?
       keywords = FeatureMetaContent.find_by_dataset_uuid(uuid).keywords.split(',')
     else 
       raise ArgumentError, "Keywords could not be retrieved for feature source of type #{feature_source.name}"
@@ -240,6 +238,9 @@ class Feature
     feature_source.name == params
   end
 
+  def is_data_source_external?
+    is_data_source?('geocens') || is_data_source?('water_cloud')
+  end
   private 
 
   def is_a_file?(params)

@@ -1,5 +1,5 @@
 require 'geoserver_translator.rb'
-require 'geocens_translator.rb'
+require 'external_service_translator.rb'
 require 'uuidtools'
 
 class Dataset < ActiveRecord::Base

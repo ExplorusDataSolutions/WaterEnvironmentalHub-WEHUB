@@ -3,11 +3,11 @@ require 'csv_builder_postgresql.rb'
 class FeatureFormatFactory
   attr_accessor :feature_type, :feature
   
-  def find(feature_type, feature)
+  def find(feature_type, feature, advanced_search_params)
     @feature = feature
     @feature_type = feature_type
     
-    data = feature.data
+    data = feature.data(advanced_search_params)
 
     case feature_type 
     when 'json'

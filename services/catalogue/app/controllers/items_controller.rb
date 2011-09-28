@@ -46,11 +46,11 @@ class ItemsController < ApplicationController
               file_data = IO.read("#{shape_factory.shape_directory}/#{filename}")
               results.push(:filename => filename, :id => uuid, :data => file_data)
             end
-          else
-            formatted_file = feature_format_factory.find(format_type, feature)
+          else    
+            formatted_file = feature_format_factory.find(format_type, feature, params)
             results.push(:filename => formatted_file[:filename], :id => uuid, :data => formatted_file[:data])
           end
-        rescue Exception => e
+        rescue Exception => e        
           errors.push(e.message)
         end        
       end

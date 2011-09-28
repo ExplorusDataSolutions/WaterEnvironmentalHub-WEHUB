@@ -17,7 +17,30 @@ class CatalogueTranslator
     if params[:filename]
       "#{url}/items/download/?filename=#{params[:filename]}"
     else
-      "#{url}/items/download/?ids=#{params[:ids]}&format=#{params[:format]}"
+      date_start = params[:start]
+      if date_start
+        date_start = Time.parse(date_start).utc.iso8601.split('T')[0]
+      end
+      date_end = params[:end]
+      if date_end
+        date_end = Time.parse(date_end).utc.iso8601.split('T')[0]
+      end
+      
+      period = ''
+      if date_start && date_end
+        period = "&start=#{date_start}&end=#{date_end}"
+      end
+      
+      bounding_box = ''
+      north = params[:north]
+      east = params[:east]
+      south = params[:south]
+      west = params[:west]
+      if north && east && south && west
+        bounding_box = "&north=#{north}&east=#{east}&south=#{south}&west=#{west}"
+      end
+      
+      "#{url}/items/download/?ids=#{params[:ids]}&format=#{params[:format]}#{bounding_box}#{period}"
     end
   end
   

@@ -18,6 +18,16 @@
   position: absolute;
   z-index: 100;
 }
+#date-range {
+  padding-bottom: 10px;
+  padding-top: 10px;  
+}
+#date-range input {
+  width: 98px;
+}
+#bbox-selector input {
+  width: 70px;
+}
 </style>
 <script>
   $(document).ready(function() {
@@ -25,9 +35,7 @@
     $('button').button();
 
     function download() {
-      var format = $('[name=download-format]:checked').val();
-      var uri = "<%= url_for :controller => 'item', :action => 'download' %>";
-      $.getJSON(uri + '?ids=' + ['<%= params[:id] %>'] + '&format=' + format, function(data) {
+      $.getJSON("<%= url_for :controller => 'item', :action => 'download' %>" + '?' + $('form[name=download]').serialize() , function(data) {
         if (data.success) {
           window.location = uri + '?filename=' + data.filename; 
         } else {
@@ -49,7 +57,7 @@
       
     var formatSelector = $('.format-selector');  
     function bindDownloadButtonset() {
-      formatSelector.buttonset();    
+      $('.format-buttons').buttonset();    
 
       $('button[name=download]')
         .button()
@@ -65,7 +73,7 @@
           .parent()
             .buttonset();
             
-      $('[name=download-format]')
+      $('form[name=download] [name=format]')
         .click(function() {
           formatSelector.hide();
           download();
@@ -76,6 +84,8 @@
     $('.tab-download').click(function() {
       formatSelector.show();
     });
+    
+    $('form[name=download]').find('[name=start],[name=end]').datepicker({ dateFormat: 'dd/mm/yy' });
   }); 
 </script>
 <script>
@@ -144,6 +154,38 @@ $(document).ready(function() {
   
 <% if @dataset.bounding_box %>
 
+      var boxControl = new OpenLayers.Control();
+      OpenLayers.Util.extend(boxControl, {
+        draw: function () {
+          this.box = new OpenLayers.Handler.Box(boxControl, { "done": function(bounds) { 
+            var leftBottom = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom));
+            var rightTop = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top));
+            setBoundingBox(rightTop.lat, rightTop.lon, leftBottom.lat, leftBottom.lon);
+          }});
+        }
+      });
+      
+      function setBoundingBox(north, east, south, west) {
+        $('[name=north]').val(north);
+        $('[name=east]').val(east);
+        $('[name=south]').val(south);
+        $('[name=west]').val(west);
+      }   
+
+      map.addControl(boxControl);
+      
+      $('#box_selector').click(function(event) {
+        event.preventDefault();
+        $('#box_display').slideToggle();
+        if (boxControl.box.active) {
+          boxControl.box.deactivate();
+        } else {
+          boxControl.box.activate();
+          $('html, body').animate({scrollTop: $(".right-container-body").offset().top }, 500);
+          $('#map').effect("pulsate", { times:1 }, 2000);
+        }
+      });
+
   <%=
   "var bounds = new OpenLayers.Bounds();
   bounds.extend(new OpenLayers.LonLat(#{@dataset.bounding_box[:east]},#{@dataset.bounding_box[:north]}));
@@ -151,7 +193,11 @@ $(document).ready(function() {
   var boxes = new OpenLayers.Layer.Boxes('boxes');
   var box = new OpenLayers.Marker.Box(bounds);
   boxes.addMarker(box);
-  map.addLayer(boxes);"
+  map.addLayer(boxes);
+  map.zoomToExtent(bounds);
+  map.zoomTo(map.zoom - 1);
+
+  "
   %>
 <% end %>
 });
@@ -176,10 +222,25 @@ $(document).ready(function() {
   </div>
   <div class="clear"></div>
   <span class="format-selector ui-widget-content ui-corner-all ui-state-active" style="display: none;">
-    Select format
-    <% @dataset.formats.format.each do |format| %>
-      <%= label_tag "download-format[#{format}]", format %><%= radio_button_tag 'download-format', format %>
+  <%= form_for :download, :method => :get, :url => { :controller => 'item', :action => 'download' }, :html => { :name => 'download' } do %>
+    <%= hidden_field_tag :ids, params[:id] %>
+    <% if @dataset.period %>
+      <div id="date-range"><%= label_tag :start, "Select a date range" %> <%= text_field_tag :start %> - <%= text_field_tag :end %></div>
+      <div id="bbox-selector">Select a bounding box <a href="#" id="box_selector">(click here to use the map)</a>
+        <table>
+          <tr><td></td><td><%= text_field_tag :north %></td><td></td></tr>
+          <tr><td style="padding-left: 97px"><%= text_field_tag :west %></td><td></td><td><%= text_field_tag :east %></td></tr>
+          <tr><td></td><td><%= text_field_tag :south %></td><td></td></tr>
+        </table>
+      </div>
     <% end %>
+    Select format
+    <span class="format-buttons">
+    <% @dataset.formats.format.each do |format| %>
+      <%= label_tag "format[#{format}]", format %><%= radio_button_tag :format, format %>
+    <% end %>
+    </span>
+  <% end %>
   </span>
 
 </div>
@@ -206,6 +267,12 @@ $(document).ready(function() {
       <div class="float-left width-165 title">Date</div>
       <div class="float-left width-500 text"><%= @dataset.date %></div>
       <div class="clear"></div>
+
+    <% if @dataset.period %>
+      <div class="float-left width-165 title">Extent</div>
+      <div class="float-left width-500 text"><%= @dataset.period %></div>
+      <div class="clear"></div>
+    <% end %>
       
       <div class="float-left width-165 title">Abstract</div>
       <div class="float-left width-500 text">
@@ -227,7 +294,8 @@ $(document).ready(function() {
       </div>
       <div class="clear"></div>
       <div class="clear height-25"></div>
-      
+
+    
       <div class="float-left">
     <% if @dataset.bounding_box && !@dataset.bounding_box.empty? %>
         <% bbox = @dataset.bounding_box %>
