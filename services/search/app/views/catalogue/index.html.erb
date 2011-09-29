@@ -25,37 +25,45 @@
      map.addLayer(markers);           
    }
    
-   function setMarker(lon, lat, html){
-     var lonLatMarker = new OpenLayers.LonLat(lon, lat);
- 
-     var feature = new OpenLayers.Feature(markers, lonLatMarker);
+    function setMarker(lon, lat, html){
+      var lonLatMarker = new OpenLayers.LonLat(lon, lat);
+  
+      var feature = new OpenLayers.Feature(markers, lonLatMarker);
 
-     feature.closeBox = true;
-     feature.data.popupContentHTML = html;
-     feature.data.overflow = "hidden";
+      var size = new OpenLayers.Size(20, 34);
+      var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+      var icon = new OpenLayers.Icon('/images/marker-blue.png', size, offset);   
+      
+      function onPopupClose(evt) {
+          this.destroy();
+      }
+      
+      function onFeatureSelect(evt) {
+        popup = new OpenLayers.Popup.FramedCloud("featurePopup",
+                               feature.lonlat,
+                               null,
+                               html,
+                               null, true, onPopupClose);
+        popup.feature = feature;
+        map.addPopup(popup, true);
+      }
+      
+      function onFeatureUnselect(evt) {
+        feature = evt.feature;
+        if (feature.popup) {
+          popup.feature = null;
+          map.removePopup(feature.popup);
+          feature.popup.destroy();
+          feature.popup = null;
+        }
+      }
+      var marker = new OpenLayers.Marker(lonLatMarker, icon.clone());
 
-     var size = new OpenLayers.Size(20, 34);
-     var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-     var icon = new OpenLayers.Icon('/images/marker-blue.png', size, offset);   
-     var marker = new OpenLayers.Marker(lonLatMarker, icon.clone());
-
-     marker.feature = feature;
-
-     var markerClick = function(evt) {
-         if (this.popup == null) {
-             this.popup = this.createPopup(this.closeBox);
-             this.popup.autoSize = true;
-             map.addPopup(this.popup);
-             this.popup.show();
-         } else {
-             this.popup.toggle();
-         }
-         OpenLayers.Event.stop(evt);
-     };
-     marker.events.register("mousedown", feature, markerClick);
-
-     markers.addMarker(marker);
-   }
+      marker.feature = feature;
+      marker.events.register("mousedown", feature, onFeatureSelect);
+      markers.addMarker(marker);
+    }
+    
    <%
    if !@search.results.empty? 
    %>
