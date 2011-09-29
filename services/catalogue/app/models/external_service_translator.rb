@@ -48,13 +48,13 @@ class ExternalServiceTranslator
         end
         data[request[:layerid]] = response_hash      
       when !status.scan(/no data found/i).empty?
-        raise ArgumentError, "external_service: No data found for time period and bounding box"
+        raise ArgumentError, "700: No data found for time period and bounding box"
       else
-        raise ArgumentError, "external_service: #{response.body}"
+        raise ArgumentError, "500: #{status.nil? ? response : status}"
       end
     end
     if data.empty?
-      raise ArgumentError, "external_service: No data could be retrieved"
+      raise ArgumentError, "600: No data could be retrieved"
     end
     
     data

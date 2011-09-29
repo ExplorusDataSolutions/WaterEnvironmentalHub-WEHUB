@@ -17,17 +17,18 @@ class CatalogueTranslator
     if params[:filename]
       "#{url}/items/download/?filename=#{params[:filename]}"
     else
-      date_start = params[:start]
-      if date_start
-        date_start = Time.parse(date_start).utc.iso8601.split('T')[0]
-      end
+      date_start = params[:start]      
       date_end = params[:end]
-      if date_end
-        date_end = Time.parse(date_end).utc.iso8601.split('T')[0]
-      end
-      
       period = ''
       if date_start && date_end
+        if !date_start.empty?
+          date_start = Time.parse(date_start).utc.iso8601.split('T')[0]
+        end
+        
+        if !date_end.empty?
+          date_end = Time.parse(date_end).utc.iso8601.split('T')[0]
+        end
+
         period = "&start=#{date_start}&end=#{date_end}"
       end
       

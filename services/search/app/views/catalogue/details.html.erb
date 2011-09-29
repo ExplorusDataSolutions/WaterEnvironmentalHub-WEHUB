@@ -35,21 +35,30 @@
     $('button').button();
 
     function download() {
-      $.getJSON("<%= url_for :controller => 'item', :action => 'download' %>" + '?' + $('form[name=download]').serialize() , function(data) {
+      var uri = "<%= url_for :controller => 'item', :action => 'download' %>";
+      $.getJSON(uri + '?' + $('form[name=download]').serialize() , function(data) {
         if (data.success) {
           window.location = uri + '?filename=' + data.filename; 
         } else {
-          var is_geocens = false
+          var is_external = false;
+          var is_no_data = false;
           $.each(data.errors, function(i, v) { 
-            if (v.match(/GEOCENS:/)) {
-              is_geocens = true;
+            if (v.match(/external_service:/)) {
+              is_external = true;
+            }
+            if (v.match(/no data found/i) || v.match(/no stations found/i)) {
+              is_no_data = true;
             }
           });
           
-          if (is_geocens) {
-            WEHub.modal("We're Sorry", "We're having trouble retrieving this feature's data from an external service. Please try again at a later date.");
+          if (is_external) {
+            if (is_no_data) {
+              WEHub.modal("We're Sorry", "No data could be retrieved for your selected time period and bounding box. Try making a new request.");
+            } else {
+              WEHub.modal("We're Sorry", "We're having trouble retrieving this feature's data from an external service. Please try again at a later date.");
+            }
           } else {
-            WEHub.modal("We're Sorry", "We're having trouble generating the " + format + " format for this feature. Please try an alternate format.");
+            WEHub.modal("We're Sorry", "We're having trouble generating the " + $('[name=format]:checked').val() + " format for this feature. Please try an alternate format.");
           }
         }
       });

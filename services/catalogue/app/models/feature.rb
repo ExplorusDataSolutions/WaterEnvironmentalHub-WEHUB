@@ -47,7 +47,11 @@ class Feature
     elsif is_data_source?('catalogue')
       execute("SELECT * FROM #{tablename}")
     elsif is_data_source_external?
-      ExternalServiceTranslator.new.data(uuid, advanced_search_params)
+      begin
+        ExternalServiceTranslator.new.data(uuid, advanced_search_params)
+      rescue Exception => e
+        raise ArgumentError, "external_service: #{e}"
+      end
     else
       raise ArgumentError, "Data could not be retrieved for feature source of type #{feature_source.name}"
     end
