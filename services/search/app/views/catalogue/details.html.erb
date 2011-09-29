@@ -190,7 +190,7 @@ $(document).ready(function() {
           boxControl.box.deactivate();
         } else {
           boxControl.box.activate();
-          $('html, body').animate({scrollTop: $(".right-container-body").offset().top }, 500);
+          $('html, body').animate({scrollTop: $("#map").offset().top }, 500);
           $('#map').effect("pulsate", { times:1 }, 2000);
         }
       });
