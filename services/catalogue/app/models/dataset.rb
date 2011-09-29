@@ -79,6 +79,7 @@ class Dataset < ActiveRecord::Base
         end
       end
       xml.tag!(:wms, feature_source == FeatureSource.find_by_name('geoserver'))
+      xml.tag!(:external, feature.is_data_source_external?) unless !feature.is_data_source_external?
     end
   end
 

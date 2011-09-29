@@ -233,7 +233,7 @@ $(document).ready(function() {
   <span class="format-selector ui-widget-content ui-corner-all ui-state-active" style="display: none;">
   <%= form_for :download, :method => :get, :url => { :controller => 'item', :action => 'download' }, :html => { :name => 'download' } do %>
     <%= hidden_field_tag :ids, params[:id] %>
-    <% if @dataset.period %>
+    <% if @dataset.external %>
       <div id="date-range"><%= label_tag :start, "Select a date range" %> <%= text_field_tag :start %> - <%= text_field_tag :end %></div>
       <div id="bbox-selector">Select a bounding box <a href="#" id="box_selector">(click here to use the map)</a>
         <table>
