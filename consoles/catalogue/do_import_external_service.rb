@@ -116,7 +116,7 @@ def add_to_catalogue(source, source_uri, service_hash, layer_list)
   request = { 
     :source => source, 
     :name => service_hash['title'], 
-    :description => service_hash.key?('description') ? service_hash['description'] : keywords, 
+    :description => service_hash.key?('description') ? service_hash['description'] : keywords.join(', '), 
     :keywords => keywords.join(', '),
     :source_uri => source_uri,
     :feature_period  => time,
