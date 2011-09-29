@@ -38,7 +38,7 @@ class ApiController < ApplicationController
       dataset = Dataset.find_by_uuid(params[:id])
       if dataset && dataset.feature
         feature_format_factory = FeatureFormatFactory.new
-        feature = feature_format_factory.find(params[:output], dataset.feature)
+        feature = feature_format_factory.find(params[:output], dataset.feature, params)
         if feature
           @data = feature[:data]
         end
