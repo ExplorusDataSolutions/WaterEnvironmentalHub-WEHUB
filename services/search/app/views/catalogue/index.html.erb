@@ -69,11 +69,11 @@
     <% 
     if @search.results && !@search.results.empty? 
      @search.results.each_with_index do |result, index| 
-       if result.coordinates
+       if result.coordinates && index < 750
          coords = result.coordinates.split(',') 
          if coords.length == 2 && (coords[0].scan(/ /).empty? || coords[1].scan(/ /).empty?)
          %>
-    <%= "setMarker(#{coords[1]}, #{coords[0]}, '#{result.name.gsub('\'','')}. <a href=\"/catalogue/details/#{result.uuid}\">More details</a>');".html_safe %>
+    <%= "setMarker(#{coords[1]}, #{coords[0]}, '#{result.name.gsub('\'','')}. <a href=\"/catalogue/details/#{result.uuid}\">More details</a>');".html_safe -%>
          <% 
          end
        end
