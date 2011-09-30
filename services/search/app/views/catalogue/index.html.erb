@@ -4,26 +4,26 @@
   }
 </style>
 <script>
- $(document).ready(function() {
+  $(document).ready(function() {
  	
- 	var map, layer;
+    var map, layer;
 
-   function loadMap() {
-     map = new OpenLayers.Map('map');
-     map.addControl(new OpenLayers.Control.LayerSwitcher());
-     
-     var gphy = new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP});
-     var gmap = new OpenLayers.Layer.Google("Google Streets", {numZoomLevels: 20});
-     var ghyb = new OpenLayers.Layer.Google("Google Hybrid", {type: G_HYBRID_MAP, numZoomLevels: 20});
-     var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, numZoomLevels: 22});
+    function loadMap() {
+      map = new OpenLayers.Map('map');
+      map.addControl(new OpenLayers.Control.LayerSwitcher());
 
-     map.addLayers([gphy, gmap, ghyb, gsat]);
-     
-     map.setCenter(new OpenLayers.LonLat(-114.922485, 56.400224), 4);
+      var gphy = new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP});
+      var gmap = new OpenLayers.Layer.Google("Google Streets", {numZoomLevels: 20});
+      var ghyb = new OpenLayers.Layer.Google("Google Hybrid", {type: G_HYBRID_MAP, numZoomLevels: 20});
+      var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, numZoomLevels: 22});
 
-     markers = new OpenLayers.Layer.Markers("Features");
-     map.addLayer(markers);           
-   }
+      map.addLayers([gphy, gmap, ghyb, gsat]);
+
+      map.setCenter(new OpenLayers.LonLat(-113.873291, 52.293992), 3);
+
+      markers = new OpenLayers.Layer.Markers("Features");
+      map.addLayer(markers);           
+    }
    
     function setMarker(lon, lat, html){
       var lonLatMarker = new OpenLayers.LonLat(lon, lat);
@@ -64,62 +64,52 @@
       markers.addMarker(marker);
     }
     
-   <%
-   if !@search.results.empty? 
-   %>
-   loadMap();
-   <%
-   end
-   %>
-   <% 
-   if @search.results && !@search.results.empty? 
+    <%
+    if !@search.results.empty? 
+    %>
+    loadMap();
+    <%
+    end
+    %>
+    <% 
+    if @search.results && !@search.results.empty? 
      @search.results.each_with_index do |result, index| 
        if result.coordinates
          coords = result.coordinates.split(',') 
          if coords.length == 2 && (coords[0].scan(/ /).empty? || coords[1].scan(/ /).empty?)
          %>
-   <%= "setMarker(#{coords[1]}, #{coords[0]}, '#{result.name.gsub('\'','')}. <a href=\"/catalogue/details/#{result.uuid}\">More details</a>');".html_safe %>
+    <%= "setMarker(#{coords[1]}, #{coords[0]}, '#{result.name.gsub('\'','')}. <a href=\"/catalogue/details/#{result.uuid}\">More details</a>');".html_safe %>
          <% 
          end
        end
      end
-   end 
-   %>
- });
+    end 
+    %>
+    });
 </script>
 
 <div class="home-top">
   <div class="home-top-left">
     <div class="home-search-left"></div>
     <div class="home-search-center">
-      <h2>Find the data you are looking for now!</h2>
       <table align="center" width="95%" class="home-search-box-table">
         <tr>
+          <td colspan="2">
+            <div id="map" style="width: 750px; border: solid 3px #0B5F9D;"></div>
+          </td>
+        </tr>      
+        <tr>
           <td align="center" colspan="2">
+            <h2>Search for water and environmental data</h2>
             <div class="home-search-text-container">
-              <div class="home-search-text-left"></div>             
             <%= form_for :search, :url => { :controller => 'search' } do |f| %>
-              <div class="home-search-text-center"><%= f.text_field :query, :name => 'query' %></div>
-              <div class="home-search-button" onclick="$('form').submit();"><%= f.submit :search, :name => 'search' %></div>
+            <div class="home-search-text-left"></div>             
+            <div class="home-search-text-center"><%= f.text_field :query, :name => 'query' %></div>
+            <div class="home-search-button" onclick="$('form').submit();"><%= f.submit :search, :name => 'search' %></div>
             <% end %>
             </div>
-          </td>
-        </tr>
-        <tr>
-          <td align="left" width="35%" class="label">Connect:</td>
-          <td align="left" width="65%">
-<%
-=begin %>
-            <span><a href="#"><img src="/images/face_book_icon.jpg" title="Facebook" alt="Facebook" border="0" /></a></span>
-<%
-=end %>
-            <span><a href="http://twitter.com/letthedataflow"><img src="/images/twitter_icon.jpg" title="Twitter" alt="Twitter" border="0" /></a></span>
-            <span><a href="http://www.linkedin.com/groups/Water-Environmental-Hub-3687237"><img src="/images/linked_in_icon.jpg" title="Linked In" alt="Linked In" border="0" /></a></span>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <div id="map" style="width:520px;"></div>
+            <div class="clear"></div>
+            <h2>or <%= link_to 'Browse', :controller => 'catalogue', :action => 'browse' %> the data catalogue</h2>
           </td>
         </tr>
       </table>
@@ -127,47 +117,63 @@
     <div class="home-search-right"></div>
   </div>
   <div class="home-top-right">
-    <div class="home-right-head">
-      <div class="float-left"><img src="/images/latest-data-icon.jpg" title="Latest Data" alt="Latest Data" /></div>
-      <div class="float-left">&nbsp;<span>Latest Data</span></div>
-      <div class="clear"></div>
-    </div>
-    <div class="clear"></div>
-    <div class="data-container">
-      <div class="float-left">
-        <img src="/images/data-icon1.jpg" title="icon" alt="icon" />
+    <div class="home-top-right-border">
+      <div class="home-right-head">
+        <div class="float-left"><img src="/images/latest-data-icon.jpg" title="Latest Data" alt="Latest Data" /></div>
+        <div class="float-left">&nbsp;<span>Latest Data</span></div>
+        <div class="clear"></div>
       </div>
-      <div class="data-text-content">
-        <a href="http://waterenvironmentalhub.ca/catalogue/details/304511d2-a682-11e0-aa6e-12313b015271" style="text-decoration: none;">
-        <span class="slight-head">IP3 (Improved Processes and Parameterization for Prediction in Cold Regions)- Wolf Creek: Alpine Tundra - 3m tower micrometeorological station</span><br />
-        <span class="data-text">
-          Area is a wind swept, high alpine tundra plateau along the drainage divide at the northern edge of the basin..
+      <div class="clear"></div>
+      <div class="data-container">
+        <div class="float-left">
+          <img src="/images/data-icon1.jpg" title="icon" alt="icon" />
+        </div>
+        <div class="data-text-content">
+          <a href="http://waterenvironmentalhub.ca/catalogue/details/304511d2-a682-11e0-aa6e-12313b015271" style="text-decoration: none;">
+          <span class="slight-head">IP3 (Improved Processes and Parameterization for Prediction in Cold Regions)- Wolf Creek: Alpine Tundra - 3m tower micrometeorological station</span><br />
+          <span class="data-text">
+            Area is a wind swept, high alpine tundra plateau along the drainage divide at the northern edge of the basin..
+          </span>
+          </a>
+        </div>
+        <div class="clear"></div>
+      </div>
+      <div class="clear"></div>
+      <div class="data-container">
+        <div class="float-left">
+          <img src="/images/data-icon2.jpg" title="icon" alt="icon" />
+        </div>
+        <div class="data-text-content">
+          <a href="http://waterenvironmentalhub.ca/catalogue/details/09abdba0-3f7b-11e0-9207-0800200c9a66" style="text-decoration: none;">
+          <span class="slight-head">GeoBase National Road Network Alberta Road Segments</span><br />
+          <span class="data-text">
+            The National Road Network (NRN) product contains quality geospatial data (current, accurate, consistent..
+          </span>
+          </a>
+        </div>
+        <div class="clear"></div>
+      </div>
+      <div class="clear"></div>
+      <div class="data-button" onclick="<%= onclick_link_to :controller => 'catalogue', :action => 'browse' %>">
+        <span class="button">
+          <button>View All</button>
         </span>
-        </a>
       </div>
-      <div class="clear"></div>
     </div>
-    <div class="clear"></div>
-    <div class="data-container">
-      <div class="float-left">
-        <img src="/images/data-icon2.jpg" title="icon" alt="icon" />
-      </div>
-      <div class="data-text-content">
-        <a href="http://waterenvironmentalhub.ca/catalogue/details/09abdba0-3f7b-11e0-9207-0800200c9a66" style="text-decoration: none;">
-        <span class="slight-head">GeoBase National Road Network Alberta Road Segments</span><br />
-        <span class="data-text">
-          The National Road Network (NRN) product contains quality geospatial data (current, accurate, consistent..
-        </span>
-        </a>
-      </div>
-      <div class="clear"></div>
-    </div>
-    <div class="clear"></div>
-    <div class="data-button" onclick="<%= onclick_link_to :controller => 'catalogue', :action => 'browse' %>">
-      <span class="button">
-        <button>View All</button>
-      </span>
-    </div>
+    <table style="width: 100%; padding-top: 30px;">
+      <tr>
+        <td align="center" class="label" style="color: #7A7A7A">Join the conversation</td>
+      </tr>      
+      <tr>
+        <td align="center" >
+          <span><a href="http://twitter.com/letthedataflow"><img src="/images/twitter_icon.jpg" title="Twitter" alt="Twitter" border="0" /></a></span>
+          <span><a href="http://www.linkedin.com/groups/Water-Environmental-Hub-3687237"><img src="/images/linked_in_icon.jpg" title="Linked In" alt="Linked In" border="0" /></a></span>
+          <span><a href="http://www.facebook.com/pages/Water-and-Environmental-Hub-let-the-water-data-flow/145981268796826"><img src="/images/face_book_icon.jpg" title="Facebook" alt="Facebook" border="0" /></a></span>
+          <span><a href="http://www.youtube.com/letthedataflow"><img src="/images/youtube_icon.png" title="You Tube" alt="You Tube" border="0" /></a></span>
+          <span><a href="http://letthedataflow.ca/rss.xml"><img src="/images/rss_icon.gif" title="RSS" alt="RSS" border="0" /></a></span>
+        </td>
+      </tr>
+    </table>
   </div>
   <div class="clear"></div>
 </div>
@@ -183,7 +189,7 @@ The Water and Environmental Hub project is creating an open source web platform 
       <%= link_to "Learn More", :controller => "about", :action => "index" %>
     </div>
   </div>
-  <div class="home-middle-content">
+  <div class="home-middle-content no-border">
     <div class="float-left"><img src="/images/community-icon.jpg" title="Community" alt="Community" /></div>
     <div class="home-middle-data">
       <div class="home-middle-head">WEHub Community</div>
@@ -193,6 +199,8 @@ The Water and Environmental Hub project is creating an open source web platform 
       <%= link_to "Learn More", :controller => "about", :action => "community" %>
     </div>
   </div>
+<%
+=begin %>  
   <div class="home-middle-content no-border">
     <div class="float-left"><img src="/images/application-icon.jpg" title="New Application" alt="New Application" /></div>
     <div class="home-middle-data">
@@ -212,6 +220,8 @@ The Water and Environmental Hub project is creating an open source web platform 
       <div class="clear"></div>
     </div>
   </div>
+<%
+=end %>  
 </div>
 <div class="clear"></div>
 
