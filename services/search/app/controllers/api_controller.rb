@@ -8,8 +8,9 @@ class ApiController < ApplicationController
   before_filter :verify_api_key, :only => [:dataset, :feature]
   
   def builder
-    @breadcrumb = ['API']
+    @breadcrumb = ['Build An App', 'API Builder']
     @feature_types = catalogue_instance.api_feature_types
+    @main_menu = 'api'
   end
     
   def datasets

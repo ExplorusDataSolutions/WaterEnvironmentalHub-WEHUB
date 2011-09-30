@@ -6,13 +6,20 @@ class CatalogueController < ApplicationController
     @search = search_instance.do_query('all', nil, nil, nil)
   end
 
+  def participate
+    @breadcrumb = ['Discover Our Data', 'How To Participate']
+    @main_menu = 'we_catalogue'
+    
+    render 'about/participate'  
+  end
+  
   def search
   end
 
   def details   
     @dataset = catalogue_instance.dataset(params[:id])
     
-    @breadcrumb = ['Water Data Catalogue', 'Detail View']
+    @breadcrumb = ['Discover Our Data', 'This Dataset']
     @main_menu = 'we_catalogue'
     
     @rating = (4*138)/5; 
@@ -26,7 +33,8 @@ class CatalogueController < ApplicationController
   end
   
   def browse
-    @breadcrumb = ['Water Data Catalogue', 'Browse']
+    @breadcrumb = ['Discover Our Data', 'Browse']
+    @main_menu = 'we_catalogue'
     
     query = 'all'
     if params[:query] != nil

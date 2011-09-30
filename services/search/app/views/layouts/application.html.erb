@@ -7,7 +7,6 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script> 
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script> 
     <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<%= request.host.match(/.com/).nil? ? "ABQIAAAAR7kR54BVDlqWYhWz74JPDRQ8L4VBsBHgHeJ-srDO_I7KY1F7mhQWPkhkhvU2koeT204050fgQfZG_Q" : "ABQIAAAAR7kR54BVDlqWYhWz74JPDRT2QunhdNtCIqhxNn0_ePlj6WPkcxTMd2Y3sgfD4XHHNqJXsLa2_Awv_A" %>"  type="text/javascript"></script>
-    <script type="text/javascript" src="http://apis.google.com/js/plusone.js"></script>
     <meta name="google-site-verification" content="Z1ebLl5nbx8o6c-Nry4ZY7dh6_bE7M4XXqKghYEHHmM" />
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"/>
 
@@ -64,14 +63,6 @@
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
     </script>
-    <script>
-      $('document').ready(function() {
-        $('#catalogue').click(function(event) {
-          event.preventDefault();
-          $('.catalogue-menu').slideToggle('fast');
-        });
-      });
-    </script>
 <%
 =end %>    
   </head>
@@ -85,32 +76,69 @@
 
         <div class="clear"></div>
         <a href="<%= url_for :root %>"><div class="header-logo"></div></a>
+        <script>
+        $(document).ready(function() {
+          $('.top-menu + ul').addClass('sub-menu')
+          $('.top-menu').bind('click', function(event) { 
+            event.preventDefault(); 
+            $(event.target).next('ul').slideToggle('fast');
+          });
+        });
+        </script>
         <div class="header-tab">
           <ul>
             <li class="<%= @main_menu == 'home' ? 'selected' : ''%>">
               <%= link_to 'Home', :root %>
             </li>
+            <li class="<%= @main_menu == 'about' ? 'selected' : ''%>">
+              <%= link_to 'Learn About Us', {:controller => 'about'}, :class => 'top-menu' %>
+              <ul style="display: none;">
+                <li><%= link_to 'The Project', {:controller => 'about', :action => 'project'} %></li>
+                <li><%= link_to 'The Partners', {:controller => 'about', :action => 'partners'} %></li>                
+                <li><%= link_to 'The Community', {:controller => 'about', :action => 'community'} %></li>                                
+                <li><%= link_to 'Our Newsroom', {:controller => 'about', :action => 'news'} %></li>                                                
+              </ul>                                          
+            </li>            
             <li class="<%= @main_menu == 'we_catalogue' ? 'selected' : ''%>">
-              <%= link_to 'Water Data Catalogue', {:controller => 'search'}, :id => 'catalogue' %>
-              <ul class="catalogue-menu" style="display: none;">
-                <li><%= link_to 'Browse', {:controller => 'catalogue', :action =>  'browse'}, :title => 'Browse our catalogue' %></li>
-                <li><%= link_to 'Search', {:controller => 'search'}, :title => 'Search our catalogue' %></li>
+              <%= link_to 'Discover Our Data', {:controller => 'search'}, :class => 'top-menu' %>
+              <ul style="display: none;">
+                <li><%= link_to 'Browse', {:controller => 'catalogue', :action =>  'browse'} %></li>
+                <li><%= link_to 'Search', {:controller => 'search'}%></li>
+                <li><%= link_to 'How To Participate', {:controller => 'catalogue', :action => 'participate'} %></li>
               </ul>              
             </li>
+<%
+=begin %>            
             <li class="<%= @main_menu == 'we_tools' ? 'selected' : ''%>">
               <%= link_to 'Tools', :controller => 'tools' %>
             </li>
+<%
+=end %>            
             <li class="<%= @main_menu == 'we_community' ? 'selected' : ''%>">
-              <%= link_to 'Community', :controller => 'community' %>
+              <%= link_to 'Community', {:controller => 'community'}, :class => 'top-menu' %>
+              <ul style="display: none;">
+                <li><%= link_to 'Connect', {:controller => 'community', :action => 'friends'} %></li>
+                <li><%= link_to 'Share', {:controller => 'community', :action => 'datasets'} %></li>                
+                <li><%= link_to 'Join', {:controller => 'community', :action => 'groups'} %></li>                                
+              </ul>                                          
             </li>
             <li class="<%= @main_menu == 'api' ? 'selected' : ''%>">
-              <%= link_to 'API', :controller => 'api' %>
+              <%= link_to 'Build An App', {:controller => 'api'}, :class => 'top-menu' %>
+              <ul style="display: none;">
+                <li><%= link_to 'API Builder', {:controller => 'api' }, :title => 'API Builder' %></li>
+              </ul>                            
             </li>
-            <li class="<%= @main_menu == 'about' ? 'selected' : ''%>">
-              <%= link_to 'About', :controller => 'about' %>
+            <li class="<%= @main_menu == 'resources' ? 'selected' : ''%>">
+              <%= link_to 'Use Our Resources', {:controller => 'about', :action => 'resources'}, :class => 'top-menu' %>
+              <ul style="display: none;">
+                <li><%= link_to 'Events', {:controller => 'about', :action => 'events'} %></li>
+                <li><%= link_to 'Calendar', {:controller => 'about', :action => 'calendar'} %></li>                
+                <li><%= link_to 'Blog', {:controller => 'about', :action => 'blog'} %></li>                                
+                <li><%= link_to 'Links', {:controller => 'about', :action => 'links'} %></li>                                                
+              </ul>                            
             </li>
             <li class="no-border <%= @main_menu == 'contact_us' ? 'selected' : ''%>">
-              <%= link_to 'Contact Us', :controller => 'about', :action => 'contact_us' %>
+              <%= link_to 'Engage Us', :controller => 'about', :action => 'contact_us' %>
             </li>
           </ul>
         </div>
@@ -118,9 +146,14 @@
       <div class="clear"></div>
       <div id="content-body">     
         <div class="content full-width">
-          <div style="border:none; width:560 height:27px; float: right; padding-top: 5px">
+          <div style="border:none; width:560 height:27px; float: right; padding-top: 7px">
             <div id="linkedin" style="width:76px; float:left;"><script type="text/javascript" src="http://platform.linkedin.com/in.js"></script><script type="in/share" data-url="<%= request.url %>" data-counter="right"></script></div>
+<%
+=begin %>            
+            <script type="text/javascript" src="http://apis.google.com/js/plusone.js"></script>
             <div id="plusone" style="width:75px; float:left;"><g:plusone size="medium" href="<%= request.url %>" count="true"></g:plusone></div>
+<%
+=end %>            
             <div id="twitter" style="float:left;"><a style="padding-top:10px;" href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="The #WEHub">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></div>
             <div id="fbsend" style="float:left;"><fb:send href="<%= request.url %>" font="verdana"></fb:send></div>
             <div id="facebook" style="float:left;"><iframe src="http://www.facebook.com/plugins/like.php?href=<%= request.url %>" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:350px; height:25px;" allowTransparency="true"></iframe></div>

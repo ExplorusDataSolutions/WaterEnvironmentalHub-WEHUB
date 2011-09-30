@@ -179,6 +179,9 @@ a{
 .yield-body{
   margin:5px 0;
 }
+.yield-body > p, .yield-body > h2 {
+  margin: 10px;
+}
 .user-dashboard {
   height:40px;
   padding-top:10px;
@@ -318,7 +321,7 @@ a{
   margin:0px;
 }
 #header-body .header-tab li{
-  padding:0 10px;
+  padding:0 8px;
   float:left;
   color:#808080;
   border-right:solid 1px #E6E6E6;
@@ -337,12 +340,18 @@ a{
   text-decoration:none;
   color:#43AD49;
 }
-ul.catalogue-menu {
+ul.sub-menu {
   position: absolute;
   padding: 3px 0px 0px 0px;
-  width: 158px;
+  background-color: #FFF;
+  -moz-border-radius-bottomleft:5px;
+  -moz-border-radius-bottomright:5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;  
 }
-ul.catalogue-menu li {
+ul.sub-menu li {
   clear: both;
   margin: 0px;
   list-style: none;
@@ -388,6 +397,7 @@ ul.catalogue-menu li {
 }
 .breadcrumb-body{
   margin:0;
+  margin: 0px 0px 20px;
   padding:6px 10px 0 10px;
   /*width:1090px;*/
   height:30px;

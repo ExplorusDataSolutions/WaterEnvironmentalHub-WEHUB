@@ -1,0 +1,18 @@
+<p>
+In partnership with other open data repositories across Canada, the WEHUB is developing a web-based platform that not only provides an extensive one-stop-shop data catalogue, but it also delivers an innovative aggregator service that is linked with a unified application programming interface (API). This will allow organizations and users to develop customized applications on top of the WEHUB web platform.
+</p>
+
+<p>
+The WEHUB is structured as a three-tiered system with a Client, Server and Database. Each tier in the system is divided into components that address the catalogue, data, and social network requirements.
+</p>
+<ul>
+    <li><strong>The catalogue</strong> acts as the index for the data and will allow for easy search, download and upload of the data.</li>
+    <li><strong>The spatial data</strong> is shown on the client as a map, making it easy for users to visualize the data.</li>
+    <li><strong>The social network</strong> will allow for commenting, flagging and sharing of data.</li>
+</ul>
+
+<p>
+The WEHUB will employ a Representational State Transfer (REST) software architecture. Open standards (e.g. OGC standards such as WMS, WFS, SOS, waterML, groundwaterML, etc.) will be used whenever practical, efficient and economical to meet the needs of users.
+</p>
+
+<%= link_to 'Browse All Data', {:controller => 'catalogue', :action =>  'browse'}, :title => 'Browse all data' %> or <%= link_to 'Search For Specific Data', {:controller => 'search'}, :title => 'Search For Specific Data' %>

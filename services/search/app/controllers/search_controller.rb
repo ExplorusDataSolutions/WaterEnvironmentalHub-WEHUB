@@ -1,6 +1,9 @@
 class SearchController < ApplicationController
     
   def index
+    @breadcrumb = ['Discover Our Data', 'Search']
+    @main_menu = 'we_catalogue'
+  
     query = 'all'
     if !(params[:query].nil? || params[:query].empty?)
       query = params[:query]
