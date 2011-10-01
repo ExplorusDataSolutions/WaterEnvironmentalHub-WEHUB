@@ -5,7 +5,6 @@
     secondaries.attr('disabled', true);
     
     $('[name=feature_type]').change(function(event) {
-    
       var featureTypeId = event.currentTarget.value;
       var url = "<%= url_for :controller => 'api', :action => 'datasets' %>" + "?feature_type_id=" + featureTypeId + "&format=html";
       
@@ -16,21 +15,49 @@
       
     });
     
+    $('[name=info_type]').change(function(event) {
+      var info_type = event.currentTarget.value;
+      var dataset_id = $('[name=datasets]').val();
+      if (info_type === 'feature') {
+        var url = "<%= url_for :controller => 'api', :action => 'is_feature_external' %>" + "?id=" + dataset_id + "&format=json";
+        $.get(url, function(data) { 
+          if (data === true) {
+            $('#advanced_search_selector').show('fast');
+          } else {
+            $('#advanced_search_selector').hide('fast');
+          }
+        });      
+      } else {
+        $('#advanced_search_selector').hide('fast');
+      }
+    });
+    
     $('[name=commit]').click(function(event) {
       event.preventDefault();
       $.ajax({
         url: "<%= url_for :controller => 'api', :action => 'builder_response' %>",
         data: $('form').serialize(),
         success: function(data) { $('#builder_response').show().html(data); },
+        error: function() { 
+          WEHub.modal("We're Sorry", "No data could be retrieved. Try making a new request."); 
+        },
         timeout: 300000
       });
     });
+    
+    $('#advanced_search_selector').find('[name=start],[name=end]').datepicker({ dateFormat: 'dd/mm/yy' });
   });
 </script>
 
 <style>
+form {
+  margin: 10px;
+}
 form div {
   padding-top: 10px;
+}
+#advanced_search_selector input {
+  width: 70px;
 }
 #builder_result, #response div {
   padding-top: 10px;
@@ -53,25 +80,36 @@ The WEHUB project offers an innovative aggregator service linked with a unified 
 The apps being built from the WEHUB range from quick-and-easy smartphone apps to more extensive applications that can be integrated into business processes.
 </p>
 
+<h2>The API Builder</h2>
 <%= form_for :query_builder, :html => { :id => 'query_builder' } do |f| %>
   <div>
-  <%= label_tag 'feature_type', 'Feature type' %>
+  <%= label_tag 'feature_type', 'Select a Feature type' %>
   <%= select_tag 'feature_type', options_from_collection_for_select(@feature_types, 'id', 'description'), { :include_blank => true } %>
   </div>
   <div>
-  <%= label_tag 'datasets', 'Dataset' %>
+  <%= label_tag 'datasets', 'Select a Dataset' %>
   <%= select_tag 'datasets', nil, { :include_blank => true } %>
   </div>
   <div>
-  <%= label_tag 'info_type', 'Information Request' %>
+  <%= label_tag 'info_type', 'Select the type of Information you would like to request' %>
   <%= select_tag 'info_type', options_for_select([ ['Dataset Information', 'dataset'], ['Feature Data', 'feature'] ]), { :include_blank => true } %>
   </div>
+  <div id="advanced_search_selector" style="display: none;">
+    <div id="date-range"><%= label_tag :start, "Select a date range" %> <%= text_field_tag :start %> - <%= text_field_tag :end %></div>
+    <div id="bbox-selector">Select a bounding box
+      <table>
+        <tr><td></td><td><%= text_field_tag :north %></td><td></td></tr>
+        <tr><td style="padding-left: 97px"><%= text_field_tag :west %></td><td></td><td><%= text_field_tag :east %></td></tr>
+        <tr><td></td><td><%= text_field_tag :south %></td><td></td></tr>
+      </table>
+    </div>
+  </div>
   <div>
-  <%= label_tag 'output', 'Request Format' %>    
+  <%= label_tag 'output', 'Select a response Format' %>    
   <%= select_tag 'output', options_for_select([ ['XML', 'xml'], ['JSON', 'json'] ]), { :include_blank => true } %>
   </div>
   <div>
-  <%= submit_tag 'Generate API call' %>
+  <%= submit_tag 'Generate API the call' %>
   </div>
 <% end %>
 
@@ -79,3 +117,6 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
   <%= render 'builder_response' %>
 </div>
 
+<p>
+<i>Requests for feature data via the API is resource intensive. We're doing our best to mitigate the latency times, but please bear with us as we fine tune our caching strategies.</i>
+</p>

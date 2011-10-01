@@ -117,6 +117,10 @@ class CatalogueTranslator
   def api_feature_types
     feature_types = xml_to_mash(get("#{api_uri}/feature_types?format=xml"))['feature_types']
   end
+  
+  def api_is_feature_external(dataset_id)
+    feature_types = get("#{api_uri}/is_feature_external?id=#{dataset_id}&format=json")
+  end
 
   def api_datasets(feature_type_id)
     datasets = xml_to_mash(get("#{api_uri}/datasets?feature_type_id=#{feature_type_id}&format=xml"))['datasets']
@@ -126,8 +130,8 @@ class CatalogueTranslator
     get("#{api_uri}/dataset?id=#{dataset_id}&format=#{format}")
   end
 
-  def api_feature_raw(dataset_id, output)
-    get("#{api_uri}/feature?id=#{dataset_id}&output=#{output}")
+  def api_feature_raw(params)
+    get("#{api_uri}/feature?#{params.to_query}")
   end
   
   def get(uri)

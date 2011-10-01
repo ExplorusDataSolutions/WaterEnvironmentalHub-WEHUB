@@ -8,6 +8,18 @@ class ApiController < ApplicationController
     respond_with(@feature_types, :dasherize => false)
   end
   
+  def is_feature_external
+    dataset_id = params[:id]
+
+    if dataset_id
+      feature_source_id = ActiveRecord::Base.connection.execute("SELECT feature_source_id FROM datasets WHERE uuid = '#{dataset_id}'")
+      if feature_source_id
+        feature_source_id = feature_source_id[0]['feature_source_id'].to_i
+      end
+      respond_with(feature_source_id == 3 || feature_source_id == 4)
+    end    
+  end
+  
   def datasets
     feature_type_id = params[:feature_type_id]
     
@@ -33,7 +45,7 @@ class ApiController < ApplicationController
     respond_with(@dataset)
   end
   
-  def feature
+  def feature  
     if params[:id] && params[:output]
       dataset = Dataset.find_by_uuid(params[:id])
       if dataset && dataset.feature

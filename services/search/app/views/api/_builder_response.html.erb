@@ -7,7 +7,7 @@
         <% url = CGI.unescape(url_for :controller => 'api', :action => 'dataset', :id => "#{@datasets}?key=#{current_user.api_key}&output=#{@output}", :only_path => false) %>
         <%= "<a href=\"#{url}\" target=\"blank\">#{url}</a>".html_safe %>      
       <% else %>
-        <% url = CGI.unescape(url_for :controller => 'api', :action => 'feature', :id => "#{@datasets}?key=#{current_user.api_key}&output=#{@output}", :only_path => false) %>
+        <% url = CGI.unescape(url_for :controller => 'api', :action => 'feature', :id => "#{@datasets}?key=#{current_user.api_key}#{@bounds}#{@extent}&output=#{@output}", :only_path => false) %>
         <%= "<a href=\"#{url}\" target=\"blank\">#{url}</a>".html_safe %>      
       <% end %>
 

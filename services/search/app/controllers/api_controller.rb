@@ -26,7 +26,11 @@ class ApiController < ApplicationController
   end
   
   def feature  
-    render :text => catalogue_instance.api_feature_raw(params[:id], params[:output])
+    render :text => catalogue_instance.api_feature_raw(params)
+  end
+  
+  def is_feature_external
+    render :text => catalogue_instance.api_is_feature_external(params[:id])
   end
   
   def builder_response  
@@ -38,7 +42,24 @@ class ApiController < ApplicationController
       if @info_type == 'dataset'
         @response = catalogue_instance.api_dataset_raw(params[:datasets], params[:output])
       else
-        @response = catalogue_instance.api_feature_raw(params[:datasets], params[:output])
+        @bounds = ''
+        if params[:north] && !params[:north].empty?
+          @bounds = { :north => params[:north], :east => params[:east], :south => params[:south], :west => params[:south] }.to_query
+          @bounds = "&#{@bounds}"
+        end
+        
+        @extent = ''
+        if params[:start] && !params[:start].empty?
+          @extent = { :start => params[:start], :end => params[:end] }.to_query
+          @extent = "&#{@extent}"
+        end
+        
+        @response = catalogue_instance.api_feature_raw(params)
+
+        if @response.strip.empty?
+          render :nothing =>  true, :status => :not_found and return
+        end
+
       end
     end
 
