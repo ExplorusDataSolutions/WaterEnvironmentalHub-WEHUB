@@ -4,6 +4,10 @@
     var secondaries = $('[name=datasets], [name=info_type], [name=output], [name=commit]');
     secondaries.attr('disabled', true);
     
+    secondaries.change(function(event) {
+      $('#builder_response').html('');
+    });
+    
     $('[name=feature_type]').change(function(event) {
       var featureTypeId = event.currentTarget.value;
       var url = "<%= url_for :controller => 'api', :action => 'datasets' %>" + "?feature_type_id=" + featureTypeId + "&format=html";
@@ -105,11 +109,11 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
     </div>
   </div>
   <div>
-  <%= label_tag 'output', 'Select a response Format' %>    
+  <%= label_tag 'output', 'Select a Format' %>    
   <%= select_tag 'output', options_for_select([ ['XML', 'xml'], ['JSON', 'json'] ]), { :include_blank => true } %>
   </div>
   <div>
-  <%= submit_tag 'Generate API the call' %>
+  <%= submit_tag 'Generate the API call' %>
   </div>
 <% end %>
 
