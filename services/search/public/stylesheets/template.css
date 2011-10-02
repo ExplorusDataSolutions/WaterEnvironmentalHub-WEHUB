@@ -350,6 +350,7 @@ ul.sub-menu {
   -webkit-border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;  
+  z-index: 200;
 }
 ul.sub-menu li {
   clear: both;
