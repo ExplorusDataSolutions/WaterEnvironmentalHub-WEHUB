@@ -1,6 +1,13 @@
 <script>
   $(document).ready(function() {
-    $.post('<%= url_for :controller => "user", :action => "recently_viewed" %>', { id: '<%= @dataset.uuid %>' });
+    setTimeout(function() {
+      $.ajax({
+        url: '<%= url_for :controller => "user", :action => "recently_viewed" %>',
+        data: { id: '<%= @dataset.uuid %>' },
+        type: 'POST',
+        global: false
+      });
+    }, 5000);
 
     $('#my-collection').click(function() {
       var ids = [];
