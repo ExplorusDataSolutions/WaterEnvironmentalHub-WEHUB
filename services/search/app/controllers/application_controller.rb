@@ -5,20 +5,24 @@ class ApplicationController < ActionController::Base
 
   helper ApplicationHelper
 
-  before_filter :fetch_recently_viewed_search_results, :fetch_user_saved_search_results, :except => [:api]
+  before_filter :fetch_recently_viewed_search_results, :fetch_user_saved_search_results
 
-  def fetch_recently_viewed_search_results
-    user_id = anonynmous_id
-    if logged_in?
-      user_id = current_user.id
+  def fetch_recently_viewed_search_results  
+    if controller_requires_recently_viewed_or_saved_search_results? 
+      user_id = anonynmous_id
+      if logged_in?
+        user_id = current_user.id
+      end
+
+      @recently_viewed_search_results = search_results_from_datasets(catalogue_instance.find_recently_viewed(user_id))
     end
-
-    @recently_viewed_search_results = search_results_from_datasets(catalogue_instance.find_recently_viewed(user_id))
   end
 
   def fetch_user_saved_search_results
-    if logged_in?
-      @user_saved_search_results = search_results_from_datasets(catalogue_instance.find_saved(current_user.id))
+    if controller_requires_recently_viewed_or_saved_search_results?
+      if logged_in?
+        @user_saved_search_results = search_results_from_datasets(catalogue_instance.find_saved(current_user.id))
+      end
     end
   end
   
@@ -32,6 +36,11 @@ class ApplicationController < ActionController::Base
   
   def logged_in?
     !current_user.nil?
+  end
+  
+  def controller_requires_recently_viewed_or_saved_search_results?
+    controller = params[:controller]
+    controller && (controller == 'search' || controller == 'catalogue')
   end
 
   def search_instance
