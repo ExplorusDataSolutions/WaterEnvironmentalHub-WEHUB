@@ -62,6 +62,7 @@ class CatalogueTranslator
     }.to_json, { 'Content-Type' => 'application/json'}) }
 
     response.value
+    Rails.cache.delete(recently_viewed_key(user_id))
     response.body
   end
 
@@ -79,6 +80,7 @@ class CatalogueTranslator
     }.to_json, { 'Content-Type' => 'application/json'}) }
 
     response.value
+    Rails.cache.delete(saved_key(user_id))
     response.body
   end
 
@@ -86,12 +88,24 @@ class CatalogueTranslator
     xml_to_mash(get(item_uri(id)))['dataset']
   end
 
-  def find_recently_viewed(user_id)
-    get("#{user_recently_viewed_uri}?user_id=#{user_id}")
+  def recently_viewed_key(user_id)
+    "#{user_id}_user_recently_viewed"
   end
-
+  
+  def find_recently_viewed(user_id)
+    Rails.cache.fetch(recently_viewed_key(user_id), :expires_in => 1.hour) do 
+      get("#{user_recently_viewed_uri}?user_id=#{user_id}")
+    end
+  end
+  
+  def saved_key(user_id)
+    "#{user_id}_user_saved"
+  end
+  
   def find_saved(user_id)
-    get("#{user_saved_uri}?user_id=#{user_id}")
+    Rails.cache.fetch(saved_key(user_id), :expires_in => 1.hour) do
+      get("#{user_saved_uri}?user_id=#{user_id}")
+    end
   end
   
   def find_datasets_by_user(user_ids)
