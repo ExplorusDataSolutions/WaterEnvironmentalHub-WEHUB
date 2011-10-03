@@ -4,26 +4,15 @@ require 'active_support/core_ext'
 
 class GeoNetworkTranslator
   attr_accessor :server_address
-
-  @@cached_search_query = {}
-  @@cached_metadata = {}
-  
+ 
   def initialize(server_address = '50.19.106.48:9090')
     @server_address = server_address
   end
-
-  def cached_metadata
-    @@cached_metadata
-  end
-  
-  def cached_search_query
-    @@cached_search_query
-  end
-
+ 
   def search_results_by_groups(group_ids)
     query = group_ids.sort.join(',')
-    if cached_search_query.has_key?(query)
-      search_terms = cached_search_query.fetch(query)
+    if Rails.cache.exist?(query)
+      search_terms = Rails.cache.fetch(query)
     else 
       groups_xml = ''
       group_ids.each do |id|
@@ -33,19 +22,19 @@ class GeoNetworkTranslator
       response = post("xml.search", "<request>#{groups_xml}</request>")
       search_terms = response.body
       
-      cached_search_query.store(query, search_terms)
+      Rails.cache.write(query, search_terms)
     end    
     
     translate_to_search_results(search_terms)
   end
   
   def search_results(query)
-    if cached_search_query.has_key?(query)
-      search_terms = cached_search_query.fetch(query)
+    if Rails.cache.exist?(query)
+      search_terms = Rails.cache.fetch(query)
     else  
       response = post("xml.search", "<request><any>#{query}</any></request>")
       search_terms = response.body
-      cached_search_query.store(query, search_terms)
+      Rails.cache.write(query, search_terms)
     end    
     
     translate_to_search_results(search_terms)
@@ -79,12 +68,12 @@ class GeoNetworkTranslator
   end
   
   def search_result(id)
-    if cached_metadata.has_key?(id)
-      result = cached_metadata.fetch(id)
+    if Rails.cache.exist?(id)
+      result = Rails.cache.fetch(id)
     else
       result = search_results(id).first
 
-      cached_search_query.store(id, result)
+      Rails.cache.write(id, result)
     end    
     
     result
@@ -113,8 +102,8 @@ class GeoNetworkTranslator
   end
   
   def augment_search_result(result)  
-    if cached_metadata.has_key?(result.id)
-      result = cached_metadata.fetch(result.id)
+    if Rails.cache.exist?(result.id)
+      result = Rails.cache.fetch(result.id)
     else    
       response = post("xml.metadata.get", "<request><uuid>#{result.id}</uuid></request>")
 
@@ -140,7 +129,7 @@ class GeoNetworkTranslator
         end
       end
       
-      cached_metadata.store(result.id, result)
+      Rails.cache.write(result.id, result)
     end
     result    
   end
@@ -180,7 +169,7 @@ class GeoNetworkTranslator
   end
   
   def refresh
-    @@cached_metadata = @@cached_search_query = {}
+    Rails.cache.clear()
   end
   
 end
