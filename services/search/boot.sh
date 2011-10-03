@@ -18,4 +18,4 @@ else
 fi
 
 rvm use 1.9.2
-nohup rails server -p 80&
+rails server -p 80 -d
