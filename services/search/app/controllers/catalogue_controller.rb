@@ -1,5 +1,7 @@
 class CatalogueController < ApplicationController
 
+  caches_page :index
+
   def index
     @main_menu = 'home'
     

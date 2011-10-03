@@ -1,6 +1,9 @@
 require 'zip/zip'
 
 class ItemsController < ApplicationController
+
+  caches_action :index, :cache_path => Proc.new { |c| c.params }, :expires_in => 24.hours
+
   respond_to :json, :xml
 
   protect_from_forgery :except => :create

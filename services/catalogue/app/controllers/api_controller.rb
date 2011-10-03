@@ -1,5 +1,7 @@
 class ApiController < ApplicationController
 
+  caches_action :datasets, :is_feature_external, :dataset, :feature_types, :cache_path => Proc.new { |c| c.params }, :expires_in => 24.hours
+
   respond_to :json, :xml
   
   def feature_types

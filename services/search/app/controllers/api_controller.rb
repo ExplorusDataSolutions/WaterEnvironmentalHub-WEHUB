@@ -1,5 +1,9 @@
 class ApiController < ApplicationController
-
+  
+  caches_page :builder
+  caches_action :dataset, :datasets, :cache_path => Proc.new { |c| c.params }, :expires_in => 24.hours
+  caches_action :builder_response, :cache_path => Proc.new { |c| c.params.delete_if { |k,v| k.starts_with?('utf8') || k.starts_with?('authenticity_token') }}, :expires_in => 24.hours
+  
   respond_to :json, :xml
 
   respond_to :html, :only => ['builder_result']
