@@ -816,8 +816,8 @@ ul.sub-menu li {
   padding:30px 0 0 0;
 }
 .home-middle .home-middle-content{
-  width:540px;
-/*  height:320px; */
+  width:355px;
+  height:320px;
   float:left;
   border-right:solid 1px #E2E2E2;
   padding:0 0 0 3px;
@@ -825,7 +825,7 @@ ul.sub-menu li {
 }
 .home-middle .home-middle-data{
   float:left;
-  width:500px;
+  width:275px;
   margin:0 10px 0 10px;
 }
 .home-middle .home-middle-head{
