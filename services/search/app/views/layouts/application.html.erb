@@ -133,7 +133,11 @@
             <li class="<%= @main_menu == 'resources' ? 'selected' : ''%>">
               <%= link_to 'Use Our Resources', {:controller => 'about', :action => 'resources'}, :class => 'top-menu' %>
               <ul style="display: none;">
+<%
+=begin %>                          
                 <li><%= link_to 'Events', {:controller => 'about', :action => 'events'} %></li>
+<%
+=end %>                            
                 <li><%= link_to 'Calendar', {:controller => 'about', :action => 'calendar'} %></li>                
                 <li><%= link_to 'Blog', {:controller => 'about', :action => 'blog'} %></li>                                
                 <li><%= link_to 'Links', {:controller => 'about', :action => 'links'} %></li>                                                
