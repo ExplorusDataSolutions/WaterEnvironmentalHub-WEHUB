@@ -17,8 +17,22 @@ class ApiController < ApplicationController
   end
     
   def datasets
-    @datasets = catalogue_instance.api_datasets(params[:feature_type_id])
+    feature_type_id = params[:feature_type_id]
 
+    date_start = params[:start]
+    date_end = params[:end]
+    north = params[:north]
+    east = params[:east]
+    south = params[:south]
+    west = params[:west]
+    
+    if feature_type_id
+      @datasets = catalogue_instance.api_datasets(feature_type_id)
+    elsif ((date_start && date_end) && !(date_start.empty? && date_end.empty?)) || ((north && east && south && west) && !(north.empty? && east.empty? && south.empty? && west.empty))
+      search = search_instance.do_query_advanced('all', date_start, date_end, south, east, north, west)
+      @datasets = search.results
+      @datasets.sort_by! { |dataset| dataset.name } unless @datasets.nil?
+    end
     respond_with(@datasets) do |format|
       format.html { render :partial => 'datasets' }
     end    
@@ -68,7 +82,7 @@ class ApiController < ApplicationController
 
     render :partial => 'builder_response'
   end
-  
+    
   private
   
   def verify_api_key

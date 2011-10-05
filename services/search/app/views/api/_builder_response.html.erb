@@ -1,8 +1,7 @@
-
-<div id="response">
+<div class="response">
   <div>
     <strong>API Call</strong>
-    <div id="uri">
+    <div class="uri">
       <% if @info_type == 'dataset' %>
         <% url = CGI.unescape(url_for :controller => 'api', :action => 'dataset', :id => "#{@datasets}?key=#{current_user.api_key}&output=#{@output}", :only_path => false) %>
         <%= "<a href=\"#{url}\" target=\"blank\">#{url}</a>".html_safe %>      
@@ -15,6 +14,6 @@
   </div>
   <div>
     <strong>API Response</strong>
-    <div id="message"><pre><%= @response %></pre></div>
+    <div class="message"><pre><%= @response %></pre></div>
   </div>
 </div>

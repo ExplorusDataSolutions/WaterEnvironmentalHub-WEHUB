@@ -5,10 +5,12 @@
     secondaries.attr('disabled', true);
     
     secondaries.change(function(event) {
-      $('#builder_response').html('');
+      $('#builder_response').hide('fast');
     });
-    
+        
     $('[name=feature_type]').change(function(event) {
+      $('#search_builder_response').hide('fast');
+      $('#north, #east, #south, #west, #start, #end').val('');
       var featureTypeId = event.currentTarget.value;
       var url = "<%= url_for :controller => 'api', :action => 'datasets' %>" + "?feature_type_id=" + featureTypeId + "&format=html";
       
@@ -18,30 +20,38 @@
       });
       
     });
-    
-    $('[name=info_type]').change(function(event) {
-      var info_type = event.currentTarget.value;
-      var dataset_id = $('[name=datasets]').val();
-      if (info_type === 'feature') {
-        var url = "<%= url_for :controller => 'api', :action => 'is_feature_external' %>" + "?id=" + dataset_id + "&format=json";
-        $.get(url, function(data) { 
-          if (data === true) {
-            $('#advanced_search_selector').show('fast');
-          } else {
-            $('#advanced_search_selector').hide('fast');
-          }
-        });      
-      } else {
-        $('#advanced_search_selector').hide('fast');
-      }
+
+    $('[name=search]').click(function(event) {
+      event.preventDefault();
+      
+      $('[name=feature_type]').val(0)
+      var url = "<%= url_for :controller => 'api', :action => 'datasets', :only_path => false %>" + "?" + "key=<%= current_user.api_key %>" + "&" + $('form').serialize().match(/(start.*south=[^&]*)/)[1];
+
+      $.get((url + "&format=html"), function(data) { 
+        secondaries.removeAttr('disabled');
+        $('[name=datasets]').html($(data).html());
+        $('[name=datasets]').focus();
+      });
+
+      $.ajax({
+        url: url + "&format=xml",
+        dataType: "text",
+        global: false,
+        success: function(data) { 
+          var response = $('#search_builder_response');
+          response.find('a').attr('href', (url + "&format=xml")).text((url + "&format=xml"))
+          response.find('.message pre').text(data);
+          response.show('fast');
+        }
+      });      
     });
-    
+       
     $('[name=commit]').click(function(event) {
       event.preventDefault();
       $.ajax({
         url: "<%= url_for :controller => 'api', :action => 'builder_response' %>",
         data: $('form').serialize(),
-        success: function(data) { $('#builder_response').show().html(data); },
+        success: function(data) { $('#builder_response').html(data).show('fast'); },
         error: function() { 
           WEHub.modal("We're Sorry", "No data could be retrieved. Try making a new request."); 
         },
@@ -50,6 +60,42 @@
     });
     
     $('#advanced_search_selector').find('[name=start],[name=end]').datepicker({ dateFormat: 'dd/mm/yy' });
+
+    function loadMap() {
+      map = new OpenLayers.Map('map');
+      
+      var gphy = new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP});
+      
+      map.addLayers([gphy]);
+      
+      map.setCenter(new OpenLayers.LonLat(-115.092773, 55.128649), 4);
+
+      var boxControl = new OpenLayers.Control();
+      OpenLayers.Util.extend(boxControl, {
+        draw: function () {
+          this.box = new OpenLayers.Handler.Box(boxControl, { "done": function(bounds) { 
+            var leftBottom = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom));
+            var rightTop = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top));
+            setBoundingBox(rightTop.lat, rightTop.lon, leftBottom.lat, leftBottom.lon);
+          }});
+        }
+      });
+      
+      function setBoundingBox(north, east, south, west) {
+        $('[name=north]').val(north);
+        $('[name=east]').val(east);
+        $('[name=south]').val(south);
+        $('[name=west]').val(west);
+      }   
+
+      map.addControl(boxControl);
+      boxControl.box.activate();
+    }
+
+    $('#bbox_selector').click(function() {
+      WEHub.dialog("Bounding box selector", 'Select a bounding box <div id="map" style="width:565px; height:320px"></div>');
+      loadMap();
+    });    
   });
 </script>
 
@@ -57,7 +103,7 @@
 form {
   margin: 10px;
 }
-form div {
+form .round div {
   padding-top: 10px;
 }
 #advanced_search_selector input {
@@ -69,10 +115,38 @@ form div {
 #response div > div {
   padding-left: 10px;
 }
-#builder_response pre {
+#builder_response pre, #search_builder_response pre {
   height: 300px;
   overflow: scroll;
-  width: 1090px;
+  width: 1070px;
+}
+#search_builder_response pre {
+  height: 100px;
+}
+.circle {
+	display: block;
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	vertical-align: middle;
+	text-align: center;
+	background: #CBE2F0;
+	-moz-border-radius: 40px;
+	-webkit-border-radius: 40px;
+	padding: 0px;
+	float: left;
+	margin-right: 20px;
+}
+.circle h3 {
+  margin: 0px;
+  color: #066497;
+}
+.rounded {
+  background: none repeat scroll 0 0 #FFFFFF;
+  border: 1px solid #D5D6D8;
+  border-radius: 5px 5px 5px 5px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 </style>
 
@@ -86,40 +160,64 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
 
 <h2>The API Builder</h2>
 <%= form_for :query_builder, :html => { :id => 'query_builder' } do |f| %>
-  <div>
-  <%= label_tag 'feature_type', 'Select a Feature type' %>
-  <%= select_tag 'feature_type', options_from_collection_for_select(@feature_types, 'id', 'description'), { :include_blank => true } %>
+  <div class="rounded">
+    <div class="circle"><h3>1</h3></div>
+    <table style="width: 995px;">
+      <tr>
+        <td>
+    <div id="advanced_search_selector" style="">
+      <div id="date-range"><%= label_tag :start, "Enter a date range" %> <%= text_field_tag :start %> - <%= text_field_tag :end %></div>
+      <div id="bbox-selector">Enter a bounding box (<a href="#" id="bbox_selector">click here</a> for a map selector)
+        <table>
+          <tr><td></td><td><%= text_field_tag :north %></td><td></td></tr>
+          <tr><td style="padding-left: 97px"><%= text_field_tag :west %></td><td></td><td><%= text_field_tag :east %></td></tr>
+          <tr><td></td><td><%= text_field_tag :south %></td><td></td></tr>
+        </table>
+      <%= submit_tag 'Search', :name => 'search', :style => 'float: right;' %>
+      </div>
+    </div>
+        </td>
+        <td style="padding: 80px;">
+    <h3>or</h3>
+        </td>
+        <td>
+    <div>
+    <%= label_tag 'feature_type', 'Select a Feature type' %>
+    <%= select_tag 'feature_type', options_from_collection_for_select(@feature_types, 'id', 'description'), { :include_blank => true } %>
+    </div>
+        </td>
+      </tr>
+    </table>
   </div>
-  <div>
-  <%= label_tag 'datasets', 'Select a Dataset' %>
-  <%= select_tag 'datasets', nil, { :include_blank => true } %>
+  <div id="search_builder_response" style="display: none;">
+    <%= render 'builder_response' %>
   </div>
-  <div>
-  <%= label_tag 'info_type', 'Select the type of Information you would like to request' %>
-  <%= select_tag 'info_type', options_for_select([ ['Dataset Information', 'dataset'], ['Feature Data', 'feature'] ]), { :include_blank => true } %>
-  </div>
-  <div id="advanced_search_selector" style="display: none;">
-    <div id="date-range"><%= label_tag :start, "Select a date range" %> <%= text_field_tag :start %> - <%= text_field_tag :end %></div>
-    <div id="bbox-selector">Select a bounding box
-      <table>
-        <tr><td></td><td><%= text_field_tag :north %></td><td></td></tr>
-        <tr><td style="padding-left: 97px"><%= text_field_tag :west %></td><td></td><td><%= text_field_tag :east %></td></tr>
-        <tr><td></td><td><%= text_field_tag :south %></td><td></td></tr>
-      </table>
+  <div class="rounded">
+    <div class="circle"><h3>2</h3></div>
+    <div>
+    <%= label_tag 'datasets', 'Select a Dataset' %>
+    <%= select_tag 'datasets', nil, { :include_blank => true } %>
     </div>
   </div>
-  <div>
-  <%= label_tag 'output', 'Select a Format' %>    
-  <%= select_tag 'output', options_for_select([ ['XML', 'xml'], ['JSON', 'json'] ]), { :include_blank => true } %>
+  <div class="rounded">
+    <div class="circle"><h3>3</h3></div>
+    <%= label_tag 'info_type', 'Select the type of Information you would like to request' %>
+    <%= select_tag 'info_type', options_for_select([ ['Dataset Information', 'dataset'], ['Feature Data', 'feature'] ]), { :include_blank => true } %>
   </div>
-  <div>
-  <%= submit_tag 'Generate the API call' %>
+  <div class="rounded">
+    <div class="circle"><h3>4</h3></div>
+    <%= label_tag 'output', 'Select a Format' %>    
+    <%= select_tag 'output', options_for_select([ ['XML', 'xml'], ['JSON', 'json'] ]), { :include_blank => true } %>
+  </div>
+  <div class="rounded">
+    <div class="circle"><h3>5</h3></div>
+    <%= submit_tag 'Generate the API call' %>
+  </div>
+  
+  <div id="builder_response" style="display: none;">
+    <%= render 'builder_response' %>
   </div>
 <% end %>
-
-<div id="builder_response" style="display: none;">
-  <%= render 'builder_response' %>
-</div>
 
 <p>
 <i>Requests for feature data via the API is resource intensive. We're doing our best to mitigate the latency times, but please bear with us as we fine tune our caching strategies.</i>
