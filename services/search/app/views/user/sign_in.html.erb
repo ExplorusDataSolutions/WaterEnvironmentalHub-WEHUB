@@ -29,9 +29,13 @@
 			<div class="float-left login-button" onclick="$('form').submit();">
         <%= f.submit :"Log-in" %>
 			</div>
+<%
+=begin %>			
 			<div class="float-left" style="margin:8px 20px;">
         <%= link_to 'Forgot Password?', { :controller => 'user', :action => 'password' } %>
 			</div>
+<%
+=end %>			
 			<div class="clear height-30"></div>
 			<div class="light-black-head">
 				<h2>Don't have a We Hub Id?</h2>
@@ -45,7 +49,7 @@
 				Connect : 
 			</div>
 			<div class="login-connect-icons">
-    <table style="width: 100%; padding-top: 30px;">
+    <table>
       <tr>
         <td align="center" >
           <span><a href="http://twitter.com/letthedataflow"><img src="/images/twitter_icon.jpg" title="Twitter" alt="Twitter" border="0" /></a></span>
