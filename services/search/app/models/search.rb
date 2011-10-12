@@ -14,6 +14,8 @@ class Search
 
   def initialize(query='all')
     @geonetwork = GeoNetworkTranslator.new
+    @geonetwork.cache = Rails.cache
+
     @catalogue = CatalogueTranslator.new
     
     @results = geonetwork.search_results(query)
