@@ -1,7 +1,5 @@
 class AboutController < ApplicationController
 
-  caches_page :index, :contact_us, :project, :partners, :community, :news, :events, :resources, :blog, :links
-
   def index
     @breadcrumb = ['Learn About Us']
     @main_menu = 'about'

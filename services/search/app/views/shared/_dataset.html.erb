@@ -1,3 +1,4 @@
+<% cache "search_dataset_#{dataset.uuid}" do %>
 <div class="search-result-each search-result-each-box">
 	<div class="search-checkbox">
 		<input type='checkbox' name='download' value='<%= dataset.uuid %>' id='<%= "download_#{dataset.uuid}" %>' />
@@ -68,3 +69,4 @@
 	<div class="clear"></div>
 </div>
 <div class="clear"></div>
+<% end %>

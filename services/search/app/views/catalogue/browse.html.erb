@@ -1,4 +1,4 @@
-<%= @groups %>
+<% cache "search_browse_page_#{params[:page]}_with_tree" do %>
 <script>
   $('document').ready(function() {
     $("#dataset-navigation").treeview({
@@ -86,7 +86,7 @@
     <%= render '/shared/download_panel_bottom' %>
 		
 	</div>
-
+<% end %>
 	<div class="sub-content-right">
     <%= render 'shared/right_panel' %>
 	</div>

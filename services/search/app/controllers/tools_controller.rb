@@ -7,7 +7,7 @@ class ToolsController < ApplicationController
   
   def chart
     @id = params[:id]
-    f = File.read('public/chart.json')
+    f = File.read("#{Rails.root}/public/chart.json")
     @json = f.strip
     @breadcrumb = ['Tools', 'Data Graph']
     @main_menu = 'we_tools'
@@ -20,7 +20,7 @@ class ToolsController < ApplicationController
   
   def map
     @id = params[:id]
-    f = File.read('public/6.json')
+    f = File.read("#{Rails.root}/public/6.json")
     @json = f.strip
     @breadcrumb = ['Tools', 'Data Map']
     @main_menu = 'we_tools'

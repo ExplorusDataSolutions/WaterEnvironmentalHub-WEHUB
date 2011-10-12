@@ -1,3 +1,4 @@
+<% cache "details_#{params[:id]}" do %>
 <script>
   $(document).ready(function() {
     setTimeout(function() {
@@ -440,7 +441,7 @@ $(document).ready(function() {
       
     </div>
   </div>
-  
+<% end %>  
   <div class="sub-content-right">
     <div class="right-content">
       <%= render 'shared/right_panel' %>

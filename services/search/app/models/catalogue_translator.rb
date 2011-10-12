@@ -3,16 +3,17 @@ require 'net/http'
 require 'active_support/core_ext'
 
 class CatalogueTranslator
-  attr_accessor :url
+  attr_accessor :url, :cache
   
-  def initialize(url = "http://localhost:3000")
-    @url = url    
+  def initialize(url = "http://localhost:3000", cache={})
+    @url = url
+    @cache = cache
   end
   
   def item_uri(id)
     "#{url}/items/?id=#{id}&format=xml"
   end
-  
+ 
   def download_uri(params)
     if params[:filename]
       "#{url}/items/download/?filename=#{params[:filename]}"
@@ -62,7 +63,7 @@ class CatalogueTranslator
     }.to_json, { 'Content-Type' => 'application/json'}) }
 
     response.value
-    Rails.cache.delete(recently_viewed_key(user_id))
+    cache.delete(recently_viewed_key(user_id))
     response.body
   end
 
@@ -80,7 +81,7 @@ class CatalogueTranslator
     }.to_json, { 'Content-Type' => 'application/json'}) }
 
     response.value
-    Rails.cache.delete(saved_key(user_id))
+    cache.delete(saved_key(user_id))
     response.body
   end
 
@@ -93,7 +94,7 @@ class CatalogueTranslator
   end
   
   def find_recently_viewed(user_id)
-    Rails.cache.fetch(recently_viewed_key(user_id), :expires_in => 1.hour) do 
+    cache.fetch(recently_viewed_key(user_id), :expires_in => 3.hour) do
       get("#{user_recently_viewed_uri}?user_id=#{user_id}")
     end
   end
@@ -103,7 +104,7 @@ class CatalogueTranslator
   end
   
   def find_saved(user_id)
-    Rails.cache.fetch(saved_key(user_id), :expires_in => 1.hour) do
+    cache.fetch(saved_key(user_id), :expires_in => 3.hour) do
       get("#{user_saved_uri}?user_id=#{user_id}")
     end
   end

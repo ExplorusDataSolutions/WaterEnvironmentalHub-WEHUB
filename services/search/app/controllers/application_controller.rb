@@ -40,7 +40,8 @@ class ApplicationController < ActionController::Base
   
   def controller_requires_recently_viewed_or_saved_search_results?
     controller = params[:controller]
-    controller && (controller == 'search' || controller == 'catalogue')
+    action = params[:action]
+    controller && (controller == 'search' || (controller == 'catalogue' && (action && !(action == 'index'))))
   end
 
   def search_instance
@@ -52,7 +53,7 @@ class ApplicationController < ActionController::Base
 
   def catalogue_instance
     if @catalogue.nil?
-      @catalogue = CatalogueTranslator.new("http://#{request.host}:3000")
+      @catalogue = CatalogueTranslator.new("http://#{request.host}:3000", Rails.cache)
     end
     @catalogue
   end

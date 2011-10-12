@@ -59,24 +59,22 @@ class ApiController < ApplicationController
       if @info_type == 'dataset'
         @response = catalogue_instance.api_dataset_raw(params[:datasets], params[:output])
       else
+        feature_request = { :id => params[:datasets], :output => params[:output] }
+
         @bounds = ''
         if params[:north] && !params[:north].empty?
-          @bounds = { :north => params[:north], :east => params[:east], :south => params[:south], :west => params[:south] }.to_query
-          @bounds = "&#{@bounds}"
+          @bounds = { :north => params[:north], :east => params[:east], :south => params[:south], :west => params[:south] }
+          feature_request.merge(@bounds)
+          @bounds = "&#{@bounds.to_query}"
         end
         
         @extent = ''
         if params[:start] && !params[:start].empty?
-          @extent = { :start => params[:start], :end => params[:end] }.to_query
-          @extent = "&#{@extent}"
+          @extent = { :start => params[:start], :end => params[:end] }
+          feature_request.merge(@extent)
+          @extent = "&#{@extent.to_query}"
         end
         
-        @response = catalogue_instance.api_feature_raw(params)
-
-        if @response.strip.empty?
-          render :nothing =>  true, :status => :not_found and return
-        end
-
       end
     end
 

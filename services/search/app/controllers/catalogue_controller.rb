@@ -1,7 +1,5 @@
 class CatalogueController < ApplicationController
 
-  caches_page :index
-
   def index
     @main_menu = 'home'
     
@@ -58,7 +56,7 @@ class CatalogueController < ApplicationController
     
     @pages = Integer(results.count / page_size)    
   
-    base_data = @search.base_data
+    base_data = @search.base_data.dup
     base_data.sort! { |a,b| a.name.downcase <=> b.name.downcase }
 
     groups = find_groups(base_data)
@@ -66,7 +64,7 @@ class CatalogueController < ApplicationController
 
     @base_data = group(base_data, groups)
   
-    observation_data = @search.observation_data
+    observation_data = @search.observation_data.dup
     observation_data.sort! { |a,b| a.name.downcase <=> b.name.downcase }
 
     groups = find_groups(observation_data)
