@@ -1,3 +1,4 @@
+<% cache "api_builder" do %>
 <script>
   $('document').ready(function() {
   
@@ -28,22 +29,14 @@
       var url = "<%= url_for :controller => 'api', :action => 'datasets', :only_path => false %>" + "?" + "key=<%= current_user.api_key %>" + "&" + $('form').serialize().match(/(start.*south=[^&]*)/)[1];
 
       $.get((url + "&format=html"), function(data) { 
+        var response = $('#search_builder_response');
+        response.find('a').attr('href', (url + "&format=xml")).text((url + "&format=xml"))
+        response.show('fast');
         secondaries.removeAttr('disabled');
         $('[name=datasets]').html($(data).html());
         $('[name=datasets]').focus();
       });
 
-      $.ajax({
-        url: url + "&format=xml",
-        dataType: "text",
-        global: false,
-        success: function(data) { 
-          var response = $('#search_builder_response');
-          response.find('a').attr('href', (url + "&format=xml")).text((url + "&format=xml"))
-          response.find('.message pre').text(data);
-          response.show('fast');
-        }
-      });      
     });
        
     $('[name=commit]').click(function(event) {
@@ -222,3 +215,4 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
 <p>
 <i>Requests for feature data via the API is resource intensive. We're doing our best to mitigate the latency times, but please bear with us as we fine tune our caching strategies.</i>
 </p>
+<% end %>
