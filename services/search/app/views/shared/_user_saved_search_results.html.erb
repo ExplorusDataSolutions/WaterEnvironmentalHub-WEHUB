@@ -9,7 +9,6 @@ $('document').ready(function() {
     global: false,
     success: function(data) {
       var template = $('#saved-datasets .contents:first');
-      template.hide();
       $(data).each(function() {
         var fragment = template.clone();
         fragment.find('.name').text(this.name);
@@ -17,13 +16,14 @@ $('document').ready(function() {
         var url = '<%= url_for :controller => "catalogue", :action => "details", :id => nil, :trailing_slash => true %>' + this.id;
         fragment.click(function() { window.location = url; });
         template.before(fragment);
-        fragment.fadeIn('slow');
       });
+      
+      $('#saved-datasets').fadeIn('slow');
     }
   });
 });
 </script>
-<div class="right-content" id="saved-datasets">
+<div class="right-content" id="saved-datasets" style="display: none;">
   <div class="main-head hand">
     <div class="float-left"><img src="/images/my-collection.jpg" alt="my collection" title="my collection" width="20" height="20"></div>
     <div class="float-left"><h1>My Collection</h1></div>

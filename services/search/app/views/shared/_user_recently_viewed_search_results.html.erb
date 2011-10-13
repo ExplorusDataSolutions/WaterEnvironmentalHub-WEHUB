@@ -16,7 +16,6 @@ $('document').ready(function() {
       }
     
       var template = $('#recently-viewed .contents:first');
-      template.hide();
       $(data).each(function() {
         if (datasetId != this.id) {
           var fragment = template.clone();
@@ -25,14 +24,15 @@ $('document').ready(function() {
           var url = '<%= url_for :controller => "catalogue", :action => "details", :id => nil, :trailing_slash => true %>' + this.id;
           fragment.click(function() { window.location = url; });
           template.before(fragment);
-          fragment.fadeIn('slow');
         }
       });
+      
+      $('#recently-viewed').fadeIn('slow');
     }
   });
 });
 </script>
-<div class="right-content" id="recently-viewed">
+<div class="right-content" id="recently-viewed" style="display: none;">
   <div class="main-head">
     <div class="float-left"><img src="/images/recently-viewed.jpg" alt="recently viewed" title="recently viewed" width="20" height="20"></div>
     <div class="float-left"><h1>Recently Viewed</h1></div>
