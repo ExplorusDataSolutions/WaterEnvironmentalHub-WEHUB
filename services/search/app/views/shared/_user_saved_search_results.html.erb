@@ -1,31 +1,42 @@
-<%
-  def onclick_link_to_saved_results
-    if logged_in?
-      "onclick=\"location.href = \'#{url_for :controller => 'user', :action => 'collection'}\'; return false;\""
-    end
-  end
-%>
+<script>
+$('document').ready(function() {
+  $('#saved-datasets .main-head').click(function() {
+    window.location = '<%= url_for :controller => "user", :action => "collection" %>';
+  });
+  $.ajax({
+    url: '<%= url_for :controller => "user", :action => "saved_collection" %>',
+    type: 'GET',
+    global: false,
+    success: function(data) {
+      var template = $('#saved-datasets .contents:first');
+      template.hide();
+      $(data).each(function() {
+        var fragment = template.clone();
+        fragment.find('.name').text(this.name);
+        fragment.find('.date').text(this.date);
+        var url = '<%= url_for :controller => "catalogue", :action => "details", :id => nil, :trailing_slash => true %>' + this.id;
+        fragment.click(function() { window.location = url; });
+        template.before(fragment);
+        fragment.fadeIn('slow');
+      });
+    }
+  });
+});
+</script>
+<div class="right-content" id="saved-datasets">
+  <div class="main-head hand">
+    <div class="float-left"><img src="/images/my-collection.jpg" alt="my collection" title="my collection" width="20" height="20"></div>
+    <div class="float-left"><h1>My Collection</h1></div>
+    <div class="clear"></div>
+  </div>
+  <div class="clear"></div>
 
-<div class="right-content">
-	<div class="main-head hand">
-		<div class="float-left" <%= onclick_link_to_saved_results.html_safe %>><img src="/images/my-collection.jpg" alt="my collection" title="my collection" width="20" height="20"></div>
-		<div class="float-left" <%= onclick_link_to_saved_results.html_safe %>><h1>My Collection</h1></div>
-		<div class="clear"></div>
-	</div>
-	<div class="clear"></div>
-
-	<% @user_saved_search_results.each do |item| %>	
-	<div class="contents" onclick="<%= link_to_details(item.id) %>">
-		<div>
-			<h2><%= item.name %></h2>
-		</div>
-		<div class="date">
-			<%= item.date %>
-		</div>
-	</div>
-	<div class="clear"></div>
-	<% end %>
-
+  <div class="contents">
+    <div>
+      <h2 class="name"></h2>
+    </div>
+    <div class="date"></div>
+  </div>
+  <div class="clear"></div>
 </div>
 <div class="clear">&nbsp;</div>
-

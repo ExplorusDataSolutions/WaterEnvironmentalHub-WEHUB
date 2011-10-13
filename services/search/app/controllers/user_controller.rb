@@ -95,11 +95,26 @@ class UserController < ApplicationController
         end
 
         catalogue_instance.add_recently_viewed(user_id, params[:id])
+        render :nothing => true
       end
+    else
+      user_id = anonynmous_id
+      if logged_in?
+        user_id = current_user.id
+      end
+
+      render :json => search_results_from_datasets(catalogue_instance.find_recently_viewed(user_id))    
     end 
-    render :nothing => true
   end
   
+  def saved_collection
+    if logged_in?
+      render :json => search_results_from_datasets(catalogue_instance.find_saved(current_user.id)) and return
+    else
+      render :status => :forbidden and return
+    end
+  end
+
   def modify_collection
     if request.post?
       if params[:ids] && logged_in?

@@ -4,27 +4,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   helper ApplicationHelper
-
-  before_filter :fetch_recently_viewed_search_results, :fetch_user_saved_search_results
-
-  def fetch_recently_viewed_search_results  
-    if controller_requires_recently_viewed_or_saved_search_results? 
-      user_id = anonynmous_id
-      if logged_in?
-        user_id = current_user.id
-      end
-
-      @recently_viewed_search_results = search_results_from_datasets(catalogue_instance.find_recently_viewed(user_id))
-    end
-  end
-
-  def fetch_user_saved_search_results
-    if controller_requires_recently_viewed_or_saved_search_results?
-      if logged_in?
-        @user_saved_search_results = search_results_from_datasets(catalogue_instance.find_saved(current_user.id))
-      end
-    end
-  end
   
   def anonynmous_id
     request.remote_ip.scan(/\d+/)[1..3].join.to_i * -1
@@ -38,12 +17,6 @@ class ApplicationController < ActionController::Base
     !current_user.nil?
   end
   
-  def controller_requires_recently_viewed_or_saved_search_results?
-    controller = params[:controller]
-    action = params[:action]
-    controller && (controller == 'search' || (controller == 'catalogue' && (action && !(action == 'index'))))
-  end
-
   def search_instance
     if @search_instance.nil?
       @search_instance = Search.new

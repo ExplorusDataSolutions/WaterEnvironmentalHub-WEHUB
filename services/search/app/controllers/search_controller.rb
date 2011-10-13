@@ -1,5 +1,5 @@
 class SearchController < ApplicationController
-    
+
   def index
     @breadcrumb = ['Discover Our Data', 'Search']
     @main_menu = 'we_catalogue'

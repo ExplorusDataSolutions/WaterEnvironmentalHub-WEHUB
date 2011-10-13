@@ -1,22 +1,51 @@
-<div class="right-content">
-	<div class="main-head">
-		<div class="float-left"><img src="/images/recently-viewed.jpg" alt="recently viewed" title="recently viewed" width="20" height="20"></div>
-		<div class="float-left"><h1>Recently Viewed</h1></div>
-		<div class="clear"></div>
-	</div>
-	<div class="clear"></div>
+<script>
+$('document').ready(function() {
+  $.ajax({
+    url: '<%= url_for :controller => "user", :action => "recently_viewed" %>',
+    type: 'GET',
+    global: false,
+    success: function(data) {
 
-	<% @recently_viewed_search_results.each do |item| %>
-	<div class="contents" onclick="<%= link_to_details(item.id) %>">
-		<div>
-			<h2><%= item.name %></h2>
-		</div>
-		<div class="date">
-			<%= item.date %>
-		</div>
-	</div>
-	<div class="clear"></div>
-	<% end %>
+      var datasetId = null;
+      var search = window.location.search;
+      if (search !== '') {
+        datasetId = search.match(/\?id=([^&]*)/)[1]
+      } else {
+        var url = window.location.href;
+        datasetId = url.substring(url.lastIndexOf('/')+1, url.length);
+      }
+    
+      var template = $('#recently-viewed .contents:first');
+      template.hide();
+      $(data).each(function() {
+        if (datasetId != this.id) {
+          var fragment = template.clone();
+          fragment.find('.name').text(this.name);
+          fragment.find('.date').text(this.date);
+          var url = '<%= url_for :controller => "catalogue", :action => "details", :id => nil, :trailing_slash => true %>' + this.id;
+          fragment.click(function() { window.location = url; });
+          template.before(fragment);
+          fragment.fadeIn('slow');
+        }
+      });
+    }
+  });
+});
+</script>
+<div class="right-content" id="recently-viewed">
+  <div class="main-head">
+    <div class="float-left"><img src="/images/recently-viewed.jpg" alt="recently viewed" title="recently viewed" width="20" height="20"></div>
+    <div class="float-left"><h1>Recently Viewed</h1></div>
+    <div class="clear"></div>
+  </div>
+  <div class="clear"></div>
 
+  <div class="contents">
+    <div>
+      <h2 class="name"></h2>
+    </div>
+    <div class="date"></div>
+  </div>
+  <div class="clear"></div>
 </div>
 <div class="clear">&nbsp;</div>
