@@ -5,16 +5,17 @@
       $('.no-auth').hide();
       
       $('.username').text(WEHub.display_name());
+    } else {
+      $('.no-auth').show();
     }
   });
 </script>
 <div class="user-dashboard">
-  <div class="no-auth">
+  <div class="no-auth" style="display: none;">
     <%= link_to image_tag('login.jpg', :alt => 'Log in', :border => 0), { :controller => 'user', :action => 'log-in' }, :class=> 'log-in' %>
     <span class="seperator">|</span>
     <%= link_to image_tag('signup.jpg', :alt => 'Register', :border => 0), { :controller => 'user', :action => 'register' }, :class=> 'sign-up' %>
   </div>
-  <div class="clear"></div>
   <div class="user-welcome-box" style="display: none;">
     <div  class="welcome-name">
     Hi, <%= link_to 'Username', { :controller => 'user', :action => 'profile' }, :class => 'username' %>
