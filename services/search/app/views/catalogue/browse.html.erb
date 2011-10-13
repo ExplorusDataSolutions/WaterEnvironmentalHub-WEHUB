@@ -4,6 +4,7 @@
       persist: "location",
       unique: true
     });
+    $("#dataset-navigation").show();
   });
 </script>
 <div class="search-box">
@@ -11,7 +12,7 @@
 		Data Sets
 	</div>
 	<div class="clear"></div>
-	<ul id="dataset-navigation" class="filetree"> 
+	<ul id="dataset-navigation" class="filetree" style="display: none;"> 
 		<li class="closed">Base Data
 		  <ul class="filetree">		  
 		<% @base_data.each do |key, value| %>
