@@ -1,69 +1,28 @@
-<%
-=begin %>
 <script>
-	$(document).ready(function(){
-		$("#notification-icon-image").click( function(){
-			$('#notification-number').toggle();
-			$('#notification-icon').toggleClass('notification-icon-border');
-			$('#notification-box').toggle();			
-		});
-	});
+  $(document).ready(function() {
+    if (WEHub.logged_in()) {
+      $('.user-welcome-box').show();
+      $('.no-auth').hide();
+      
+      $('.username').text(WEHub.display_name());
+    }
+  });
 </script>
-<%
-=end %>
 <div class="user-dashboard">
-<% if !logged_in? %>
-  <div class="no-auth" >
+  <div class="no-auth">
     <%= link_to image_tag('login.jpg', :alt => 'Log in', :border => 0), { :controller => 'user', :action => 'log-in' }, :class=> 'log-in' %>
-	  <span class="seperator">|</span>
+    <span class="seperator">|</span>
     <%= link_to image_tag('signup.jpg', :alt => 'Register', :border => 0), { :controller => 'user', :action => 'register' }, :class=> 'sign-up' %>
   </div>
   <div class="clear"></div>
-<% else %>
-  <div class="user-welcome-box">
-  		<div  class="welcome-name">
-  			Hi, <%= link_to current_user.display_name, :controller => 'user', :action => 'profile' %>
-  		</div>
-
-<%
-=begin %>		
-		<div class="float-left">
-			<div id="notification-number" class="notification-number" style="display:block">
-				2
-			</div>
-			<div id="notification-icon" class="notification-icon">
-				<img id="notification-icon-image" src="/images/icon-notification.jpg" alt="Notification" title="Notification" border="0" width="22" height="22" />
-			</div>
-			<div id="notification-box" class="notification-box" style="display:none">
-				<div class="notification-text">
-					<span class="blue-small-head">Joe Blob</span>
-					<span>has shared</span>
-					<span class="blue-small-underline">IP3 Water Data</span>
-					<span>with you</span>
-				</div>
-				<div class="clear"></div>
-				<div class="notification-text">
-					<span class="blue-small-head">Jane Dino</span>
-					<span>has posted on your</span>
-					<span class="blue-small-underline">wall</span>
-				</div>
-				<div class="clear"></div>
-				<div class="notification-text no-border">
-					<span class="blue-small-head">Machael Angelo</span>
-					<span>has requested to access to</span>
-					<span class="blue-small-underline">Water Temperature Datasets</span>
-				</div>
-				<div class="clear"></div>
-			</div>
-		</div>
-<%
-=end %>		
-		<div class="float-left">
-			<%= link_to image_tag('logout.jpg', :alt => 'Log out', :border => 0), { :controller => 'user', :action => 'log-out' }, :class=> 'log-out' %>
-		</div>
-		<div class="clear"></div>
+  <div class="user-welcome-box" style="display: none;">
+    <div  class="welcome-name">
+    Hi, <%= link_to 'Username', { :controller => 'user', :action => 'profile' }, :class => 'username' %>
+    </div>
+    <div class="float-left">
+    <%= link_to image_tag('logout.jpg', :alt => 'Log out', :border => 0), { :controller => 'user', :action => 'log-out' }, :class=> 'log-out' %>
+    </div>
+    <div class="clear"></div>
   </div>
-  <div class="clear"></div>
-  
-<% end %>
+  <div class="clear"></div>  
 </div>

@@ -1,5 +1,7 @@
 class SearchController < ApplicationController
 
+  caches_page :index, :cache_path => Proc.new { |controller| controller.params }
+  
   def index
     @breadcrumb = ['Discover Our Data', 'Search']
     @main_menu = 'we_catalogue'

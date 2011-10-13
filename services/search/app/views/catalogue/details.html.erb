@@ -1,4 +1,3 @@
-<% cache "details_#{params[:id]}" do %>
 <script>
   $(document).ready(function() {
     setTimeout(function() {
@@ -10,11 +9,14 @@
       });
     }, 5000);
 
-    $('#my-collection').click(function() {
-      var ids = [];
-      ids.push('<%= @dataset.uuid %>');
-      $.post("<%= url_for :controller => 'user', :action => 'save' %>", { ids: ids }, function(data) { location.reload(); });
-    });    
+    if (WEHub.logged_in()) {
+      $('#my-collection').show();
+      $('#my-collection').click(function() {
+        var ids = [];
+        ids.push('<%= @dataset.uuid %>');
+        $.post("<%= url_for :controller => 'user', :action => 'save' %>", { ids: ids }, function(data) { location.reload(); });
+      });      
+    }
 
   });
 </script>
@@ -230,9 +232,7 @@ $(document).ready(function() {
   </div>
 <%
 =end %>
-<% if logged_in? %>
-  <div class="top-container-tab" id="my-collection">+ My collection</div>
-<% end %>
+  <div class="top-container-tab" id="my-collection" style="display: none;">+ My collection</div>
   <div class="top-container-tab tab-download">
     <div class="float-left">Download</div>
     <div class="float-left tab-download-arrow"></div>   
@@ -441,7 +441,6 @@ $(document).ready(function() {
       
     </div>
   </div>
-<% end %>  
   <div class="sub-content-right">
     <div class="right-content">
       <%= render 'shared/right_panel' %>

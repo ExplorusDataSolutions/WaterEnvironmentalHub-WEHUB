@@ -1,8 +1,4 @@
 <div class="right-container">
-<% if !logged_in? %>
-  <%= render 'shared/user_recently_viewed_search_results' %>	
-<% else %>
   <%= render 'shared/user_recently_viewed_search_results' %>	
   <%= render 'shared/user_saved_search_results' %>
-<% end %>
 </div>

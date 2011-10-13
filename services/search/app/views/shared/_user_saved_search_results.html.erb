@@ -1,26 +1,28 @@
 <script>
 $('document').ready(function() {
-  $('#saved-datasets .main-head').click(function() {
-    window.location = '<%= url_for :controller => "user", :action => "collection" %>';
-  });
-  $.ajax({
-    url: '<%= url_for :controller => "user", :action => "saved_collection" %>',
-    type: 'GET',
-    global: false,
-    success: function(data) {
-      var template = $('#saved-datasets .contents:first');
-      $(data).each(function() {
-        var fragment = template.clone();
-        fragment.find('.name').text(this.name);
-        fragment.find('.date').text(this.date);
-        var url = '<%= url_for :controller => "catalogue", :action => "details", :id => nil, :trailing_slash => true %>' + this.id;
-        fragment.click(function() { window.location = url; });
-        template.before(fragment);
-      });
-      
-      $('#saved-datasets').fadeIn('slow');
-    }
-  });
+  if (WEHub.logged_in()) {
+    $('#saved-datasets .main-head').click(function() {
+      window.location = '<%= url_for :controller => "user", :action => "collection" %>';
+    });
+    $.ajax({
+      url: '<%= url_for :controller => "user", :action => "saved_collection" %>',
+      type: 'GET',
+      global: false,
+      success: function(data) {
+        var template = $('#saved-datasets .contents:first');
+        $(data).each(function() {
+          var fragment = template.clone();
+          fragment.find('.name').text(this.name);
+          fragment.find('.date').text(this.date);
+          var url = '<%= url_for :controller => "catalogue", :action => "details", :id => nil, :trailing_slash => true %>' + this.id;
+          fragment.click(function() { window.location = url; });
+          template.before(fragment);
+        });
+        
+        $('#saved-datasets').fadeIn('slow');
+      }
+    });
+  }
 });
 </script>
 <div class="right-content" id="saved-datasets" style="display: none;">

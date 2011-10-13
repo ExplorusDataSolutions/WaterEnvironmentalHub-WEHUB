@@ -9,7 +9,7 @@
 
 <script>
   $(document).ready(function() {
-
+  
     $('button').button();
     
     function download() {
@@ -69,16 +69,18 @@
     $('[name=select-all]').click(function() {
       $('[type=checkbox][name=download]').attr('checked', true);
     });
-    
-    <% if logged_in? %>
-    $('[name=my-collection]').click(function() {
-      var ids = [];
-      $('[type=checkbox][name=download]:checked').each(function() { ids.push($(this).val()); })
-      if (ids.length != 0) {
-        $.post("<%= url_for :controller => 'user', :action => 'modify_collection' %>", { ids: ids }); 
-      }
-    });    
-    <% end %>
+
+    if (WEHub.logged_in()){
+      $('[name=my-collection]').click(function() {
+        var ids = [];
+        $('[type=checkbox][name=download]:checked').each(function() { ids.push($(this).val()); })
+        if (ids.length != 0) {
+          $.post("<%= url_for :controller => 'user', :action => 'modify_collection' %>", { ids: ids }); 
+        }
+      });
+
+      $('[name=my-collection]').show();
+    }    
   })
 </script>
 
@@ -91,7 +93,7 @@
       </span>
     </span>
 
-    <button name="my-collection">+ My collection</button>
+    <button name="my-collection" style="display: none;">+ My collection</button>
     <button name="select-all">Select all</button>
     <button name="clear">Clear</button>
   </div>

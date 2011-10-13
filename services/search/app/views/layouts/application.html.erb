@@ -72,10 +72,8 @@
     <div id="main-body">
       <div id="header-body" class="full-width">
 
-<% cache "dashboard_#{logged_in?}_#{logged_in? ? current_user.id : ''}" do %>
         <%= render 'shared/user_dashboard' %>
-<% end %>
-<% cache "menu_#{@main_menu}" do %>
+
         <div class="clear"></div>
         <a href="<%= url_for :root %>"><div class="header-logo"></div></a>
         <script>
@@ -149,8 +147,7 @@
           </ul>
         </div>
       </div>
-<% end %>
-<% cache "social_links" do %>
+
       <div class="clear"></div>
       <div id="content-body">     
         <div class="content full-width">
@@ -177,7 +174,7 @@
             </div>
           </div>
           <div class="clear"></div>
-<% end %>
+
           <% if @breadcrumb %>          
           <div class="breadcrumb-body">
             <% @breadcrumb.each_with_index do |breadcrumb, index| %>

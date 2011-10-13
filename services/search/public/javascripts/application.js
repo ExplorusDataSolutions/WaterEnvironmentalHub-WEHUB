@@ -23,6 +23,18 @@ WEHub.modal = function(title, message) {
   });
 }
 
+WEHub.logged_in = function() {
+  return $.cookie('we_hub') ? true : false;  
+}
+
+WEHub.display_name = function() {
+  return $.cookie('we_hub') ? $.cookie('we_hub').match(/display_name=([^&]*)/)[1].replace(/\+/g, ' ') : '';
+}
+
+WEHub.id = function() {
+  return $.cookie('we_hub') ? $.cookie('we_hub').match(/id=([^&]*)/)[1] : '';
+}
+
 function add_new_dataset(){
 	var hid_last_cnt	=	$('#hid_last_cnt').val()*1 + 1;
 	$('#hid_last_cnt').val(hid_last_cnt);

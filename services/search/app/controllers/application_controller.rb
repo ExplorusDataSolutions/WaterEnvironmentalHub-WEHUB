@@ -1,7 +1,8 @@
 load 'enginey_translator.rb'
 
 class ApplicationController < ActionController::Base
-  protect_from_forgery
+  #turning this off to enable caching
+  #protect_from_forgery
 
   helper ApplicationHelper
   

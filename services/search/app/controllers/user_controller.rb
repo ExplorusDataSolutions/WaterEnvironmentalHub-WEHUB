@@ -7,7 +7,6 @@ class UserController < ApplicationController
   before_filter :verify_logged_in, :only => [:groups, :profile, :save]
   before_filter :fetch_user_groups, :fetch_user_datasets, :fetch_profile, :only => [:profile]
 
- 
   def sign_in
     @user = User.new(params[:user])
     if request.post?
@@ -19,6 +18,7 @@ class UserController < ApplicationController
           @user = socialnetwork_instance.sign_in(params[:user][:login], params[:user][:password])
         end
         session[:user] = @user
+        set_wehub_cookie(@user)
 
         respond_with(@user) do |format|
           format.html { redirect_to :root }
@@ -40,6 +40,8 @@ class UserController < ApplicationController
         if @user.valid?
           @user = socialnetwork_instance.register(params[:user])
           session[:user] = @user
+          set_wehub_cookie(@user)
+          
           respond_with(@user) do |format|
             format.html { redirect_to :root }
           end
@@ -53,10 +55,19 @@ class UserController < ApplicationController
     end    
   end
 
+  def set_wehub_cookie(user)
+    cookies[:we_hub] = { :value => { :id => user.id, :display_name => user.display_name }.to_query, :expires => 1.year.from_now }
+  end
+  
+  def delete_wehub_cookie
+    cookies.delete :we_hub
+  end
+  
   def sign_out
     socialnetwork_instance.sign_out
     session[:user] = nil
     reset_session
+    delete_wehub_cookie
     redirect_to :root
   end
 
