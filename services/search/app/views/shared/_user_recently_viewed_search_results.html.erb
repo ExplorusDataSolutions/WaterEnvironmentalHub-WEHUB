@@ -9,7 +9,10 @@ $('document').ready(function() {
       var datasetId = null;
       var search = window.location.search;
       if (search !== '') {
-        datasetId = search.match(/\?id=([^&]*)/)[1]
+        var results = search.match(/\?id=([^&]*)/)
+        if (results) {
+          datasetId = results[1]
+        }
       } else {
         var url = window.location.href;
         datasetId = url.substring(url.lastIndexOf('/')+1, url.length);
