@@ -1,6 +1,7 @@
 class CatalogueController < ApplicationController
 
-  caches_page :index, :details, :browse, :cache_path => Proc.new { |controller| controller.params }
+  caches_page :index, :details
+  caches_page :browse, :cache_path => Proc.new { |controller| controller.params }
   
   def index
     @main_menu = 'home'
