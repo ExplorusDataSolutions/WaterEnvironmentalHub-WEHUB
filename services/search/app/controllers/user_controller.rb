@@ -115,7 +115,6 @@ class UserController < ApplicationController
   
   def recently_viewed
     if request.get?
-debugger    
       render :json => search_results_from_datasets(catalogue_instance.find_recently_viewed(user_id))
     end 
   end
