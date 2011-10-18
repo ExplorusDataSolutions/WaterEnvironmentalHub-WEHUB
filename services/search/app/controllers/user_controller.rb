@@ -110,18 +110,12 @@ class UserController < ApplicationController
   end
 
   def user_id
-    user_id = anonynmous_id
-    if logged_in?
-      user_id = current_user.id
-    end  
-  end
-
-  def cache
-    Rails.cache
+    logged_in? ? current_user.id : anonynmous_id
   end
   
   def recently_viewed
     if request.get?
+debugger    
       render :json => search_results_from_datasets(catalogue_instance.find_recently_viewed(user_id))
     end 
   end
