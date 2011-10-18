@@ -6,7 +6,19 @@ class UserController < ApplicationController
 
   before_filter :verify_logged_in, :only => [:groups, :profile, :save]
   before_filter :fetch_user_groups, :fetch_user_datasets, :fetch_profile, :only => [:profile]
+  
+  #Note: the if statement in the  caches_action works around a bug where Rails does not cache the content type
+  caches_action :recently_viewed, :if => Proc.new { |c| c.headers["Content-Type"] = 'application/json; charset=UTF-8' }, :cache_path => :recently_viewed_key.to_proc, :expires_in => 30.minutes
+  caches_action :saved_collection, :if => Proc.new { |c| c.headers["Content-Type"] = 'application/json; charset=UTF-8' }, :cache_path => :saved_collection_key.to_proc, :expires_in => 30.minutes
 
+  def recently_viewed_key
+    "user/recently_viewed/#{user_id.to_s}"
+  end
+  
+  def saved_collection_key
+    "user/saved_collection/#{user_id.to_s}"
+  end
+  
   def sign_in
     @user = User.new(params[:user])
     if request.post?
@@ -96,26 +108,32 @@ class UserController < ApplicationController
       @main_menu = 'we_community'
     end    
   end
+
+  def user_id
+    user_id = anonynmous_id
+    if logged_in?
+      user_id = current_user.id
+    end  
+  end
+
+  def cache
+    Rails.cache
+  end
   
   def recently_viewed
+    if request.get?
+      render :json => search_results_from_datasets(catalogue_instance.find_recently_viewed(user_id))
+    end 
+  end
+  
+  def modify_recently_viewed
     if request.post?
       if params[:id]
-        user_id = anonynmous_id
-        if logged_in?
-          user_id = current_user.id
-        end
-
         catalogue_instance.add_recently_viewed(user_id, params[:id])
-        render :nothing => true
+        expire_fragment recently_viewed_key
       end
-    else
-      user_id = anonynmous_id
-      if logged_in?
-        user_id = current_user.id
-      end
-
-      render :json => search_results_from_datasets(catalogue_instance.find_recently_viewed(user_id))    
-    end 
+    end
+    render :nothing => true
   end
   
   def saved_collection
@@ -130,6 +148,7 @@ class UserController < ApplicationController
     if request.post?
       if params[:ids] && logged_in?
         catalogue_instance.user_collections(current_user.id, params[:ids], params[:modifier])
+        expire_fragment saved_collection_key
       end
     end
     render :nothing => true
