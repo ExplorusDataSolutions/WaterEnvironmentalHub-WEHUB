@@ -124,9 +124,10 @@ class UserController < ApplicationController
       if params[:id]
         catalogue_instance.add_recently_viewed(user_id, params[:id])
         expire_fragment recently_viewed_key
+        redirect_to :action => :recently_viewed and return
       end
     end
-    render :nothing => true
+    render :nothing => true and return
   end
   
   def saved_collection
@@ -142,9 +143,10 @@ class UserController < ApplicationController
       if params[:ids] && logged_in?
         catalogue_instance.user_collections(current_user.id, params[:ids], params[:modifier])
         expire_fragment saved_collection_key
+        redirect_to :action => :saved_collection and return
       end
     end
-    render :nothing => true
+    render :nothing => true and return
   end
   
   def befriend
