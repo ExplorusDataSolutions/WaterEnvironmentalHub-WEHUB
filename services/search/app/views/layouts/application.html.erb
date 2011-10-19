@@ -88,15 +88,18 @@
             if (WEHub.logged_in()) {
               $.ajax({
                 url: '/community/datasets',
-                global: false
+                global: false,
+                cache: false
               });
               $.ajax({
                 url: '/community/groups',
-                global: false
+                global: false,
+                cache: false                
               });
               $.ajax({
                 url: '/community/friends',
-                global: false
+                global: false,
+                cache: false                
               });    
             }
           });
