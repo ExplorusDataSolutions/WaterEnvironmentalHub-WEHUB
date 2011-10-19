@@ -1,94 +1,109 @@
-<div class="profile-left-box">
-	<div class="profile-left-head">
-		<span>Welcome </span>
-		<span class="head-name"><%= current_user.login.capitalize %></span>
-	</div>
-	<div class="clear"></div>
-	<table width="100%" cellpadding="5">
-		<tr>
-			<td align="left" width="25%">
-				Name:
-			</td>
-			<td align="left" class="font-bold" width="75%" >
-				<%= current_user.display_name  %>
-			</td>
-		</tr>
-		<tr>
-			<td align="left">
-				Email:
-			</td>
-			<td align="left">
-        <%= current_user.email %>
-			</td>
-		</tr>
-		<% if @profile && @profile.organization %>
-		<tr>
-			<td align="left">
-				Organization:
-			</td>
-			<td align="left" class="font-bold">
-			  <% if !@profile.organization_url.nil? %>
-				<%= link_to @profile.organization, @profile.organization_url  %>
-				<% else %>
-				  <%= @profile.organization %>
-				<% end %>
-			</td>
-		</tr>
-		<% end %>
+<script>
+$(document).ready(function() {
+  $.ajax({
+    url: '<%= url_for :controller => "user", :action => "profile_snapshot" %>',
+    global: false,
+    cache: false,
+    success: function(data) {
+
+      $('.profile-left-box').parent().html($(data).find('.profile-left-box'));
+    }
+  });  
+});
+</script>
+<div style="width: 274px;">
+
+  <div class="profile-left-box">
+    <div class="profile-left-head">
+      <span>Welcome </span>
+      <span class="head-name"><%= current_user.login.capitalize %></span>
+    </div>
+    <div class="clear"></div>
+    <table width="100%" cellpadding="5">
+      <tr>
+        <td align="left" style="width: 85px;">
+          Name:
+        </td>
+        <td align="left" class="font-bold">
+          <%= current_user.display_name  %>
+        </td>
+      </tr>
+      <tr>
+        <td align="left">
+          Email:
+        </td>
+        <td align="left">
+          <%= current_user.email %>
+        </td>
+      </tr>
+      <% if @profile && @profile.organization %>
+      <tr>
+        <td align="left">
+          Organization:
+        </td>
+        <td align="left" class="font-bold">
+        <% if !@profile.organization_url.nil? %>
+          <%= link_to @profile.organization, @profile.organization_url  %>
+        <% else %>
+          <%= @profile.organization %>
+        <% end %>
+        </td>
+      </tr>
+      <% end %>
 <%
 =begin %>		
-		<tr>
-			<td align="left" valign="top">
-				Friends:
-			</td>
-			<td align="left">
-				<div class="profile-left-friends-list">
-					<img src="/images/friend-small-thumb.jpg" alt="Friends" title="Friends" border="0" />
-				</div>
-				<div class="profile-left-friends-list-more">
-					+<br />More
-				</div>
-			</td>
-		</tr>
+      <tr>
+        <td align="left" valign="top">
+          Friends:
+        </td>
+        <td align="left">
+          <div class="profile-left-friends-list">
+            <img src="/images/friend-small-thumb.jpg" alt="Friends" title="Friends" border="0" />
+          </div>
+          <div class="profile-left-friends-list-more">
+            +<br />More
+          </div>
+        </td>
+      </tr>
 <%
 =end %>		
-    <% if !@user_profile_groups.nil? %>
-		<tr>
-			<td align="left">
-				Groups:
-			</td>
-			<td align="left" class="font-bold">
-			<% 
-        group_names = []
-        @user_profile_groups.each { |group| group_names.push(group.name) } 
+      <% if !@user_profile_groups.nil? %>
+      <tr>
+        <td align="left">
+          Groups:
+        </td>
+        <td align="left" class="font-bold">
+        <% 
+          group_names = []
+          @user_profile_groups.each { |group| group_names.push(group.name) } 
 
-        if !group_names.empty?
-			%>
-  		<%= group_names.join(', ') %>
-			<%
-			  end
-		  %>
-			</td>
-		</tr>
+          if !group_names.empty?
+        %>
+        <%= group_names.join(', ') %>
+        <%
+          end
+        %>
+        </td>
+      </tr>
+      <% end %>
+      <% if !@user_profile_datasets.nil? %>
+      <tr>
+        <td align="left">
+          Datasets:
+        </td>
+        <td align="left" class="font-bold">
+        <%
+          if @user_profile_datasets
+            @user_profile_datasets.each do |dataset|
+        %>
+          <%= link_to dataset.name, :controller => 'catalogue', :action => 'details', :id => dataset.uuid %>
+        <%    
+            end        
+          end
+        %>
+        </td>
+      </tr>
     <% end %>
-    <% if !@user_profile_datasets.nil? %>
-		<tr>
-			<td align="left">
-				Datasets:
-			</td>
-			<td align="left" class="font-bold">
-      <%
-        if @user_profile_datasets
-          @user_profile_datasets.each do |dataset|
-      %>
-      <%= link_to dataset.name, :controller => 'catalogue', :action => 'details', :id => dataset.uuid %>
-      <%    
-          end        
-        end
-      %>
-			</td>
-		</tr>
-		<% end %>
-
-	</table>
+    </table>
+  </div>
 </div>

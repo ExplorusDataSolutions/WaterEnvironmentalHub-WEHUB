@@ -1,11 +1,14 @@
 class GroupsController < ApplicationController
 
-  before_filter :verify_logged_in, :fetch_user_groups, :fetch_user_datasets, :fetch_profile
+  before_filter :verify_logged_in
+  
+  caches_action :show, :cache_path => :groups_key.to_proc, :expires_in => 30.minutes
   
   def edit
     if request.post?
       begin
         socialnetwork_instance.group_update(params)
+        expire_fragment groups_key
       rescue
       end
     end
@@ -25,6 +28,7 @@ class GroupsController < ApplicationController
     if request.post?
       group = socialnetwork_instance.group_create(params)
       socialnetwork_instance.membership_create({ :user_id => current_user.id, :group_id => group.id })
+      expire_fragment groups_key
       redirect_to :action => 'show', :anchor => 'mine'
     end
   end
@@ -39,8 +43,13 @@ class GroupsController < ApplicationController
       elsif params.key? :promote
         socialnetwork_instance.membership_promote(params)
       end
+      expire_fragment groups_key
       redirect_to :action => 'edit', :id => params[:group][:id]
     end
+  end
+  
+  def groups_key
+    "groups/user/#{current_user.id}"
   end
   
   def show
@@ -59,6 +68,7 @@ class GroupsController < ApplicationController
   def join
     begin
       socialnetwork_instance.membership_create({ :user_id => current_user.id, :group_id => params[:id] })
+      expire_fragment groups_key
     rescue
     end
     redirect_to :action => 'show'

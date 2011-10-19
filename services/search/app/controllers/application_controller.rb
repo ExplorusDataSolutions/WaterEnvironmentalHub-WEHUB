@@ -56,22 +56,4 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def fetch_user_groups
-    if !current_user.nil?
-      @user_profile_groups = socialnetwork_instance.user_groups(current_user.id)
-    end
-  end
-
-  def fetch_user_datasets
-    if !current_user.nil?
-      @user_profile_datasets = catalogue_instance.find_datasets_by_user(current_user.id)
-    end
-  end
-
-  def fetch_profile
-    if !current_user.nil?  
-      @profile = socialnetwork_instance.profile(current_user.id)
-    end
-  end  
-
 end

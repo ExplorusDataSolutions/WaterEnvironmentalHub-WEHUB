@@ -1,6 +1,9 @@
 class CommunityController < ApplicationController
-  before_filter :verify_logged_in, :fetch_user_groups, :fetch_user_datasets, :fetch_profile
+
+  before_filter :verify_logged_in
   
+  caches_action :friends, :cache_path => :friends_key.to_proc, :expires_in => 30.minutes
+
   def index
     @breadcrumb = ['Community']
     @main_menu = 'we_community'
@@ -10,7 +13,11 @@ class CommunityController < ApplicationController
     @breadcrumb = ['Profile']
     @main_menu = 'we_community'
   end
-   
+  
+  def friends_key
+    "community/friends/user/#{current_user.id}"
+  end
+  
   def friends
     @breadcrumb = ['Community', 'Friends']
     @main_menu = 'we_community'
@@ -46,6 +53,22 @@ class CommunityController < ApplicationController
       @friends.push(friend)
     end unless friends.nil?
 
+  end
+  
+  def befriend
+    if params[:id]
+      socialnetwork_instance.friend_add(params[:id])
+      expire_fragment friends_key      
+      redirect_to :action => 'friends'
+    end
+  end
+
+  def unfriend
+    if params[:id]
+      socialnetwork_instance.friend_remove(current_user.id, params[:id])
+      expire_fragment friends_key
+      redirect_to :action => 'friends'
+    end
   end
   
   def news

@@ -84,6 +84,27 @@
             event.preventDefault(); 
             $(event.target).next('ul').slideToggle('fast');
           });
+          <% #Primes the community pages cache when the user expands the menu item %>
+          $('.community').click(function() {
+            if (WEHub.logged_in()) {
+              $.ajax({
+                url: '/community/datasets',
+                global: false,
+                cache: false
+              });
+              $.ajax({
+                url: '/community/groups',
+                global: false,
+                cache: false                
+              });
+              $.ajax({
+                url: '/community/friends',
+                global: false,
+                cache: false                
+              });    
+            }
+          });
+
         });
         </script>
         <div class="header-tab">
@@ -116,7 +137,7 @@
 <%
 =end %>            
             <li class="<%= @main_menu == 'we_community' ? 'selected' : ''%>">
-              <%= link_to 'Community', {:controller => 'community'}, :class => 'top-menu' %>
+              <%= link_to 'Community', {:controller => 'community'}, :class => 'top-menu community' %>
               <ul style="display: none;">
                 <li><%= link_to 'Connect', {:controller => 'community', :action => 'friends'} %></li>
                 <li><%= link_to 'Share', {:controller => 'community', :action => 'datasets'} %></li>                

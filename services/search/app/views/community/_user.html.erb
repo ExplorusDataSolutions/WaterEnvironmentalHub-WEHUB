@@ -33,9 +33,9 @@
 	</div>
 	<div class="float-right">
     <% if !edit %>
-    <%= link_to image_tag('add-friend-button.jpg', :alt => 'Add Friend' ), { :controller => 'user', :action => 'befriend', :id => user.id } %>
+    <%= link_to image_tag('add-friend-button.jpg', :alt => 'Add Friend' ), { :controller => 'community', :action => 'befriend', :id => user.id } %>
     <% else %>
-    <%= link_to image_tag('remove-friend-button.jpg', :alt => 'Remove Friend' ), { :controller => 'user', :action => 'unfriend', :id => user.id } %>
+    <%= link_to image_tag('remove-friend-button.jpg', :alt => 'Remove Friend' ), { :controller => 'community', :action => 'unfriend', :id => user.id } %>
     <% end %>
 	</div>
 	<div class="clear"></div>
