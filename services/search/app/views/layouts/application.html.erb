@@ -1,3 +1,4 @@
+<% cache "home_part_1_#{params[:controller]}" do %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
   <head>
@@ -186,9 +187,9 @@
           </div>          
           <div class="clear"></div>
           <% end%>
-        
+<% end %>        
           <div class="yield-body"><%= yield %></div>
-
+<% cache "home_part_2" do %>
         </div>
       </div>
       <div class="clear"></div>
@@ -222,3 +223,4 @@
     <%= render "/shared/dialog" %>
   </body>
 </html>
+<% end %>
