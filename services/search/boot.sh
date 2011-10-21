@@ -18,4 +18,4 @@ else
 fi
 
 rvm use 1.9.2
-rails server -p 80 -d
+unicorn_rails -c config/unicorn.conf.rb -D

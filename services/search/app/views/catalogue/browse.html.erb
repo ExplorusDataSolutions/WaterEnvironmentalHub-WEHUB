@@ -1,3 +1,9 @@
+<% 
+clean_params = params
+clean_params.delete('utf8')
+clean_params.delete('authenticity_token')
+
+cache "catalogue_browse_#{clean_params.to_query}" do %>
 <script>
   $('document').ready(function() {
     $("#dataset-navigation").treeview({
@@ -91,3 +97,4 @@
 	</div>
 </div>
 <div class="clear"></div>
+<% end %>
