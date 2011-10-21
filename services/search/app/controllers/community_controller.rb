@@ -36,20 +36,24 @@ class CommunityController < ApplicationController
     @users = []
     users.each do |user|
       if filtered_user_ids.include?(user.id)
+=begin
         datasets = catalogue_instance.find_datasets_by_user(user.id)
         if datasets
           user.datasets = datasets
         end
+=end
         @users.push(user)
       end
     end unless users.nil?
     
     @friends = []
     friends.each do |friend|
+=begin
       datasets = catalogue_instance.find_datasets_by_user(friend.id)
       if datasets
         friend.datasets = datasets
       end
+=end
       @friends.push(friend)
     end unless friends.nil?
 
