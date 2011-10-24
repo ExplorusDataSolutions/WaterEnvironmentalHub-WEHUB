@@ -83,6 +83,27 @@
             event.preventDefault(); 
             $(event.target).next('ul').slideToggle('fast');
           });
+          <% #Primes the community pages cache when the user expands the menu item %>
+          $('.community').click(function() {
+            if (WEHub.logged_in()) {
+              $.ajax({
+                url: '/community/datasets',
+                global: false,
+                cache: false
+              });
+              $.ajax({
+                url: '/community/groups',
+                global: false,
+                cache: false                
+              });
+              $.ajax({
+                url: '/community/friends',
+                global: false,
+                cache: false                
+              });    
+            }
+          });
+
         });
         </script>
         <div class="header-tab">
@@ -115,7 +136,7 @@
 <%
 =end %>            
             <li class="<%= @main_menu == 'we_community' ? 'selected' : ''%>">
-              <%= link_to 'Community', {:controller => 'community'}, :class => 'top-menu' %>
+              <%= link_to 'Community', {:controller => 'community'}, :class => 'top-menu community' %>
               <ul style="display: none;">
                 <li><%= link_to 'Connect', {:controller => 'community', :action => 'friends'} %></li>
                 <li><%= link_to 'Share', {:controller => 'community', :action => 'datasets'} %></li>                
@@ -157,7 +178,7 @@
               <div id=\"plusone\" style=\"width:75px; float:left; display: none;\"><g:plusone size=\"medium\" href=\"#{request.url}\" count=\"true\"></g:plusone></div>
               <div id=\"twitter\" style=\"float:left;\"><a style=\"padding-top:10px;\" href=\"http://twitter.com/share\" class=\"twitter-share-button\" data-count=\"horizontal\" data-via=\"The #WEHub\">Tweet</a><script type=\"text/javascript\" src=\"http://platform.twitter.com/widgets.js\"></script></div>
               <div id=\"fbsend\" style=\"float:left;\"><fb:send href=\"#{request.url}\" font=\"verdana\"></fb:send></div>
-              <div id=\"facebook\" style=\"float:left;\"><iframe src=\"http://www.facebook.com/plugins/like.php?href=#{request.url}\" scrolling=\"no\" frameborder=\"0\" style=\"border:none; overflow:hidden; width:350px; height:25px;\" allowTransparency=\"true\"></iframe></div>".gsub(/\n/,'') -%>';
+              <div id=\"facebook\" style=\"float:left;\"><iframe src=\"http://www.facebook.com/plugins/like.php?href=#{request.url}\" scrolling=\"no\" frameborder=\"0\" style=\"border:none; overflow:hidden; height:25px;\" allowTransparency=\"true\"></iframe></div>".gsub(/\n/,'') -%>';
               setTimeout(function() { 
                 $('#social-widgets > div').after($("<div/>").html(socialWidgets).text()); 
                 setTimeout(function() { 
@@ -167,10 +188,10 @@
               }, 100);
             });
           </script>        
-          <div style="border:none; width:560 height:27px; float: right; padding-top: 7px;">
+          <div style="border:none; height:27px; float: right; padding-top: 7px;">
             <div id="social-widgets-slug" style="line-height: 29px;">&nbsp;</div>
             <div id="social-widgets" style="display: none;" id="social-widgets">
-              <div id="linkedin" style="width:76px; float:left; line-height: 29px;">&nbsp;<script type="text/javascript" src="http://platform.linkedin.com/in.js"></script><script type="in/share" data-url="<%= request.url %>" data-counter="right"></script></div>
+              <div id="linkedin" style="padding-right: 15px; float:left; line-height: 29px;">&nbsp;<script type="text/javascript" src="http://platform.linkedin.com/in.js"></script><script type="in/share" data-url="<%= request.url %>" data-counter="right"></script></div>
             </div>
           </div>
           <div class="clear"></div>
@@ -186,9 +207,8 @@
           </div>          
           <div class="clear"></div>
           <% end%>
-        
           <div class="yield-body"><%= yield %></div>
-
+<% cache "home_part_2" do %>
         </div>
       </div>
       <div class="clear"></div>
@@ -222,3 +242,4 @@
     <%= render "/shared/dialog" %>
   </body>
 </html>
+<% end %>

@@ -22,6 +22,8 @@ Catalogue::Application.routes.draw do
   
   match 'api/' => 'api#builder'
 
+   match 'parse_json' => 'tools#parse_json', :as=>:parse_json
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

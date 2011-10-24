@@ -1,57 +1,71 @@
-<%
-if @pages > 3
-%>
+
+<script>
+  $(document).ready(function() {
+    function getPage() {
+      var result = window.location.search.match(/page=([^&])/);
+      return result ? parseInt(result[1], 10) : 1;
+    }
+    
+    function getPagePathname(page) {
+      var pathname = window.location.pathname;
+      if (window.location.search) {
+        var result = window.location.search.match(/page=[\d]*/);
+        if (result) {
+          return pathname + window.location.search.replace(result, 'page=' + page);
+        }
+        return pathname + window.location.search + '&page=' + page;
+      } else {
+        return pathname + '?page=' + page;
+      }
+    }
+
+    var pages = <%= @pages %>;
+    var pathname = window.location.pathname
+    var page = getPage();
+
+    var pagePrevRef = $('.page-previous');
+    if (page === 1) {
+      pagePrevRef.addClass('disabled');
+    } else {
+      pagePrevRef.removeClass('disabled');
+      pagePrevRef.attr('href', getPagePathname(page - 1));
+    }
+    
+    var pageNextRef = $('.page-next');
+    if (page === pages) {
+      pageNextRef.addClass('disabled');
+    } else {
+      pageNextRef.removeClass('disabled');
+      pageNextRef.attr('href', getPagePathname(page + 1));
+    }
+    
+    var pageTabFragment = $('<a class="page-tab" href=""></a>');
+
+    var pageTabs = 7;
+    if (page > pageTabs/2) {
+      for(var i = pageTabs ; i > 0 ; i--) {
+        var tabPage = page - 4 + i;
+        if (i === 4) {
+          pagePrevRef.after(pageTabFragment.clone().attr('href', getPagePathname(tabPage)).addClass('current').text(tabPage));
+        } else if (tabPage > 0 && tabPage < pages) {
+          pagePrevRef.after(pageTabFragment.clone().attr('href', getPagePathname(tabPage)).text(tabPage));
+        }
+      }
+    } else {
+      for(var i = pageTabs ; i > 0 ; i--) {
+        var tabPage = page - 1 + i;
+        if (i === 1) {
+          pagePrevRef.after(pageTabFragment.clone().attr('href', getPagePathname(tabPage)).addClass('current').text(tabPage));
+        } else if (tabPage > 0 && tabPage < pages) {
+          pagePrevRef.after(pageTabFragment.clone().attr('href', getPagePathname(tabPage)).text(tabPage));
+        }
+      }    
+    }
+  });
+</script>
+
 <div class="clear"></div>
 <div class="pagination">
-<%    
-  url_match = request.url.match(/(.*)[\?|&]page=/)
-  if !url_match.nil?
-    url = url_match[1]
-  else
-    url = request.url
-  end
-  
-  url = url.scan(/&/).empty? ? "#{url}?page=" : "#{url}&page="
-
-  if @current-1 != 0
-%>
-  <a rel="previous" class="prev_page" href="<%= "#{url}#{@current-1}" %>">Previous</a>
-<%
-  else
-%>
-  <span class="disabled prev_page">Previous</span>
-<%
-  end
-=begin
-  ellipsis = false
-  (1..@pages).each do |i| 
-	  if i == @current
-  %>
-    <span class="current"><%= i %></span>
-  <%
-    elseif i <= 3 || (@pages - 3) < i
-  %>
-    <a href="<%= "#{url}#{i}" %>"><%= i %></a>
-  <% 
-    elsif @pages > 3 && !ellipsis
-      ellipsis = true
-  %>
-    ...
-  <%
-	  end
-  end
-=end
-  if @current != @pages
-%>
-  <a rel="next" class="next_page" href="<%= "#{url}#{@current+1}" %>">Next</a>
-<%
-  else
-%>
-  <span class="disabled next_page">Next</span>
-<%
-  end
-%>
+  <a rel="previous" class="page-previous" href="#">Previous</a>
+  <a rel="next" class="page-next" href="#">Next</a>
 </div>
-<%
-end
-%>

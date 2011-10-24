@@ -653,7 +653,8 @@ ul.sub-menu li {
 }
 .pagination span, .pagination a{
   border:solid 1px #AFAFAF;
-  padding:1px 5px;
+  padding: 10px;
+  margin: 6px;
   color:#8D8D8D;
   background:#FFFFFF;
   text-decoration:none;
@@ -677,9 +678,13 @@ ul.sub-menu li {
   color:#2FB133;
   background:#EEEEEE !important;
 }
-.pagination .prev_page, .pagination .next_page{
+.pagination .page-previous, .pagination .page-next {
   background:#EEEEEE !important;
 }
+.pagination a:hover.disabled{
+  color:#8D8D8D;
+}
+
 /*
  * Pagination End
  */

@@ -1,12 +1,19 @@
 class DatasetsController < ApplicationController
 
-  before_filter :verify_logged_in, :fetch_user_groups, :fetch_user_datasets, :fetch_profile
-  
+  before_filter :verify_logged_in
+
+  caches_action :show, :cache_path => :datasets_key.to_proc, :expires_in => 30.minutes
+    
   def create
     @breadcrumb = ['Community', 'Datasets']
     @main_menu = 'we_community'
+    expire_fragment datasets_key
   end  
 
+  def datasets_key
+    "datasets/user/#{current_user.id}"
+  end
+  
   def show
     @breadcrumb = ['Community', 'Datasets']
     @main_menu = 'we_community'

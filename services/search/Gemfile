@@ -6,6 +6,7 @@ gem 'rubyzip'
 gem 'nokogiri'
 gem 'spreadsheet'
 gem 'hashie'
+gem 'dalli'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -13,7 +14,7 @@ gem 'hashie'
 # gem 'sqlite3-ruby', :require => 'sqlite3'
 
 # Use unicorn as the web server
-# gem 'unicorn'
+gem 'unicorn'
 
 # Deploy with Capistrano
 # gem 'capistrano'
@@ -34,5 +35,4 @@ gem 'hashie'
 group :development, :test do
   gem "rspec-rails", ">= 2.4.1"
   gem 'ruby-debug19'
-  gem "mongrel", '>= 1.2.0.pre2'
 end

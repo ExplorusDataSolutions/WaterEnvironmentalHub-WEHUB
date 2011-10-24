@@ -8,6 +8,7 @@ $('document').ready(function() {
       url: '<%= url_for :controller => "user", :action => "saved_collection" %>',
       type: 'GET',
       global: false,
+      cache: false,      
       success: function(data) {
         var template = $('#saved-datasets .contents:first');
         $(data).each(function() {

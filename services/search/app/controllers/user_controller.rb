@@ -5,8 +5,24 @@ class UserController < ApplicationController
   respond_to :json, :except => :sign_in
 
   before_filter :verify_logged_in, :only => [:groups, :profile, :save]
-  before_filter :fetch_user_groups, :fetch_user_datasets, :fetch_profile, :only => [:profile]
+  
+  #Note: the if statement in the  caches_action works around a bug where Rails does not cache the content type
+  caches_action :recently_viewed, :if => Proc.new { |c| c.headers["Content-Type"] = 'application/json; charset=UTF-8' }, :cache_path => :recently_viewed_key.to_proc, :expires_in => 30.minutes
+  caches_action :saved_collection, :if => Proc.new { |c| c.headers["Content-Type"] = 'application/json; charset=UTF-8' }, :cache_path => :saved_collection_key.to_proc, :expires_in => 30.minutes
+  caches_action :profile_snapshot, :cache_path => :profile_snapshot_key.to_proc, :expires_in => 30.minutes
 
+  def recently_viewed_key
+    "user/recently_viewed/#{user_id.to_s}"
+  end
+  
+  def saved_collection_key
+    "user/saved_collection/#{user_id.to_s}"
+  end
+  
+  def profile_snapshot_key
+    "user/profile_snapshot/#{user_id.to_s}"
+  end
+  
   def sign_in
     @user = User.new(params[:user])
     if request.post?
@@ -86,6 +102,7 @@ class UserController < ApplicationController
     if request.post?
       begin
         socialnetwork_instance.profile_update(current_user.id, params)
+        expire_fragment profile_snapshot_key
       rescue
         
       end
@@ -97,25 +114,34 @@ class UserController < ApplicationController
     end    
   end
   
+  def profile_snapshot
+    if !current_user.nil?
+      @user_profile_groups = socialnetwork_instance.user_groups(current_user.id)
+      @user_profile_datasets = catalogue_instance.find_datasets_by_user(current_user.id)
+      @profile = socialnetwork_instance.profile(current_user.id)
+    end
+    render :partial => '/shared/user_profile_snapshot'
+  end  
+    
+  def user_id
+    logged_in? ? current_user.id : anonynmous_id
+  end
+  
   def recently_viewed
+    if request.get?
+      render :json => search_results_from_datasets(catalogue_instance.find_recently_viewed(user_id))
+    end 
+  end
+  
+  def modify_recently_viewed
     if request.post?
       if params[:id]
-        user_id = anonynmous_id
-        if logged_in?
-          user_id = current_user.id
-        end
-
         catalogue_instance.add_recently_viewed(user_id, params[:id])
-        render :nothing => true
+        expire_fragment recently_viewed_key
+        redirect_to :action => :recently_viewed and return
       end
-    else
-      user_id = anonynmous_id
-      if logged_in?
-        user_id = current_user.id
-      end
-
-      render :json => search_results_from_datasets(catalogue_instance.find_recently_viewed(user_id))    
-    end 
+    end
+    render :nothing => true and return
   end
   
   def saved_collection
@@ -130,23 +156,11 @@ class UserController < ApplicationController
     if request.post?
       if params[:ids] && logged_in?
         catalogue_instance.user_collections(current_user.id, params[:ids], params[:modifier])
+        expire_fragment saved_collection_key
+        redirect_to :action => :saved_collection and return
       end
     end
-    render :nothing => true
-  end
-  
-  def befriend
-    if params[:id]
-      socialnetwork_instance.friend_add(params[:id])
-      redirect_to :controller => 'community', :action => 'friends'
-    end
-  end
-
-  def unfriend
-    if params[:id]
-      socialnetwork_instance.friend_remove(current_user.id, params[:id])
-      redirect_to :controller => 'community', :action => 'friends'
-    end
+    render :nothing => true and return
   end
         
 end

@@ -2,7 +2,7 @@
   $(document).ready(function() {
     setTimeout(function() {
       $.ajax({
-        url: '<%= url_for :controller => "user", :action => "recently_viewed" %>',
+        url: '<%= url_for :controller => "user", :action => "modify_recently_viewed" %>',
         data: { id: '<%= @dataset.uuid %>' },
         type: 'POST',
         global: false

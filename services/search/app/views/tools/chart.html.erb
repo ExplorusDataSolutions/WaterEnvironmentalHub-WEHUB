@@ -236,6 +236,52 @@ function chart_show(chart_id){
 }
 </script>
 
+
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+$('#plot-graph').click(function(){
+     $('#bar-chart').hide();
+     $('#pie-chart').hide();
+     var xaxis_val=$("select#xaxis").val();
+     var yaxis_val=$("select#yaxis").val();
+      
+     $.ajax({
+        url: "<%= parse_json_url %>",
+        data:{
+           xaxis: xaxis_val,
+           yaxis:  yaxis_val
+        },
+        success:function(dat){
+
+            json=jQuery.parseJSON(dat);
+            //alert(json[0]);
+            var a0=json[0];
+            var a1=json[1];
+            var a2=json[2];
+            var a3=json[3];
+            var a4=json[4];
+            minx=json['0_x'][0];
+            maxx=json['0_x'][1];
+            miny=json['0_y'][0];
+            maxy=json['0_y'][1];
+            var options0 = {
+                title: " ",
+                axes:{xaxis:{min:minx, max:maxx},yaxis:{min:miny, max:maxy}},
+                lengend:{show:true},
+                cursor:{show:true, zoom:true},
+                //axesDefaults:{useSeriesColor:true}
+                tickOptions: {formatString: ''}
+               }
+            $('#line-chart1').html('');
+            plot2 = $.jqplot('line-chart1', [a0],  options0);
+        }
+     });
+  });
+});
+</script>
+
+
 <div class="tab-menu-body">
 	<div class="tab-menu">
 		<%= link_to 'WE Data Map', :controller => 'tools', :action => 'map', :id => @id %>
@@ -280,20 +326,26 @@ function chart_show(chart_id){
 						</select>
 					</div>
 					<div>
+                                               <!--
 						<select class="select-box-2">
 							<option>X-axis</option>
 						</select>
+                                                         -->
+                                                 <% data= @data_set.each_with_index{|x, y| [x, y] } %>
+                                                 Xaxis: <%= select_tag(:xaxis,options_for_select(data),:class=>"select-box-2",:prompt => "X-axis" )%>
 					</div>
-					<div>
+					<div><!--
 						<select class="select-box-2">
 							<option>Y-axis</option>
-						</select>
+						</select> -->
+                                                Yaxis:  <%= select_tag(:yaxis,options_for_select(data),:class=>"select-box-2",:prompt => "Y-axis" )%> 
 					</div>
 				</div>
 			</div>
 			<div class="clear"></div>
 		  </div>
-		  <div id="filter-2">
+
+		<!--  <div id="filter-2">
 			<div class="filter-part">
 				<div class="filter-left">
 					<input type="checkbox" id="filter-check-2" name="filter-check" value="2">
@@ -317,7 +369,7 @@ function chart_show(chart_id){
 				</div>
 			</div>
 			<div class="clear"></div>
-		  </div>
+		  </div>  -->
 		 </div>
 			<div class="filter-part">
 				<div class="filter-left">
@@ -326,7 +378,8 @@ function chart_show(chart_id){
 				<div class="filter-right">
 					<div>
 						<span class="button">
-							<button>Graph</button>
+						<!--	<button>Graph</button> -->
+                                                        <button id="plot-graph">Graph</button>
 						</span>
 						<span class="button">
 							<button onclick="remove_dataset(); return false;">Remove</button>
