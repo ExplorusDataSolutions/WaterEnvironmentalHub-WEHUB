@@ -1,1 +1,23 @@
-View the site at http://waterenvironmentalhub.ca 
+The Water and Environmental Hub (WEHub)
+
+View the prodution site at http://waterenvironmentalhub.ca 
+View the development site at http://50.17.244.36
+
+A brief lay of the land:
+ The apps/service directory is our site at http://waterenvironmentalhub.ca
+ The services/catalogue directory is our catalogue service and connection point to the data
+
+ Geonetwork is used as an search engine and is reference through apps/service
+ Geoserver is used as a repository for base data and is referenced throughh services/catalogue
+ EngineY is used as our social network
+
+ Modifications to third party tools like Geonetwork / Geoserver can be found in the dependencies directory
+
+ Modifications to EngineY can be found in the EngineY repository https://github.com/tesera/EngineY
+
+Ports:
+ Geonetwork on 9090
+ Geoserver on 8080
+ services/catalogue on 3000
+ apps/search on 80
+ EngineY on 3002
