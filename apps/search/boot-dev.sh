@@ -18,4 +18,4 @@ else
 fi
 
 rvm use 1.9.2
-unicorn_rails -c config/unicorn.conf.rb -D -E production
+unicorn_rails -p 3001 -E development -w -d

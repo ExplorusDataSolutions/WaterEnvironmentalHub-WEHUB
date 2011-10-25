@@ -4,7 +4,7 @@ require 'rexml/document'
 
 class EngineYTranslator
 
-  def initialize(storage={}, server_address = 'localhost:3002')
+  def initialize(server_address='http://localhost:3002', storage={})
     @server_address = server_address
     @storage = storage
     @user = nil
@@ -178,39 +178,39 @@ class EngineYTranslator
   private
   
   def friends_uri
-    "http://#{@server_address}/friends"
+    "#{@server_address}/friends"
   end
 
   def profile_uri
-    "http://#{@server_address}/users"
+    "#{@server_address}/users"
   end
   
   def register_uri
-    "http://#{@server_address}/users/create"
+    "#{@server_address}/users/create"
   end
 
   def signed_in_uri
-    "http://#{@server_address}/sessions/logged_in"
+    "#{@server_address}/sessions/logged_in"
   end
 
   def groups_uri
-    "http://#{@server_address}/groups"
+    "#{@server_address}/groups"
   end
 
   def memberships_uri
-    "http://#{@server_address}/memberships"
+    "#{@server_address}/memberships"
   end
   
   def sign_in_uri
-    "http://#{@server_address}/sessions/create"
+    "#{@server_address}/sessions/create"
   end
 
   def sign_out_uri
-    "http://#{@server_address}/sessions/destroy"
+    "#{@server_address}/sessions/destroy"
   end
   
   def api_uri
-    "http://#{@server_address}/api_key"  
+    "#{@server_address}/api_key"  
   end
 
   def user_from_enginey(response)

@@ -5,8 +5,8 @@ require 'active_support/core_ext'
 class GeoNetworkTranslator
   attr_accessor :server_address, :cache
  
-  def initialize(server_address = '50.19.106.48:9090', cache={})
-    @server_address = server_address
+  def initialize(server_address='http://localhost:9090', cache={})
+  @server_address = server_address
     @cache = cache
   end
  
@@ -150,7 +150,7 @@ class GeoNetworkTranslator
       authenticate
     end
     puts xmlRequest
-    url = URI.parse("http://#{server_address}/geonetwork/srv/en/#{uri}")
+    url = URI.parse("#{server_address}/geonetwork/srv/en/#{uri}")
     request = Net::HTTP::Post.new(url.path)
     request.body = "<?xml version='1.0' encoding='UTF-8'?>#{xmlRequest}"
     request.content_type = "text/xml"

@@ -12,9 +12,8 @@ class Search
     @catalogue
   end
 
-  def initialize(query='all')
-    @geonetwork = GeoNetworkTranslator.new
-    @geonetwork.cache = Rails.cache
+  def initialize(geonetwork_address='http://localhost:8080', cache={}, query='all')
+    @geonetwork = GeoNetworkTranslator.new(geonetwork_address, cache)
 
     @catalogue = CatalogueTranslator.new
     

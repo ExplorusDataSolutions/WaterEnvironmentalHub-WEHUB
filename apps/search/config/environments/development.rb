@@ -22,5 +22,11 @@ Catalogue::Application.configure do
 
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
+
+  # End points for our various dependencies
+  config.enginey_address = 'http://localhost:3002'
+  config.geonetwork_address = 'http://localhost:9090'
+  config.catalogue_address = 'http://localhost:3000'
+  
 end
 

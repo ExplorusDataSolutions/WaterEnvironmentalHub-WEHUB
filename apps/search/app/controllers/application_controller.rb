@@ -20,21 +20,21 @@ class ApplicationController < ActionController::Base
   
   def search_instance
     if @search_instance.nil?
-      @search_instance = Search.new
+      @search_instance = Search.new(Rails.application.config.geonetwork_address, Rails.cache)
     end
     @search_instance
   end
 
   def catalogue_instance
     if @catalogue.nil?
-      @catalogue = CatalogueTranslator.new("http://#{request.host}:3000", Rails.cache)
+      @catalogue = CatalogueTranslator.new(Rails.application.config.catalogue_address, Rails.cache)
     end
     @catalogue
   end
 
   def socialnetwork_instance
     if @socialnetwork.nil?
-      @socialnetwork = EngineYTranslator.new(session)
+      @socialnetwork = EngineYTranslator.new(Rails.application.config.enginey_address, session)
     end
     @socialnetwork
   end

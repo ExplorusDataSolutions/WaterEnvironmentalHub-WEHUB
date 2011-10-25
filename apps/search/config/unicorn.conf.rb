@@ -21,7 +21,8 @@ worker_processes 12
 
 # Help ensure your application will always spawn in the symlinked
 # "current" directory that Capistrano sets up.
-working_directory "/projects/WEHub/apps/search" # available in 0.94.0+
+APP_PATH = "/projects/WEHub/apps/search"
+working_directory APP_PATH # available in 0.94.0+
 
 # listen on both a Unix domain socket and a TCP port,
 # we use a shorter backlog for quicker failover when busy
@@ -32,13 +33,13 @@ listen 80, :tcp_nopush => true
 timeout 1200
 
 # feel free to point this anywhere accessible on the filesystem
-pid "/projects/WEHub/apps/search/tmp/pids/unicorn.pid"
+pid APP_PATH + "/tmp/pids/unicorn.pid"
 
 # By default, the Unicorn logger will write to stderr.
 # Additionally, ome applications/frameworks log to stderr or stdout,
 # so prevent them from going to /dev/null when daemonized here:
-stderr_path "/projects/WEHub/apps/search/log/unicorn.stderr.log"
-stdout_path "/projects/WEHub/apps/search/log/unicorn.stdout.log"
+stderr_path APP_PATH + "/log/unicorn.stderr.log"
+stdout_path APP_PATH + "/log/unicorn.stdout.log"
 
 # combine REE with "preload_app true" for memory savings
 # http://rubyenterpriseedition.com/faq.html#adapt_apps_for_cow

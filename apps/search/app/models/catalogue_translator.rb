@@ -5,7 +5,7 @@ require 'active_support/core_ext'
 class CatalogueTranslator
   attr_accessor :url, :cache
   
-  def initialize(url = "http://localhost:3000", cache={})
+  def initialize(url="http://localhost:3000", cache={})
     @url = url
     @cache = cache
   end
