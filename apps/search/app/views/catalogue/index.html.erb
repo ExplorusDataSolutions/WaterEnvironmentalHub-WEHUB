@@ -1,3 +1,4 @@
+
 <style>
   #search_submit {
     display: none;
@@ -11,53 +12,13 @@
     function loadMap() {
       map = new OpenLayers.Map('map');
    
-      var gphy = new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP});
-      map.addLayers([gphy]);
-
-      map.setCenter(new OpenLayers.LonLat(-113.873291, 52.293992), 3);
-
+      map.addLayer(new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP}));
+      
+      WEHub.OpenLayers.setCenter(map, -113.873291, 52.293992, 3);
+      
       markers = new OpenLayers.Layer.Markers("Features");
       map.addLayer(markers);           
-    }
-   
-    function setMarker(lon, lat, html){
-      var lonLatMarker = new OpenLayers.LonLat(lon, lat);
-  
-      var feature = new OpenLayers.Feature(markers, lonLatMarker);
-
-      var size = new OpenLayers.Size(20, 34);
-      var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-      var icon = new OpenLayers.Icon('/images/marker-blue.png', size, offset);   
-      
-      function onPopupClose(evt) {
-          this.destroy();
-      }
-      
-      function onFeatureSelect(evt) {
-        popup = new OpenLayers.Popup.FramedCloud("featurePopup",
-                               feature.lonlat,
-                               null,
-                               html,
-                               null, true, onPopupClose);
-        popup.feature = feature;
-        map.addPopup(popup, true);
-      }
-      
-      function onFeatureUnselect(evt) {
-        feature = evt.feature;
-        if (feature.popup) {
-          popup.feature = null;
-          map.removePopup(feature.popup);
-          feature.popup.destroy();
-          feature.popup = null;
-        }
-      }
-      var marker = new OpenLayers.Marker(lonLatMarker, icon.clone());
-
-      marker.feature = feature;
-      marker.events.register("mousedown", feature, onFeatureSelect);
-      markers.addMarker(marker);
-    }
+    }   
     
     <%
     if !@search.results.empty? 
@@ -69,11 +30,11 @@
     <% 
     if @search.results && !@search.results.empty? 
      @search.results.each_with_index do |result, index| 
-       if result.coordinates && index < 750
+       if result.coordinates
          coords = result.coordinates.split(',') 
          if coords.length == 2 && (coords[0].scan(/ /).empty? || coords[1].scan(/ /).empty?)
          %>
-    <%= "setMarker(#{coords[1]}, #{coords[0]}, '#{result.name.gsub('\'','')}. <a href=\"/catalogue/details/#{result.uuid}\">More details</a>');".html_safe -%>
+<%= "WEHub.OpenLayers.setMarker(map, markers, #{coords[1]}, #{coords[0]}, '#{result.name.gsub('\'','')}. <a href=\"/catalogue/details/#{result.uuid}\">More details</a>');".html_safe -%>
          <% 
          end
        end

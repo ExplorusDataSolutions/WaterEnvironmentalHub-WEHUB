@@ -134,7 +134,7 @@ $(document).ready(function() {
 
     map.addLayers([gphy, gmap, ghyb, gsat]);
     
-    map.setCenter(new OpenLayers.LonLat(lon, lat), 1);
+    WEHub.OpenLayers.setCenter(map, lon, lat, 1);
 
     markers = new OpenLayers.Layer.Markers("Features");
     map.addLayer(markers);
@@ -142,7 +142,7 @@ $(document).ready(function() {
   }
   
   function setMarker(lon, lat){
-    var lonLatMarker = new OpenLayers.LonLat(lon, lat);
+    var lonLatMarker = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
 
     var feature = new OpenLayers.Feature(markers, lonLatMarker);
 

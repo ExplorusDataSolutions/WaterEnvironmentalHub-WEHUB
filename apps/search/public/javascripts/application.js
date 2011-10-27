@@ -35,6 +35,54 @@ WEHub.id = function() {
   return $.cookie('we_hub') ? $.cookie('we_hub').match(/id=([^&]*)/)[1] : '';
 }
 
+WEHub.OpenLayers = {}
+
+WEHub.OpenLayers.setMarker = function setMarker(map, markers, lon, lat, html){
+  var lonLatMarker = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
+
+  var feature = new OpenLayers.Feature(markers, lonLatMarker);
+
+  var size = new OpenLayers.Size(20, 34);
+  var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+  var icon = new OpenLayers.Icon('/images/marker-blue.png', size, offset);   
+  
+  function onPopupClose(evt) {
+      this.destroy();
+  }
+  
+  function onFeatureSelect(evt) {
+    popup = new OpenLayers.Popup.FramedCloud("featurePopup",
+                           feature.lonlat,
+                           null,
+                           html,
+                           null, true, onPopupClose);
+    popup.feature = feature;
+    map.addPopup(popup, true);
+  }
+  
+  function onFeatureUnselect(evt) {
+    feature = evt.feature;
+    if (feature.popup) {
+      popup.feature = null;
+      map.removePopup(feature.popup);
+      feature.popup.destroy();
+      feature.popup = null;
+    }
+  }
+  var marker = new OpenLayers.Marker(lonLatMarker, icon.clone());
+
+  marker.feature = feature;
+  marker.events.register("mousedown", feature, onFeatureSelect);
+  markers.addMarker(marker);
+}
+
+WEHub.OpenLayers.setCenter = function(map, lon, lat, zoomLevel) {
+  map.setCenter(new OpenLayers.LonLat(lon, lat).transform(
+    new OpenLayers.Projection("EPSG:4326"),
+    map.getProjectionObject()
+  ), 3);
+}
+
 function add_new_dataset(){
 	var hid_last_cnt	=	$('#hid_last_cnt').val()*1 + 1;
 	$('#hid_last_cnt').val(hid_last_cnt);
