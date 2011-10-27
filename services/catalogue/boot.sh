@@ -18,4 +18,4 @@ else
 fi
 
 rvm use 1.9.2
-rails server -d
+rails server -p 3000 -d
