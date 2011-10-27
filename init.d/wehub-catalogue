@@ -1,0 +1,18 @@
+#! /bin/bash
+# chkconfig: 2345 01 10
+# description: Starts the WEHub's catalogue service
+
+case "$1" in
+  start)
+    cd /projects/WEHub/services/catalogue/
+    ./boot.sh
+    ;;
+  stop)
+    ;;
+  *)
+    echo "Usage: /etc/init.d/wehub-catalogue {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0

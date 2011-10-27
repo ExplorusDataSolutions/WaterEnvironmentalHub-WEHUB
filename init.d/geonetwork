@@ -1,0 +1,20 @@
+#! /bin/bash
+# chkconfig: 2345 01 10
+# description: Starts the geonetwork
+
+case "$1" in
+  start)
+    cd /usr/local/tomcat/bin/
+    ./startup.sh
+    ;;
+  stop)
+    cd /usr/local/tomcat/bin/
+    ./shutdown.sh
+    ;;
+  *)
+    echo "Usage: /etc/init.d/geonetwork {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0
