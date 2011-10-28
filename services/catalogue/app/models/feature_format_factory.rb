@@ -15,7 +15,7 @@ class FeatureFormatFactory
     when 'xml'
       data = JSON.parse(data.to_json).to_xml
     when 'csv'
-      csv_builder = CsvBuilderPostgreSQL.new
+      csv_builder = CsvBuilderPostgreSQL.new("#{Rails.root}/tmp/csvs")
       data = csv_builder.build(feature)
     else
       raise ArgumentError, "Feature type of #{feature_type} is not implemented"

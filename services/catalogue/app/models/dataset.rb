@@ -67,6 +67,7 @@ class Dataset < ActiveRecord::Base
         end
       rescue
       end
+
       if feature.latitude_longitude
         xml.tag!(:coordinates, feature.latitude_longitude)
       end

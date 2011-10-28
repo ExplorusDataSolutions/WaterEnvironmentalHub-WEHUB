@@ -36,7 +36,7 @@ class Feature
   
   def geoserver_translator
     if @geoserver_translator.nil?
-      @geoserver_translator = GeoServerTranslator.new
+      @geoserver_translator = GeoServerTranslator.new(Rails.application.config.geoserver_address, 300, "#{Rails.root}/tmp/cache")
     end
     @geoserver_translator
   end
@@ -89,8 +89,8 @@ class Feature
 
       rescue
       end
-
-      !(latitude.empty? && longitude.empty?) ? "#{latitude},#{longitude}" : nil
+      
+      !(latitude.to_s == '' && longitude.to_s == '') ? "#{latitude},#{longitude}" : nil
     elsif is_data_source_external?
       meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
       if meta_content
@@ -143,9 +143,9 @@ class Feature
   def create(params)
     
     if is_a_file?(params)
-      tablename = "feature_data_#{uuid.gsub('-','_')}"
+      tablename = resolve_tablename
       if !params.match(/(\.xls|\.xlsx|\.ods.|\.csv)$/).nil?
-        sheet_translator = SpreadsheetTranslator.new(params)
+        sheet_translator = SpreadsheetTranslator.new(params, "#{Rails.root}/public/uploads", "#{Rails.root}/tmp/spreadsheets")
               
         execute("CREATE TABLE #{tablename} (#{sheet_translator.fields_sql})")
         execute(["COPY #{tablename} FROM ? WITH CSV", sheet_translator.filename])
@@ -164,7 +164,7 @@ class Feature
         end
 
       elsif !params.match(/(\.zip)$/).nil?
-        shape_translator = ShapeTranslator.new(params, tablename)
+        shape_translator = ShapeTranslator.new(params, tablename, '4326', "#{Rails.root}/public/uploads", "#{Rails.root}/tmp/shape_scripts")
             
         execute(shape_translator.shape_sql)
       else
@@ -252,18 +252,11 @@ class Feature
   end
       
   def resolve_tablename
-    tablename = nil
     if uuid.match(/[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12}/) != nil
-      uuid_with_underscores = uuid.gsub(/-/, '_')      
-      begin
-        tablename = execute("SELECT tablename FROM pg_tables WHERE tablename LIKE '%#{uuid_with_underscores}%' LIMIT 1")[0]['tablename']
-      rescue
-        raise ArgumentError, "Observation data for #{uuid} could not be found"  
-      end
+      "feature_data_#{uuid.gsub('-','_')}"
     else
       raise ArgumentError, "Expected a valid uuid, but got #{uuid}"
     end
-    tablename
   end
 
   def data_lightweight

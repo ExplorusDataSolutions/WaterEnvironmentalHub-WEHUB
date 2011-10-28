@@ -77,8 +77,8 @@ class SpreadsheetTranslator
   end
   
   def path
-    if defined? RAILS_ROOT
-      "#{RAILS_ROOT}"
+    if defined? Rails.root
+      "#{Rails.root}"
     else
       File.realpath("../../")
     end

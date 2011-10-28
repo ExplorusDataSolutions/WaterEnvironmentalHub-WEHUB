@@ -55,7 +55,7 @@ class ShapeBuilderGeoServer
   end  
 
   def http_get(uri)
-    url = URI.parse("http://#{server_address}/geoserver/ows?service=WFS&version=1.0.0&request=#{uri}")    
+    url = URI.parse("#{server_address}/geoserver/ows?service=WFS&version=1.0.0&request=#{uri}")    
     puts "Getting #{url}"
     http = Net::HTTP.new(url.host, url.port)
     http.read_timeout = timeout

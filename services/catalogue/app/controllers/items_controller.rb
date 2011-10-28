@@ -13,7 +13,7 @@ class ItemsController < ApplicationController
   end
   
   def download
-    directory ="tmp/zips/"
+    directory ="#{Rails.root}/tmp/zips/"
     if params[:filename]
       send_file "#{directory}#{params[:filename].match(/\w+.zip/)[0]}", :type => "application/zip" and return
     end
@@ -35,7 +35,7 @@ class ItemsController < ApplicationController
     result = ''
     results = []
     
-    shape_factory = ShapeFactory.new
+    shape_factory = ShapeFactory.new("#{Rails.root}/tmp/shapes", "#{Rails.root}/tmp/zips")
     feature_format_factory = FeatureFormatFactory.new
     
     uuids.each do |uuid|      
@@ -54,6 +54,7 @@ class ItemsController < ApplicationController
             results.push(:filename => formatted_file[:filename], :id => uuid, :data => formatted_file[:data])
           end
         rescue Exception => e        
+          logger.error e
           errors.push(e.message)
         end        
       end

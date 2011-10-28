@@ -7,7 +7,7 @@ class CsvBuilderPostgreSQL
   end
   
   def build(feature)
-    filename = "#{Rails.root}/#{csv_directory}/#{feature.filename}.#{extension}"
+    filename = "#{csv_directory}/#{feature.filename}.#{extension}"
 
     begin
       if !File.exist?(filename)

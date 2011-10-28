@@ -4,9 +4,9 @@ require 'shape_builder_geoserver.rb'
 class ShapeFactory
   attr_accessor :shape_directory, :feature
   
-  def initialize(shape_directory = "tmp/shapes")
+  def initialize(shape_directory="tmp/shapes", zips_directory="tmp/zips")
     @shape_directory = shape_directory
-    @builders = {:base => ShapeBuilderGeoServer.new(shape_directory), :other => ShapeBuilderPostgreSQL.new(shape_directory)}
+    @builders = {:base => ShapeBuilderGeoServer.new(shape_directory, zips_directory, Rails.application.config.geoserver_address), :other => ShapeBuilderPostgreSQL.new(shape_directory)}
   end
   
   def find(feature)

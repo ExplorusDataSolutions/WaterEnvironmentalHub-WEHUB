@@ -4,7 +4,7 @@ require 'active_support/core_ext'
 class GeoServerTranslator
   attr_accessor :server_address, :timeout, :cache_directory
   
-  def initialize(server_address = '50.19.106.48:8080', timeout=300, cache_directory='tmp/cache')
+  def initialize(server_address='localhost:8080', timeout=300, cache_directory='tmp/cache')
     @server_address = server_address
     @timeout = timeout
     @cache_directory = cache_directory
@@ -51,7 +51,7 @@ class GeoServerTranslator
   end
           
   def http_get(uri)
-    url = URI.parse("http://#{server_address}/geoserver/ows?service=WFS&version=1.0.0&request=#{uri}")    
+    url = URI.parse("#{server_address}/geoserver/ows?service=WFS&version=1.0.0&request=#{uri}")    
     puts "Getting #{url}"
     http = Net::HTTP.new(url.host, url.port)
     http.read_timeout = timeout
