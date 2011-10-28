@@ -5,7 +5,7 @@
 case "$1" in
   start)
     cd /geoserver/geoserver-2.0.2/bin/
-    ./startup.sh
+    ./startup.sh &
     ;;
   stop)
     cd /geoserver/geoserver-2.0.2/bin/
