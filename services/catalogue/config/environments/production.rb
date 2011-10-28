@@ -5,12 +5,19 @@ Catalogue::Application.configure do
   # Code is not reloaded between requests
   config.cache_classes = true
 
+  config.cache_store = :dalli_store, 'we-rails2-cache.gqmntp.0001.use1.cache.amazonaws.com:11211', { 
+    :namespace => 'dev_cat', 
+    :value_max_bytes => 5242880, 
+    :expires_in => 172800, 
+    :compress => true 
+  }
+
   # Full error reports are disabled and caching is turned on
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
   # Specifies the header that your server uses for sending files
-  config.action_dispatch.x_sendfile_header = "X-Sendfile"
+#  config.action_dispatch.x_sendfile_header = "X-Sendfile"
 
   # For nginx:
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect'
@@ -46,4 +53,8 @@ Catalogue::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+
+  # End points for our various dependencies
+  config.geoserver_address = 'http://localhost:8080'
+
 end

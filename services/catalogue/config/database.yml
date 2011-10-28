@@ -45,7 +45,7 @@ test:
 production:
   adapter: postgresql
   encoding: unicode
-  database: catalogue_production
+  database: catalogue_development
   pool: 5
   username: catalogue
-  password:
+  password: t3s3raDeV
