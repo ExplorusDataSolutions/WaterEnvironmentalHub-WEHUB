@@ -76,7 +76,10 @@ class Feature
               result = result[0]
               latitude = result.select{ |column| column =~ /^y$/i }.first[1]
               longitude = result.select{ |column| column =~ /^x$/i }.first[1]
-              if latitude.to_i.abs > 180
+              if latitude.to_i.abs > 90 || longitude.to_i.abs > 180 || latitude.to_i == 0 || longitude.to_i == 0
+                latitude = longitude = ''
+              end
+              if (latitude.to_i < 0 && longitude.to_i < 0) || (latitude.to_i > 0  && longitude.to_i > 0)
                 latitude = longitude = ''
               end
             end
@@ -158,7 +161,7 @@ class Feature
             longitude = lat_long_split[1]
 
             execute("SELECT addgeometrycolumn('public', '#{tablename}', 'the_geom' ,4326 ,'POINT' ,2);")
-            execute("UPDATE public.#{tablename} SET the_geom = geometryfromtext('POINT(#{latitude} #{longitude})', 4326);")
+            execute("UPDATE public.#{tablename} SET the_geom = geometryfromtext('POINT(#{longitude} #{latitude})', 4326);")
           end
         rescue Exception => e
         end
