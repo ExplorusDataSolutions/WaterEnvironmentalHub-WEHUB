@@ -72,7 +72,8 @@ class UserController < ApplicationController
   end
 
   def set_wehub_cookie(user)
-    cookies[:we_hub] = { :value => { :id => user.id, :display_name => user.display_name }.to_query, :expires => 1.year.from_now }
+    # the expires date should be sync'd with the session expiry
+    cookies[:we_hub] = { :value => { :id => user.id, :display_name => user.display_name }.to_query, :expires => 7.days.from_now }
   end
   
   def delete_wehub_cookie
