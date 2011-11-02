@@ -18,4 +18,4 @@ else
 fi
 
 rvm use 1.9.2
-unicorn_rails -p 3001 -E development -w -d
+rails server -p 3001 --debugger
