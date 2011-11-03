@@ -15,4 +15,8 @@ module ApplicationHelper
   def onclick_link_to(route)
     "location.href = '#{url_for route}'; return false;"
   end
+  
+  def scrub_for_seo(name)
+    name.gsub(/-|\.|- /,'').gsub(' ','-')
+  end
 end
