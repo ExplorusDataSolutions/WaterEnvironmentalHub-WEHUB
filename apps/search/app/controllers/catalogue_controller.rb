@@ -4,6 +4,7 @@ class CatalogueController < ApplicationController
   caches_action :browse, :cache_path => Proc.new { |controller| controller.params }  
 
   def index
+    @breadcrumb = ['Home']
     @main_menu = 'home'
     
     @search = search_instance.do_query('all', nil, nil, nil)
