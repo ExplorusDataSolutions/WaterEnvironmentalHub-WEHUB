@@ -53,9 +53,19 @@
         $(errors).each(function(i,e) { errorMsg += '<li>' + e + ' can\'t be blank</li>'; });
         $('#error-explanation').html('<ul>' + errorMsg + '</ul>').focus();
       } else {
-        form.submit();
+        $("#terms-dialog").dialog({
+          zIndex: 2000, /* override Open Layers */
+          height: 250,
+          width: 600,
+          title: 'Terms and conditions',
+	        modal: true,
+	        buttons: { 
+	          "Yes, I agree": function() { form.submit(); },
+	          "No, I do not agree": function() { $(this).dialog("close"); }
+          }
+        });
       }
-    });
+    });    
   });
 
   $(document).ready(function() {
@@ -69,6 +79,7 @@
     $("[name='dataset[feature_period_start]'], [name='dataset[feature_period_end]'], [name='dataset[feature_period]']").datepicker({ dateFormat: 'dd/mm/yy' });
   });
 </script>
+
 
 
 <%= render '/shared/left_panel' %>
@@ -255,3 +266,7 @@
 	</div>
 </div>
 <div class="clear"></div>
+
+<div id="terms-dialog" style="display: none;">
+  I agree that the data I am about to upload meets our definition of openness. <p>Openness: <strong>“A piece of content or data is open if anyone is free to use, reuse, and redistribute it &mdash; subject only, at most, to the requirement to attribute and share-alike.”</strong></p>
+</div>
