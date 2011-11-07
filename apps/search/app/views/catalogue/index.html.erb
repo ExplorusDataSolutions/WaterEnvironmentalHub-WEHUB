@@ -34,7 +34,7 @@
          coords = result.coordinates.split(',') 
          if coords.length == 2 && (coords[0].scan(/ /).empty? || coords[1].scan(/ /).empty?)
          %>
-<%= "WEHub.OpenLayers.setMarker(map, markers, #{coords[1]}, #{coords[0]}, '#{result.name.gsub('\'','')}. <a href=\"/catalogue/details/#{result.uuid}\">More details</a>');".html_safe -%>
+<%= "WEHub.OpenLayers.setMarker(map, markers, #{coords[1]}, #{coords[0]}, '#{result.name.gsub('\'','')}. <a href=\"/catalogue/details/#{result.uuid}/#{u(scrub_for_seo(result.name))}\">More details</a>');".html_safe -%>
          <% 
          end
        end
@@ -196,7 +196,7 @@
     <div class="home-middle-data">
       <div class="home-middle-head">What is the WEHUB?</div>
       <div class="home-middle-text">
-        <iframe width="290" height="243" src="http://www.youtube.com/embed/uYXpjipnBac?hl=en&fs=1" frameborder="0" allowfullscreen></iframe>
+        <iframe width="290" height="243" src="http://www.youtube.com/embed/Ilj-pTPOKlY" frameborder="0" allowfullscreen></iframe>
       </div>
     </div>
   </div>

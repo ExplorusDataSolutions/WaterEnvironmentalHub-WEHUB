@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
   <head>
-    <title>The Water and Environment Hub (WEHUB)</title>
+    <title><%= !yield(:title).empty? ? "#{yield(:title).gsub(/  /, '')} - " : "#{!@breadcrumb.nil? ? @breadcrumb.join(' - ') : params[:controller].capitalize} - " %> The Water and Environment Hub (WEHUB) </title>
     <%= stylesheet_link_tag :all %>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script> 
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script> 
@@ -174,7 +174,7 @@
             $(window).load(function() {
               var socialWidgets = '<%= "<script type=\"text/javascript\" src=\"http://apis.google.com/js/plusone.js\"></script>
               <div id=\"plusone\" style=\"width:75px; float:left; display: none;\"><g:plusone size=\"medium\" href=\"#{request.url}\" count=\"true\"></g:plusone></div>
-              <div id=\"twitter\" style=\"float:left;\"><a style=\"padding-top:10px;\" href=\"http://twitter.com/share\" class=\"twitter-share-button\" data-count=\"horizontal\" data-via=\"The #WEHub\">Tweet</a><script type=\"text/javascript\" src=\"http://platform.twitter.com/widgets.js\"></script></div>
+              <div id=\"twitter\" style=\"float:left;\"><a style=\"padding-top:10px;\" href=\"http://twitter.com/share\" class=\"twitter-share-button\" data-count=\"horizontal\" data-via=\"letthedataflow\">Tweet</a><script type=\"text/javascript\" src=\"http://platform.twitter.com/widgets.js\"></script></div>
               <div id=\"fbsend\" style=\"float:left;\"><fb:send href=\"#{request.url}\" font=\"verdana\"></fb:send></div>
               <div id=\"facebook\" style=\"float:left;\"><iframe src=\"http://www.facebook.com/plugins/like.php?href=#{request.url}\" scrolling=\"no\" frameborder=\"0\" style=\"border:none; overflow:hidden; height:25px;\" allowTransparency=\"true\"></iframe></div>".gsub(/\n/,'') -%>';
               setTimeout(function() { 

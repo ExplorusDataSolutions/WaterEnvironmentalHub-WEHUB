@@ -28,7 +28,7 @@ cache "catalogue_browse_#{clean_params.to_query}" do %>
 		      <span class="folder"><%= key %></span>
 		      <ul>
 		        <% value.each do |result| %>
-    		    <li><span class="file"><%= link_to result.name, :controller => 'catalogue', :action => 'details', :id => result.id %></span></li>
+    		    <li><span class="file"><%= link_to result.name, :controller => 'catalogue', :action => 'details', :id => result.id, :seo => scrub_for_seo(result.name) %></span></li>
     		    <% end %>
 		      </ul>
   	    </li>
@@ -36,7 +36,7 @@ cache "catalogue_browse_#{clean_params.to_query}" do %>
 		  <% else %>
 		    <li>
         <% value.each do |result| %>
-          <span class="file"><%= link_to result.name, :controller => 'catalogue', :action => 'details', :id => result.id %></span>
+          <span class="file"><%= link_to result.name, :controller => 'catalogue', :action => 'details', :id => result.id, :seo => scrub_for_seo(result.name) %></span>
 		    <% end %>
   	    </li>
 	    <% end %>
@@ -52,7 +52,7 @@ cache "catalogue_browse_#{clean_params.to_query}" do %>
 		      <span class="folder"><%= key %></span>
 		      <ul>
 		        <% value.each do |result| %>
-    		    <li><span class="file"><%= link_to result.name, :controller => 'catalogue', :action => 'details', :id => result.id %></span></li>
+    		    <li><span class="file"><%= link_to result.name, :controller => 'catalogue', :action => 'details', :id => result.id, :seo => scrub_for_seo(result.name) %></span></li>
     		    <% end %>
 		      </ul>
   	    </li>
@@ -60,7 +60,7 @@ cache "catalogue_browse_#{clean_params.to_query}" do %>
 		  <% else %>
 		    <li>
         <% value.each do |result| %>
-          <span class="file"><%= link_to result.name, :controller => 'catalogue', :action => 'details', :id => result.id %></span>
+          <span class="file"><%= link_to result.name, :controller => 'catalogue', :action => 'details', :id => result.id, :seo => scrub_for_seo(result.name) %></span>
 		    <% end %>
   	    </li>
 	    <% end %>
