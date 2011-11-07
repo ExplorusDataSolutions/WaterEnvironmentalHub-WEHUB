@@ -5,14 +5,14 @@ class CreateDatasets < ActiveRecord::Migration
       t.string :uuid
       t.text :description
       t.text :source
+      t.references :creative_commons_license      
+      t.references :owner
       
       #Todo: move to feature object
       t.text :feature_period
       t.references :feature_type
       t.references :feature_source
-
-      t.references :owner
-
+      
       t.timestamps
     end
     

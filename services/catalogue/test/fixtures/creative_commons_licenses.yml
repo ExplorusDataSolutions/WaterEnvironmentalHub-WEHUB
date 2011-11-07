@@ -1,0 +1,20 @@
+--- 
+creative_commons_license_00002: 
+  type: 'by'
+  uri: 'http://creativecommons.org/licenses/by/3.0/'
+
+creative_commons_license_00003: 
+  type: 'by-sa'
+  uri: 'http://creativecommons.org/licenses/by-sa/3.0/'
+
+creative_commons_license_00004: 
+  type: 'by-nc'
+  uri: 'http://creativecommons.org/licenses/by-nc/3.0/'s
+
+creative_commons_license_00005: 
+  type: 'by-nd'
+  uri: 'http://creativecommons.org/licenses/by-nd/3.0/'
+
+creative_commons_license_00006: 
+  type: 'by-na-sa'
+  uri: 'http://creativecommons.org/licenses/by-nc-sa/3.0/'

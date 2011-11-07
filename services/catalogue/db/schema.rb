@@ -10,13 +10,21 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110517160707) do
+ActiveRecord::Schema.define(:version => 20111107205255) do
 
   create_table "authors", :force => true do |t|
     t.string   "email"
     t.string   "first_name"
     t.string   "last_name"
     t.integer  "dataset_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "creative_commons_licenses", :force => true do |t|
+    t.string   "type"
+    t.string   "name"
+    t.string   "uri"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -47,10 +55,41 @@ ActiveRecord::Schema.define(:version => 20110517160707) do
 
   add_index "datasets", ["uuid"], :name => "index_datasets_on_uuid", :unique => true
 
+# Could not dump table "feature_data_04471f4c_e0a4_11e0_8bee_0050ba2647ec" because of following StandardError
+#   Unknown type 'geometry' for column 'the_geom'
+
+  create_table "feature_data_253b2532_e09e_11e0_8bee_0050ba2647ec", :id => false, :force => true do |t|
+    t.string "FID"
+    t.string "Station ID"
+    t.string "Latitude"
+    t.string "Longitude"
+    t.string "DateTime"
+    t.string "Date"
+    t.string "Discharge (m3/s)"
+    t.string "Discharge Flag"
+    t.string "Manually Measured Discharge (m3/s)"
+    t.string "Manual Measurement Ice Effect?"
+    t.string "Manual Measurement Quality"
+    t.string "Data Source\n"
+  end
+
+  create_table "feature_data_416ad2bc_04cf_41eb_9c9b_7e440c21673b", :id => false, :force => true do |t|
+    t.decimal "id",         :precision => 255, :scale => 0, :null => false
+    t.decimal "feature_id", :precision => 255, :scale => 0
+  end
+
+# Could not dump table "feature_data_ed8fb7c0_8e59_4884_a422_a8a3be49982b" because of following StandardError
+#   Unknown type 'geometry' for column 'thepoint_lonlat'
+
+# Could not dump table "feature_data_fe4460ca_6dec_4b65_93fe_9b5d6e31e6e8" because of following StandardError
+#   Unknown type 'geometry' for column 'thepoint_lonlat'
+
   create_table "feature_meta_contents", :force => true do |t|
     t.text     "dataset_uuid"
     t.text     "keywords"
     t.text     "source_uri"
+    t.text     "coordinates"
+    t.text     "bounding_box"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -71,12 +110,30 @@ ActiveRecord::Schema.define(:version => 20110517160707) do
     t.datetime "updated_at"
   end
 
+  create_table "geometry_columns", :id => false, :force => true do |t|
+    t.string  "f_table_catalog",   :limit => 256, :null => false
+    t.string  "f_table_schema",    :limit => 256, :null => false
+    t.string  "f_table_name",      :limit => 256, :null => false
+    t.string  "f_geometry_column", :limit => 256, :null => false
+    t.integer "coord_dimension",                  :null => false
+    t.integer "srid",                             :null => false
+    t.string  "type",              :limit => 30,  :null => false
+  end
+
   create_table "owners", :force => true do |t|
     t.integer  "user_id"
     t.integer  "group_id"
     t.string   "source",     :default => "EngineY"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "spatial_ref_sys", :id => false, :force => true do |t|
+    t.integer "srid",                      :null => false
+    t.string  "auth_name", :limit => 256
+    t.integer "auth_srid"
+    t.string  "srtext",    :limit => 2048
+    t.string  "proj4text", :limit => 2048
   end
 
   create_table "user_dataset_collections", :force => true do |t|

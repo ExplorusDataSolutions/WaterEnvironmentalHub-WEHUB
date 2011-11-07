@@ -9,6 +9,7 @@ class Dataset < ActiveRecord::Base
   belongs_to :feature_source
   belongs_to :owner
   has_one :author
+  belongs_to :creative_commons_license
 
   validates_presence_of :name, :description, :feature_type, :feature_source
   
