@@ -1,20 +1,25 @@
 --- 
 creative_commons_license_00002: 
-  type: 'by'
+  name: 'by'
+  description: 'Attribution Creative Commons'
   uri: 'http://creativecommons.org/licenses/by/3.0/'
 
 creative_commons_license_00003: 
-  type: 'by-sa'
+  name: 'by-sa'
+  description: 'Attribution-ShareAlike Creative Commons'
   uri: 'http://creativecommons.org/licenses/by-sa/3.0/'
 
 creative_commons_license_00004: 
-  type: 'by-nc'
-  uri: 'http://creativecommons.org/licenses/by-nc/3.0/'s
+  name: 'by-nc'
+  description: 'Attribution-NonCommercial Creative Commons'
+  uri: 'http://creativecommons.org/licenses/by-nc/3.0/'
 
 creative_commons_license_00005: 
-  type: 'by-nd'
+  name: 'by-nd'
+  description: 'Attribution-NoDerivs Creative Commons'
   uri: 'http://creativecommons.org/licenses/by-nd/3.0/'
 
 creative_commons_license_00006: 
-  type: 'by-na-sa'
+  name: 'by-na-sa'
+  description: 'Attribution-NonCommercial-ShareAlike Creative Commons'
   uri: 'http://creativecommons.org/licenses/by-nc-sa/3.0/'

@@ -22,8 +22,8 @@ ActiveRecord::Schema.define(:version => 20111107205255) do
   end
 
   create_table "creative_commons_licenses", :force => true do |t|
-    t.string   "type"
     t.string   "name"
+    t.text     "description"
     t.string   "uri"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -51,11 +51,15 @@ ActiveRecord::Schema.define(:version => 20111107205255) do
     t.integer  "owner_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "creative_commons_license_id"
   end
 
   add_index "datasets", ["uuid"], :name => "index_datasets_on_uuid", :unique => true
 
 # Could not dump table "feature_data_04471f4c_e0a4_11e0_8bee_0050ba2647ec" because of following StandardError
+#   Unknown type 'geometry' for column 'the_geom'
+
+# Could not dump table "feature_data_198769ba_098b_11e1_92b2_0050ba2647ec" because of following StandardError
 #   Unknown type 'geometry' for column 'the_geom'
 
   create_table "feature_data_253b2532_e09e_11e0_8bee_0050ba2647ec", :id => false, :force => true do |t|
@@ -77,6 +81,9 @@ ActiveRecord::Schema.define(:version => 20111107205255) do
     t.decimal "id",         :precision => 255, :scale => 0, :null => false
     t.decimal "feature_id", :precision => 255, :scale => 0
   end
+
+# Could not dump table "feature_data_62f5dd42_098c_11e1_92b2_0050ba2647ec" because of following StandardError
+#   Unknown type 'geometry' for column 'the_geom'
 
 # Could not dump table "feature_data_ed8fb7c0_8e59_4884_a422_a8a3be49982b" because of following StandardError
 #   Unknown type 'geometry' for column 'thepoint_lonlat'
