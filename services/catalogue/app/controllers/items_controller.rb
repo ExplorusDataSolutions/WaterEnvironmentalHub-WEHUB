@@ -101,10 +101,12 @@ class ItemsController < ApplicationController
       if dataset.valid?
         owner = owner(params[:owner])
         author = author(params[:author])
+        creative_commons_license = creative_commons_license(params[:creative_commons_license])
         begin
           dataset.feature.create(filename)
           dataset.owner = owner 
           dataset.author = author 
+          dataset.creative_commons_license = creative_commons_license
           dataset.save
         rescue Exception => e
           Dataset.destroy(dataset.id)
@@ -211,6 +213,10 @@ class ItemsController < ApplicationController
     nil
   end
 
+  def creative_commons_license(params)
+    (params.nil? || params.empty? || params == 'none') ? nil : CreativeCommonsLicense.find_by_uri(params)
+  end
+  
   def author(params)
 
     first = ''

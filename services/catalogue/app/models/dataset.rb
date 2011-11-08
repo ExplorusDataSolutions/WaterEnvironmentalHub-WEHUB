@@ -9,6 +9,7 @@ class Dataset < ActiveRecord::Base
   belongs_to :feature_source
   belongs_to :owner
   has_one :author
+  belongs_to :creative_commons_license
 
   validates_presence_of :name, :description, :feature_type, :feature_source
   
@@ -81,6 +82,7 @@ class Dataset < ActiveRecord::Base
       end
       xml.tag!(:wms, feature_source == FeatureSource.find_by_name('geoserver'))
       xml.tag!(:external, feature.is_data_source_external?) unless !feature.is_data_source_external?
+      xml.tag!(:creative_commons_license, creative_commons_license.uri) unless creative_commons_license.nil?
     end
   end
 

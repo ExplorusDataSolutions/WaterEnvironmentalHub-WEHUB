@@ -4,7 +4,7 @@ class SpreadsheetTranslator
     @filename = filename
     @spreadsheets_directory = spreadsheets_directory
     
-    filename_upload = "#{path}/#{uploads_directory}/#{@filename}"
+    filename_upload = "#{uploads_directory}/#{@filename}"
     
     if !is_csv
       @spreadsheet = Roo::Spreadsheet.open(filename_upload)
@@ -57,7 +57,7 @@ class SpreadsheetTranslator
   end
   
   def filename_csv
-    "#{path}/#{@spreadsheets_directory}/#{@filename.split('.')[0]}.csv"
+    "#{@spreadsheets_directory}/#{@filename.split('.')[0]}.csv"
   end
     
   def save_as_csv
@@ -67,21 +67,13 @@ class SpreadsheetTranslator
   # The Roo Gem (providing spreadsheet conversion) is read only, doesn't support editing spreadsheets 
   #  since I can't edit the spreadsheet, I'm deleting the fieldnames through the commandline  
   def delete_fieldnames_row
-    filename_temp = "#{path}/#{@spreadsheets_directory}/#{@filename.split('.')[0]}.processed.csv"
+    filename_temp = "#{@spreadsheets_directory}/#{@filename.split('.')[0]}.processed.csv"
     # Clean up the first line, it contains the field names
     %x[tail -n +2 #{filename_csv} > #{filename_temp}]
     # Clean up the csv file, remove double newlines    
     %x[sed ':a;N;$!ba;s/\\n\\n/\\n/g' #{filename_temp} > #{filename_csv}]
     # Clean up the temp file
     %x[rm #{filename_temp}]
-  end
-  
-  def path
-    if defined? Rails.root
-      "#{Rails.root}"
-    else
-      File.realpath("../../")
-    end
   end
 
 end
