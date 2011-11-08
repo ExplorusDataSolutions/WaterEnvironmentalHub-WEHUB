@@ -1,72 +1,73 @@
 <% cache "search_dataset_#{dataset.uuid}" do %>
 <div class="search-result-each search-result-each-box">
-	<div class="search-checkbox">
-		<input type='checkbox' name='download' value='<%= dataset.uuid %>' id='<%= "download_#{dataset.uuid}" %>' />
-	</div>
-	<div class="search-text">
-		<div class="float-left">
+  <div class="search-checkbox">
+    <input type='checkbox' name='download' value='<%= dataset.uuid %>' id='<%= "download_#{dataset.uuid}" %>' />
+  </div>
+  <div class="search-text">
+    <div class="float-left">
       <label for='<%= "download_#{dataset.uuid}" %>'>
-			<span class="search-title">
-				<%= dataset.name %>
-			</span>&nbsp;
-			<span class="search-date">
-				<%= dataset.date %>
-			</span>
-      </label>
-		</div>
-		<div class="clear"></div>
-		<p>
-			<span class="head">Abstract:</span>
-			<span>
-				<%= dataset.description %>			
+      <span class="search-title">
+        <%= dataset.name %>
+      </span>&nbsp;
+      <span class="search-date">
+        <%= dataset.date %>
       </span>
-		</p>
-		<p>
+      </label>
+    </div>
+    <div class="clear"></div>
+    <p>
+      <span class="head">Abstract:</span>
+      <span>
+        <%= dataset.description %>      
+      </span>
+    </p>
+    <p>
       <% if dataset.author && !(dataset.author.name.nil? || dataset.author.email.nil?) %>
-			<div class="third-sep">
-				<span class="head">Author: </span>
-				<span><%= dataset.author.name %> <%= dataset.author.email %></span>
-			</div>
+      <div class="third-sep">
+        <span class="head">Author: </span>
+        <span><%= dataset.author.name %> <%= dataset.author.email %></span>
+      </div>
       <% end %>
       <% if dataset.period %>
         <% if dataset.period.scan(/-/).count == 1 %>
           <% period_parts = dataset.period.split(/-/) %>
-			<div class="third-sep">
-				<span class="head">Start Date: </span>
-				<span><%= period_parts[0] %></span>
-			</div>
-			<div class="third-sep">
-				<span class="head">End Date: </span>
-				<span><%= period_parts[1] %></span>
-			</div>
+      <div class="third-sep">
+        <span class="head">Start Date: </span>
+        <span><%= period_parts[0] %></span>
+      </div>
+      <div class="third-sep">
+        <span class="head">End Date: </span>
+        <span><%= period_parts[1] %></span>
+      </div>
         <% else %>
-			<div class="third-sep">
-				<span class="head">Date: </span>
-				<span><%= dataset.period %></span>
-			</div>
+      <div class="third-sep">
+        <span class="head">Date: </span>
+        <span><%= dataset.period %></span>
+      </div>
         <% end %>
       <% end %>
-			<div class="clear"></div>
-		</p>
+      <div class="clear"></div>
+    </p>
     <% if dataset.properties %>
-		<p>      
-			<span class="head">Number of Observed Properties: </span><span><%= dataset.properties.scan(/,/).count %></span><br />
-			<span class="head">Features: </span><span>
+    <p>      
+      <span class="head">Number of Observed Properties: </span><span><%= dataset.properties.scan(/,/).count %></span><br />
+      <span class="head">Features: </span><span>
       <% if dataset.properties.length > 255 %>
         <%= dataset.properties[0..255] %>...
       <% else %>
         <%= dataset.properties %>
       <% end %>
       </span>
-		</p>
+    </p>
     <% end %>
-		<div class="search-btm-image-link">
+<%= dataset %>    
+    <div class="search-btm-image-link">
       <%= link_to image_tag('1.png', :alt => 'Map this', :border => 0), { :controller => 'tools', :action => 'chart', :id => dataset.id } %>
       <%= link_to image_tag('2.png', :alt => 'Map this', :border => 0), { :controller => 'tools', :action => 'map', :id => dataset.id } %>
       <%= link_to image_tag('3.png', :alt => 'More details', :border => 0), { :controller => 'catalogue', :action => 'details', :id => dataset.id, :seo => scrub_for_seo(dataset.name) } %>
-		</div>
-	</div>
-	<div class="clear"></div>
+    </div>
+  </div>
+  <div class="clear"></div>
 </div>
 <div class="clear"></div>
 <% end %>
