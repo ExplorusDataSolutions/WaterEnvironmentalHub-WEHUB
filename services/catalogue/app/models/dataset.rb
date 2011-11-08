@@ -50,6 +50,7 @@ class Dataset < ActiveRecord::Base
       xml.tag!(:name, name)
       xml.tag!(:source, source) unless source.nil?
       xml.tag!(:uuid, uuid)
+      xml.tag!(:id, uuid)
       xml.owner do
         if !owner.user_id.nil?
           xml.tag!(:user_id, owner.user_id)

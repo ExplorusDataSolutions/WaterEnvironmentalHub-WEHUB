@@ -15,7 +15,7 @@ $('document').ready(function() {
           var fragment = template.clone();
           fragment.find('.name').text(this.name);
           fragment.find('.date').text(this.date);
-          var url = '<%= url_for :controller => "catalogue", :action => "details", :id => nil, :trailing_slash => true %>' + this.id + '/' + encodeURI(this.name.replace(/-|\.|- /g,'').replace(/ /g,'-'));
+          var url = '<%= url_for :controller => "catalogue", :action => "details", :id => nil, :trailing_slash => true %>' + this.id + '/' + encodeURI(this.name.replace(/-|\.|- /g,'').replace(/ /g,'-').toLowerCase());
           fragment.click(function() { window.location = url; });
           template.before(fragment);
         });

@@ -17,6 +17,6 @@ module ApplicationHelper
   end
   
   def scrub_for_seo(name)
-    name.gsub(/-|\.|- /,'').gsub(' ','-')
+    name.gsub(/-|\.|- /,'').gsub(' ','-').downcase
   end
 end
