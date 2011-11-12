@@ -45,7 +45,17 @@ class Feature
     if is_data_source?('geoserver')
       geoserver_translator.data(uuid)
     elsif is_data_source?('catalogue')
-      execute("SELECT * FROM #{tablename}")
+      column_names = execute("SELECT * FROM #{tablename} LIMIT 1")[0]
+      if column_names
+        column_names = column_names.keys
+        if column_names.include?('the_geom')
+          column_names.delete('the_geom')
+          column_names = column_names.collect {|x| "\"#{x}\"" }.join(', ')
+          execute("SELECT #{column_names}, ST_AsGeoJSON(the_geom) AS the_geom FROM #{tablename}")
+        else
+          execute("SELECT * FROM #{tablename}")
+        end        
+      end
     elsif is_data_source_external?
       begin
         ExternalServiceTranslator.new.data(uuid, advanced_search_params)
