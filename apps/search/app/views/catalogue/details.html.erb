@@ -161,7 +161,7 @@ $(document).ready(function() {
       { "transparent":"true",
         "layers":name,
         "format":"image/png" },
-        { "reproject":"false" });   
+        { "reproject":"false" });
     map.addLayer(datasetLayer);
   }
   
@@ -179,8 +179,8 @@ $(document).ready(function() {
       OpenLayers.Util.extend(boxControl, {
         draw: function () {
           this.box = new OpenLayers.Handler.Box(boxControl, { "done": function(bounds) { 
-            var leftBottom = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom));
-            var rightTop = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top));
+            var leftBottom = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom)).transform(map.getProjectionObject(),  new OpenLayers.Projection('EPSG:4326'));
+            var rightTop = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top)).transform(map.getProjectionObject(),  new OpenLayers.Projection('EPSG:4326'));
             setBoundingBox(rightTop.lat, rightTop.lon, leftBottom.lat, leftBottom.lon);
           }});
         }
@@ -209,8 +209,8 @@ $(document).ready(function() {
 
   <%=
   "var bounds = new OpenLayers.Bounds();
-  bounds.extend(new OpenLayers.LonLat(#{@dataset.bounding_box[:east]},#{@dataset.bounding_box[:north]}));
-  bounds.extend(new OpenLayers.LonLat(#{@dataset.bounding_box[:west]},#{@dataset.bounding_box[:south]}));  
+  bounds.extend(new OpenLayers.LonLat(#{@dataset.bounding_box[:east]},#{@dataset.bounding_box[:north]}).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));
+  bounds.extend(new OpenLayers.LonLat(#{@dataset.bounding_box[:west]},#{@dataset.bounding_box[:south]}).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));  
   var boxes = new OpenLayers.Layer.Boxes('boxes');
   var box = new OpenLayers.Marker.Box(bounds);
   boxes.addMarker(box);
@@ -218,7 +218,7 @@ $(document).ready(function() {
   map.zoomToExtent(bounds);
   map.zoomTo(map.zoom - 1);
 
-  "
+  ".html_safe
   %>
 <% end %>
 });
