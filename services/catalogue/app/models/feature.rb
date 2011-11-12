@@ -128,10 +128,10 @@ class Feature
       meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
       if meta_content && meta_content.bounding_box && !meta_content.bounding_box.empty?
         { 
-          :north => meta_content.bounding_box.split(',')[1].split(' ')[1], 
-          :east => meta_content.bounding_box.split(',')[1].split(' ')[0],
-          :south => meta_content.bounding_box.split(' ')[1].split(',')[0],
-          :west => meta_content.bounding_box.split(' ')[0]
+          :north => meta_content.bounding_box.split(' ')[1].split(',')[0],
+          :east => meta_content.bounding_box.split(' ')[0],
+          :south => meta_content.bounding_box.split(',')[1].split(' ')[1],
+          :west => meta_content.bounding_box.split(',')[1].split(' ')[0]
         }
       end
     end
