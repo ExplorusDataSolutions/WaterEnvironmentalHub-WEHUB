@@ -1,0 +1,14 @@
+<%= render 'errors' %>
+
+<div>
+  <p>Enter your email address to have your password reset and emailed to you.</p>
+  <table>
+    <tr>
+  <%= form_for :user do |f| %>
+      <td align="right"><%= f.label 'email', 'Email address:' %></td><td><%= f.text_field 'email', :size => '15' %></td>
+    </tr><tr>
+    <td colspan="2" align="right"><%= f.submit 'Reset password', :id=> 'reset' %></td>
+  <% end %>
+    </tr>
+  </table>
+</div>

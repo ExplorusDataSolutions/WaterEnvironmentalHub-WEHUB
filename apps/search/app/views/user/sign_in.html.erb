@@ -29,13 +29,9 @@
 			<div class="float-left login-button" onclick="$('form').submit();">
         <%= f.submit :"Log-in" %>
 			</div>
-<%
-=begin %>			
 			<div class="float-left" style="margin:8px 20px;">
-        <%= link_to 'Forgot Password?', { :controller => 'user', :action => 'password' } %>
+        <%= link_to 'Forgot your password?', { :controller => 'user', :action => 'forgot' } %>
 			</div>
-<%
-=end %>			
 			<div class="clear height-30"></div>
 			<div class="light-black-head">
 				<h2>Don't have a WEHUB Id?</h2>

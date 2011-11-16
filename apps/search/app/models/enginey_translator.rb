@@ -110,8 +110,19 @@ class EngineYTranslator
       :id => user_id,
       :user => params[:user],
       :format => "json"
-    }.to_json, { 'Content-Type' => 'application/json'}) }
-    
+    }.to_json, { 'Content-Type' => 'application/json'}) }    
+  end
+  
+  def password_update(params)
+    response = post_json("#{@server_address}/user/update_password?format=json", {
+      :user => params[:user],
+      :format => "json"
+    })
+    json_to_mash(response) unless response.nil?
+  end
+  
+  def password_reset(email)
+    get("#{@server_address}/user/forgot_password?email=#{email}")
   end
 
   def user_groups(user_id)

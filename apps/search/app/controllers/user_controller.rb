@@ -4,7 +4,7 @@ class UserController < ApplicationController
   respond_to :html, :only => [:sign_in, :groups, :register]
   respond_to :json, :except => :sign_in
 
-  before_filter :verify_logged_in, :only => [:groups, :profile, :save]
+  before_filter :verify_logged_in, :only => [:groups, :profile, :save, :password]
   
   #Note: the if statement in the  caches_action works around a bug where Rails does not cache the content type
   caches_action :recently_viewed, :if => Proc.new { |c| c.headers["Content-Type"] = 'application/json; charset=UTF-8' }, :cache_path => :recently_viewed_key.to_proc, :expires_in => 30.minutes
@@ -43,7 +43,7 @@ class UserController < ApplicationController
         @user.errors.add_to_base('User could not be authenticated. Check your Login and Password.')
       end
     else
-      @breadcrumb     = ['Login...']
+      @breadcrumb     = ['Log in']
       @main_menu      = 'home'
       render :layout => 'application'
     end    
@@ -70,7 +70,7 @@ class UserController < ApplicationController
       @main_menu      = 'home'
     end    
   end
-
+  
   def set_wehub_cookie(user)
     # the expires date should be sync'd with the session expiry
     cookies[:we_hub] = { :value => { :id => user.id, :display_name => user.display_name }.to_query, :expires => 7.days.from_now }
@@ -99,6 +99,42 @@ class UserController < ApplicationController
     render :json => socialnetwork_instance.logged_in?
   end
 
+  def password
+    @breadcrumb = ['Password Reset']
+    @main_menu = 'we_community'
+
+    @user = User.new(nil)
+    if request.post?
+      response = {}
+      if (params[:user][:password_old].blank? || params[:user][:password].blank? || params[:user][:password_confirmation].blank?)
+        @user.errors.add_to_base('all password fields are required')
+      elsif !(params[:user][:password] == params[:user][:password_confirmation])
+        @user.errors.add_to_base('the new and confirmation passwords do not match')
+      else
+        begin
+          response = socialnetwork_instance.password_update(params)      
+        rescue
+          
+        end
+        if response.include?('errors')      
+          @user.errors.add_to_base(response.errors[0][1])
+        else
+          redirect_to :root
+        end
+      end
+    end
+  end
+  
+  def forgot
+    @breadcrumb = ['Forgot Password']
+  
+    @user = User.new(nil)
+    if request.post?
+      socialnetwork_instance.password_reset(params[:user][:email])
+      redirect_to :action => :sign_in
+    end
+  end
+  
   def profile
     if request.post?
       begin
@@ -113,7 +149,7 @@ class UserController < ApplicationController
       @breadcrumb = ['My Profile']
       @main_menu = 'we_community'
     end    
-  end
+  end 
   
   def profile_snapshot
     if !current_user.nil?

@@ -3,7 +3,7 @@ class User
   include ActiveModel::Conversion  
   extend ActiveModel::Naming
 
-  attr_accessor :first_name, :last_name, :display_name, :login, :password, :password_confirmation, :email, :id, :api_key
+  attr_accessor :first_name, :last_name, :display_name, :login, :password, :password_confirmation, :password_old, :email, :id, :api_key
 
   validates_presence_of :first_name, :last_name, :login, :password, :password_confirmation, :email
 
