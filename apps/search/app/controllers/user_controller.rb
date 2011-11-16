@@ -103,7 +103,7 @@ class UserController < ApplicationController
   end
 
   def password
-    @breadcrumb = ['Password Reset']
+    @breadcrumb = ['Change Your Password']
     @main_menu = 'we_community'
 
     @user = User.new(nil)
@@ -122,7 +122,7 @@ class UserController < ApplicationController
         if response.include?('errors')      
           @user.errors.add_to_base(response.errors[0][1])
         else
-          redirect_to :root
+          redirect_to :controller => 'user', :action => 'profile'
         end
       end
     end
