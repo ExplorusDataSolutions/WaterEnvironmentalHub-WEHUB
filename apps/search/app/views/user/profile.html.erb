@@ -101,6 +101,12 @@
 				</div>
 			</div>
 			<div class="profile-content-para" name="user[api_key]"><%= @profile.api_key %></div>
+			<div class="profile-sub-head">
+				<div class="float-left">
+					Password
+				</div>
+			</div>			
+			<div><%= link_to "change", :controller => 'user', :action => 'password' %></div>
 <%
 =begin %>			
 			<div class="profile-sub-head">
