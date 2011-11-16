@@ -54,12 +54,16 @@ class UserController < ApplicationController
     if request.post?
       begin
         if @user.valid?
-          @user = socialnetwork_instance.register(params[:user])
-          session[:user] = @user
-          set_wehub_cookie(@user)
-          
-          respond_with(@user) do |format|
-            format.html { redirect_to :root }
+          if params[:eula].nil?
+            @user.errors.add_to_base('You must agree to the WEHUB\'s Privacy Statment and Terms of Use.')          
+          else
+            @user = socialnetwork_instance.register(params[:user])
+            session[:user] = @user
+            set_wehub_cookie(@user)
+            
+            respond_with(@user) do |format|
+              format.html { redirect_to :root }
+            end
           end
         end
       rescue Net::HTTPServerException => ex
