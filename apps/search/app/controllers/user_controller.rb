@@ -24,6 +24,9 @@ class UserController < ApplicationController
   end
   
   def sign_in
+    @breadcrumb     = ['Log in']
+    @main_menu      = 'home'
+
     @user = User.new(params[:user])
     if request.post?
       begin
@@ -35,18 +38,14 @@ class UserController < ApplicationController
         end
         session[:user] = @user
         set_wehub_cookie(@user)
-
+        
         respond_with(@user) do |format|
-          format.html { redirect_to :root }
+          format.html { redirect_to redirected_from.nil? ? :root : redirected_from }
         end
       rescue Net::HTTPServerException => ex
         @user.errors.add_to_base('User could not be authenticated. Check your Login and Password.')
       end
-    else
-      @breadcrumb     = ['Log in']
-      @main_menu      = 'home'
-      render :layout => 'application'
-    end    
+    end
   end
 
   def register

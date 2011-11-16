@@ -52,8 +52,17 @@ class ApplicationController < ActionController::Base
   
   def verify_logged_in
     if current_user.nil?
+      redirected_from = request.request_uri
       redirect_to :controller => 'user', :action => 'sign_in'
     end
   end
-
+  
+  def redirected_from=(value)
+    session[:redirected_from] = value
+  end
+  
+  def redirected_from
+    session[:redirected_from]
+  end
+  
 end
