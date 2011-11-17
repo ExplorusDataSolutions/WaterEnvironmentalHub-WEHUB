@@ -83,7 +83,7 @@ class Dataset < ActiveRecord::Base
       end
       xml.tag!(:wms, feature_source == FeatureSource.find_by_name('geoserver'))
       xml.tag!(:external, feature.is_data_source_external?) unless !feature.is_data_source_external?
-      xml.tag!(:creative_commons_license, creative_commons_license.uri) unless creative_commons_license.nil?
+      xml.tag!(:creative_commons_license, creative_commons_license.name) unless creative_commons_license.nil?
     end
   end
 

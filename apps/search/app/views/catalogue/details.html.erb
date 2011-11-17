@@ -441,7 +441,7 @@ $(document).ready(function() {
 <% if !@dataset.creative_commons_license.nil? %>
       <h2 class="green-dot-blue-head">License</h2>
       <div class="float-left width-165 title">&nbsp;</div>
-      <div class="float-left width-500 text"><%= image_tag 'creative-commons.png', :alt => 'Creative Commons', :style => "border: 0px; height: 16px; width: 16px;" %> <a href="<%= @dataset.creative_commons_license %>">Some rights reserved</a></div>
+      <div class="float-left width-500 text"><%= "<a href='http://creativecommons.org/licenses/#{@dataset.creative_commons_license}/3.0/'><img src='/images/#{@dataset.creative_commons_license}.png' alt='creative commons' /></a>".html_safe -%></div>
       <div class="clear"></div>
 <% end %>      
       

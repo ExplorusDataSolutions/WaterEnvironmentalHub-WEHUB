@@ -214,7 +214,7 @@ class ItemsController < ApplicationController
   end
 
   def creative_commons_license(params)
-    (params.nil? || params.empty? || params == 'none') ? nil : CreativeCommonsLicense.find_by_uri(params)
+    (params.nil? || params.empty? || params == 'none') ? nil : CreativeCommonsLicense.find_by_name(params)
   end
   
   def author(params)
