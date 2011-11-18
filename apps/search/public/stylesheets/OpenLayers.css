@@ -1,3 +1,5 @@
+/* OpenLayer.js references the OpenLayers.css file */
+
 div.olMap {
   z-index: 0;
   padding: 0 !important;

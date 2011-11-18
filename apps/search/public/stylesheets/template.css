@@ -359,18 +359,20 @@ ul.sub-menu li {
   border: none !important;
 }
 #content-body{
-  background: #FFFFFF url(/images/bg-repeat.jpg) repeat-x;
+  background: #FFFFFF url(/images/bg-repeat.jpg) repeat-x scroll right top;
   text-align:center;
 }
 #content-body .content{
-  padding:10px 10px;
   text-align:left;
-  margin:0 auto;
+  margin: 0 auto;
 }
 #footer-body{
   background: #FFFFFF url(/images/bg-repeat-footer.jpg) repeat-x;
   height:100px;
   text-align:center;
+}
+#content-body, #footer-body{
+  min-width: 1090px;
 }
 #footer-body .footer-content{
   border-top:solid 1px #E2E2E2;
