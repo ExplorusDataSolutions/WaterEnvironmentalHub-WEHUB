@@ -70,9 +70,7 @@
         </tr>
         <tr>
           <td>
-            <div style="text-align: center; color: #7A7A7A;">
-            The WEHUB stores or accesses 2,040 Observation Datasets and over a 100 Base Features Datasets.
-            </div>
+            <%= render 'datasets_counter' %>
           </td>
         </tr>
       </table>
@@ -86,36 +84,7 @@
         <div class="float-left">&nbsp;<span>Latest Data</span></div>
         <div class="clear"></div>
       </div>
-      <div class="clear"></div>
-      <div class="data-container">
-        <div class="float-left">
-          <img src="/images/data-icon1.jpg" title="icon" alt="icon" />
-        </div>
-        <div class="data-text-content">
-          <a href="http://waterenvironmentalhub.ca/catalogue/details/304511d2-a682-11e0-aa6e-12313b015271" style="text-decoration: none;">
-          <span class="slight-head">IP3 (Improved Processes and Parameterization for Prediction in Cold Regions)- Wolf Creek: Alpine Tundra - 3m tower micrometeorological station</span><br />
-          <span class="data-text">
-            Area is a wind swept, high alpine tundra plateau along the drainage divide at the northern edge of the basin..
-          </span>
-          </a>
-        </div>
-        <div class="clear"></div>
-      </div>
-      <div class="clear"></div>
-      <div class="data-container">
-        <div class="float-left">
-          <img src="/images/data-icon2.jpg" title="icon" alt="icon" />
-        </div>
-        <div class="data-text-content">
-          <a href="http://waterenvironmentalhub.ca/catalogue/details/09abdba0-3f7b-11e0-9207-0800200c9a66" style="text-decoration: none;">
-          <span class="slight-head">GeoBase National Road Network Alberta Road Segments</span><br />
-          <span class="data-text">
-            The National Road Network (NRN) product contains quality geospatial data (current, accurate, consistent..
-          </span>
-          </a>
-        </div>
-        <div class="clear"></div>
-      </div>
+      <%= render(:partial => 'datasets_uploaded', :collection => @datasets_latest) %>
       <div class="clear"></div>
       <div class="data-button" onclick="<%= onclick_link_to :controller => 'catalogue', :action => 'browse' %>">
         <span class="button">

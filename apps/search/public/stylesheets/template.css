@@ -795,7 +795,7 @@ ul.sub-menu li {
   padding: 5px;
 }
 .home-top-right .data-container{
-  padding:10px 0 5px 0;
+  padding:10px 0 5px 5px;
   border-bottom:dotted 1px #C4C4C4;
   margin-bottom:10px;
 }
@@ -810,7 +810,7 @@ ul.sub-menu li {
 }
 .home-top-right .data-text-content{
   float:left;
-  width:190px
+  width:185px
 }
 .home-top-right .data-text{
   color:#868686;

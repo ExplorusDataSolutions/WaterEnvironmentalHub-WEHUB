@@ -148,6 +148,14 @@ class CatalogueTranslator
   def api_feature_raw(params)
     get("#{api_uri}/feature?#{params.to_query}")
   end
+
+  def datasets_by_type
+    json_to_mash(get("#{statistics_uri}/datasets_by_type?format=json"))
+  end
+
+  def datasets_last_uploaded
+    json_to_mash(get("#{statistics_uri}/last_uploaded?format=json"))['datasets']
+  end
   
   def get(uri)
     timeout = 500
@@ -161,6 +169,10 @@ class CatalogueTranslator
 
     response.value
     response.body
+  end
+
+  def statistics_uri
+    "#{url}/statistics"
   end
   
   def api_uri

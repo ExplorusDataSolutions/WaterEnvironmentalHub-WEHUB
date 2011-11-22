@@ -6,6 +6,9 @@ class CatalogueController < ApplicationController
   def index
     @breadcrumb = ['Home']
     @main_menu = 'home'
+
+    @datasets_counter = catalogue_instance.datasets_by_type
+    @datasets_latest = catalogue_instance.datasets_last_uploaded
     
     @search = search_instance.do_query('all', nil, nil, nil)
   end
