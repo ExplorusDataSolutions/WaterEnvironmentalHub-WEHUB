@@ -27,6 +27,8 @@ class ToolsController < ApplicationController
   end
   
   def developers
+    redirect_to :controller => 'api' and return
+    
     @id = params[:id]
     @breadcrumb = ['Tools', 'Developers']
     @main_menu = 'we_tools'
