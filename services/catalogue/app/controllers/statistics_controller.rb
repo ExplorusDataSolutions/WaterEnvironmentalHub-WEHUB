@@ -10,7 +10,7 @@ class StatisticsController < ApplicationController
   end
   
   def last_uploaded
-    datasets = Dataset.find(:all, :order => 'updated_at DESC', :limit => 5)
+    datasets = Dataset.find(:all, :order => 'updated_at DESC', :limit => 2)
     
     results = []
     datasets.each do |dataset| 
