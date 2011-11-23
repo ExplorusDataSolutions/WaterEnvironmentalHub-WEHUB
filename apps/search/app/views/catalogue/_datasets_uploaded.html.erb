@@ -1,0 +1,22 @@
+<div class="data-container">
+  <div class="float-left">
+    <img src="/images/data-icon1.jpg" title="icon" alt="icon" />
+  </div>
+  <div class="data-text-content">
+    <a href="<%= url_for :controller => 'catalogue', :action => 'details', :id => datasets_uploaded.uuid %>" style="text-decoration: none;">
+    <span class="slight-head"><%= datasets_uploaded.name %></span><br />
+    <span class="data-text">
+      <% 
+         description = datasets_uploaded.description
+         if description.length > 100
+      %>
+      <%= "#{datasets_uploaded.description[0..100]}..." %>  
+      <% else %>
+        <%= datasets_uploaded.description %>
+      <% end %>
+    </span>
+    </a>
+  </div>
+  <div class="clear"></div>
+</div>
+<div class="clear"></div>
