@@ -4,9 +4,9 @@ class StatisticsController < ApplicationController
 
   def datasets_by_type
     base_count = ActiveRecord::Base.connection.execute("SELECT COUNT(id) FROM datasets WHERE feature_type_id = 1 OR feature_type_id = 2")
-    observation_count = ActiveRecord::Base.connection.execute("SELECT COUNT(id) FROM datasets WHERE feature_type_id = 3 OR feature_type_id = 4")
-
-    respond_with({ :observation => observation_count[0]['count'].to_i, :base => base_count[0]['count'].to_i })
+    all_count = ActiveRecord::Base.connection.execute("SELECT COUNT(id) FROM datasets")
+    
+    respond_with({ :observation => (count_as_i(all_count) - count_as_i(base_count)), :base => count_as_i(base_count) })
   end
   
   def last_uploaded
@@ -18,6 +18,12 @@ class StatisticsController < ApplicationController
     end
     
     respond_with(:datasets => results)
+  end
+  
+  private
+  
+  def count_as_i(query)
+    query[0]['count'].to_i
   end
   
 end
