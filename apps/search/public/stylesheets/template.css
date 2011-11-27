@@ -1359,6 +1359,9 @@ ul.sub-menu li {
     height: 28px;
     width: 117px; 
 }
+#box_display input {
+  width: 60px;
+}
 #search_submit, #dataset_submit {
   visibility: hidden;
 }
