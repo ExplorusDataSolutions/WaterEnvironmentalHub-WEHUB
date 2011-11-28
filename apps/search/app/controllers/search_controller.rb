@@ -1,6 +1,8 @@
 class SearchController < ApplicationController
 
-  caches_page :index, :cache_path => Proc.new { |controller| controller.params }
+  caches_action :index, 
+    :if => Proc.new { (params[:datasets].nil? && params[:type].nil?) || (params[:datasets] == 'public' && params[:type] == 'simple') || (params[:datasets].nil? && params[:type] == 'simple') || (params[:type].nil? && params[:datasets] == 'public') }, 
+    :cache_path => Proc.new { "?keywords=#{params[:keywords] ? params[:keywords] : (params[:query] ? params[:query] : 'all')}&page=#{params[:page] ? params[:page] : 0}" }
   
   def index
     @breadcrumb = ['Discover Our Data', 'Search']
