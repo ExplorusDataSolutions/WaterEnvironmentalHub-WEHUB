@@ -92,6 +92,8 @@
   <%= render(:partial => '/shared/dataset', :collection => @search.results) || render('/shared/no_results') %>
 
   <% if !@search.results.empty? %>
+  
+  <div class="clear height-10"></div>
 
   <%= render '/shared/pagination' %>
 

@@ -58,10 +58,27 @@
           <td align="center" colspan="2">
             <h2>Search for water and environmental data</h2>
             <div class="home-search-text-container">
-            <%= form_for :search, :url => { :controller => 'search' } do |f| %>
+            <script>
+              $('document').ready(function() {
+                function sendToSearch() {
+                  window.location = $('form').attr('action') + '/?' + $('form [name=query]').serialize();
+                }
+                $('.home-search-button').click(function() {
+                  sendToSearch();
+                });
+                $('form input').keypress(function(e) {
+                  if(e.which == 13) {
+                    e.preventDefault();
+                    sendToSearch()
+                    return false;
+                  }
+                });              
+              });
+            </script>
+            <%= form_for :search, :url => { :controller => 'search' }, :html => { :method => :get } do |f| %>
             <div class="home-search-text-left"></div>             
             <div class="home-search-text-center"><%= f.text_field :query, :name => 'query' %></div>
-            <div class="home-search-button" onclick="$('form').submit();"><%= f.submit :search, :name => 'search' %></div>
+            <div class="home-search-button""><%= f.submit :search, :name => 'search' %></div>
             <% end %>
             </div>
             <div class="clear"></div>

@@ -16,7 +16,7 @@
       $('[name=query]').val(keywords);
     }
 
-    function setFormAction() {
+    function buildFormAction() {
       var datasets = []
       $('[name=datasets]').each(function(i,e) { 
         if ($(e).is(':checked')) {
@@ -33,12 +33,24 @@
         params += '&from=' + $('[name=date_start]').val() + '&to=' + $('[name=date_end]').val()
         params += '&south=' + $('[name="bounding_box[south]"]').val() + '&east=' + $('[name="bounding_box[east]"]').val() + '&north=' + $('[name="bounding_box[north]"]').val() + '&west=' + $('[name="bounding_box[west]"]').val();
       }
-      $('form').attr('action', action + params);
+      
+      return action + params;
+    }
+
+    function setFormAction() {
+      $('form').attr('action', buildFormAction());
     }
 
     $('.search-button').click(function() {
-      setFormAction()
-      $('form').submit();
+      window.location = buildFormAction();
+    });
+    
+    $('form input').keypress(function(e) {
+      if(e.which == 13) {
+        e.preventDefault();
+        window.location = buildFormAction();
+        return false;
+      }
     });
 
     setFormAction();
@@ -89,7 +101,7 @@
   });
 </script>
 
-<%= form_for :search, :url => { :datasets => 'public' } do |f| %>
+<%= form_for :search, :url => { :datasets => 'public' }, :html => { :method => :get } do |f| %>
 <div class="search-box">
 	<div class="clear height-10"></div>
 	<div class="text-shade-left"></div>
