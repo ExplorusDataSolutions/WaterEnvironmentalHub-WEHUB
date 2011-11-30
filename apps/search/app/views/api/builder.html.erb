@@ -61,14 +61,14 @@
       
       map.addLayers([gphy]);
       
-      map.setCenter(new OpenLayers.LonLat(-115.092773, 55.128649), 4);
+      WEHub.OpenLayers.setCenter(map, -114.922485, 56.400224, 4);
 
       var boxControl = new OpenLayers.Control();
       OpenLayers.Util.extend(boxControl, {
         draw: function () {
           this.box = new OpenLayers.Handler.Box(boxControl, { "done": function(bounds) { 
-            var leftBottom = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom));
-            var rightTop = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top));
+            var leftBottom = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom)).transform(map.getProjectionObject(), new OpenLayers.Projection('EPSG:4326'));
+            var rightTop = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top)).transform(map.getProjectionObject(), new OpenLayers.Projection('EPSG:4326'));;
             setBoundingBox(rightTop.lat, rightTop.lon, leftBottom.lat, leftBottom.lon);
           }});
         }
