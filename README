@@ -21,5 +21,3 @@ Ports:
  services/catalogue on 3000
  apps/search on 80
  EngineY on 3002
-
-Tamara is adding a modifcation
