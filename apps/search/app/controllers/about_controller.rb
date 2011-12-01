@@ -37,7 +37,7 @@ class AboutController < ApplicationController
   end
 
   def community
-    @breadcrumb = ['Learn About Us', 'The Community']
+    @breadcrumb = ['Learn About Us', 'Our Users']
     @main_menu = 'about'  
   end
   
