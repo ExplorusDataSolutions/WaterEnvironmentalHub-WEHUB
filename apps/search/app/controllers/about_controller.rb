@@ -57,11 +57,6 @@ class AboutController < ApplicationController
     @main_menu = 'resources'
   end
 
-  def blog
-    @breadcrumb = ['Use Our Resources', 'Blog']
-    @main_menu = 'resources'
-  end
-
   def links
     @breadcrumb = ['Use Our Resources', 'Links']
     @main_menu = 'resources'
