@@ -28,7 +28,8 @@
     <%#Focus the cursor on the first form input %>
     <script>
       $(document).ready(function() {
-        $("input[type=text]:first").focus();
+        $('[name=query]').focus(function() { if (this.value == 'all') { $(this).val(''); }});
+        $('[name=query]').blur(function() { if (this.value == '') { $(this).val('all'); }});
         
         $('#loading-dialog')
         .hide()  // hide it initially
@@ -123,7 +124,8 @@
               <ul style="display: none;">
                 <li><%= link_to 'Browse', {:controller => 'catalogue', :action =>  'browse'} %></li>
                 <li><%= link_to 'Search', {:controller => 'search'}%></li>
-                <li><%= link_to 'How To Participate', {:controller => 'catalogue', :action => 'participate'} %></li>
+                <li><%= link_to 'WEHUB Data Platform', {:controller => 'catalogue', :action => 'platform'} %></li>
+                <li><%= link_to 'How To Participate', {:controller => 'catalogue', :action => 'participate'} %></li>                
               </ul>              
             </li>
 <%
