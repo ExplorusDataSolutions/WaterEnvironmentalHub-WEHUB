@@ -30,7 +30,7 @@
     <% 
     if @search.results && !@search.results.empty? 
      @search.results.each_with_index do |result, index| 
-       if result.coordinates
+       if result && result.coordinates
          coords = result.coordinates.split(',') 
          if coords.length == 2 && (coords[0].scan(/ /).empty? || coords[1].scan(/ /).empty?)
          %>
