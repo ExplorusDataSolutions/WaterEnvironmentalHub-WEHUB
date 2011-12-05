@@ -19,6 +19,13 @@ class CatalogueController < ApplicationController
     
     render 'about/participate'  
   end
+
+  def platform
+    @breadcrumb = ['Discover Our Data', 'Data Platform']
+    @main_menu = 'we_catalogue'
+    
+    render 'about/platform'
+  end
   
   def search
   end
