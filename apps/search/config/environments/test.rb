@@ -32,4 +32,11 @@ Catalogue::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+  
+  # End points for our various dependencies
+  config.geoserver_address = 'http://localhost:8080'   
+  config.enginey_address = 'http://localhost:3002'
+  config.geonetwork_address = 'http://localhost:9090'
+  config.catalogue_address = 'http://localhost:3000'
+    
 end
