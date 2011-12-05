@@ -126,12 +126,18 @@ $(document).ready(function() {
 %>
 
   function loadMap() {
-    map = new OpenLayers.Map('map');
+    var options = {
+      displayProjection: new OpenLayers.Projection("EPSG:4326"),
+      units: "m",
+      numZoomLevels: 22,
+      maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34)
+    };  
+    map = new OpenLayers.Map('map', options);
     map.addControl(new OpenLayers.Control.LayerSwitcher());
     
-    var gphy = new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP});
-    var gmap = new OpenLayers.Layer.Google("Google Streets", {numZoomLevels: 20});
-    var ghyb = new OpenLayers.Layer.Google("Google Hybrid", {type: G_HYBRID_MAP, numZoomLevels: 20});
+    var gphy = new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP, sphericalMercator: true, numZoomLevels: 22});
+    var gmap = new OpenLayers.Layer.Google("Google Streets", {numZoomLevels: 22});
+    var ghyb = new OpenLayers.Layer.Google("Google Hybrid", {type: G_HYBRID_MAP, numZoomLevels: 22});
     var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, numZoomLevels: 22});
 
     map.addLayers([gphy, gmap, ghyb, gsat]);
@@ -155,13 +161,16 @@ $(document).ready(function() {
 
     markers.addMarker(marker);
   }
-  
+        
   function setLayer(name, uuid){
-    var datasetLayer = new OpenLayers.Layer.WMS(name,  "http://50.19.106.48:8080/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=" + uuid, 
-      { "transparent":"true",
-        "layers":name,
-        "format":"image/png" },
-        { "reproject":"false" });
+    var datasetLayer = new OpenLayers.Layer.WMS(name, <%= "'#{Rails.application.config.geoserver_address}/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=gn:'".html_safe %> + uuid,
+      { transparent: true,
+        layers: name,
+        format: 'image/png',
+        srs: 'EPSG:4326'
+      },
+      { reproject: false }
+    );
     map.addLayer(datasetLayer);
   }
   

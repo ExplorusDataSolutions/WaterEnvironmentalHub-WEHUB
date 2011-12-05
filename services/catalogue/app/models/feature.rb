@@ -68,9 +68,7 @@ class Feature
   end
     
   def latitude_longitude
-    if is_data_source?('geoserver')
-      geoserver_translator.coordinates(uuid)
-    elsif is_data_source?('catalogue')    
+    if is_data_source?('catalogue')    
       latitude = ''
       longitude = ''
 
@@ -113,7 +111,9 @@ class Feature
   end
 
   def bounding_box
-    if is_data_source?('catalogue')
+    if is_data_source?('geoserver')
+      geoserver_translator.bounding_box(uuid)
+    elsif is_data_source?('catalogue')
       begin
         first_row = execute("SELECT * FROM #{tablename} LIMIT 1")[0]
 

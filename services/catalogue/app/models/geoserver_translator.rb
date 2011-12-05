@@ -1,5 +1,6 @@
 require 'net/http'
 require 'active_support/core_ext'
+require 'rexml/document'
 
 class GeoServerTranslator
   attr_accessor :server_address, :timeout, :cache_directory
@@ -22,10 +23,27 @@ class GeoServerTranslator
     data
   end
   
-  def coordinates(uuid)
-    hash = get_features(uuid)
-    coords = hash['features'][0]['geometry']['coordinates'].join(',').split(',')
-    "#{coords[1]},#{coords[0]}"
+  def bounding_box(uuid)
+    doc = REXML::Document.new(http_get("GetCapabilities"))
+    doc.elements.each('WFS_Capabilities/FeatureTypeList/FeatureType') do |feature|
+
+      element_uuid = feature.elements['Name'].text
+
+      if !element_uuid.scan(':').empty?
+        element_uuid = element_uuid.split(':')[1] 
+      end
+
+      if element_uuid && element_uuid == uuid
+        bbox = feature.elements['LatLongBoundingBox']
+        return { 
+          :north => bbox.attributes['maxy'],
+          :east => bbox.attributes['maxx'],
+          :south => bbox.attributes['miny'],
+          :west => bbox.attributes['minx'],
+        }
+      end  
+
+    end
   end
     
   def feature_fields(uuid)
