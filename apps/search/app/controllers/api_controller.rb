@@ -31,7 +31,11 @@ class ApiController < ApplicationController
     elsif ((date_start && date_end) && !(date_start.empty? && date_end.empty?)) || ((north && east && south && west) && !(north.empty? && east.empty? && south.empty? && west.empty))
       search = search_instance.do_query_advanced('all', date_start, date_end, south, east, north, west)
       @datasets = search.results
-      @datasets.sort_by! { |dataset| dataset.name } unless @datasets.nil?
+      if @datasets.nil? || @datasets.empty?
+        render :status => 500 and return
+      else
+        @datasets.sort_by! { |dataset| dataset.name } 
+      end
     end
     respond_with(@datasets) do |format|
       format.html { render :partial => 'datasets' }

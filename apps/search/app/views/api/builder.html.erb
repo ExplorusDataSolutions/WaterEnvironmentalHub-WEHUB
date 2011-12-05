@@ -28,13 +28,19 @@
       $('[name=feature_type]').val(0)
       var url = "<%= url_for :controller => 'api', :action => 'datasets', :only_path => false %>" + "?" + "key=<%= current_user.api_key %>" + "&" + $('form').serialize().match(/(start.*south=[^&]*)/)[1];
 
-      $.get((url + "&format=html"), function(data) { 
-        var response = $('#search_builder_response');
-        response.find('a').attr('href', (url + "&format=xml")).text((url + "&format=xml"))
-        response.show('fast');
-        secondaries.removeAttr('disabled');
-        $('[name=datasets]').html($(data).html());
-        $('[name=datasets]').focus();
+      $.ajax({
+        url: (url + "&format=html"), 
+        success: function(data) { 
+          var response = $('#search_builder_response');
+          response.find('a').attr('href', (url + "&format=xml")).text((url + "&format=xml"))
+          response.show('fast');
+          secondaries.removeAttr('disabled');
+          $('[name=datasets]').html($(data).html());
+          $('[name=datasets]').focus();
+        },
+        error: function() { 
+          WEHub.modal("We're Sorry", "No data could be retrieved. Try making a new request."); 
+        }
       });
 
     });
@@ -86,7 +92,11 @@
     }
 
     $('#bbox_selector').click(function() {
-      WEHub.dialog("Bounding box selector", 'Select a bounding box <div id="map" style="width:565px; height:320px"></div>');
+      WEHub.modal("Bounding box selector", 'Select a bounding box <div id="map" style="width:565px; height:320px"></div>');
+      $("#dialog-modal").dialog('option', 'buttons', [{
+        text: "Ok",
+        click: function() { $(this).dialog("close"); }
+      }]);
       loadMap();
     });    
   });
@@ -100,7 +110,7 @@ form .round div {
   padding-top: 10px;
 }
 #advanced_search_selector input {
-  width: 70px;
+  width: 80px;
 }
 #builder_result, #response div {
   padding-top: 10px;

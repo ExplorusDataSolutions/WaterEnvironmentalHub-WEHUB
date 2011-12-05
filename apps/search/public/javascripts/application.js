@@ -16,10 +16,10 @@ WEHub.modal = function(title, message) {
   modal.html(message);
   modal.dialog({
     zIndex: 2000, /* override Open Layers */
-    height: 200,
+    minHeight: 200,
     width: 600,
     title: title,
-	modal: true
+  	modal: true
   });
 }
 
@@ -80,7 +80,7 @@ WEHub.OpenLayers.setCenter = function(map, lon, lat, zoomLevel) {
   map.setCenter(new OpenLayers.LonLat(lon, lat).transform(
     new OpenLayers.Projection("EPSG:4326"),
     map.getProjectionObject()
-  ), 3);
+  ), zoomLevel);
 }
 
 function add_new_dataset(){
