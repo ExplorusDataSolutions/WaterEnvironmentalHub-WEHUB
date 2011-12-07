@@ -47,23 +47,40 @@
         $("a", ".button").click(function() { return false; });
       });
     </script>
-<%
-=begin %>
-    <script type="text/javascript">
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-19174368-1']);
-      _gaq.push(['_setDomainName', 'none']);
-      _gaq.push(['_setAllowLinker', true]);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
+    <script>
+      $('document').ready(function() {
+      
+        var container = $('#twitter-ticker');
+        function updateMessage(text) {
+          container.fadeOut('slow', function() { container.html(text).fadeIn('slow'); });
+        }
+        setTimeout(function() { 
+          $.ajax({
+            url: '<%= url_for :controller => "twitter" %>',
+            global: false,
+            success: function(data) {
+              if (data && data.length != 0) {
+                var messages = []
+                for (var i=0 ; i < data.length ; i++) {
+                  messages.push(data[i].text);
+                }
+                                
+                updateMessage(messages[0]);
+                
+                var count = 1;
+                setInterval(function() {
+                  if (count == data.length) {
+                    count = 0;
+                  }
+                  updateMessage(messages[count])
+                  count++;
+                }, 10000);
+              }
+            }
+          });
+        }, 2000);
+      });
     </script>
-<%
-=end %>    
   </head>
   <body>
     <div id="loading-dialog" style="display: none;"></div>    
@@ -71,7 +88,7 @@
     <div id="main-body">
       <div id="header-body" class="full-width">
 
-        <%= render 'shared/user_dashboard' %>
+        <%= render 'shared/user_dashboard' -%>
 
         <div class="clear"></div>
         <a href="<%= url_for :root %>"><div class="header-logo"></div></a>
@@ -204,7 +221,8 @@
             <span class="braedcrumb-sep">></span>
               <% end %>
             <% end %>
-          </div>          
+            <div id="twitter-ticker"></div>
+          </div>
           <div class="clear"></div>
           <% end%>
           <div class="yield-body"><%= yield %></div>
@@ -239,7 +257,21 @@
       </div>
       <div class="clear"></div>
     </div>
-    <%= render "/shared/dialog" %>
+    <%= render "/shared/dialog" -%>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-19174368-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
   </body>
 </html>
 <% end %>
