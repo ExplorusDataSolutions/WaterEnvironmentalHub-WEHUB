@@ -58,6 +58,7 @@
           $.ajax({
             url: '<%= url_for :controller => "twitter" %>',
             global: false,
+            dataType: 'json',
             success: function(data) {
               if (data && data.length != 0) {
                 var messages = []
