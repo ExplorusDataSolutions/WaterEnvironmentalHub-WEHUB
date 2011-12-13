@@ -21,7 +21,9 @@
       <span class="head">This group is <%= group.private? ? 'private' : 'public' %></span>          
     </div>
     <div>
-      <%= link_to 'Edit group', { :controller => 'groups', :action => 'edit', :id => group.id } %>
+      <% if group.role && !group.role.scan(/admin/).empty? %>
+        <%= link_to 'Edit group', { :controller => 'groups', :action => 'edit', :id => group.id } %>
+      <% end %>
 	  </div>
 	  <div class="clear"></div>
   </div>

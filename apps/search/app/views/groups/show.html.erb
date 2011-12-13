@@ -1,30 +1,31 @@
 <script>
   $(document).ready(function() {
     function eventId(event) { return event.target.id }
-    $('#create-group, #my-groups, #all-groups').click(function(event) {
+    $('#create, #mine, #all').click(function(event) {
       event.preventDefault();
       var selectedClassName = 'selected';
       $('.share-middle-filter').children().removeClass(selectedClassName)
       switch (eventId(event))
       {
-        case 'create-group': 
+        case 'create': 
           $('#edit-group-form').show();
           $('#my-group-list, #all-group-list').hide();
-          $('#create-group').addClass(selectedClassName);
+          $('#create').addClass(selectedClassName);
           break;
-        case 'my-groups': 
+        case 'mine': 
           $('#my-group-list').show();
           $('#edit-group-form, #all-group-list').hide();
-          $('#my-groups').addClass(selectedClassName);
+          $('#mine').addClass(selectedClassName);
           break;
-        case 'all-groups': 
+        case 'all': 
           $('#all-group-list').show();
           $('#edit-group-form, #my-group-list').hide();
-          $('#all-groups').addClass(selectedClassName);
+          $('#all').addClass(selectedClassName);
         break;
         default:
       }
     });
+    $(location.hash ? location.hash : '#mine').click();
   });
 </script>
 
@@ -41,9 +42,9 @@
 	<div class="profile-content-container">
 		<div class="clear"></div>
 		<div class="share-middle-filter">
-			<a href="#" class="selected" id="all-groups">All Groups</a>
-			<a href="#" id="my-groups">My Groups</a>
-			<a href="#" id="create-group">Create Group</a>
+			<a href="#all" class="selected" id="all">All Groups</a>
+			<a href="#mine" id="mine">My Groups</a>
+			<a href="#create" id="create">Create Group</a>
 		</div>
 		<div class="clear"></div>
     <div id="all-group-list">

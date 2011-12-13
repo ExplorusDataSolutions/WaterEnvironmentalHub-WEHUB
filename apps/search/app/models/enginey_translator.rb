@@ -156,6 +156,11 @@ class EngineYTranslator
     members['hash']['items'] unless members.nil?
   end
   
+  def group_role(group_id)
+    role = json_to_mash(post_json("#{groups_uri}/role", { :group_id => group_id, :format => 'json' }))
+    role['role'] unless role.nil?
+  end
+  
   def membership_create(params)
     post_json("#{memberships_uri}/create", params)
   end

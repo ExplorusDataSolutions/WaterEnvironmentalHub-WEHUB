@@ -13,6 +13,11 @@ class GroupsController < ApplicationController
       end
     end
 
+    role = socialnetwork_instance.group_role(params[:id])
+    if role.nil? || role[0].scan(/admin/).empty?
+      redirect_to :action => 'show', :anchor => 'mine'
+    end
+    
     @breadcrumb = ['Groups', 'Edit']
     @main_menu = 'we_community'
 
@@ -59,10 +64,19 @@ class GroupsController < ApplicationController
     @my_groups = socialnetwork_instance.user_groups(current_user.id)
     all_groups = socialnetwork_instance.groups_all
     if @my_groups
-      @groups = ((@my_groups | all_groups) - @my_groups) 
+      @groups = ((@my_groups | all_groups) - @my_groups)
     else
       @groups = all_groups
     end
+    
+    @my_groups.each_with_index do |g, i|
+      role = socialnetwork_instance.group_role(g.id)
+      if !role.nil?
+        @my_groups[i] = @my_groups[i].merge({ :role => socialnetwork_instance.group_role(g.id)[0] })
+      end
+    end unless @my_groups.nil?
+    @groups
+
   end
 
   def join
@@ -71,7 +85,7 @@ class GroupsController < ApplicationController
       expire_fragment groups_key
     rescue
     end
-    redirect_to :action => 'show'
+    redirect_to :action => 'show', :anchor => 'mine'
   end
 
 end
