@@ -25,7 +25,7 @@
         default:
       }
     });
-    $(location.hash ? location.hash : '#mine').click();
+    if (location.hash) { $(location.hash).click(); }
   });
 </script>
 
