@@ -2,22 +2,22 @@ class GroupsController < ApplicationController
 
   before_filter :verify_logged_in
   
-  caches_action :show, :cache_path => :groups_key.to_proc, :expires_in => 30.minutes
+  caches_action :show, :cache_path => :groups_key.to_proc, :expires_in => 5.minutes
   
   def edit
-    if request.post?
-      begin
-        socialnetwork_instance.group_update(params)
-        expire_fragment groups_key
-      rescue
-      end
-    end
-
     role = socialnetwork_instance.group_role(params[:id])
     if role.nil? || role[0].scan(/admin/).empty?
       redirect_to :action => 'show', :anchor => 'mine'
     end
     
+    if request.post?
+      begin
+        expire_fragment groups_key
+        socialnetwork_instance.group_update(params)
+      rescue
+      end
+    end
+
     @breadcrumb = ['Groups', 'Edit']
     @main_menu = 'we_community'
 

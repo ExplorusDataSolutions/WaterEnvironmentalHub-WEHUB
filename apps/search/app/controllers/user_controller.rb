@@ -57,7 +57,9 @@ class UserController < ApplicationController
             @user.errors.add_to_base('You must agree to the WEHUB\'s Privacy Statment and Terms of Use.')          
           else
             @user = socialnetwork_instance.register(params[:user])
+            socialnetwork_instance.sign_out
 
+            @user = socialnetwork_instance.sign_in(params[:user][:login], params[:user][:password])
             session[:user] = @user
             set_wehub_cookie(@user)
             
