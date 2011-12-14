@@ -57,6 +57,7 @@ class UserController < ApplicationController
             @user.errors.add_to_base('You must agree to the WEHUB\'s Privacy Statment and Terms of Use.')          
           else
             @user = socialnetwork_instance.register(params[:user])
+
             session[:user] = @user
             set_wehub_cookie(@user)
             
@@ -65,8 +66,8 @@ class UserController < ApplicationController
             end
           end
         end
-      rescue Net::HTTPServerException => ex
-        @user.errors.add_to_base('User could not be authenticated. Check your Login and Password')
+      rescue Exception => ex
+        @user.errors.add_to_base('Username or email address have already been taken.')
       end
     else
       @breadcrumb     = ['Registration']
