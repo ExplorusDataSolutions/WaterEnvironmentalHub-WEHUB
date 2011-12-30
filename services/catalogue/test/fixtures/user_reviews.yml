@@ -1,0 +1,33 @@
+---
+user_review_00001:
+  created_at: 2011-11-27 18:36:13.000000000Z
+  comments: Great data
+  id: 1
+  rating: 5
+  updated_at: 2011-11-27 18:36:13.000000000Z
+  user_id: 1
+  uuid: ed8fb7c0-8e59-4884-a422-a8a3be49982b
+user_review_00002:
+  created_at: 2011-12-30 18:36:13.000000000Z
+  comments: OK data, but messy
+  id: 2
+  rating: 3
+  updated_at: 2011-12-30 18:36:13.000000000Z
+  user_id: 2
+  uuid: ed8fb7c0-8e59-4884-a422-a8a3be49982b
+user_review_00003:
+  created_at: 2011-10-10 18:36:13.000000000Z
+  comments: !!null 
+  id: 3
+  rating: 1
+  updated_at: 2011-10-10 18:36:13.000000000Z
+  user_id: 3
+  uuid: ed8fb7c0-8e59-4884-a422-a8a3be49982b
+user_review_00004:
+  created_at: 2011-12-30 18:36:13.000000000Z
+  comments: !!null 
+  id: 4
+  rating: 0
+  updated_at: 2011-12-30 18:36:13.000000000Z
+  user_id: 4
+  uuid: ed8fb7c0-8e59-4884-a422-a8a3be49982b
