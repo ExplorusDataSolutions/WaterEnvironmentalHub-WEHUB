@@ -4,7 +4,7 @@ class UserController < ApplicationController
   respond_to :html, :only => [:sign_in, :groups, :register]
   respond_to :json, :except => :sign_in
 
-  before_filter :verify_logged_in, :only => [:groups, :profile, :save, :password]
+  before_filter :verify_logged_in, :only => [:groups, :profile, :save, :password, :reviews]
   
   #Note: the if statement in the  caches_action works around a bug where Rails does not cache the content type
   caches_action :recently_viewed, :if => Proc.new { |c| c.headers["Content-Type"] = 'application/json; charset=UTF-8' }, :cache_path => :recently_viewed_key.to_proc, :expires_in => 30.minutes
@@ -204,6 +204,15 @@ class UserController < ApplicationController
       end
     end
     render :nothing => true and return
+  end
+  
+  def reviews
+    uuids = catalogue_instance.find_user_reviews(current_user.id)
+    if uuids
+      uuids = uuids['strings']
+    end
+    
+    render :json => uuids
   end
         
 end

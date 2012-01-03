@@ -18,21 +18,35 @@
         ids.push('<%= @dataset.uuid %>');
         $.post("<%= url_for :controller => 'user', :action => 'modify_collection' %>", { ids: ids }, function(data) { location.reload(); });
       });
-      $('#add-review').show();
-      $('#add-review').click(function() {
-        
-        WEHub.dialog("Review this dataset", $('.new-comment:first').html());
-        $('#dialog-modal .rating-container').rating();
-        $("#dialog-modal").dialog('option', 'buttons', [{
-          text: "Submit",
-          click: function() { 
-            $.post("<%= url_for :controller => 'reviews', :action => 'create', :id => @dataset.id %>", $(this).find('form').serialize(), function(data) { location.reload(); });
-          }
-        }]);
-
+      
+      $.ajax({
+        url: "<%= url_for :controller => 'user', :action => 'reviews', :id => current_user.id %>",
+        cache: false,
+        dataType: 'json',
+        global: false,
+        success: function(data) {
+          if (data) {
+            for (var i=0 ; i < data.length ; i++) {
+              if (data[i] === '<%= @dataset.uuid %>') {
+               return;
+              }
+            }
+          }  
+          $('#add-review').show();
+          $('#add-review').click(function() {
+            WEHub.dialog("Review this dataset", $('.new-comment:first').html());
+            $('#dialog-modal .rating-container').rating();
+            $("#dialog-modal").dialog('option', 'buttons', [{
+              text: "Submit",
+              click: function() { 
+                $.post("<%= url_for :controller => 'reviews', :action => 'create', :id => @dataset.id %>", $(this).find('form').serialize(), function(data) { location.reload(); });
+                $(this).dialog("close");              
+              }
+            }]);
+          });
+        }
       });
     }
-
   });
 </script>
 <style>

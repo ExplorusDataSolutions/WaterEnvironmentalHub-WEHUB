@@ -97,6 +97,10 @@ class CatalogueTranslator
     xml_to_mash(get("#{user_reviews_uri}?id=#{uuid}&format=xml"))['user_reviews']
   end
   
+  def find_user_reviews(user_id)
+    xml_to_mash(get("#{url}/user/reviews?id=#{user_id}&format=xml"))
+  end
+  
   def create_review(params)
     response = post_json("#{user_reviews_uri}?format=json", :review => params)
     json_to_mash(response)['user_review'] unless response.nil?
