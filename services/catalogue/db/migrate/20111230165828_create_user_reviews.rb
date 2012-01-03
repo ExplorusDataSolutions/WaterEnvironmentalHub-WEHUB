@@ -2,7 +2,7 @@ class CreateUserReviews < ActiveRecord::Migration
   def self.up
     create_table :user_reviews do |t|
       t.integer :user_id, :null => false
-      t.string :uuid
+      t.string :uuid, :null => false
       t.integer :rating, :default => 0
       t.text :comments
       
