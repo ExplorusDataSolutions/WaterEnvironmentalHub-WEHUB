@@ -63,6 +63,17 @@ class UserController < ApplicationController
 
     respond_with(@datasets)
   end
+  
+  def reviews
+    @reviews = UserReview.find_all_by_user_id(params[:id])
+    
+    uuids = []
+    @reviews.each do |review|
+      uuids.push(review.uuid)
+    end
+    
+    respond_with(uuids)    
+  end
 
   def search
     @datasets = []
