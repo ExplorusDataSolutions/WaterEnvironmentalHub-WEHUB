@@ -612,6 +612,8 @@ ul.sub-menu li {
   border-bottom:dotted 1px #DCDCDC;
   padding:0 0 5px 0;
   margin:0 0 10px 0;
+}
+.sub-content-right .contents{
   cursor: pointer;
 }
 .sub-content-right h2, #comments h2{
@@ -1105,21 +1107,7 @@ ul.sub-menu li {
   margin:0;
   padding:0;
 }
-/*
-.comment-box{
-  height:155px;
-  background:#E2E1DD;
-  margin:21px 0;
-  padding:10px 12px 0 22px;
-  
-}
-.comment-box-textarea{
-  float:left;
-  margin:5px 10px 10px 0;
-  padding:1px;
-  width:568px;
-  height:68px;
-  background:#FFFFFF;
+#comments {
   -moz-border-radius-bottomleft:5px;
   -moz-border-radius-bottomright:5px;
   -moz-border-radius-topleft:5px;
@@ -1132,42 +1120,11 @@ ul.sub-menu li {
   border-bottom-right-radius: 5px;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
+  background-color: #F7F4F4;
+  padding: 15px 10px;
 }
-.comment-box-textarea textarea{
-  width:568px;
-  height:67px;
-  border:none;
-}
-.comment-box-submit{
-  margin:40px 0 0 0;
-  float:left;
-}
-.comment-container{
-  margin:25px 0;
-}
-.each-comment-box{
-  border:solid 1px #E1E2DD;
-  font-size:12px;
-  color:#373634;
-  padding:10px 15px;
-  margin:10px 0 0 0;
-  -moz-border-radius-bottomleft:5px;
-  -moz-border-radius-bottomright:5px;
-  -moz-border-radius-topleft:5px;
-  -moz-border-radius-topright:5px;
-  -webkit-border-bottom-left-radius: 5px;
-  -webkit-border-bottom-right-radius: 5px;
-  -webkit-border-top-left-radius: 5px;
-  -webkit-border-top-right-radius: 5px;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-}
-*/
-/*we catalogue end*/
 
-/*
+ /*
  * Login Style
  */
 
