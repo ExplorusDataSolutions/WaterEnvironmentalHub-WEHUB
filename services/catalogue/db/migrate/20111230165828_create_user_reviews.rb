@@ -1,10 +1,10 @@
 class CreateUserReviews < ActiveRecord::Migration
   def self.up
     create_table :user_reviews do |t|
-      t.integer :user_id
+      t.integer :user_id, :null => false
       t.string :uuid
       t.integer :rating, :default => 0
-      t.string :comments
+      t.text :comments
       
       t.timestamps
     end
