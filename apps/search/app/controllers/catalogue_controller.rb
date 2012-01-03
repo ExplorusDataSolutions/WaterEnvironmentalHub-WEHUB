@@ -37,15 +37,6 @@ class CatalogueController < ApplicationController
     
     @breadcrumb = ['Discover Our Data', 'This Dataset']
     @main_menu = 'we_catalogue'
-    
-    @rating = (4*138)/5; 
-  end
-  
-  def comment    
-    @breadcrumb = ['Water Data Catalogue', 'Detail View']
-    @main_menu = 'we_catalogue'
-    
-    @rating = (4*138)/5; 
   end
   
   def browse
