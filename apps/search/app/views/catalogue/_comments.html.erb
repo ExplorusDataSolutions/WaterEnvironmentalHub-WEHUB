@@ -6,9 +6,11 @@ $('document').ready(function() {
     global: false,
     cache: false,      
     success: function(data) {
-      $('#comments .reviews').html(data).show();
-      $('.rating-container').rating({ displayOnly: true });
-      $('#comments').fadeIn('slow');
+      if (data && data.length > 0) {
+        $('#comments .reviews').html(data).show();
+        $('#comments .rating-container').rating({ displayOnly: true });
+        $('#comments').fadeIn('slow');
+      }
     }
   });
 
@@ -24,10 +26,18 @@ $('document').ready(function() {
 
   <div class="reviews">
   </div>
-  
+
+<%
+=begin %>  
   <div>
     <span class="button">
-    <button>Show more...</button>
+    <button style="width: 100%;">Show more...</button>
     </span>     
   </div>
+<%
+=end %>
+</div>
+
+<div class="new-comment" style="display: none;">
+  <%= render "reviews/new" -%>
 </div>

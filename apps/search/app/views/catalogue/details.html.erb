@@ -17,7 +17,20 @@
         var ids = [];
         ids.push('<%= @dataset.uuid %>');
         $.post("<%= url_for :controller => 'user', :action => 'modify_collection' %>", { ids: ids }, function(data) { location.reload(); });
-      });      
+      });
+      $('#add-review').show();
+      $('#add-review').click(function() {
+        
+        WEHub.dialog("Review this dataset", $('.new-comment:first').html());
+        $('#dialog-modal .rating-container').rating();
+        $("#dialog-modal").dialog('option', 'buttons', [{
+          text: "Submit",
+          click: function() { 
+            $.post("<%= url_for :controller => 'reviews', :action => 'create', :id => @dataset.id %>", $(this).find('form').serialize(), function(data) { location.reload(); });
+          }
+        }]);
+
+      });
     }
 
   });
@@ -236,9 +249,7 @@ $(document).ready(function() {
     <a href="#" onclick="history.go(-1);return false;">Back to Search Results</a>
 </div>
 <div class="top-container-tab-body" >
-  <div class="top-container-tab">
-    + Comments
-  </div>
+  <div class="top-container-tab" id="add-review" style="display: none;">+ Comments</div>
   <div class="top-container-tab" id="my-collection" style="display: none;">+ My collection</div>
   <div class="top-container-tab tab-download">
     <div class="float-left">Download</div>
@@ -454,16 +465,15 @@ $(document).ready(function() {
       <div class="clear"></div>
 <% end %>      
       
-      <div class="clear height-25"></div>
-      
-      <%= render 'comments' %>
-      
       <div class="clear height-25"></div>      
     </div>
   </div>
   <div class="sub-content-right">
-    <div class="right-content">
-      <%= render 'shared/right_panel' %>
-    </div>    
+    <%= render 'shared/right_panel' %>
+  </div>    
 
-    <div class="clear"></div>
+  <div class="clear"></div>
+    
+  <%= render 'comments' %>
+  
+</div>

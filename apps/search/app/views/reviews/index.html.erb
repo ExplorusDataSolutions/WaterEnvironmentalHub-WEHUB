@@ -1,11 +1,13 @@
-<% @reviews.each do |review| %>
+<% if @reviews %>
+  <% @reviews.each do |review| %>
 <div class="review">
   <section class="rating-container">
   <% 5.times do |i| %>
-    <%= radio_button("review[#{review.id}]", 'rating', i, { :checked => (i == review.rating - 1) }) %>
+    <%= radio_button("review[#{review.id}]", 'rating', i+1, { :checked => (i+1 == review.rating) }) %>
   <% end %>
   </section>
   <div class="clear"></div>
   <h2 class="comments"><%= review.comments %></h2><span class="date"><%= review.created_at %></span>
 </div>
+  <% end %>
 <% end %>
