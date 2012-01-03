@@ -1,6 +1,7 @@
 require 'rexml/document'
 require 'net/http'
 require 'active_support/core_ext'
+require 'hashie'
 
 class CatalogueTranslator
   attr_accessor :url, :cache
@@ -51,38 +52,21 @@ class CatalogueTranslator
   end
   
   def add_recently_viewed(user_id, dataset_uuid)
-    timeout = 500
-    url = URI.parse(user_recently_viewed_uri)
-    http = Net::HTTP.new(url.host, url.port)
-    http.read_timeout = timeout
-    http.open_timeout = timeout
-    response = http.start {|http| http.post(url.to_s, { 
+    response = post_json(user_recently_viewed_uri, { 
       :user_id => "#{user_id}", 
-      :uuid => "#{dataset_uuid}",
-      :format => "json" 
-    }.to_json, { 'Content-Type' => 'application/json'}) }
-
-    response.value
-    cache.delete(recently_viewed_key(user_id))
-    response.body
+      :uuid => "#{dataset_uuid}"
+    })
+    cache.delete(recently_viewed_key(user_id)) unless response.nil?
+    response
   end
 
   def user_collections(user_id, dataset_uuids, modifier)
-    timeout = 500
-    url = URI.parse(user_saved_uri)
-    http = Net::HTTP.new(url.host, url.port)
-    http.read_timeout = timeout
-    http.open_timeout = timeout    
-    response = http.start {|http| http.post(url.to_s, { 
-      :user_id => "#{user_id}", 
+    response = post_json(user_saved_uri, { :user_id => "#{user_id}", 
       :uuids => "#{dataset_uuids}",
-      :modifier => "#{modifier}",
-      :format => "json" 
-    }.to_json, { 'Content-Type' => 'application/json'}) }
-
-    response.value
-    cache.delete(saved_key(user_id))
-    response.body
+      :modifier => "#{modifier}"
+    })
+    cache.delete(saved_key(user_id)) unless response.nil?    
+    response
   end
 
   def dataset(id)
@@ -107,6 +91,15 @@ class CatalogueTranslator
     cache.fetch(saved_key(user_id), :expires_in => 3.hour) do
       get("#{user_saved_uri}?user_id=#{user_id}")
     end
+  end
+  
+  def find_reviews(uuid)
+    xml_to_mash(get("#{user_reviews_uri}?id=#{uuid}&format=xml"))['user_reviews']
+  end
+  
+  def create_review(params)
+    response = post_json("#{user_reviews_uri}?format=json", :review => params)
+    json_to_mash(response)['user_review'] unless response.nil?
   end
   
   def find_datasets_by_user(user_ids)
@@ -198,6 +191,23 @@ class CatalogueTranslator
   def user_search_datasets_uri
     "#{url}/user/search"
   end
+  
+  def user_reviews_uri
+    "#{url}/reviews"
+  end
+
+  def post_json(uri, json_hash={})
+    json_hash.merge!(:format => "json")
+    timeout = 500
+    url = URI.parse(uri)
+    http = Net::HTTP.new(url.host, url.port)
+    http.read_timeout = timeout
+    http.open_timeout = timeout    
+    response = http.start {|http| http.post(url.to_s, json_hash.to_json, { 'Content-Type' => 'application/json'}) }
+    
+    response.value
+    response.body
+  end  
 
   def xml_to_mash(value)
     Hashie::Mash.new(Hash.from_xml(value))
@@ -208,3 +218,4 @@ class CatalogueTranslator
   end
 
 end
+

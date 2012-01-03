@@ -1,0 +1,11 @@
+<% @reviews.each do |review| %>
+<div class="review">
+  <section class="rating-container">
+  <% 5.times do |i| %>
+    <%= radio_button("review[#{review.id}]", 'rating', i, { :checked => (i == review.rating - 1) }) %>
+  <% end %>
+  </section>
+  <div class="clear"></div>
+  <h2 class="comments"><%= review.comments %></h2><span class="date"><%= review.created_at %></span>
+</div>
+<% end %>

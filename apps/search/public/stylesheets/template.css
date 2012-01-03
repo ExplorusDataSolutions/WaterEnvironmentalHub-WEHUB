@@ -597,24 +597,24 @@ ul.sub-menu li {
 .sub-content-right .right-content{
   margin:0 0 20px 0;
 }
-.sub-content-right .main-head{
+.sub-content-right .main-head, #comments .main-head{
   padding-bottom:5px;
   margin-bottom:10px;
   border-bottom:solid 1px #DCDCDC;
 }
-.sub-content-right h1{
+.sub-content-right h1, #comments h1{
   font-size:18px;
   font-weight:normal;
   margin:-5px 0 0 10px;
 }
-.sub-content-right .contents{
+.sub-content-right .contents, #comments .review{
   color:#BBBBBB;
   border-bottom:dotted 1px #DCDCDC;
   padding:0 0 5px 0;
   margin:0 0 10px 0;
   cursor: pointer;
 }
-.sub-content-right h2{
+.sub-content-right h2, #comments h2{
   color:#6A6A6A;
   font-size:14px;
   font-weight:normal;
@@ -631,7 +631,7 @@ ul.sub-menu li {
   font-size:12px;
   font-weight
 }
-.sub-content-right .contents .date{
+.sub-content-right .contents .date, #comments .review .date{
   color:#AFAFAF;
   font-size:12px;
 }
@@ -1105,6 +1105,7 @@ ul.sub-menu li {
   margin:0;
   padding:0;
 }
+/*
 .comment-box{
   height:155px;
   background:#E2E1DD;
@@ -1163,6 +1164,7 @@ ul.sub-menu li {
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 }
+*/
 /*we catalogue end*/
 
 /*

@@ -236,13 +236,9 @@ $(document).ready(function() {
     <a href="#" onclick="history.go(-1);return false;">Back to Search Results</a>
 </div>
 <div class="top-container-tab-body" >
-<%
-=begin %>
   <div class="top-container-tab">
     + Comments
   </div>
-<%
-=end %>
   <div class="top-container-tab" id="my-collection" style="display: none;">+ My collection</div>
   <div class="top-container-tab tab-download">
     <div class="float-left">Download</div>
@@ -460,6 +456,9 @@ $(document).ready(function() {
       
       <div class="clear height-25"></div>
       
+      <%= render 'comments' %>
+      
+      <div class="clear height-25"></div>      
     </div>
   </div>
   <div class="sub-content-right">
@@ -467,37 +466,4 @@ $(document).ready(function() {
       <%= render 'shared/right_panel' %>
     </div>    
 
-<%
-=begin %>
-    <div class="right-content">
-      <div class="main-head">
-        <div class="float-left"><img src="/images/icon-comments.jpg" alt="Comments" title="Comments" width="20" height="20"></div>
-        <div class="float-left"><h1>Comments</h1></div>
-        <div class="clear"></div>
-      </div>
-      <div id="star" class="star" align="left">
-        <p class="color" style="width: <%= @rating%>px;text-align:left;">
-        <p class="gray"/>                                  
-      </div>
-      <div class="clear"></div>
-      <div class="contents">
-        Data is taken at a high frequently, however there are many missing measurements.
-      </div>
-      <div class="clear">&nbsp;</div>
-      
-      <div id="star" class="star" align="left">
-        <p class="color" style="width: <%= @rating%>px;text-align:left;">
-        <p class="gray"/>                                  
-      </div>
-      <div class="clear"></div>
-      <div class="contents">
-        Data is taken at a high frequently, however there are many missing measurements.
-      </div>
-      <div class="clear">&nbsp;</div>
-      <span class="button">
-        <button>See All</button>
-      </span>     
-    </div>
     <div class="clear"></div>
-<%
-=end %>

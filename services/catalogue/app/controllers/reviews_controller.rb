@@ -3,15 +3,18 @@ class ReviewsController < ApplicationController
   respond_to :json, :xml
  
   def index
-    respond_with(UserReview.find_all_by_uuid_order_by_date_with_limit(params[:id]))  
+    @review = UserReview.find_all_by_uuid_order_by_date_with_limit(params[:id])
+    respond_with(@review)  
   end
   
-  def show
-    respond_with(UserReview.find_by_uuid(params[:id]))
+  def show  
+    @review = UserReview.find_by_uuid(params[:id])
+    respond_with(@review)
   end
   
-  def create    
-    respond_with(UserReview.create(params[:review]))
+  def create
+    @review = UserReview.create(params[:review])
+    respond_with(@review, :location => reviews_url)
   end
   
 end

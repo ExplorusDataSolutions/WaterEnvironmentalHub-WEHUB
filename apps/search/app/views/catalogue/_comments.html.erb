@@ -1,0 +1,33 @@
+<script>
+$('document').ready(function() { 
+  $.ajax({
+    url: '<%= url_for :controller => "reviews", :id => @dataset.uuid %>',
+    type: 'GET',
+    global: false,
+    cache: false,      
+    success: function(data) {
+      $('#comments .reviews').html(data).show();
+      $('.rating-container').rating({ displayOnly: true });
+      $('#comments').fadeIn('slow');
+    }
+  });
+
+});
+</script>
+
+<div id="comments" style="display: none;">
+  <div class="main-head">
+    <div class="float-left"><img src="/images/icon-comments.jpg" alt="Comments" title="Comments" width="20" height="20"></div>
+    <div class="float-left"><h1>Comments</h1></div>
+    <div class="clear"></div>
+  </div>
+
+  <div class="reviews">
+  </div>
+  
+  <div>
+    <span class="button">
+    <button>Show more...</button>
+    </span>     
+  </div>
+</div>
