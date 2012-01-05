@@ -19,6 +19,9 @@ class GeonetworkController < ApplicationController
     @keywords = feature.keywords    
     @bounding_box = feature.bounding_box
     @temporal_extent = feature.temporal_extent
+    
+    review = UserReview.find_by_uuid(params[:id])
+    @review_summary = review.summary unless review.nil?
   end
   
   def info

@@ -17,4 +17,9 @@ class ReviewsController < ApplicationController
     respond_with(@review, :location => reviews_url)
   end
   
+  def summary
+    review = UserReview.find_by_uuid(params[:id])
+    respond_with(review.summary)
+  end
+  
 end

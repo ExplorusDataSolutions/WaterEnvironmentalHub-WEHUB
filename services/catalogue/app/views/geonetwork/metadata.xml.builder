@@ -53,6 +53,9 @@ xml.Metadata('xmlns:geonet' => 'http://www.fao.org/geonetwork') do
     end
   end
   
+  message = {}
+
+=begin  
   relations = []  
   @related_datasets.each do |d|
     if d.uuid != @dataset.uuid
@@ -61,6 +64,7 @@ xml.Metadata('xmlns:geonet' => 'http://www.fao.org/geonetwork') do
   end
 
   message = {:relations => relations}
+=end
   
   if !@dataset.owner.nil?    
     message.update({:owner => {:group_id => @dataset.owner.group_id, :owner_id => @dataset.owner.user_id, :source => @dataset.owner.source }})
@@ -76,6 +80,10 @@ xml.Metadata('xmlns:geonet' => 'http://www.fao.org/geonetwork') do
 
   if !@dataset.feature.nil? && !@dataset.feature.latitude_longitude.nil?
     message.update({:coordinates => "#{@dataset.feature.latitude_longitude}"})
+  end
+  
+  if !@review_summary.nil?
+    message.update({:review_summary => @review_summary})
   end
 
   xml.additionalInfo(message.to_json)

@@ -5,7 +5,9 @@ Catalogue::Application.routes.draw do
 
   resources :user_viewed_datasets
   resources :user_dataset_collection
-  resources :reviews 
+
+  match 'reviews/summary' => 'reviews#summary'
+  resources :reviews   
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
