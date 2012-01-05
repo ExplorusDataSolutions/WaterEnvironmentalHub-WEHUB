@@ -129,6 +129,7 @@ class GeoNetworkTranslator
         result.owner = Hashie::Mash.new(additional_info['owner'])
         result.author = Hashie::Mash.new(additional_info['author'])
         result.coordinates = additional_info['coordinates']
+        result.review_summary = Hashie::Mash.new(additional_info['review_summary'])
 
         keywords = []
         item.elements.each('dataIdInfo/descKeys') do |keyword|

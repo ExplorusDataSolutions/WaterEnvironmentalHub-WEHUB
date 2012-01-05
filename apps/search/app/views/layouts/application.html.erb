@@ -42,6 +42,11 @@
       });
     </script>
     <script>
+      $(document).ready(function() {
+        $('.search-result-each .rating-container').rating({ displayOnly: true });
+      });
+    </script>
+    <script>
       $(function() {
         $("button, input:submit, a", ".button").button();
         $("a", ".button").click(function() { return false; });
