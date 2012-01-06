@@ -47,12 +47,12 @@
           <td>
         <section class="rating-container" style="display: inline;">
         <% 5.times do |i| %>
-          <%= radio_button("#{dataset.id}", 'rating', i+1, { :checked => (i+1 == dataset.review_summary.average_rating.ceil) }) %>
+          <%= radio_button("#{dataset.id}", 'rating', i+1, { :checked => (i+1 == dataset.review_summary.average.ceil) }) %>
         <% end %>
         </section>
           </td>
           <td>
-        (<%= dataset.review_summary.total_ratings %> stars)
+        (<%= dataset.review_summary.total %> out of <%= dataset.review_summary.possible %> stars)
           </td>
         </tr>
       </table>
