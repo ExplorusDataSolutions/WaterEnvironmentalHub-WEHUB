@@ -8,19 +8,30 @@ class UserReview < ActiveRecord::Base
   end
   
   def find_ratings_by_uuid(uuid)
-    sql = ActiveRecord::Base.send(:sanitize_sql_array, (['SELECT rating AS index, COUNT(*) AS ratings FROM user_reviews WHERE uuid = ? GROUP BY rating ORDER BY rating;', uuid]))
+    sql = ActiveRecord::Base.send(:sanitize_sql_array, (['SELECT rating AS index, COUNT(*) AS votes FROM user_reviews WHERE uuid = ? AND rating <> 0 GROUP BY rating ORDER BY rating;', uuid]))
+    ActiveRecord::Base.connection.execute(sql)
+  end
+
+  def find_average_rating_by_uuid(uuid)
+    sql = ActiveRecord::Base.send(:sanitize_sql_array, (['SELECT AVG(rating) AS average FROM user_reviews WHERE uuid = ? AND rating <> 0;', uuid]))
     ActiveRecord::Base.connection.execute(sql)
   end
   
   def summary
     ratings = find_ratings_by_uuid(self.uuid)
-    
-    average = 0;
+
+    possible = 0
+    total = 0
     ratings.each do |r|
-      average = average + (r['index'].to_f / 5 * r['ratings'].to_i)
-    end
+      possible = possible + r['votes'].to_i * 5
+      total = total + r['votes'].to_i * r['index'].to_i
+    end unless ratings.nil?
     
-    { :average_rating => average, :ratings => ratings }
+    average = 0
+    average = find_average_rating_by_uuid(self.uuid)
+    average = average[0]['average'].to_f unless average.nil?
+    
+    { :average => average, :possible => possible, :total => total, :ratings => ratings }
   end
     
 end
