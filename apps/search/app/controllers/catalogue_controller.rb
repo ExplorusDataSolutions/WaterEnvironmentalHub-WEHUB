@@ -1,6 +1,7 @@
 class CatalogueController < ApplicationController
 
   include CatalogueHelper
+  include ReviewHelper
 
   caches_page :index, :details
   caches_action :browse, :cache_path => Proc.new { |controller| controller.params }  
@@ -33,7 +34,9 @@ class CatalogueController < ApplicationController
   end
 
   def details   
-    @dataset = catalogue_instance.dataset(params[:id])
+    @dataset = catalogue_instance.dataset(params[:id])    
+    @reviews = augment_users(catalogue_instance.find_reviews(params[:id]))
+    @review_summary = catalogue_instance.find_review_summary(params[:id])    
     
     @breadcrumb = ['Discover Our Data', 'This Dataset']
     @main_menu = 'we_catalogue'

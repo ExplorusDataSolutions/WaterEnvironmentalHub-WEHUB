@@ -1,0 +1,19 @@
+<% if @review_summary %>
+<table style="border-spacing: 0px; padding-bottom: 20px;">
+  <tr>
+    <td style="padding: 0px;" colspan="2"><span class="head"><strong>Average Review</strong></span></td>
+  </tr>
+  <tr>
+    <td style="padding: 0px;">
+  <section class="rating-container">
+  <% 5.times do |i| %>
+    <%= radio_button("review_summary", 'rating', i+1, { :checked => (i+1 == @review_summary.average.ceil) }) %>
+  <% end %>
+  </section>
+    </td>
+    <td>
+  (<%= @review_summary.possible / 5 %> reviews)
+    </td>
+  </tr>
+</table>
+<% end %>

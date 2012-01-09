@@ -106,6 +106,10 @@ class CatalogueTranslator
     json_to_mash(response)['user_review'] unless response.nil?
   end
   
+  def find_review_summary(uuid)
+    json_to_mash(get("#{url}/reviews/summary?id=#{uuid}&format=json"))
+  end
+  
   def find_datasets_by_user(user_ids)
     datasets = xml_to_mash(get("#{user_datasets_uri}?user_ids=#{user_ids}&format=xml"))['datasets'] 
     datasets.sort_by! { |dataset| dataset.date }.reverse! unless datasets.nil?

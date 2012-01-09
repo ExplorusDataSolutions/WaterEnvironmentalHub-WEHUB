@@ -1,5 +1,6 @@
 <script>
 $('document').ready(function() { 
+  $('#comments .rating-container').rating({ displayOnly: true });
   $.ajax({
     url: '<%= url_for :controller => "reviews", :id => @dataset.uuid %>',
     type: 'GET',
@@ -8,8 +9,20 @@ $('document').ready(function() {
     success: function(data) {
       if (data && data.length > 0) {
         $('#comments .reviews').html(data).show();
-        $('#comments .rating-container').rating({ displayOnly: true });
-        $('#comments').fadeIn('slow');
+        $('#comments .reviews .rating-container').rating({ displayOnly: true });
+      }
+    }
+  });
+
+  $.ajax({
+    url: '<%= url_for :controller => "reviews", :action => "dashboard", :id => @dataset.uuid %>',
+    type: 'GET',
+    global: false,
+    cache: false,      
+    success: function(data) {
+      if (data && data.length > 0) {
+        $('#comments .dashboard').html(data).show();
+        $('#comments .dashboard .rating-container').rating({ displayOnly: true });
       }
     }
   });
@@ -17,14 +30,20 @@ $('document').ready(function() {
 });
 </script>
 
-<div id="comments" style="display: none;">
+<div id="comments">
   <div class="main-head">
     <div class="float-left"><img src="/images/icon-comments.jpg" alt="Comments" title="Comments" width="20" height="20"></div>
-    <div class="float-left"><h1>Comments</h1></div>
+    <div class="float-left"><h3>Reviews</h3></div>
     <div class="clear"></div>
   </div>
 
+  <div class="dashboard">
+    <%= render '/reviews/dashboard' %>
+  </div>
+  <div class="clear"></div>
+  
   <div class="reviews">
+    <%= render '/reviews/index' %>
   </div>
 
 <%
@@ -36,7 +55,9 @@ $('document').ready(function() {
   </div>
 <%
 =end %>
+
 </div>
+
 
 <div class="new-comment" style="display: none;">
   <%= render "reviews/new" -%>
