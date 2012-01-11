@@ -4,7 +4,7 @@ module ReviewHelper
     reviews.each_with_index do |r, i|
       user = find_user(users, r.user_id)
       reviews[i].merge!(:user => user) unless user.nil?
-    end unless users.nil? || users.empty?
+    end unless users.nil? || users.empty? || reviews.nil? || reviews.empty?
   end
   
   def find_user(users, id)

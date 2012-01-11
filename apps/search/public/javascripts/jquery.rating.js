@@ -50,7 +50,8 @@
         .append('<div class="stars">' + list + '</div>')
         .unbind('set.rating')
         .bind('set.rating', $.fn.rating.set)
-        .trigger('set.rating', isChecked);
+        .trigger('set.rating', isChecked)
+        .addClass('rated');
       
       if (!($.fn.rating.displayOnly(el))) {
         $('a', el).live('click', function(e){

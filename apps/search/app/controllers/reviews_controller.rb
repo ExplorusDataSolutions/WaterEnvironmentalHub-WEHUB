@@ -11,7 +11,8 @@ class ReviewsController < ApplicationController
   end
   
   def index
-    @reviews = augment_users(catalogue_instance.find_reviews(params[:id]))
+  
+    @reviews = augment_users(catalogue_instance.find_reviews(params[:id], params[:page], params[:page_size]))
     
     render :partial => 'index', :layout => false
   end

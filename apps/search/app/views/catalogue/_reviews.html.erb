@@ -1,19 +1,36 @@
 <script>
 $('document').ready(function() { 
-  $('#comments .rating-container').rating({ displayOnly: true });
-  $.ajax({
-    url: '<%= url_for :controller => "reviews", :id => @dataset.uuid %>',
-    type: 'GET',
-    global: false,
-    cache: false,      
-    success: function(data) {
-      if (data && data.length > 0) {
-        $('#comments .reviews').html(data).show();
-        $('#comments .reviews .rating-container').rating({ displayOnly: true });
+  function loadReviews(page, pageSize, callback) {  
+    $.ajax({
+      url: '<%= url_for :controller => "reviews" %>?id=<%= @dataset.uuid %>&page=' + page + '&page_size=' + page_size,
+      type: 'GET',
+      global: false,
+      cache: false,      
+      success: function(data) {
+        if (data && data.length > 0) {
+          if (page === 1) {
+            $('#comments .reviews').html(data);
+          } else {
+            $('#comments .reviews').append(data);
+          }
+          $('#comments .reviews .rating-container').not('.rated').rating({ displayOnly: true });
+          callback();
+        }
       }
-    }
+    });
+  }
+  
+  var page = 1;
+  var page_size = 10;
+  $('#comments #show-more').click(function() {
+    page = page + 1;
+    $('#comments #show-more').attr('disabled', 'disabled').addClass('ui-state-disabled');
+    loadReviews(page, page_size, function() { $('#comments #show-more').removeAttr('disabled', 'disabled').removeClass('ui-state-disabled'); });
   });
+  
+  loadReviews(page, pageSize);
 
+  $('#comments .rating-container').not('.rated').rating({ displayOnly: true });
   $.ajax({
     url: '<%= url_for :controller => "reviews", :action => "dashboard", :id => @dataset.uuid %>',
     type: 'GET',
@@ -46,15 +63,11 @@ $('document').ready(function() {
     <%= render '/reviews/index' %>
   </div>
 
-<%
-=begin %>  
   <div>
     <span class="button">
-    <button style="width: 100%;">Show more...</button>
+    <button id="show-more" style="width: 100%;">Show more...</button>
     </span>     
   </div>
-<%
-=end %>
 
 </div>
 
