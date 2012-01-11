@@ -4,15 +4,15 @@ class ReviewsController < ApplicationController
   
   before_filter :verify_logged_in, :only => [:create] 
   
-  caches_action :index, :cache_path => :index_key.to_proc, :expires_in => 24.hours
+  caches_action :index, :if => Proc.new{ |c| c.params[:page].to_i == 1 }, :cache_path => :index_key.to_proc, :expires_in => 24.hours
   caches_action :summary, :cache_path => :summary_key.to_proc, :expires_in => 24.hours
-  
-  def index_key
-    "reviews/index/#{params[:id]}_#{params[:page]}_#{params[:page_size]}"
+    
+  def index_key(uuid=params[:id])
+    "reviews/index/#{uuid}"
   end
   
-  def summary_key
-    "reviews/summary/#{params[:id]}_#{params[:page]}_#{params[:page_size]}"
+  def summary_key(uuid=params[:id])
+    "reviews/summary/#{uuid}"
   end
 
   def dashboard

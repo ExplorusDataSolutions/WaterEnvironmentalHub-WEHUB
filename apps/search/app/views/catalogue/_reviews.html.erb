@@ -11,7 +11,8 @@ $('document').ready(function() {
       success: function(data) {
         if (data && data.length > 0) {
           if (page === 1) {
-            $('#comments .reviews').html(data);
+            $('#comments .reviews').html(data);  
+            $('#comments').show();
           } else {
             $('#comments .reviews').append(data);
           }
@@ -49,7 +50,7 @@ $('document').ready(function() {
 });
 </script>
 
-<div id="comments">
+<div id="comments" style="display: none;">
   <div class="main-head">
     <div class="float-left"><img src="/images/icon-comments.jpg" alt="Comments" title="Comments" width="20" height="20"></div>
     <div class="float-left"><h3>Reviews</h3></div>

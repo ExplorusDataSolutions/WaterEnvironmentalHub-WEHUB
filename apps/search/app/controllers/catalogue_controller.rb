@@ -35,7 +35,7 @@ class CatalogueController < ApplicationController
 
   def details   
     @dataset = catalogue_instance.dataset(params[:id])    
-    @reviews = augment_users(catalogue_instance.find_reviews(params[:id]))
+    @reviews = augment_users(catalogue_instance.find_reviews(params[:id], 1, 100))
     @review_summary = catalogue_instance.find_review_summary(params[:id])    
     
     @breadcrumb = ['Discover Our Data', 'This Dataset']
