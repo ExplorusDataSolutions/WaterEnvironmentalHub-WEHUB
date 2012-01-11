@@ -107,7 +107,12 @@ class CatalogueTranslator
   end
   
   def find_review_summary(uuid)
-    json_to_mash(get("#{url}/reviews/summary?id=#{uuid}&format=json"))
+    #Todo: fix 500 error being thrown from catalogue service when reviews don't exist
+    begin
+      response = get("#{url}/reviews/summary?id=#{uuid}&format=json")
+      json_to_mash(response) unless response.nil?
+    rescue
+    end
   end
   
   def find_datasets_by_user(user_ids)
