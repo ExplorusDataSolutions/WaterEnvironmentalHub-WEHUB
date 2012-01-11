@@ -16,7 +16,7 @@ gem 'spreadsheet'
 gem 'uuidtools'
 gem 'hashie'
 gem 'dalli'
-
+gem 'will_paginate'
 
 # Use unicorn as the web server
 gem 'unicorn'

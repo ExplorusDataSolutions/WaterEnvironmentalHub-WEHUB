@@ -3,8 +3,12 @@ class ReviewsController < ApplicationController
   respond_to :json, :xml
  
   def index
-    @review = UserReview.find_all_by_uuid_order_by_date_with_limit(params[:id])
-    respond_with(@review)  
+    page_size = (!params[:page_size] || params[:page_size].to_i > 100) ? 100 : params[:page_size].to_i
+    page = (!params[:page] || params[:page].to_i <= 0 ) ? 1 : params[:page].to_i
+
+    @reviews = UserReview.paginate(:page => page, :per_page => page_size).order('id DESC')
+    
+    respond_with(@reviews)
   end
   
   def show  
