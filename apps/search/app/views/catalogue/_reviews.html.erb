@@ -1,8 +1,10 @@
 <script>
 $('document').ready(function() { 
+  $('#comments .rating-container').not('.rated').rating({ displayOnly: true });
+  
   function loadReviews(page, pageSize, callback) {  
     $.ajax({
-      url: '<%= url_for :controller => "reviews" %>?id=<%= @dataset.uuid %>&page=' + page + '&page_size=' + page_size,
+      url: '<%= url_for :controller => "reviews" %>?id=<%= @dataset.uuid %>&page=' + page + '&page_size=' + pageSize,
       type: 'GET',
       global: false,
       cache: false,      
@@ -14,29 +16,29 @@ $('document').ready(function() {
             $('#comments .reviews').append(data);
           }
           $('#comments .reviews .rating-container').not('.rated').rating({ displayOnly: true });
-          callback();
+          callback ? callback() : null;
         }
       }
     });
   }
   
   var page = 1;
-  var page_size = 10;
+  var pageSize = 5;
   $('#comments #show-more').click(function() {
     page = page + 1;
     $('#comments #show-more').attr('disabled', 'disabled').addClass('ui-state-disabled');
-    loadReviews(page, page_size, function() { $('#comments #show-more').removeAttr('disabled', 'disabled').removeClass('ui-state-disabled'); });
+    loadReviews(page, pageSize, function() { $('#comments #show-more').removeAttr('disabled', 'disabled').removeClass('ui-state-disabled'); });
   });
   
   loadReviews(page, pageSize);
 
-  $('#comments .rating-container').not('.rated').rating({ displayOnly: true });
   $.ajax({
     url: '<%= url_for :controller => "reviews", :action => "dashboard", :id => @dataset.uuid %>',
     type: 'GET',
     global: false,
     cache: false,      
     success: function(data) {
+      console.log('here');
       if (data && data.length > 0) {
         $('#comments .dashboard').html(data).show();
         $('#comments .dashboard .rating-container').rating({ displayOnly: true });

@@ -93,7 +93,7 @@ class CatalogueTranslator
     end
   end
   
-  def find_reviews(uuid, page=1, page_size=10)
+  def find_reviews(uuid, page=1, page_size=5)
     xml_to_mash(get("#{user_reviews_uri}?id=#{uuid}&page=#{page}&page_size=#{page_size}&format=xml"))['user_reviews']
   end
   

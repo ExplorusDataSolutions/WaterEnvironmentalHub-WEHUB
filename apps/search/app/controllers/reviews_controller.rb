@@ -2,7 +2,18 @@ class ReviewsController < ApplicationController
 
   include ReviewHelper
   
-  before_filter :verify_logged_in, :only => [:create]  
+  before_filter :verify_logged_in, :only => [:create] 
+  
+  caches_action :index, :cache_path => :index_key.to_proc, :expires_in => 24.hours
+  caches_action :summary, :cache_path => :summary_key.to_proc, :expires_in => 24.hours
+  
+  def index_key
+    "reviews/index/#{self.uuid}"
+  end
+  
+  def summary_key
+    "reviews/summary/#{self.uuid}"
+  end
 
   def dashboard
     @review_summary = catalogue_instance.find_review_summary(params[:id])
@@ -10,8 +21,7 @@ class ReviewsController < ApplicationController
     render :partial => 'dashboard', :layout => false
   end
   
-  def index
-  
+  def index  
     @reviews = augment_users(catalogue_instance.find_reviews(params[:id], params[:page], params[:page_size]))
     
     render :partial => 'index', :layout => false
@@ -27,6 +37,9 @@ class ReviewsController < ApplicationController
     review.merge!(:uuid => params[:id])
     
     response = catalogue_instance.create_review(review)
+    
+    expire_fragment index_key
+    expire_fragment summary_key
 
     render :nothing => true, :status => (response.nil? ? 500 : :ok)
   end

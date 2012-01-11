@@ -6,7 +6,7 @@ class ReviewsController < ApplicationController
     page_size = (!params[:page_size] || params[:page_size].to_i > 100) ? 100 : params[:page_size].to_i
     page = (!params[:page] || params[:page].to_i <= 0 ) ? 1 : params[:page].to_i
 
-    @reviews = UserReview.paginate(:page => page, :per_page => page_size).order('id DESC')
+    @reviews = UserReview.where(:uuid => params[:id]).paginate(:page => page, :per_page => page_size).order('id DESC')
     
     respond_with(@reviews)
   end
