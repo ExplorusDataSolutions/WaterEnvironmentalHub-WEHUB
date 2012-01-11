@@ -1,6 +1,12 @@
 <% content_for :title, @dataset.name %>
 
 <script>
+  <% #ToDo fix the layout so the height of these two boxes don\'t need to be sync'd through JavaScript%>
+  $(document).ready(function() {
+    $('.sub-content-right').height($('.right-container-left-body').height() - 10);
+  });
+</script>
+<script>
   $(document).ready(function() {
     setTimeout(function() {
       $.ajax({

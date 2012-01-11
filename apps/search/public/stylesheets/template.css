@@ -587,8 +587,9 @@ ul.sub-menu li {
 }
 .sub-content-right{
   float: left;
-  width: 179px;
+  width: 190px;
   overflow: auto;
+  padding-right: 5px;
 }
 .sub-content-full{
   float:left;
