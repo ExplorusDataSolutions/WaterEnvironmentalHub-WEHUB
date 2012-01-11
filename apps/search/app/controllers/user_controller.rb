@@ -1,6 +1,9 @@
 load 'enginey_translator.rb'
 
 class UserController < ApplicationController
+
+  include UserHelper
+  
   respond_to :html, :only => [:sign_in, :groups, :register]
   respond_to :json, :except => :sign_in
 
@@ -152,11 +155,13 @@ class UserController < ApplicationController
       render :text => params['value']
     else
       @profile = socialnetwork_instance.profile(params[:id].nil? ? current_user.id : params[:id])
-      @breadcrumb = ['My Profile']
+
+      
+      @breadcrumb = ["#{current_profile_logged_in? ? 'My' : @profile.name + '\'s'} Profile"]
       @main_menu = 'we_community'
     end    
   end 
-  
+    
   def profile_snapshot
     if !current_user.nil?
       @user_profile_groups = socialnetwork_instance.user_groups(current_user.id)
