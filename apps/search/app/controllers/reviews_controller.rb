@@ -8,11 +8,11 @@ class ReviewsController < ApplicationController
   caches_action :summary, :cache_path => :summary_key.to_proc, :expires_in => 24.hours
   
   def index_key
-    "reviews/index/#{self.uuid}"
+    "reviews/index/#{params[:id]}_#{params[:page]}_#{params[:page_size]}"
   end
   
   def summary_key
-    "reviews/summary/#{self.uuid}"
+    "reviews/summary/#{params[:id]}_#{params[:page]}_#{params[:page_size]}"
   end
 
   def dashboard
