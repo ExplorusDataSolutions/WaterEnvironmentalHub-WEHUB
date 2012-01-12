@@ -7,12 +7,12 @@
     <td style="padding: 0px;">
   <section class="rating-container">
   <% 5.times do |i| %>
-    <%= radio_button("review_summary", 'rating', i+1, { :checked => (i+1 == @review_summary.average.ceil) }) %>
+    <%= radio_button("review_summary", 'rating', i+1, { :checked => (i+1 == @review_summary.average.ceil) }) -%>
   <% end %>
   </section>
     </td>
     <td>
-  (<%= @review_summary.total %> reviews)
+  (<%= @review_summary.total -%> reviews)
     </td>
   </tr>
 </table>

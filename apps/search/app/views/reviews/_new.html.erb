@@ -10,7 +10,7 @@
             <td>
   <section class="rating-container" style="display: inline;">
   <% 5.times do |i| %>
-    <%= radio_button "review", "rating", i+1 %>
+    <%= radio_button "review", "rating", i+1 -%>
   <% end %>
   </section>
             </td>
@@ -20,10 +20,10 @@
     </tr>
     <tr>
       <td style="vertical-align: top; text-align: right;">
-  <%= f.label :comments, 'Enter your review' %>
+  <%= f.label :comments, 'Enter your review' -%>
       </td>
       <td>
-  <%= f.text_area :comments, :size => '45x11' %>
+  <%= f.text_area :comments, :size => '45x11' -%>
       </td>
     </tr>
   </table> 

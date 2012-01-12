@@ -6,12 +6,11 @@
       <td style="padding: 0px">
     <section class="rating-container">
   <% 5.times do |i| %>
-    <%= radio_button("review[#{review.id}]", 'rating', i+1, { :checked => (i+1 == review.rating) }) %>
+    <%= radio_button("review[#{review.id}]", 'rating', i+1, { :checked => (i+1 == review.rating) }) -%>
   <% end %>
     </section>    
       </td>
-      <td>
-      -
+      <td> -
   <% if review.user %>
     <span class="user"><%= link_to_if(!review.user.nil?, review.user.name, { :controller => 'user', :action => 'profile', :id => review.user_id }) %></span>,
   <% end %>
