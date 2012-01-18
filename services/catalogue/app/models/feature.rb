@@ -1,4 +1,6 @@
 class Feature 
+
+  include DatabaseHelper
   include ActiveModel::Validations
   include ActiveModel::Conversion  
   extend ActiveModel::Naming
@@ -259,10 +261,6 @@ class Feature
     end
   end
     
-  def to_s
-    puts "Feature:\n\t#{uuid}\n\t#{name}\n\t#{feature_source.to_s}"
-  end
-
   def is_data_source?(params)
     feature_source.name == params
   end
@@ -327,13 +325,4 @@ class Feature
     keywords
   end
   
-  def execute(sql_params)
-    if sql_params.kind_of?(Array)
-      sql = ActiveRecord::Base.send(:sanitize_sql_array, sql_params)
-    else
-      sql = sql_params
-    end
-    ActiveRecord::Base.connection.execute(sql)
-  end
-
 end
