@@ -142,13 +142,9 @@ class ItemsController < ApplicationController
     meta_content = FeatureMetaContent.find_by_source_uri(params[:source_uri])
     
     if meta_content.nil?
-      dataset_params = {
-        :name => params[:name],
-        :description => params[:description],
-        :feature_type => FeatureType.find_by_name('observation_data_dynamic'),
-        :feature_source => FeatureSource.find_by_name(params[:source]),
-        :feature_period => params[:feature_period]
-      }
+      dataset_params = params
+      params.merge!(:feature_type => FeatureType.find_by_name('observation_data_dynamic'))
+      params.merge!(:feature_source => FeatureSource.find_by_name(params[:feature_source]))
 
       dataset = Dataset.create(dataset_params)
       if !dataset.errors.empty?
@@ -158,8 +154,7 @@ class ItemsController < ApplicationController
       dataset.feature.create(params)
     else
       dataset = Dataset.find_by_uuid(meta_content.dataset_uuid)
-      dataset.description = params[:description]
-      dataset.save
+      dataset.update_attributes(params)
       dataset.feature.create(params)
     end
 

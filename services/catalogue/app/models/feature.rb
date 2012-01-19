@@ -188,20 +188,14 @@ class Feature
         raise ArgumentError, "Feature could not be created from #{params}"
       end
     else
-      meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
-      
-      meta_content_params = {:dataset_uuid => uuid, :keywords => params[:keywords], :source_uri => params[:source_uri], :bounding_box => params[:bounding_box]}
-     
+      meta_content_params = params
+      meta_content_params.merge!(:dataset_uuid => uuid)     
       if params[:bounding_box]
-        meta_content_params.store(:coordinates, latitude_longitude_from_bbox(params[:bounding_box]))
+        meta_content_params.merge!(:coordinates => latitude_longitude_from_bbox(params[:bounding_box]))
       end
-       
-      if meta_content.nil?
-        meta_content = FeatureMetaContent.create(meta_content_params)
-      else
-        meta_content.attributes = meta_content_params
-        meta_content.save
-      end
+
+      meta_content = FeatureMetaContent.find_or_initialize_by_dataset_uuid(uuid)
+      meta_content.update_attributes(meta_content_params)
     end
   end
   

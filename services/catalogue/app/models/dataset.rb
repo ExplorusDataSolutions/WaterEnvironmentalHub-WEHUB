@@ -11,6 +11,8 @@ class Dataset < ActiveRecord::Base
   has_one :author
   belongs_to :creative_commons_license
 
+  accepts_nested_attributes_for :owner, :author
+  
   validates_presence_of :name, :description, :feature_type, :feature_source
   
   before_create :generate_uuid
