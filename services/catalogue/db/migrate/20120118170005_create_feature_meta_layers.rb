@@ -5,7 +5,6 @@ class CreateFeatureMetaLayers < ActiveRecord::Migration
       t.string :layer_id, :null => false
       t.string :name
       t.text :keywords
-      t.text :source_uri, :null => false
       t.text :coordinates
       t.text :bounding_box      
       t.text :feature_period
@@ -13,7 +12,6 @@ class CreateFeatureMetaLayers < ActiveRecord::Migration
       t.timestamps
     end
     
-    add_index :feature_meta_layers, [:layer_id, :source_uri], :unique => true
   end
 
   def self.down

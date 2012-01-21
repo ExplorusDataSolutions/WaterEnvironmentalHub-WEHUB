@@ -1,6 +1,7 @@
 class Feature 
 
   include DatabaseHelper
+  include GisHelper  
   include ActiveModel::Validations
   include ActiveModel::Conversion  
   extend ActiveModel::Naming
@@ -188,32 +189,30 @@ class Feature
         raise ArgumentError, "Feature could not be created from #{params}"
       end
     else
-      meta_content_params = params
-      meta_content_params.merge!(:dataset_uuid => uuid)     
-      if params[:bounding_box]
-        meta_content_params.merge!(:coordinates => latitude_longitude_from_bbox(params[:bounding_box]))
-      end
+      meta_feature_params = params
+      meta_feature_params.merge!(:dataset_uuid => uuid)
+      meta_feature_params = coordinates_to_params_from_bounding_box(params)
+      
+      layers = meta_feature_params[:layers_attributes]
+      if layers
+        layers.each_with_index do |layer, i|
+          layers[i] = coordinates_to_params_from_bounding_box(layer)
+        end         
+        meta_feature_params.merge!(:layers_attributes => layers)
+      end      
 
-      meta_content = FeatureMetaContent.find_or_initialize_by_dataset_uuid(uuid)
-      meta_content.update_attributes(meta_content_params)
+      meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
+      
+      if meta_content.nil?
+        meta_content = FeatureMetaContent.create(meta_feature_params)
+      else
+        meta_content.layers.destroy_all
+        meta_content.update_attributes(meta_feature_params)
+      end
     end
   end
   
-  def latitude_longitude_from_bbox(bounding_box)
-    if bounding_box.is_a? Hash
-      bounding_box =  "#{bounding_box[:west]} #{bounding_box[:south]}, #{bounding_box[:east]} #{bounding_box[:north]}"
-    end
-    latitude = ''
-    longitude = ''
-    centroid = "centroid('MULTIPOINT(#{bounding_box})')"
-    result = execute("SELECT x(#{centroid}), y(#{centroid})")[0]
-    if result
-      latitude = result.select{ |column| column =~ /^y$/i }.first[1]
-      longitude = result.select{ |column| column =~ /^x$/i }.first[1]
-    end
-    
-    "#{latitude},#{longitude}"
-  end
+
   
   def keywords
     if is_data_source?('geoserver')

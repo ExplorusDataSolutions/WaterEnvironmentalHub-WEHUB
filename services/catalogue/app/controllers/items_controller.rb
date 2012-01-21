@@ -138,24 +138,35 @@ class ItemsController < ApplicationController
   end
   
   def load_external_meta_content
-
-    meta_content = FeatureMetaContent.find_by_source_uri(params[:source_uri])
+    feature_params = params[:dataset][:feature]
+    feature_params.merge!(:layers_attributes => feature_params[:layers])
+    feature_params.delete(:layers)
+    
+    meta_content = FeatureMetaContent.find_by_source_uri(feature_params[:source_uri])
     
     if meta_content.nil?
-      dataset_params = params
-      params.merge!(:feature_type => FeatureType.find_by_name('observation_data_dynamic'))
-      params.merge!(:feature_source => FeatureSource.find_by_name(params[:feature_source]))
+      dataset_params = params[:dataset]
+      dataset_params.merge!(:feature_type => FeatureType.find_by_name('observation_data_dynamic'))
+      dataset_params.merge!(:feature_source => FeatureSource.find_by_name(dataset_params[:feature_source]))
+      dataset_params.delete(:feature)
 
       dataset = Dataset.create(dataset_params)
       if !dataset.errors.empty?
         render :text => dataset.errors, :status => 500 and return
       end
 
-      dataset.feature.create(params)
+      dataset.feature.create(feature_params)
     else
       dataset = Dataset.find_by_uuid(meta_content.dataset_uuid)
-      dataset.update_attributes(params)
-      dataset.feature.create(params)
+
+      dataset_params = params[:dataset]
+      dataset_params.delete(:uuid)
+      dataset_params.delete(:feature_period)
+      dataset_params.delete(:feature_source)
+      dataset_params.delete(:feature)
+      
+      dataset.update_attributes(dataset_params)
+      dataset.feature.create(feature_params)
     end
 
     render :text => dataset.uuid
