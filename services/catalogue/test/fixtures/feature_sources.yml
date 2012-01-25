@@ -19,3 +19,8 @@ feature_source_00004:
   id: 4
   name: water_cloud
 
+feature_source_00005: 
+  description: Feature data is stored external and maintened by the Alberta Water Portal
+  id: 5
+  name: alberta_water_portal
+

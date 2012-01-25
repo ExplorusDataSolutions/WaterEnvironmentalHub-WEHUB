@@ -65,13 +65,32 @@ def add_to_catalogue(source, source_uri, service_hash, layer_list)
     end
   end
   
+  layers = nil
   if layer_list && !layer_list.empty?
+    layers = []
     if layer_list.is_a? Array
       layer_list.each do |layer|
         keywords.push(layer['name'])
         id = layer['id']
         if !(id.to_s.match(/^\d$/))
           keywords.push(id)
+        end
+        bbox = layer['bbox']
+        
+        if source == 'alberta_water_portal'
+          layers.push({ 
+            :layer_id => layer['layerid'], 
+            :name => "#{layer['description']}, #{layer['field']}",
+            :feature_period => "#{layer['begintime']} - #{layer['endtime']}", 
+            :bounding_box => bbox['upperright']['longitude'].nil? ? nil : "#{bbox['upperright']['longitude']} #{bbox['upperright']['latitude']},#{bbox['bottomleft']['longitude']} #{bbox['bottomleft']['latitude']}" 
+          })
+        else
+          layers.push({ 
+            :layer_id => layer['id'], 
+            :name => layer['name'],
+            :feature_period => "#{layer['time']['begintime']} - #{layer['time']['endtime']}", 
+            :bounding_box => "#{bbox['upperright']['longitude']} #{bbox['upperright']['latitude']},#{bbox['bottomleft']['longitude']} #{bbox['bottomleft']['latitude']}"
+          })
         end
       end
     else
@@ -113,14 +132,19 @@ def add_to_catalogue(source, source_uri, service_hash, layer_list)
   bbox = service_hash['bbox']
   bounding_box = "#{bbox['upperright']['longitude']} #{bbox['upperright']['latitude']},#{bbox['bottomleft']['longitude']} #{bbox['bottomleft']['latitude']}"  
   
-  request = { 
-    :source => source, 
-    :name => service_hash['title'], 
-    :description => service_hash.key?('description') ? service_hash['description'] : keywords.join(', '), 
-    :keywords => keywords.join(', '),
-    :source_uri => source_uri,
-    :feature_period  => time,
-    :bounding_box => bounding_box
+  request = {
+    :dataset => {
+      :name => service_hash['title'],
+      :description => service_hash.key?('description') ? service_hash['description'] : keywords.join(', '),
+      :feature_period  => time,
+      :feature_source => source,
+      :feature => { 
+        :keywords => keywords.join(', '),
+        :source_uri => source_uri,
+        :bounding_box => bounding_box,
+        :layers => layers
+      }
+    }
   }
   
   puts "-------"
@@ -138,13 +162,25 @@ elsif ARGV[0] == 'water_cloud'
   service_list_uri = "http://136.159.79.145:12321/services/"
   service_details_uri = "http://136.159.79.145:12321/service/"
   source = "water_cloud"
+elsif ARGV[0] == 'alberta_water_portal'
+  service_list_uri = "http://www.albertawater.com/awp/api/realtime/services"
+  service_details_uri = "http://www.albertawater.com/awp/api/realtime/service/"
+  source = 'alberta_water_portal'
 end
 
 service_list = (JSON.parse(http_get("#{service_list_uri}")))['servicelist']
+service_list = [service_list] if !service_list.is_a? (Array)
 puts "Discovered #{service_list.count} services for #{source} on #{service_list_uri} at #{Time.new}"
 service_list.each do |service|
   service_id = service['id']
   service_uri = "#{service_details_uri}#{service_id}"
-  layer_list = (JSON.parse(http_get(service_uri)))['layerlist']
+
+  if source == 'alberta_water_portal'
+    layer_list = http_get(service_uri)
+    layer_list = layer_list[(layer_list.rindex('>') + 1).. -1].strip unless layer_list.index('>').nil?
+    layer_list = (JSON.parse(layer_list))
+  else
+    layer_list = (JSON.parse(http_get(service_uri)))['layerlist']
+  end
   add_to_catalogue(source, service_uri, service, layer_list)
 end
