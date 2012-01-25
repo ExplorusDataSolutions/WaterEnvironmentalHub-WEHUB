@@ -142,12 +142,7 @@ class Feature
     elsif is_data_source_external?
       meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
       if meta_content && meta_content.bounding_box && !meta_content.bounding_box.empty?
-        { 
-          :north => meta_content.bounding_box.split(' ')[1].split(',')[0],
-          :east => meta_content.bounding_box.split(' ')[0],
-          :south => meta_content.bounding_box.split(',')[1].split(' ')[1],
-          :west => meta_content.bounding_box.split(',')[1].split(' ')[0]
-        }
+        bounding_box_from_string(meta_content.bounding_box)
       end
     end
   end
@@ -210,9 +205,16 @@ class Feature
         meta_content.update_attributes(meta_feature_params)
       end
     end
-  end
+  end 
   
-
+  def layers
+    if is_data_source_external?
+      meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
+      meta_content.layers
+    else
+      raise ArgumentError, "Layers could not be retrieved for feature source of type #{feature_source.name}"    
+    end
+  end
   
   def keywords
     if is_data_source?('geoserver')
@@ -259,7 +261,7 @@ class Feature
   end
 
   def is_data_source_external?
-    is_data_source?('geocens') || is_data_source?('water_cloud')
+    is_data_source?('geocens') || is_data_source?('water_cloud') || is_data_source?('alberta_water_portal')
   end
   private 
 

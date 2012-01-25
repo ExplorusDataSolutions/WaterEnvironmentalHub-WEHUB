@@ -23,4 +23,15 @@ module GisHelper
     params
   end
   
+  def bounding_box_from_string(bbox)
+    if bbox
+      { 
+        :north => bbox.split(' ')[1].split(',')[0],
+        :east => bbox.split(' ')[0],
+        :south => bbox.split(',')[1].split(' ')[1],
+        :west => bbox.split(',')[1].split(' ')[0]
+      }
+    end
+  end
+  
 end

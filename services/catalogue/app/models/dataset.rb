@@ -3,6 +3,8 @@ require 'external_service_translator.rb'
 require 'uuidtools'
 
 class Dataset < ActiveRecord::Base
+
+  include GisHelper
   
   has_and_belongs_to_many :dataset_groups
   belongs_to :feature_type
@@ -86,6 +88,19 @@ class Dataset < ActiveRecord::Base
       xml.tag!(:wms, feature_source == FeatureSource.find_by_name('geoserver'))
       xml.tag!(:external, feature.is_data_source_external?) unless !feature.is_data_source_external?
       xml.tag!(:creative_commons_license, creative_commons_license.name) unless creative_commons_license.nil?
+
+      xml.layers do
+        self.feature.layers.each do |layer|
+          xml.layer do
+            xml.tag!(:name, layer.name)
+            xml.tag!(:keywords, layer.keywords) unless !layer.keywords
+            xml.tag!(:coordinates, layer.coordinates) unless !layer.coordinates
+            xml.tag!(:bounding_box, bounding_box_from_string(layer.bounding_box)) unless !layer.bounding_box
+            xml.tag!(:period, layer.feature_period) unless !layer.feature_period
+          end
+        end
+      end unless !feature.layers
+      
     end
   end
 
