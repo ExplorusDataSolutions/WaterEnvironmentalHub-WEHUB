@@ -47,13 +47,12 @@ def format_date(date)
   year = result[:year]
   month = result[:month]
   day = result[:day]
-  if month.nil? || month.to_i > 12
-    month = 1
-  end
-  if day.nil? || day.to_i > 31
-    day = 1
-  end
-  Time.parse("#{year}-#{month}-#{day}").iso8601.split('T')[0]  
+
+  month = 1 if month.nil? || month.to_i > 12 || month.to_i == 0
+  day = 1 if day.nil? || day.to_i > 31 || day.to_i == 0
+  year = 1901 if year.nil? || year.to_i < 1901
+
+  Time.parse("#{year}-#{month}-#{day}").iso8601.split('T')[0]
 end
 
 def add_to_catalogue(source, source_uri, service_hash, layer_list)
