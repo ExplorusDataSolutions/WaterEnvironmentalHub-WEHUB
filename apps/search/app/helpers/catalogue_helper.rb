@@ -196,4 +196,9 @@ module CatalogueHelper
       number_contents.join(' ') == name
     end
   end
+  
+  def box_colours(i)
+    colours = ['red', 'green', 'blue', 'orange', 'yellow', 'purple']
+    colours[i]
+  end
 end

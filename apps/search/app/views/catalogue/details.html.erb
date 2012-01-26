@@ -63,6 +63,13 @@
   position: absolute;
   z-index: 100;
 }
+#layer-selector table {
+  border-collapse: collapse; 
+  margin: 0;
+}
+#layer-selector {
+  padding-bottom: 5px;
+}
 #date-range {
   padding-bottom: 10px;
   padding-top: 10px;  
@@ -249,6 +256,28 @@ $(document).ready(function() {
         }
       });
 
+  <% if @dataset.layers %>
+    <% @dataset.layers.each_with_index do |layer, i| %>
+
+  <%=
+  "var bounds#{i} = new OpenLayers.Bounds();
+  bounds#{i}.extend(new OpenLayers.LonLat(#{layer.bounding_box[:east]},#{layer.bounding_box[:north]}).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));
+  bounds#{i}.extend(new OpenLayers.LonLat(#{layer.bounding_box[:west]},#{layer.bounding_box[:south]}).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));  
+  var boxes = new OpenLayers.Layer.Boxes('boxes');
+  var box = new OpenLayers.Marker.Box(bounds#{i});
+  box.setBorder('#{box_colours(i)}', 2);  
+  boxes.addMarker(box);
+  map.addLayer(boxes);
+  
+  var bounds = new OpenLayers.Bounds();
+  bounds.extend(new OpenLayers.LonLat(#{@dataset.bounding_box[:east]},#{@dataset.bounding_box[:north]}).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));
+  bounds.extend(new OpenLayers.LonLat(#{@dataset.bounding_box[:west]},#{@dataset.bounding_box[:south]}).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));  
+  map.zoomToExtent(bounds);
+  
+  ".html_safe    
+  -%>
+    <% end %>
+  <% else %>
   <%=
   "var bounds = new OpenLayers.Bounds();
   bounds.extend(new OpenLayers.LonLat(#{@dataset.bounding_box[:east]},#{@dataset.bounding_box[:north]}).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));
@@ -261,7 +290,9 @@ $(document).ready(function() {
   map.zoomTo(map.zoom - 1);
 
   ".html_safe
-  %>
+  %>  
+  <% end %>
+
 <% end %>
 });
 </script>
@@ -276,11 +307,24 @@ $(document).ready(function() {
     <div class="float-left tab-download-arrow"></div>   
   </div>
   <div class="clear"></div>
-  <span class="format-selector ui-widget-content ui-corner-all ui-state-active" style="display: none;">
+  
+  <div class="format-selector ui-widget-content ui-corner-all ui-state-active" style="display: none;">
   <%= form_for :download, :method => :get, :url => { :controller => 'item', :action => 'download' }, :html => { :name => 'download' } do %>
     <%= hidden_field_tag :ids, params[:id] %>
     <% if @dataset.external %>
       <div id="date-range"><%= label_tag :start, "Select a date range" %> <%= text_field_tag :start %> - <%= text_field_tag :end %></div>
+      <% if @dataset.layers %>
+      <div id="layer-selector">
+        <table>
+          <tr>
+            <td valign="top" rowspan="<%= @dataset.layers.count + 1 %>">Select a feature layer</td>
+          </tr>        
+          <% @dataset.layers.each do |layer| %>
+          <tr><td><%= radio_button_tag :layer, layer.id %></td><td><%= label_tag "layer[#{layer.id}]", layer.name %></td></tr>
+          <% end %>
+        </table>
+      </div>
+      <% end %>
       <div id="bbox-selector">Select a bounding box <a href="#" id="box_selector">(click here to use the map)</a>
         <table>
           <tr><td></td><td><%= text_field_tag :north %></td><td></td></tr>
@@ -296,7 +340,7 @@ $(document).ready(function() {
     <% end %>
     </span>
   <% end %>
-  </span>
+  </div>
 
 </div>
 <div class="clear"></div>
@@ -406,6 +450,15 @@ $(document).ready(function() {
         <div id="map" style="width:318px; height:189px"></div>        
       </div>
       <div class="clear"></div>
+    <% if @dataset.layers %>
+      <h2 class="green-dot-blue-head">Feature Layers</h2>
+      <% @dataset.layers.each_with_index do |layer, i| %>
+      <div class="float-left width-165 title">Layer <%= i+1 %> (<span style="color: <%= box_colours(i) %>"><%= box_colours(i) %></span>)</div>
+      <div class="float-left width-500 text"><%= layer.name %>, <%= layer.period %></div>
+      <div class="clear"></div>
+      <% end %>
+    <% end  %>
+      
     <% if !@dataset.author.nil? %>
       <h2 class="green-dot-blue-head">Point of contact</h2>
       

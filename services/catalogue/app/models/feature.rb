@@ -210,9 +210,10 @@ class Feature
   def layers
     if is_data_source_external?
       meta_content = FeatureMetaContent.find_by_dataset_uuid(uuid)
-      meta_content.layers
+      meta_content.layers unless !meta_content
     else
-      raise ArgumentError, "Layers could not be retrieved for feature source of type #{feature_source.name}"    
+      Rails.logger.info "Layers could not be retrieved for feature #{uuid}, feature source of #{feature_source.name}"
+      nil
     end
   end
   
@@ -228,7 +229,7 @@ class Feature
     elsif is_data_source_external?
       keywords = FeatureMetaContent.find_by_dataset_uuid(uuid).keywords.split(',')
     else 
-      raise ArgumentError, "Keywords could not be retrieved for feature source of type #{feature_source.name}"
+      raise ArgumentError, "Keywords could not be retrieved for feature source of #{feature_source.name}"
     end   
     
     if !keywords.nil?
