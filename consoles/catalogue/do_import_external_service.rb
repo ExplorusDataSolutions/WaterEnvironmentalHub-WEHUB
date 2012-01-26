@@ -68,36 +68,30 @@ def add_to_catalogue(source, source_uri, service_hash, layer_list)
   layers = nil
   if layer_list && !layer_list.empty?
     layers = []
-    if layer_list.is_a? Array
-      layer_list.each do |layer|
-        keywords.push(layer['name'])
-        id = layer['id']
-        if !(id.to_s.match(/^\d$/))
-          keywords.push(id)
-        end
-        bbox = layer['bbox']
-        
-        if source == 'alberta_water_portal'
-          layers.push({ 
-            :layer_id => layer['layerid'], 
-            :name => "#{layer['description']}, #{layer['field']}",
-            :feature_period => "#{layer['begintime']} - #{layer['endtime']}", 
-            :bounding_box => bbox['upperright']['longitude'].nil? ? nil : "#{bbox['upperright']['longitude']} #{bbox['upperright']['latitude']},#{bbox['bottomleft']['longitude']} #{bbox['bottomleft']['latitude']}" 
-          })
-        else
-          layers.push({ 
-            :layer_id => layer['id'], 
-            :name => layer['name'],
-            :feature_period => "#{layer['time']['begintime']} - #{layer['time']['endtime']}", 
-            :bounding_box => "#{bbox['upperright']['longitude']} #{bbox['upperright']['latitude']},#{bbox['bottomleft']['longitude']} #{bbox['bottomleft']['latitude']}"
-          })
-        end
-      end
-    else
-      keywords.push(layer_list['name'])
-      id = layer_list['id']
+    
+    layer_list = [layer_list] if !layer_list.is_a? (Array)
+    layer_list.each do |layer|
+      keywords.push(layer['name'])
+      id = layer['id']
       if !(id.to_s.match(/^\d$/))
         keywords.push(id)
+      end
+      bbox = layer['bbox']
+
+      if source == 'alberta_water_portal'
+        layers.push({ 
+          :layer_id => layer['layerid'], 
+          :name => "#{layer['description']}, #{layer['field']}",
+          :feature_period => "#{format_date(layer['begintime'])} - #{format_date(layer['endtime'])}",
+          :bounding_box => bbox['upperright']['longitude'].nil? ? nil : "#{bbox['upperright']['longitude']} #{bbox['upperright']['latitude']},#{bbox['bottomleft']['longitude']} #{bbox['bottomleft']['latitude']}" 
+        })
+      else
+        layers.push({ 
+          :layer_id => layer['id'], 
+          :name => layer['name'],
+          :feature_period => "#{format_date(layer['time']['begintime'])} - #{format_date(layer['time']['endtime'])}",
+          :bounding_box => "#{bbox['upperright']['longitude']} #{bbox['upperright']['latitude']},#{bbox['bottomleft']['longitude']} #{bbox['bottomleft']['latitude']}"
+        })
       end
     end
   end
