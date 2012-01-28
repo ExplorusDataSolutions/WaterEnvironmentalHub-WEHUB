@@ -93,7 +93,7 @@ class Dataset < ActiveRecord::Base
         xml.layers :type => 'array' do
           self.feature.layers.each do |layer|
             xml.layer do
-              xml.tag!(:id, layer.id)
+              xml.tag!(:layer_id, layer.layer_id)
               xml.tag!(:name, layer.name)
               xml.tag!(:keywords, layer.keywords) unless !layer.keywords
               xml.tag!(:coordinates, layer.coordinates) unless !layer.coordinates

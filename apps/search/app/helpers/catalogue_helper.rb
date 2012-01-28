@@ -198,7 +198,7 @@ module CatalogueHelper
   end
   
   def box_colours(i)
-    colours = ['red', 'green', 'blue', 'orange', 'yellow', 'purple']
+    colours = ['red', 'green', 'blue', 'orange', 'purple', 'turquoise', 'tan', 'navy', 'brown', 'gray', 'coral', 'fuchsia', 'yellow']
     colours[i]
   end
 end

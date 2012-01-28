@@ -319,8 +319,8 @@ $(document).ready(function() {
           <tr>
             <td valign="top" rowspan="<%= @dataset.layers.count + 1 %>">Select a feature layer</td>
           </tr>        
-          <% @dataset.layers.each do |layer| %>
-          <tr><td><%= radio_button_tag :layer, layer.id %></td><td><%= label_tag "layer[#{layer.id}]", layer.name %></td></tr>
+          <% @dataset.layers.each_with_index do |layer, i| %>
+          <tr><td><%= radio_button_tag :layer, layer.layer_id %></td><td><%= label_tag "layer[#{layer.layer_id}]", "#{layer.name} (<span style='color: #{box_colours(i)}'>#{box_colours(i)}</span>)".html_safe %></td></tr>
           <% end %>
         </table>
       </div>
@@ -447,7 +447,7 @@ $(document).ready(function() {
     <% end %>
       </div>
       <div class="float-left slight-margin">
-        <div id="map" style="width:318px; height:189px"></div>        
+        <div id="map" style="width:400px; height:200px"></div>        
       </div>
       <div class="clear"></div>
     <% if @dataset.layers %>

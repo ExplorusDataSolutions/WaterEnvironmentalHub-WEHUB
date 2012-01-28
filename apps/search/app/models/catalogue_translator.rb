@@ -43,7 +43,12 @@ class CatalogueTranslator
         bounding_box = "&north=#{north}&east=#{east}&south=#{south}&west=#{west}"
       end
       
-      "#{url}/items/download/?ids=#{params[:ids]}&format=#{params[:format]}#{bounding_box}#{period}"
+      layer = ''
+      if params[:layer]
+        layer = "&layer=#{params[:layer]}"
+      end
+      
+      "#{url}/items/download/?ids=#{params[:ids]}&format=#{params[:format]}#{bounding_box}#{period}#{layer}"
     end
   end
   
