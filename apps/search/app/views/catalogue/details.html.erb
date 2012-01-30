@@ -258,7 +258,7 @@ $(document).ready(function() {
 
   <% if @dataset.layers %>
     <% @dataset.layers.each_with_index do |layer, i| %>
-
+      <% if layer.bounding_box %>
   <%=
   "var bounds#{i} = new OpenLayers.Bounds();
   bounds#{i}.extend(new OpenLayers.LonLat(#{layer.bounding_box[:east]},#{layer.bounding_box[:north]}).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));
@@ -276,6 +276,7 @@ $(document).ready(function() {
   
   ".html_safe    
   -%>
+      <% end %>
     <% end %>
   <% else %>
   <%=
@@ -453,9 +454,11 @@ $(document).ready(function() {
     <% if @dataset.layers %>
       <h2 class="green-dot-blue-head">Feature Layers</h2>
       <% @dataset.layers.each_with_index do |layer, i| %>
+        <% if layer.bounding_box %>
       <div class="float-left width-165 title">Layer <%= i+1 %> (<span style="color: <%= box_colours(i) %>"><%= box_colours(i) %></span>)</div>
       <div class="float-left width-500 text"><%= layer.name %>, <%= layer.period %></div>
       <div class="clear"></div>
+        <% end %>
       <% end %>
     <% end  %>
       

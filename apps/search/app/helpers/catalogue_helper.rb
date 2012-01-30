@@ -198,7 +198,7 @@ module CatalogueHelper
   end
   
   def box_colours(i)
-    colours = ['red', 'green', 'blue', 'orange', 'purple', 'turquoise', 'tan', 'navy', 'brown', 'gray', 'coral', 'fuchsia', 'yellow']
+    colours = ['red', 'green', 'blue', 'orange', 'purple', 'turquoise', 'tan', 'navy', 'brown', 'gray', 'coral', 'fuchsia', 'yellow', 'blueviolet', 'aliceblue', 'cadetblue', 'darkgoldenrod', 'darkolivegreen', 'darkred', 'darksalmon', 'darkslateblue', 'firebrick', 'greenyellow', 'hotpink', 'lightblue', 'plum', 'royalblue' ,'skyblue', 'yellowgreen', 'deeppink', 'indigo', 'darkkhaki', 'cornsilk', 'cornflowerblue', 'cadetblue', 'crimson', 'darkgrey', 'deeppink', 'azure', 'bisque', 'black', 'darkorange']
     colours[i]
   end
 end
