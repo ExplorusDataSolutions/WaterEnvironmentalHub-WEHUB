@@ -48,13 +48,29 @@ class Feature
     if is_data_source?('geoserver')
       geoserver_translator.data(uuid)
     elsif is_data_source?('catalogue')
+
       column_names = execute("SELECT * FROM #{tablename} LIMIT 1")[0]
       if column_names
         column_names = column_names.keys
         if column_names.include?('the_geom')
           column_names.delete('the_geom')
           column_names = column_names.collect {|x| "\"#{x}\"" }.join(', ')
-          execute("SELECT #{column_names}, ST_AsGeoJSON(the_geom) AS the_geom FROM #{tablename}")
+
+          properties = execute("SELECT #{column_names} FROM #{tablename}")          
+          coordinates = execute("SELECT ST_AsGeoJSON(the_geom) AS geometry FROM #{tablename}")
+
+          features = []
+          properties.each_with_index do |prop, i|
+            if coordinates[i]['geometry']
+              features.push({ :type => "Feature",
+                              :geometry => JSON.parse(coordinates[i]['geometry']),
+                              :properties => properties[i]
+                            })
+            end
+          end            
+          
+          # returning GeoJSON, for GeoJSON example see: http://geojson.org/geojson-spec.html#examples
+          { :type => "FeatureCollection", :features => features }
         else
           execute("SELECT * FROM #{tablename}")
         end        
