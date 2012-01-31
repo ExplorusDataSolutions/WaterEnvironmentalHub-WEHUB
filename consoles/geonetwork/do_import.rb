@@ -11,14 +11,3 @@ puts "Building mefs"
 MefFactory.new(temp_directory).build_all
 puts "Uploading mefs"
 Importer.new(temp_directory).upload_all
-
-puts "Refreshing cache"
-url = URI.parse('http://localhost:80/search/refresh')
-http = Net::HTTP.new(url.host, url.port)
-response = http.start {|http| http.get(url.to_s) }
-puts response.body
-
-puts "Prime cache"
-url = URI.parse('http://localhost:80/search')
-http = Net::HTTP.new(url.host, url.port)
-response = http.start {|http| http.get(url.to_s) }
