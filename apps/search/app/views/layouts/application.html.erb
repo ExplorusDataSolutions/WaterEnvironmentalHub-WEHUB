@@ -53,6 +53,14 @@
       });
     </script>
     <script>
+      $(document).ready(function() {
+        $('.more a').click(function(event) {
+          event.preventDefault();
+          $(event.target).parent().hide('fast').next('span').slideToggle('fast');
+        });
+      });
+    </script>
+    <script>
       $('document').ready(function() {
       
         var container = $('#twitter-ticker');

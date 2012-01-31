@@ -18,7 +18,7 @@
     <p>
       <span class="head">Abstract:</span>
       <span>
-        <%= dataset.description %>      
+        <%= more_markup(dataset.description, 255).html_safe -%>
       </span>
     </p>
     <div>
@@ -33,11 +33,7 @@
     <% if dataset.properties %>
       <span class="head">Number of Observed Properties: </span><span><%= dataset.properties.scan(/,/).count %></span><br />
       <span class="head">Features: </span><span>
-      <% if dataset.properties.length > 255 %>
-        <%= dataset.properties[0..255] %>...
-      <% else %>
-        <%= dataset.properties %>
-      <% end %>
+        <%= more_markup(dataset.properties, 120).html_safe -%>
       </span><br />
       
       <% if dataset.review_summary && dataset.review_summary.average %>      

@@ -201,4 +201,12 @@ module CatalogueHelper
     colours = ['red', 'green', 'blue', 'orange', 'purple', 'turquoise', 'tan', 'navy', 'brown', 'gray', 'coral', 'fuchsia', 'yellow', 'blueviolet', 'aliceblue', 'cadetblue', 'darkgoldenrod', 'darkolivegreen', 'darkred', 'darksalmon', 'darkslateblue', 'firebrick', 'greenyellow', 'hotpink', 'lightblue', 'plum', 'royalblue' ,'skyblue', 'yellowgreen', 'deeppink', 'indigo', 'darkkhaki', 'cornsilk', 'cornflowerblue', 'cadetblue', 'crimson', 'darkgrey', 'deeppink', 'azure', 'bisque', 'black', 'darkorange']
     colours[i]
   end
+  
+  def more_markup(content, length=125)
+    if content.length > length
+      "#{content[0..length]}<span class='more'>... <a href='#more'>more</a></span><span class='more-content' style='display: none;'>#{content[length+1..-1]}</span>"
+    else
+      content
+    end
+  end
 end
