@@ -121,7 +121,7 @@ class GeoNetworkTranslator
       doc = REXML::Document.new(response.body)
 
       doc.elements.each('Metadata') do |item|
-        result.description = item.elements['dataIdInfo/idAbs'].text
+        result.description = item.elements['dataIdInfo/idPurp'].text
 
         additional_info = JSON.parse(item.elements['additionalInfo'].text)
         result.period = additional_info['period']
