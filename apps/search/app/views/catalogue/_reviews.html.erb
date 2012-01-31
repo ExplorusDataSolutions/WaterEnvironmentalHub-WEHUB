@@ -39,7 +39,6 @@ $('document').ready(function() {
     global: false,
     cache: false,      
     success: function(data) {
-      console.log('here');
       if (data && data.length > 0) {
         $('#comments .dashboard').html(data).show();
         $('#comments .dashboard .rating-container').rating({ displayOnly: true });

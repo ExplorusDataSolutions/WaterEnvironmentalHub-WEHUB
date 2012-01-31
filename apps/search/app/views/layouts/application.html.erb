@@ -102,6 +102,7 @@
           $('.top-menu + ul').addClass('sub-menu')
           $('.top-menu').bind('click', function(event) { 
             event.preventDefault(); 
+            $('.sub-menu').hide('fast');
             $(event.target).next('ul').slideToggle('fast');
           });
           <% #Primes the community pages cache when the user expands the menu item %>
