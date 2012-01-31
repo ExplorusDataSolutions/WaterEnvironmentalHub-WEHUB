@@ -1,6 +1,6 @@
 #!/bin/bash
 
-base='http://localhost:3001'
+base='http://localhost:80'
 url='/search/refresh'
 
 echo $(date)
