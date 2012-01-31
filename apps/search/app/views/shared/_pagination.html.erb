@@ -2,7 +2,7 @@
 <script>
   $(document).ready(function() {
     function getPage() {
-      var result = window.location.search.match(/page=([^&])/);
+      var result = window.location.search.match(/page=([^&]*)/);
       return result ? parseInt(result[1], 10) : 1;
     }
     
