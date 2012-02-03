@@ -27,7 +27,7 @@ class ApiController < ApplicationController
     west = params[:west]
     
     if feature_type_id
-      @datasets = catalogue_instance.api_datasets(feature_type_id)
+      @datasets = catalogue_instance.api_datasets_by_feature_type_id(feature_type_id)
     elsif ((date_start && date_end) && !(date_start.empty? && date_end.empty?)) || ((north && east && south && west) && !(north.empty? && east.empty? && south.empty? && west.empty))
       search = search_instance.do_query_advanced('all', date_start, date_end, south, east, north, west)
       @datasets = search.results

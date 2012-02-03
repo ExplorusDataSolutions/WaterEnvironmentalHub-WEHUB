@@ -1,5 +1,9 @@
 class ToolsController < ApplicationController
 
+  def test
+    render :layout => false
+  end
+  
   def index
     @breadcrumb = ['Tools']
     @main_menu = 'we_tools'
@@ -19,11 +23,10 @@ class ToolsController < ApplicationController
   end
   
   def map
-    @id = params[:id]
-    f = File.read("#{Rails.root}/public/6.json")
-    @json = f.strip
-    @breadcrumb = ['Tools', 'Data Map']
+    @breadcrumb = ['Tools', 'Map']
     @main_menu = 'we_tools'
+    
+    @datasets = catalogue_instance.api_datasets(params)
   end
   
   def developers

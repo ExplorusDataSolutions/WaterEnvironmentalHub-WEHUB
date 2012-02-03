@@ -148,8 +148,12 @@ class CatalogueTranslator
     feature_types = get("#{api_uri}/is_feature_external?id=#{dataset_id}&format=json")
   end
 
-  def api_datasets(feature_type_id)
+  def api_datasets_by_feature_type_id(feature_type_id)
     datasets = xml_to_mash(get("#{api_uri}/datasets?feature_type_id=#{feature_type_id}&format=xml"))['datasets']
+  end
+  
+  def api_datasets(params)
+    datasets = xml_to_mash(get("#{api_uri}/datasets?#{clean(params).to_query}"))['datasets']
   end
   
   def api_dataset_raw(dataset_id, format)
@@ -166,6 +170,15 @@ class CatalogueTranslator
 
   def datasets_last_uploaded
     json_to_mash(get("#{statistics_uri}/last_uploaded?format=json"))['datasets']
+  end
+  
+  def clean(params, format='xml')
+    params.delete(:controller)
+    params.delete(:action)
+    params[:format] = format
+    params.delete(:utf8)
+    params.delete(:authenticity_token)
+    params
   end
   
   def get(uri)

@@ -11,9 +11,15 @@
     map.addLayer(layer);
     
             
-    function drawJSON(data) {
+    function drawJSON(data, colour) {
       var geojson_format = new OpenLayers.Format.GeoJSON();
       var vector_layer = new OpenLayers.Layer.Vector(); 
+
+      var style = OpenLayers.Feature.Vector.style["default"];
+      style.strokeColor = style.fillColor = colour;
+
+      vector_layer.style = style;
+            
       map.addLayer(vector_layer);
       vector_layer.addFeatures(geojson_format.read(data));
 
@@ -24,14 +30,19 @@
       map.zoomToExtent(bounds);
     }
 
+    var points = [];
     <% 
-      uuids = params[:ids].split(',')
-      uuids.each do |uuid|
+      @datasets.each_with_index do |dataset, i|
     %>
-    $.get(<%= "'http://localhost:3001/api/feature/#{uuid}?output=json'" -%>, function(data) { drawJSON(data); });
+    points.push(<%= "'POINT(#{dataset.coordinates.gsub(',',' ')})'" %>);
+    $.get(<%= "'http://localhost:3001/api/feature/#{dataset.id}?output=json'" -%>, function(data) { drawJSON(data, <%= "'#{css_colour(i)[:code]}'" %>); }); 
     <%
-      end unless !uuids
+      end unless !@datasets
     %>
+/*
+    var centriod = OpenLayers.Geometry.fromWKT(points);
+debugger;
+*/
   });    
 </script>
 	
@@ -52,9 +63,20 @@
 	</div>
 </div>
 <div class="clear"></div>
-
+<style>
+  #filter-container ul {
+    padding: 0px;
+    margin: 0 -6px 0 20px;
+  }
+  #filter-container li {
+    font-size: 30px;
+    line-height: 18px;
+  }
+</style>
 <div class="sub-content-body">
 	<div class="sub-content-left">
+<%
+=begin %<	
 		<div class="left-tab-body">
 			<div id="bar-chart-div" class="left-tab tab-select">
 				<a href="#">Layers</a>
@@ -64,99 +86,46 @@
 			</div>
 		</div>
 		<div class="clear"></div>
+<%
+=end %>		
 		<div id="filter-container">
-		 <div id="filter-content">
-		  <div id="filter-1">
-			<div class="float-left">
-				<input type="checkbox" id="filter-check-1" name="filter-check" value="1">
-			</div>
-			<div class="float-left width-5">&nbsp;</div>
-			<div class="float-left">
-				<img src="/images/bullet-blue.jpg" border="0" />
-			</div>
-			<div class="float-left width-5">&nbsp;</div>
-			<div class="float-left width-210">
-				<div class="tool-left-link">
-					IP3 Alpine Tundra
-				</div>
-				<div class="tool-left-text">
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula.
-				</div>
-			</div>
-			<div class="clear height-5">&nbsp;</div>
-		  </div>
-		  
-		  <div id="filter-2">
-			<div class="float-left">
-				<input type="checkbox" id="filter-check-2" name="filter-check" value="2">
-			</div>
-			<div class="float-left width-5">&nbsp;</div>
-			<div class="float-left">
-				<img src="/images/bullet-green.jpg" border="0" />
-			</div>
-			<div class="float-left width-5">&nbsp;</div>
-			<div class="float-left width-210">
-				<div class="tool-left-link">
-					IP3 Grange Basin
-				</div>
-				<div class="tool-left-text">
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula.
-				</div>
-			</div>
-			<div class="clear height-5">&nbsp;</div>
-		  </div>
-		  
-		  <div id="filter-3">			
-			<div class="float-left">
-				<input type="checkbox" id="filter-check-3" name="filter-check" value="3">
-			</div>
-			<div class="float-left width-5">&nbsp;</div>
-			<div class="float-left">
-				<img src="/images/bullet-yellow.jpg" border="0" />
-			</div>
-			<div class="float-left width-5">&nbsp;</div>
-			<div class="float-left width-210">
-				<div class="tool-left-link">
-					IP3 Buckbrush
-				</div>
-				<div class="tool-left-text">
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula.
-				</div>
-			</div>
-			<div class="clear height-5">&nbsp;</div>
-		  </div>
-		  
-		  <div id="filter-4">			
-			<div class="float-left">
-				<input type="checkbox" id="filter-check-4" name="filter-check" value="4">
-			</div>
-			<div class="float-left width-5">&nbsp;</div>
-			<div class="float-left">
-				<img src="/images/bullet-grey.jpg" border="0" />
-			</div>
-			<div class="float-left width-5">&nbsp;</div>
-			<div class="float-left width-210">
-				<div class="tool-left-link">
-					PAM 2nd Wheat Output
-				</div>
-				<div class="tool-left-text">
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula.
-				</div>
-			</div>
-			<div class="clear height-5">&nbsp;</div>
-		  </div>
-		 </div>
-		 <div class="clear height-50">&nbsp;</div>
-			<div>
-				<span class="button">
-					<button onclick="add_new_dataset_map(); return false;">+ Dataset</button>
-				</span>
-				<span class="button">
-					<button onclick="remove_dataset_map(); return false;">Remove</button>
-				</span>
-			</div>
-				
-					
+      <div id="filter-content">
+      <%= form_for :datasets do |f| %>
+      <%  @datasets.each_with_index do |dataset,i| %>
+        <div class="float-left">
+          <%= check_box_tag "dataset[#{dataset.id}]", dataset.id %>
+        </div>
+        <div class="float-left width-5">&nbsp;</div>
+        <div class="float-left"><ul><li style='color: <%= "#{css_colour(i)[:code]}" %>'></li></ul></div>
+        <div class="float-left width-5">&nbsp;</div>
+        <div class="float-left width-210">
+          <label for='<%= "dataset_#{dataset.id}" %>'>
+            <div class="tool-left-link">
+            <%= dataset.name %>
+            </div>
+            <div class="tool-left-text">
+            <%= dataset.description %>
+            </div>
+          </label>
+        </div>
+        <div class="clear height-5">&nbsp;</div>
+      <% end unless !@datasets %>
+      <% end %>
+      </div>
+
+      <div class="clear height-50">&nbsp;</div>
+      <div>
+<%
+=begin %>      
+        <span class="button">
+          <button onclick="add_new_dataset_map(); return false;">+ Dataset</button>
+        </span>
+<%
+=end %>        
+        <span class="button">
+          <button onclick="remove_dataset_map(); return false;">Remove</button>
+        </span>				
+      </div>					
 		</div>
 	</div>
 	<input type="hidden" name="hid_last_cnt" id="hid_last_cnt" value="4">

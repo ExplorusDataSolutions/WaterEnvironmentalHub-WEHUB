@@ -202,6 +202,21 @@ module CatalogueHelper
     colours[i]
   end
   
+  def css_colour(i)
+    colours = [ 
+      { 'FF0000' => 'red' }, { '00FF00' => 'green' }, { '0000FF' => 'blue' }, { 'FFA500' => 'orange' }, { '800080' => 'purple' }, 
+      { '40E0D0' => 'turquoise' }, { 'D2B48C' => 'tan' }, { '000080' => 'navy' }, { 'A52A2A' => 'brown' }, { '808080' => 'gray' }, 
+      { 'FF7F50' => 'coral' }, { 'FF00FF' => 'fuchsia' }, { 'FFFF00' => 'yellow' }, { '8A2BE2' => 'blue violet' }, 
+      { 'F0F8FF' => 'alice blue' }, { 'F9EA0' => 'cadet blue' }, { 'B8860B' => 'dark golden rod' }, { '556B2F' => 'dark olive green' }, 
+      { '8B0000' => 'dark red' }, { 'E9967A' => 'dark salmon' }, { '483D8B' => 'dark slate blue' }, { 'B22222' => 'fire brick' }, 
+      { 'ADFF2F' => 'green yellow' }, { 'FF69B4' => 'hot pink' }, { 'DDA0DD' => 'plum' }, { '4169E1' => 'royal blue' }, 
+      { '87CEEB' => 'sky blue' }, { '9ACD32' => 'yellow green' }, { 'FF1493' => 'deep pink' }, { '4B0082' => 'indigo' }, 
+      { 'BDB76B' => 'dark khaki' }, { 'FFF8DC' => 'corn silk' }, { '6495ED' => 'corn flower blue' }, { '5F9EA0' => 'cadet blue' }, 
+      { 'DC143C' => 'crimson' }, { 'A9A9A9' => 'dark gray' }, { 'F0FFFF' => 'azure' }, { 'FFE4C4' => 'bisque' }, { '000000' => 'black' }, 
+      { 'FF8C00' => 'dark orange' } ]
+    { :name => colours[i].values[0], :code => "##{colours[i].keys[0]}" }
+  end
+  
   def more_markup(content, length=125)
     if content.length > length
       "#{content[0..length]}<span class='more'>... <a href='#more'>more</a></span><span class='more-content' style='display: none;'>#{content[length+1..-1]}</span>"
