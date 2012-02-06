@@ -55,100 +55,7 @@
     }
   });
 </script>
-<style>
-.format-selector {
-  font-size: 0.8em;
-  margin-left: -110px;
-  padding: 1px 8px;
-  position: absolute;
-  z-index: 100;
-}
-#layer-selector table {
-  border-collapse: collapse; 
-  margin: 0;
-}
-#layer-selector {
-  padding-bottom: 5px;
-}
-#date-range {
-  padding-bottom: 10px;
-  padding-top: 10px;  
-}
-#date-range input {
-  width: 98px;
-}
-#bbox-selector input {
-  width: 70px;
-}
-</style>
-<script>
-  $(document).ready(function() {
-
-    $('button').button();
-
-    function download() {
-      var uri = "<%= url_for :controller => 'item', :action => 'download' %>";
-      $.getJSON(uri + '?' + $('form[name=download]').serialize() , function(data) {
-        if (data.success) {
-          window.location = uri + '?filename=' + data.filename; 
-        } else {
-          var is_external = false;
-          var is_no_data = false;
-          $.each(data.errors, function(i, v) { 
-            if (v.match(/external_service:/)) {
-              is_external = true;
-            }
-            if (v.match(/no data found/i) || v.match(/no stations found/i)) {
-              is_no_data = true;
-            }
-          });
-          
-          if (is_external) {
-            if (is_no_data) {
-              WEHub.modal("We're Sorry", "No data could be retrieved for your selected time period and bounding box. Try making a new request.");
-            } else {
-              WEHub.modal("We're Sorry", "We're having trouble retrieving this feature's data from an external service. Please try again at a later date.");
-            }
-          } else {
-            WEHub.modal("We're Sorry", "We're having trouble generating the " + $('[name=format]:checked').val() + " format for this feature. Please try an alternate format.");
-          }
-        }
-      });
-    }
-      
-    var formatSelector = $('.format-selector');  
-    function bindDownloadButtonset() {
-      $('.format-buttons').buttonset();    
-
-      $('button[name=download]')
-        .button()
-        .click(function() {
-          formatSelector.hide();
-          download();
-        })
-        .next()
-          .button({ text: false, icons: { primary: 'ui-icon-triangle-1-s' }})
-          .click(function() { 
-            formatSelector.toggle();
-           })
-          .parent()
-            .buttonset();
-            
-      $('form[name=download] [name=format]')
-        .click(function() {
-          formatSelector.hide();
-          download();
-        });
-    }
-    bindDownloadButtonset()
-    
-    $('.tab-download').click(function() {
-      formatSelector.show();
-    });
-    
-    $('form[name=download]').find('[name=start],[name=end]').datepicker({ dateFormat: 'dd/mm/yy' });
-  }); 
-</script>
+<%= render "download_format_selector" %>
 <script>
 $(document).ready(function() {
   
@@ -309,39 +216,7 @@ $(document).ready(function() {
   </div>
   <div class="clear"></div>
   
-  <div class="format-selector ui-widget-content ui-corner-all ui-state-active" style="display: none;">
-  <%= form_for :download, :method => :get, :url => { :controller => 'item', :action => 'download' }, :html => { :name => 'download' } do %>
-    <%= hidden_field_tag :ids, params[:id] %>
-    <% if @dataset.external %>
-      <div id="date-range"><%= label_tag :start, "Select a date range" %> <%= text_field_tag :start %> - <%= text_field_tag :end %></div>
-      <% if @dataset.layers %>
-      <div id="layer-selector">
-        <table>
-          <tr>
-            <td valign="top" rowspan="<%= @dataset.layers.count + 1 %>">Select a feature layer</td>
-          </tr>        
-          <% @dataset.layers.each_with_index do |layer, i| %>
-          <tr><td><%= radio_button_tag :layer, layer.layer_id %></td><td><%= label_tag "layer[#{layer.layer_id}]", "#{layer.name} (<span style='color: #{box_colours(i)}'>#{box_colours(i)}</span>)".html_safe %></td></tr>
-          <% end %>
-        </table>
-      </div>
-      <% end %>
-      <div id="bbox-selector">Select a bounding box <a href="#" id="box_selector">(click here to use the map)</a>
-        <table>
-          <tr><td></td><td><%= text_field_tag :north %></td><td></td></tr>
-          <tr><td style="padding-left: 97px"><%= text_field_tag :west %></td><td></td><td><%= text_field_tag :east %></td></tr>
-          <tr><td></td><td><%= text_field_tag :south %></td><td></td></tr>
-        </table>
-      </div>
-    <% end %>
-    Select format
-    <span class="format-buttons">
-    <% @dataset.formats.format.each do |format| %>
-      <%= label_tag "format[#{format}]", format %><%= radio_button_tag :format, format %>
-    <% end %>
-    </span>
-  <% end %>
-  </div>
+<%= 'download_format_selector' %>
 
 </div>
 <div class="clear"></div>

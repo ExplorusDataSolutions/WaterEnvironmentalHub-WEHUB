@@ -70,19 +70,27 @@
     }
     
     $('button.remove').click(function(event) {
-      var ids = $('[name=datasets]:checked').val();
+      var ids = $('[name=dataset]:checked').val();
       if (typeof ids === 'string') {
         ids = [ids]
       }      
       
       removeLayers(ids);
       for (i in ids) {      
-        $('.datasets.' + ids[i]).hide();
+        $('.dataset.' + ids[i]).hide();
       }
+    });
+    
+    $('form[name=datasets] [name=dataset]').click(function(event) {
+      var ids = []
+      $('[name=dataset]:checked').each(function() {
+          ids.push($(this).val());
+      });
+      $('form[name=download] [name=ids]').val(ids.join(','));
     });
   });    
 </script>
-	
+
 <div class="tab-menu-body">
 	<div class="tab-menu tab-menu-select">
 		<%= link_to 'Data Map', :controller => 'tools', :action => 'map', :id => @id %>
@@ -98,9 +106,13 @@
 <%
 =end %>	
 	<div class="tab-menu-right">
-		<div class="top-container-tab">
-			<div class="float-left tab-download">Download</div><div class="float-left tab-download-arrow"></div>
-		</div>
+    <div class="top-container-tab tab-download">
+      <div class="float-left">Download</div>
+      <div class="float-left tab-download-arrow"></div>   
+    </div>
+    <div class="clear"></div>
+		
+		<%= render '/catalogue/download_format_selector' %>
 	</div>
 </div>
 <div class="clear"></div>
@@ -131,11 +143,11 @@
 =end %>		
 		<div id="filter-container">
       <div id="filter-content">
-      <%= form_for :datasets do |f| %>
+      <%= form_for :datasets, :html => { :name => 'datasets' } do |f| %>
       <%  @datasets.each_with_index do |dataset,i| %>
         <div class="mini-loading-dialog datasets <%= "#{dataset.id}" -%>">
           <div class="float-left">
-            <%= check_box_tag "datasets", dataset.id, false, :id => "dataset_#{dataset.id}" %>
+            <%= check_box_tag "dataset", dataset.id, false, :id => "dataset_#{dataset.id}" %>
           </div>
           <div class="float-left width-5">&nbsp;</div>
           <div class="float-left"><label for='<%= "dataset_#{dataset.id}" %>'><ul><li style='color: <%= "#{css_colour(i)[:code]}" %>'></li></ul></label></div>

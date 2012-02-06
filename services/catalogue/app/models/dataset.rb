@@ -55,7 +55,7 @@ class Dataset < ActiveRecord::Base
       xml.tag!(:source, source) unless source.nil?
       xml.tag!(:uuid, uuid)
       xml.tag!(:id, uuid)
-      xml.owner do
+      xml.owner :type => 'array' do
         if !owner.user_id.nil?
           xml.tag!(:user_id, owner.user_id)
         end
@@ -80,7 +80,7 @@ class Dataset < ActiveRecord::Base
       if feature.bounding_box
         xml.tag!(:bounding_box, feature.bounding_box)
       end
-      xml.formats do
+      xml.formats :type => 'array' do
         feature.formats.each do |format|
           xml.format format
         end
