@@ -1,3 +1,10 @@
+<style>
+.mini-loading-dialog {
+  background: white url(/images/spinner.gif) center top no-repeat;
+  height: 55px;
+  opacity: 0.6;
+}
+</style>
 <script>
   $(document).ready(function() {
 
@@ -5,57 +12,91 @@
     var lat = 40;
     var zoom = 5;
     var map, layer;
+    var points = new OpenLayers.Geometry.MultiPoint();
+    var layers = []
 
     map = new OpenLayers.Map( 'map' );
-    layer = new OpenLayers.Layer.WMS( "OpenLayers WMS", "http://labs.metacarta.com/wms/vmap0", {layers: 'basic'} );
-    map.addLayer(layer);
-    
+    map.addLayer(new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP}));    
             
-    function drawJSON(data, colour) {
-      var geojson_format = new OpenLayers.Format.GeoJSON();
-      var vector_layer = new OpenLayers.Layer.Vector(); 
+    function drawJSON(data, colour, coordinates, datasetId) {
+      $('.datasets.' + datasetId).removeClass('mini-loading-dialog');
+      
+      var geojson_format = new OpenLayers.Format.GeoJSON({
+        'externalProjection': new OpenLayers.Projection('EPSG:4326'),
+        'internalProjection': map.getProjectionObject()
+      });
+      var vector_layer = new OpenLayers.Layer.Vector(datasetId); 
 
       var style = OpenLayers.Feature.Vector.style["default"];
       style.strokeColor = style.fillColor = colour;
-
       vector_layer.style = style;
             
-      map.addLayer(vector_layer);
+      map.addLayer(vector_layer);      
       vector_layer.addFeatures(geojson_format.read(data));
 
-      var bounds = new OpenLayers.Bounds(
-        -119.193, 48.999,
-        -110.006, 59.858
-      );
-      map.zoomToExtent(bounds);
+      points.addPoint(OpenLayers.Geometry.fromWKT('POINT(' + coordinates + ')'));
+      var centroid = points.getCentroid(true);
+      WEHub.OpenLayers.setCenter(map, centroid.y, centroid.x, 3);
     }
 
-    var points = [];
     <% 
       @datasets.each_with_index do |dataset, i|
     %>
-    points.push(<%= "'POINT(#{dataset.coordinates.gsub(',',' ')})'" %>);
-    $.get(<%= "'http://localhost:3001/api/feature/#{dataset.id}?output=json'" -%>, function(data) { drawJSON(data, <%= "'#{css_colour(i)[:code]}'" %>); }); 
+
+    $.ajax({
+      url: <%= "'http://localhost:3001/api/feature/#{dataset.id}?output=json'" -%>,
+      global: false,
+      success: function(data) { <%= "drawJSON(data,'#{css_colour(i)[:code]}', '#{dataset.coordinates.gsub(',', ' ')}', '#{dataset.id}');" -%> }
+    });    
+
     <%
       end unless !@datasets
     %>
-/*
-    var centriod = OpenLayers.Geometry.fromWKT(points);
-debugger;
-*/
+    
+    function removeLayers(ids) {
+      var matchingLayers = []
+      for(i in map.layers) {
+        var layer = map.layers[i];
+        for(j in ids) {
+          if (layer['name'] === ids[j]) {
+            matchingLayers.push(layer);
+          }
+        }
+      }
+      
+      for(i in matchingLayers) {      
+        map.removeLayer(matchingLayers[i]);
+      }
+    }
+    
+    $('button.remove').click(function(event) {
+      var ids = $('[name=datasets]:checked').val();
+      if (typeof ids === 'string') {
+        ids = [ids]
+      }      
+      
+      removeLayers(ids);
+      for (i in ids) {      
+        $('.datasets.' + ids[i]).hide();
+      }
+    });
   });    
 </script>
 	
 <div class="tab-menu-body">
 	<div class="tab-menu tab-menu-select">
-		<%= link_to 'WE Data Map', :controller => 'tools', :action => 'map', :id => @id %>
+		<%= link_to 'Data Map', :controller => 'tools', :action => 'map', :id => @id %>
 	</div>
+<%
+=begin %>
 	<div class="tab-menu">
 		<%= link_to 'WE Data Graphs', :controller => 'tools', :action => 'chart', :id => @id %>
 	</div>
 	<div class="tab-menu">
 		<%= link_to 'Developers', :controller => 'tools', :action => 'developers', :id => @id %>
 	</div>
+<%
+=end %>	
 	<div class="tab-menu-right">
 		<div class="top-container-tab">
 			<div class="float-left tab-download">Download</div><div class="float-left tab-download-arrow"></div>
@@ -92,21 +133,23 @@ debugger;
       <div id="filter-content">
       <%= form_for :datasets do |f| %>
       <%  @datasets.each_with_index do |dataset,i| %>
-        <div class="float-left">
-          <%= check_box_tag "dataset[#{dataset.id}]", dataset.id %>
-        </div>
-        <div class="float-left width-5">&nbsp;</div>
-        <div class="float-left"><ul><li style='color: <%= "#{css_colour(i)[:code]}" %>'></li></ul></div>
-        <div class="float-left width-5">&nbsp;</div>
-        <div class="float-left width-210">
-          <label for='<%= "dataset_#{dataset.id}" %>'>
-            <div class="tool-left-link">
-            <%= dataset.name %>
-            </div>
-            <div class="tool-left-text">
-            <%= dataset.description %>
-            </div>
-          </label>
+        <div class="mini-loading-dialog datasets <%= "#{dataset.id}" -%>">
+          <div class="float-left">
+            <%= check_box_tag "datasets", dataset.id, false, :id => "dataset_#{dataset.id}" %>
+          </div>
+          <div class="float-left width-5">&nbsp;</div>
+          <div class="float-left"><label for='<%= "dataset_#{dataset.id}" %>'><ul><li style='color: <%= "#{css_colour(i)[:code]}" %>'></li></ul></label></div>
+          <div class="float-left width-5">&nbsp;</div>
+          <div class="float-left width-210">
+            <label for='<%= "dataset_#{dataset.id}" %>'>
+              <div class="tool-left-link">
+              <%= link_to "#{dataset.name}", {:controller => 'catalogue', :action => 'details'}, :target => 'blank' %>
+              </div>
+              <div class="tool-left-text">
+              <%= dataset.description %>
+              </div>
+            </label>
+          </div>
         </div>
         <div class="clear height-5">&nbsp;</div>
       <% end unless !@datasets %>
@@ -118,12 +161,12 @@ debugger;
 <%
 =begin %>      
         <span class="button">
-          <button onclick="add_new_dataset_map(); return false;">+ Dataset</button>
+          <button>+ Dataset</button>
         </span>
 <%
 =end %>        
         <span class="button">
-          <button onclick="remove_dataset_map(); return false;">Remove</button>
+          <button class="remove">Remove</button>
         </span>				
       </div>					
 		</div>

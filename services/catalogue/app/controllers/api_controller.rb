@@ -24,15 +24,20 @@ class ApiController < ApplicationController
   
   def datasets
     feature_type_id = params[:feature_type_id]
+    uuids = params[:ids].split(',') unless !params[:ids]
     
+    @datasets = []
     if feature_type_id
       results = ActiveRecord::Base.connection.execute("SELECT uuid, name FROM datasets WHERE feature_type_id = #{feature_type_id} ORDER BY name")
       
-      @datasets = []
       results.each do |result|
         @datasets.push(Dataset.new(:uuid => result['uuid'], :name => result['name'], :feature_source => FeatureSource.new(:name => 'light')))
       end
-    end  
+    elsif uuids
+      uuids.each do |uuid|
+        @datasets.push(Dataset.find_by_uuid(uuid))
+      end
+    end    
     
     respond_with(@datasets)
   end
