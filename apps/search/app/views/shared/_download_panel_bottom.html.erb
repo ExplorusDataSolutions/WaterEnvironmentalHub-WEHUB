@@ -69,6 +69,20 @@
     $('[name=select-all]').click(function() {
       $('[type=checkbox][name=download]').attr('checked', true);
     });
+    
+    $('.map-link').click(function(event) {
+      var checked = $('[type=checkbox][name=download]:checked');
+      
+      var ids = [];
+      checked.each(function() {
+        ids.push($(this).val());
+      })
+      if (checked.length > 1) {
+        event.preventDefault();
+        var url = event.target.parentElement.href;
+        window.location = url.replace(/map\/(.*)/, 'map/?ids=' + ids.join(','));
+      }
+    });
 
     if (WEHub.logged_in()){
       $('[name=my-collection]').click(function() {
