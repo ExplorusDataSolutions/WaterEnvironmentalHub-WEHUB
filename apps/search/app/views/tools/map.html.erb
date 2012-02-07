@@ -68,25 +68,25 @@
         map.removeLayer(matchingLayers[i]);
       }
     }
-    
-    $('button.remove').click(function(event) {
-      var ids = $('[name=dataset]:checked').val();
-      if (typeof ids === 'string') {
-        ids = [ids]
-      }      
-      
-      removeLayers(ids);
-      for (i in ids) {      
-        $('.dataset.' + ids[i]).hide();
-      }
-    });
-    
-    $('form[name=datasets] [name=dataset]').click(function(event) {
+
+    function uuids() {
       var ids = []
       $('[name=dataset]:checked').each(function() {
           ids.push($(this).val());
       });
-      $('form[name=download] [name=ids]').val(ids.join(','));
+      return ids;
+    }
+        
+    $('button.remove').click(function(event) {
+      var ids = uuids();      
+      removeLayers(ids);
+      for (i in ids) {      
+        $('.datasets.' + ids[i]).hide();
+      }
+    });
+    
+    $('form[name=datasets] [name=dataset]').click(function(event) {
+      $('form[name=download] [name=ids]').val(uuids().join(','));
     });
   });    
 </script>
@@ -158,7 +158,7 @@
               <%= link_to "#{dataset.name}", {:controller => 'catalogue', :action => 'details'}, :target => 'blank' %>
               </div>
               <div class="tool-left-text">
-              <%= dataset.description %>
+              <%= more_markup(dataset.description).html_safe -%>
               </div>
             </label>
           </div>

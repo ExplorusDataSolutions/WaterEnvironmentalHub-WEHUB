@@ -26,6 +26,9 @@ class ToolsController < ApplicationController
     @breadcrumb = ['Tools', 'Map']
     @main_menu = 'we_tools'
     
+    if params[:id]
+      params[:ids] = [params[:id]]
+    end
     @datasets = catalogue_instance.api_datasets(params)
   end
   
