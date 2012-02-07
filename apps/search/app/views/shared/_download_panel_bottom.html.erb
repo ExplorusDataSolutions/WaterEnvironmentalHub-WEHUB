@@ -73,12 +73,14 @@
     $('.map-link').click(function(event) {
       var checked = $('[type=checkbox][name=download]:checked');
       
-      var ids = [];
-      checked.each(function() {
-        ids.push($(this).val());
-      })
       if (checked.length > 1) {
         event.preventDefault();
+
+        var ids = [];
+        checked.each(function() {
+          ids.push($(this).val());
+        })
+
         var url = event.target.parentElement.href;
         window.location = url.replace(/map\/(.*)/, 'map/?ids=' + ids.join(','));
       }
