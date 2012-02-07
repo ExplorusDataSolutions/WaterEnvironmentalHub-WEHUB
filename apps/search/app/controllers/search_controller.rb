@@ -66,8 +66,10 @@ class SearchController < ApplicationController
   end
     
   def refresh
-    search_instance.refresh
-    render :text => 'Success!'
-  end
-        
+    if self.request.remote_addr == 'localhost' || self.request.remote_addr == '127.0.0.1'
+      Rails.cache.clear
+      render :text => 'Success!' and return
+    end
+    render :text => 'Fail!' and return
+  end     
 end
