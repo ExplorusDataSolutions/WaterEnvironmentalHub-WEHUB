@@ -44,7 +44,7 @@
     %>
 
     $.ajax({
-      url: <%= "'http://localhost:3001/api/feature/#{dataset.id}?output=json'" -%>,
+      url: "<%= url_for :controller => 'api', :action => 'feature', :id => dataset.id, :output => 'json' %>",
       global: false,
       success: function(data) { <%= "drawJSON(data,'#{css_colour(i)[:code]}', '#{dataset.coordinates.gsub(',', ' ')}', '#{dataset.id}');" -%> }
     });    
