@@ -134,11 +134,11 @@
 </script>
 
 <div class="tab-menu-body">
+<%
+=begin %>
 	<div class="tab-menu tab-menu-select">
 		<%= link_to 'Data Map', :controller => 'tools', :action => 'map', :id => @id %>
 	</div>
-<%
-=begin %>
 	<div class="tab-menu">
 		<%= link_to 'WE Data Graphs', :controller => 'tools', :action => 'chart', :id => @id %>
 	</div>
@@ -197,7 +197,7 @@
           <div class="float-left width-210">
             <label for='<%= "dataset_#{dataset.id}" %>'>
               <div class="tool-left-link">
-              <%= link_to "#{dataset.name}", {:controller => 'catalogue', :action => 'details'}, :target => 'blank' %>
+              <%= link_to "#{dataset.name}", {:controller => 'catalogue', :action => 'details', :id => dataset.id}, :target => 'blank' %>
               </div>
               <div class="tool-left-text">
               <%= more_markup(dataset.description).html_safe -%>
