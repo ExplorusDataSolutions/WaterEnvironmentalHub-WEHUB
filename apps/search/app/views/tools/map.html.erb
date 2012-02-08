@@ -27,7 +27,9 @@
     map.addLayer(new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP}));    
             
     function drawJSON(data, colour, coordinates, datasetId) {
-      $('.datasets.' + datasetId).removeClass('mini-loading-dialog');
+      var datasetElement = $('.datasets.' + datasetId);
+      datasetElement.removeClass('mini-loading-dialog');      
+      datasetElement.find('input').attr('checked', true);
       
       var geojson_format = new OpenLayers.Format.GeoJSON({
         'externalProjection': new OpenLayers.Projection('EPSG:4326'),
@@ -37,6 +39,7 @@
 
       var style = OpenLayers.Feature.Vector.style["default"];
       style.strokeColor = style.fillColor = colour;
+      style.strokeOpacity = style.fillOpacity = 0.3;
       vector_layer.style = style;
             
       map.addLayer(vector_layer);      
@@ -44,7 +47,7 @@
 
       points.addPoint(OpenLayers.Geometry.fromWKT('POINT(' + coordinates + ')'));
       var centroid = points.getCentroid(true);
-      WEHub.OpenLayers.setCenter(map, centroid.y, centroid.x, 3);
+      WEHub.OpenLayers.setCenter(map, centroid.y, centroid.x, 4);
     }
     
     function disableDataset(datasetId) {
@@ -94,14 +97,16 @@
     
     var removedLayers = []    
     function toggleLayers(ids) {
-
       var toRemove = matchingLayers(map.layers, ids);
+      var toAdd = matchingLayers(removedLayers, ids);
+
+      
       for(i in toRemove) {
         map.removeLayer(toRemove[i]);
         removedLayers.push(toRemove[i])
       }
 
-      var toAdd = matchingLayers(removedLayers, ids);
+
       for(i in toAdd) {
         map.addLayer(toAdd[i]);
         for(i in removedLayers) {
