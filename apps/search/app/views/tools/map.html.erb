@@ -7,6 +7,14 @@
 </style>
 <script>
   $(document).ready(function() {
+    if (<%= !@datasets || @datasets.count > 0 %>) {
+      WEHub.modal("We're Sorry", "The maps for these datasets couldn't be retrieved");
+      $('button.remove').hide();
+    }
+  });
+</script>
+<script>
+  $(document).ready(function() {
 
     var lon = 5;
     var lat = 40;
@@ -38,6 +46,12 @@
       var centroid = points.getCentroid(true);
       WEHub.OpenLayers.setCenter(map, centroid.y, centroid.x, 3);
     }
+    
+    function disableDataset(datasetId) {
+      var datasetElement = $('.datasets.' + datasetId);
+      datasetElement.removeClass('mini-loading-dialog').addClass('ui-state-disabled')
+      datasetElement.find('input').attr('disabled', true);
+    }
 
     <% 
       @datasets.each_with_index do |dataset, i|
@@ -46,7 +60,9 @@
     $.ajax({
       url: "<%= url_for :controller => 'api', :action => 'feature', :id => dataset.id, :output => 'json' %>",
       global: false,
-      success: function(data) { <%= "drawJSON(data,'#{css_colour(i)[:code]}', '#{dataset.coordinates.gsub(',', ' ')}', '#{dataset.id}');" -%> }
+      success: function(data) { <%= "drawJSON(data,'#{css_colour(i)[:code]}', '#{dataset.coordinates.gsub(',', ' ')}', '#{dataset.id}');" -%> },
+      error: function(data) { disableDataset('<%= dataset.id %>'); }
+      
     });    
 
     <%
@@ -87,6 +103,11 @@
     
     $('form[name=datasets] [name=dataset]').click(function(event) {
       $('form[name=download] [name=ids]').val(uuids().join(','));
+    });
+    
+    $('button.add').click(function(event) {
+      event.preventDefault();
+      window.location = "<%= url_for :controller => 'search', :action => 'index' %>";
     });
   });    
 </script>
@@ -170,13 +191,9 @@
 
       <div class="clear height-50">&nbsp;</div>
       <div>
-<%
-=begin %>      
         <span class="button">
-          <button>+ Dataset</button>
+          <button class="add">+ Dataset</button>
         </span>
-<%
-=end %>        
         <span class="button">
           <button class="remove">Remove</button>
         </span>				
