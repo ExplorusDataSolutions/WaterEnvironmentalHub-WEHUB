@@ -7,7 +7,7 @@
 </style>
 <script>
   $(document).ready(function() {
-    if (<%= !@datasets || @datasets.count < 0 %>) {
+    if (<%= !@datasets || @datasets.count == 0 %>) {
       WEHub.modal("We're Sorry", "The maps for these datasets couldn't be retrieved");
       $('button.remove').hide();
     }
@@ -69,46 +69,67 @@
       end unless !@datasets
     %>
     
-    function removeLayers(ids) {
-      var matchingLayers = []
-      for(i in map.layers) {
-        var layer = map.layers[i];
+
+    function matchesLayer(layer, ids) {
+      if (layer && layer['name']) {
         for(j in ids) {
           if (layer['name'] === ids[j]) {
-            matchingLayers.push(layer);
+            return true;
           }
         }
       }
-      
-      for(i in matchingLayers) {      
-        map.removeLayer(matchingLayers[i]);
+      return false;
+    }
+    
+    var removedLayers = []    
+    function toggleLayers(ids) {
+      var toAdd = [];
+      for(i in removedLayers) {
+        var layer = removedLayers[i];
+        if (matchesLayer(layer, ids)) {
+          toAdd.push(layer);
+        }
+
       }
+
+      var toRemove = [];
+      
+      for(i in map.layers) {
+        var layer = map.layers[i];
+        if (matchesLayer(layer, ids)) {
+          toRemove.push(layer);
+        }
+      }
+
+      for(i in toRemove) {
+        map.removeLayer(toRemove[i]);
+        removedLayers.push(toRemove[i])
+      }
+      
+      for(i in toAdd) {
+        map.addLayer(toAdd[i]);
+        for(i in removedLayers) {
+          var layer = removedLayers[i];
+          if (matchesLayer(layer, ids)) {
+            removedLayers[i] = null;
+          }
+        }
+      }
+
     }
 
     function uuids() {
       var ids = []
-      $('[name=dataset]:checked').each(function() {
-          ids.push($(this).val());
-      });
+      $('[name=dataset]:checked').each(function() { ids.push($(this).val()); });
       return ids;
     }
-        
-    $('button.remove').click(function(event) {
-      var ids = uuids();      
-      removeLayers(ids);
-      for (i in ids) {      
-        $('.datasets.' + ids[i]).hide();
-      }
-    });
-    
+            
     $('form[name=datasets] [name=dataset]').click(function(event) {
+
       $('form[name=download] [name=ids]').val(uuids().join(','));
+      toggleLayers([$(event.target).val()]);
     });
     
-    $('button.add').click(function(event) {
-      event.preventDefault();
-      window.location = "<%= url_for :controller => 'search', :action => 'index' %>";
-    });
   });    
 </script>
 
@@ -189,6 +210,8 @@
       <% end %>
       </div>
 
+<%
+=begin %>
       <div class="clear height-50">&nbsp;</div>
       <div>
         <span class="button">
@@ -197,7 +220,9 @@
         <span class="button">
           <button class="remove">Remove</button>
         </span>				
-      </div>					
+      </div>
+<%
+=end %>      
 		</div>
 	</div>
 	<input type="hidden" name="hid_last_cnt" id="hid_last_cnt" value="4">
