@@ -81,31 +81,27 @@
       return false;
     }
     
+    function matchingLayers(layers, ids) {
+      var matchedLayers = [];
+      for(i in layers) {
+        var layer = layers[i];
+        if (matchesLayer(layer, ids)) {
+          matchedLayers.push(layer);
+        }
+      }
+      return matchedLayers;
+    }
+    
     var removedLayers = []    
     function toggleLayers(ids) {
-      var toAdd = [];
-      for(i in removedLayers) {
-        var layer = removedLayers[i];
-        if (matchesLayer(layer, ids)) {
-          toAdd.push(layer);
-        }
 
-      }
-
-      var toRemove = [];
-      
-      for(i in map.layers) {
-        var layer = map.layers[i];
-        if (matchesLayer(layer, ids)) {
-          toRemove.push(layer);
-        }
-      }
-
+      var toRemove = matchingLayers(map.layers, ids);
       for(i in toRemove) {
         map.removeLayer(toRemove[i]);
         removedLayers.push(toRemove[i])
       }
-      
+
+      var toAdd = matchingLayers(removedLayers, ids);
       for(i in toAdd) {
         map.addLayer(toAdd[i]);
         for(i in removedLayers) {
@@ -115,7 +111,6 @@
           }
         }
       }
-
     }
 
     function uuids() {
