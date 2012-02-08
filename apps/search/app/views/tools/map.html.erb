@@ -7,7 +7,7 @@
 </style>
 <script>
   $(document).ready(function() {
-    if (<%= !@datasets || @datasets.count > 0 %>) {
+    if (<%= !@datasets || @datasets.count < 0 %>) {
       WEHub.modal("We're Sorry", "The maps for these datasets couldn't be retrieved");
       $('button.remove').hide();
     }
