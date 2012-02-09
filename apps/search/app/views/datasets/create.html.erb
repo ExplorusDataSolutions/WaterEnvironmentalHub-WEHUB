@@ -135,6 +135,20 @@
             <%= file_field_tag :filename, :class => 'required', :friendly => 'File' %>
 						<div class="">
 							Valid uploads includes: Spreadsheet in .csv, .ods, .xls, or .xlsx format, or Shape files (a .zip file) containing atleast a .shp and .dbf file
+							
+							If the file is in a spreadsheet format it must only have 1 sheet. Multiple sheet uploads will not be successful using the WEHUB uploader. 
+														
+							Shape files will not need to be altered but will need to be converted into WGS84 Geographic ESPG 4326 (http://spatialreference.org/ref/epsg/4326/) and can be directly uploaded into the WEHub. If the data is in any other format it will need to be lightly altered to fit the following specifications:
+											
+							1. The file will be set up in a horizontal data representation with the first row being the column headings with units.
+												
+							2. The file will have an FID column which will represent the feature ID for each individual feature (e.g., a station, a person, etc.) in the table. This can have one to many values. 
+														
+							3. The file will have a Date\Time column. This column can be in multiple formats as long as it is present and populated with values.  
+														
+							4. The file will have a Latitude column. This column will be populated with the features latitude in WGS84 in decimal degrees (example 52.495912).
+												
+							5. The file will have a Longitude column. This column will be populated with the features longitude in WGS84 in decimal degrees (example -114.19012).
 						</div>
 					</td>
 				</tr>
