@@ -136,26 +136,26 @@
 <div class="tab-menu-body">
 <%
 =begin %>
-	<div class="tab-menu tab-menu-select">
-		<%= link_to 'Data Map', :controller => 'tools', :action => 'map', :id => @id %>
-	</div>
-	<div class="tab-menu">
-		<%= link_to 'WE Data Graphs', :controller => 'tools', :action => 'chart', :id => @id %>
-	</div>
-	<div class="tab-menu">
-		<%= link_to 'Developers', :controller => 'tools', :action => 'developers', :id => @id %>
-	</div>
+  <div class="tab-menu tab-menu-select">
+    <%= link_to 'Data Map', :controller => 'tools', :action => 'map', :id => @id %>
+  </div>
+  <div class="tab-menu">
+    <%= link_to 'WE Data Graphs', :controller => 'tools', :action => 'chart', :id => @id %>
+  </div>
+  <div class="tab-menu">
+    <%= link_to 'Developers', :controller => 'tools', :action => 'developers', :id => @id %>
+  </div>
 <%
-=end %>	
-	<div class="tab-menu-right">
+=end %>  
+  <div class="tab-menu-right">
     <div class="top-container-tab tab-download">
       <div class="float-left">Download</div>
       <div class="float-left tab-download-arrow"></div>   
     </div>
     <div class="clear"></div>
-		
-		<%= render '/catalogue/download_format_selector' %>
-	</div>
+    
+    <%= render '/catalogue/download_format_selector' %>
+  </div>
 </div>
 <div class="clear"></div>
 <style>
@@ -169,21 +169,21 @@
   }
 </style>
 <div class="sub-content-body">
-	<div class="sub-content-left">
+  <div class="sub-content-left">
 <%
-=begin %<	
-		<div class="left-tab-body">
-			<div id="bar-chart-div" class="left-tab tab-select">
-				<a href="#">Layers</a>
-			</div>
-			<div id="line-chart-div" class="left-tab">
-				<a href="#">Info</a>
-			</div>
-		</div>
-		<div class="clear"></div>
+=begin %<  
+    <div class="left-tab-body">
+      <div id="bar-chart-div" class="left-tab tab-select">
+        <a href="#">Layers</a>
+      </div>
+      <div id="line-chart-div" class="left-tab">
+        <a href="#">Info</a>
+      </div>
+    </div>
+    <div class="clear"></div>
 <%
-=end %>		
-		<div id="filter-container">
+=end %>    
+    <div id="filter-container">
       <div id="filter-content">
       <%= form_for :datasets, :html => { :name => 'datasets' } do |f| %>
       <%  @datasets.each_with_index do |dataset,i| %>
@@ -219,19 +219,19 @@
         </span>
         <span class="button">
           <button class="remove">Remove</button>
-        </span>				
+        </span>        
       </div>
 <%
 =end %>      
-		</div>
-	</div>
-	<input type="hidden" name="hid_last_cnt" id="hid_last_cnt" value="4">
-	<div class="sub-content-center">
-		<div id="map" style="width:564px;"></div>
-		<!--img src="/images/temp-data-map.jpg" border="0" alt="Temp Map" title="Map"-->		
-	</div>
-	<div class="sub-content-right">
-    <%= render 'shared/right_panel' %>		
-	</div>
-	<div class="clear"></div>
+    </div>
+  </div>
+  <input type="hidden" name="hid_last_cnt" id="hid_last_cnt" value="4">
+  <div class="sub-content-center">
+    <div id="map" style="width:564px;"></div>
+    <!--img src="/images/temp-data-map.jpg" border="0" alt="Temp Map" title="Map"-->    
+  </div>
+  <div class="sub-content-right">
+    <%= render 'shared/right_panel' %>    
+  </div>
+  <div class="clear"></div>
 </div>
