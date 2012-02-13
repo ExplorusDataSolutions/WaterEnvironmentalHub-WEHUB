@@ -1,5 +1,7 @@
 class ApiController < ApplicationController
 
+  include DatabaseHelper
+  
   caches_action :datasets, :is_feature_external, :dataset, :feature_types, :cache_path => Proc.new { |c| c.params }, :expires_in => 24.hours
 
   respond_to :json, :xml
@@ -66,6 +68,25 @@ class ApiController < ApplicationController
     
     # returns results in text format b/c some of our data results in invalid XML and JSON
     render :text => @data
+  end
+  
+  def shared_properties
+    uuids = params[:ids].split(',') unless !params[:ids]
+
+    common_terms_with_types = {}
+    uuids.each_with_index do |uuid, i|
+      dataset = Dataset.find_by_uuid(uuid)
+      feature = dataset.feature unless !dataset
+      if !feature.nil? && !feature.is_data_source_external?
+        fields_with_type = feature.feature_fields_by_type
+        common_terms_with_types.merge!(fields_with_type) if i == 0
+        fields_with_type.each do |key, value|
+          common_terms_with_types[key] = common_terms_with_types[key] & value
+        end
+      end
+    end
+
+    respond_with(common_terms_with_types)
   end
   
 end

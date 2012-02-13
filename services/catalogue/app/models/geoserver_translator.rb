@@ -57,6 +57,31 @@ class GeoServerTranslator
     fields
   end
   
+  def get_type(string)
+    type = :string
+    begin
+      Float(string)
+      type = :numeric
+    rescue
+    end
+    type
+  end
+  
+  def feature_fields_by_type(uuid)
+    fields_with_types = {}
+    
+    hash = get_features(uuid)
+    hash = hash['features'][0]['properties']
+    hash.each do |result|
+      if fields_with_types[get_type(result[1])].nil? 
+        fields_with_types[get_type(result[1])] = []
+      end
+      fields_with_types[get_type(result[1])].push(result[0])
+    end
+    
+    fields_with_types
+  end
+  
   def cache_filename(uuid)
     "#{cache_directory}/geoserver_#{uuid.gsub('-','_')}.hash"
   end

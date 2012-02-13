@@ -257,6 +257,10 @@ class Feature
     keywords
   end
   
+  def feature_fields_by_type
+    geoserver_translator.feature_fields_by_type(uuid)    
+  end
+  
   def name
     @name
   end
