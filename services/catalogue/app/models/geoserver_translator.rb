@@ -8,18 +8,14 @@ class GeoServerTranslator
   def initialize(server_address='localhost:8080', timeout=300, cache_directory='tmp/cache')
     @server_address = server_address
     @timeout = timeout
-    @cache_directory = cache_directory
   end
 
-  def data(uuid)
-    data = []
-    begin
-      File.open(cache_filename(uuid), 'r') { |f| data = f.read }
-      data = eval(data)
-    rescue Exception => e
-      data = JSON.parse(http_get("GetFeature&typeName=#{uuid}&maxFeatures=10000&outputFormat=json"))
-      File.open(cache_filename(uuid), 'w') { |f| f.write(data) }
-    end
+  def data(uuid, filter_properties=nil)
+    data = []   
+    
+    url_properties = (filter_properties && !filter_properties.empty?) ? "&propertyName=#{filter_properties.join(',')}" : ''
+    data = JSON.parse(http_get("GetFeature&typeName=#{uuid}&maxFeatures=100000#{url_properties}&outputFormat=json"))
+    
     data
   end
   
@@ -81,11 +77,7 @@ class GeoServerTranslator
     
     fields_with_types
   end
-  
-  def cache_filename(uuid)
-    "#{cache_directory}/geoserver_#{uuid.gsub('-','_')}.hash"
-  end
-  
+    
   def get_features(uuid)
     if @features.nil?
       @features = JSON.parse(http_get("GetFeature&typeName=#{uuid}&maxFeatures=1&outputFormat=json"))

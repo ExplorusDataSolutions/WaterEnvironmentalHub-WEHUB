@@ -45,18 +45,21 @@ class Feature
   end
   
   def data(advanced_search_params=nil)
-    if is_data_source?('geoserver')
-      geoserver_translator.data(uuid)
-    elsif is_data_source?('catalogue')
+    filter_properties = filter_properties_from_params(advanced_search_params)
 
-      column_names = execute("SELECT * FROM #{tablename} LIMIT 1")[0]
-      if column_names
-        column_names = column_names.keys
-        if column_names.include?('the_geom')
-          column_names.delete('the_geom')
+    if is_data_source?('geoserver')
+      geoserver_translator.data(uuid, filter_properties)
+    elsif is_data_source?('catalogue')
+      result = execute("SELECT * FROM #{tablename} LIMIT 1")[0]
+      if result
+        has_geom = result.keys.include?('the_geom')
+        column_names = result.keys & filter_properties if !filter_properties.empty?        
+        column_names = result.keys if column_names.empty?
+        
+        if has_geom
           column_names = column_names.collect {|x| "\"#{x}\"" }.join(', ')
 
-          properties = execute("SELECT #{column_names} FROM #{tablename}")          
+          properties = execute("SELECT #{column_names} FROM #{tablename}")
           coordinates = execute("SELECT ST_AsGeoJSON(the_geom) AS geometry FROM #{tablename}")
 
           features = []
@@ -72,7 +75,9 @@ class Feature
           # returning GeoJSON, for GeoJSON example see: http://geojson.org/geojson-spec.html#examples
           { :type => "FeatureCollection", :features => features }
         else
-          execute("SELECT * FROM #{tablename}")
+          column_names = column_names.collect {|x| "\"#{x}\"" }.join(', ')
+
+          execute("SELECT #{column_names} FROM #{tablename}")
         end        
       end
     elsif is_data_source_external?
@@ -306,7 +311,17 @@ class Feature
       { :tablename => dataset_name, :data => execute("SELECT * FROM #{tablename} LIMIT 1") }
     end
   end
-      
+
+  def filter_properties_from_params(params)
+    if params[:properties]
+      result = params[:properties].split(',')
+      if !result.is_a?(Array)
+        result = [result]
+      end
+    end
+    result
+  end
+        
   def extract_keywords(observation_data)
     keywords = []
     
