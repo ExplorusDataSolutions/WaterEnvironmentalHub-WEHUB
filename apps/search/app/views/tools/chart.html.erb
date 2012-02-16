@@ -1,423 +1,113 @@
-<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="jqplot/excanvas.js"></script><![endif]-->
-<%= stylesheet_link_tag "jqplot/jquery.jqplot"%>
-<%= javascript_include_tag "jqplot/jquery.jqplot","jqplot/jqplot.cursor","jqplot/jqplot.categoryAxisRenderer","jqplot/jqplot.barRenderer","jqplot/jqplot.pieRenderer","jqplot/jqplot.enhancedLegendRenderer"%>
-
-
-
-<script type="text/javascript">
-	var data 		=	'<%=@json%>';
-	var unescaped 	=	$('<textarea />').html(data).val();
-	var json		=	jQuery.parseJSON(unescaped);
-	var length		=	json.length;
-	var min_day		=	0;
-	var max_day		=	0;
-	
-	for (i = 0; i < length; i++){
-		if (min_day == 0 || min_day > json[i]['Calendar Day']){
-			min_day		=	json[i]['Calendar Day']
-		}
-		if (max_day < json[i]['Calendar Day']){
-			max_day		=	json[i]['Calendar Day']
-		}
-	}
-		
-	json.sort(sortBy("Calendar Day"));
-	
-	for (i = 0; i < 10; i++){
-		eval("list" + i + " = new Array();");
-	}
-	
-	day_key		=	new Array();
-	day_val		=	new Array();
-	key 		=	0;
-	min_day		=	140;
-	max_day		=	150;
-	for(i = min_day; i <= max_day; i++){
-		day_key[i]		=	key;
-		day_val[key]	=	i;
-		for (j = 0; j < 10; j++){
-			eval("list" + j + "[" + key + "] = 0;");
-		}
-		key++;
-	}
-	
-	var cal_day		=	0;
-	for (i = 0; i < length; i++){
-		if (json[i]['Calendar Day'] >= min_day && json[i]['Calendar Day'] <= max_day){
-			for (j = 0; j < 10; j++){
-				if (eval("list" + j + "[" + day_key[json[i]['Calendar Day']] + "]") == 0){
-					eval("list" + j + "[" + day_key[json[i]['Calendar Day']] + "] = " + json[i]['Biometeorological Time'] + ";");
-					break;
-				}
-			}	
-		}
-	}
-	
-function sortBy(prop){ return function(a,b){return a[prop]-b[prop];}}
-	
-$.jqplot.config.enablePlugins = true;
-$(document).ready(function(){
-
-	bars		=	new Array();
-	pie			=	new Array();
-	pies		=	new Array();
-	lseries		=	new Array();
-	cseries		=	new Array();
-	for (j = 0; j < 10; j++){
-		lseries[j]	=	new Array();
-		cseries[j]	=	new Array();
-		pie[j]	=	new Array();
-		bars[j]	=	eval("list" + j);
-		
-		
-		var label				=	'Datset' + (j*1 + 1);
-		
-		cseries[j]['label']		=	label
-		lseries[j]['renderer']	=	$.jqplot.BarRenderer; 
-		
-		var pie_val				=	eval(bars[j].join('+'));
-		
-		pie[j][0]	=	label;
-		pie[j][1]	=	pie_val;
-	}
-	
-	
-	plot1 = $.jqplot('chart1', bars, {
-	    legend:{show:false, location:'ne'},title: {text: 'Rainfall', show: true},
-
-	    series:lseries,
-	    axes:{
-	        xaxis:{renderer:$.jqplot.CategoryAxisRenderer,ticks: day_val}, 
-	        yaxis:{min:0}
-	    },
-		cursor:{
-			zoom:true,
-	    	showTooltip: false
-		}
-	});
-	controlplot1 = $.jqplot('chart2', bars, {
-	    legend:{
-			  renderer: $.jqplot.EnhancedLegendRenderer,
-              show:true, 
-              placement: 'outside', 
-              rendererOptions: {
-                  numberRows: 2
-              }, 
-              location:'s',
-              marginTop: '10px'
-          },title:'',
-	    series:cseries,
-		axes:{
-	        xaxis:{renderer:$.jqplot.CategoryAxisRenderer,ticks: day_val}, 
-	        yaxis:{min:0}
-	    },
-	    axesDefaults:{
-		    tickOptions:{
-		      showLabel:false, 
-		      showMark:false
-		    }
-		},
-		cursor:{
-			zoom:true,
-	    	showTooltip: false,
-          	constrainZoomTo: 'y'
-		}
-	});
-	$.jqplot.Cursor.zoomProxy(plot1,controlplot1); 
-	
-	
-	lineplot1 = $.jqplot('line-chart1', bars, {
-	    legend:{show:false, location:'ne'},title: {text: 'Rainfall', show: true},
-
-	    series:'',
-	    axes:{
-	        xaxis:{renderer:$.jqplot.CategoryAxisRenderer,ticks: day_val}, 
-	        yaxis:{min:0}
-	    },
-		cursor:{
-			zoom:true,
-	    	showTooltip: false
-		}
-	});
-	linecontrolplot1 = $.jqplot('line-chart2', bars, {
-	    legend:{
-			  renderer: $.jqplot.EnhancedLegendRenderer,
-              show:true, 
-              placement: 'outside', 
-              rendererOptions: {
-                  numberRows: 2
-              }, 
-              location:'s',
-              marginTop: '10px'
-          },title:'',
-	    series:cseries,
-	    axesDefaults:{
-		    tickOptions:{
-		      showLabel:false, 
-		      showMark:false
-		    }
-		},
-		cursor:{
-			zoom:true,
-	    	showTooltip: false,
-          	constrainZoomTo: 'y'
-		}
-	});
-	$.jqplot.Cursor.zoomProxy(lineplot1,linecontrolplot1);
-	
-	
-	
-    pieplot1 = $.jqplot('pie-chart1', [pie], {
-        gridPadding: {top:0, bottom:38, left:0, right:0},
-      seriesDefaults:{renderer:$.jqplot.PieRenderer, trendline:{show:false}, rendererOptions: { padding: 8, showDataLabels: true}},
-                  legend:{
-                      show:true, 
-                      placement: 'outside', 
-                      rendererOptions: {
-                          numberRows: 2
-                      }, 
-                      location:'s',
-                      marginTop: '10px'
-                  },title: {text: 'Rainfall', show: true}       
+<script>
+  $(document).ready(function() {
+   
+    var graphData = [];
+    var sharedProperties = {};
+    function idsFromSearch() { return window.location.search.match(/ids=([\w-,]*)/)[1].split(','); }
+    
+    $(document).bind('drawGraph', function() { $.jqplot('chart1', graphData); })
+    $(document).bind('loadDataForSharedPropertiesAndGraph', function() {
+      property = 'accuracy'; //sharedProperties.numeric[0];
+      uuids = idsFromSearch();      
+      for (i in uuids) {
+        $.ajax({
+          url: "<%= url_for :controller => 'tools', :action => 'chart_feature', :format => 'json' %>" + '&properties=' + property + '&id=' + uuids[i],
+          global: false,
+          success: function(data) {
+            graphData.push(data);
+            $(document).trigger('drawGraph');
+          }
+        });
+      }
     });
 
-	
-	
-	
-	$('#bar-chart').hide();
-	$('#line-chart').hide();
-	$('#pie-chart').hide();
-		
-	var tab_select		=	false;
-	if(location.hash){
-		var hash_val	=	location.hash;
-		if (hash_val == '#bar'){
-			chart_show('bar-chart');
-			tab_select	=	true;
-		}else if(hash_val == '#line'){
-			chart_show('line-chart');
-			tab_select	=	true;
-		}else if(hash_val == '#pie'){
-			chart_show('pie-chart');
-			tab_select	=	true;
-		}
-	}
-	
-	if (!tab_select){
-		chart_show('bar-chart');
-	}
-	 
-	$('#bar-chart-div').click(function(){
-		chart_show('bar-chart');
-	});
-	$('#line-chart-div').click(function(){
-		chart_show('line-chart');
-	});
-	$('#pie-chart-div').click(function(){
-		chart_show('pie-chart');
-	});
-});
-
-$(function() {
-	$( "button, input:submit, a", ".button" ).button();
-	$( "a", ".button" ).click(function() { return false; });
-});
-
-function chart_show(chart_id){
-	$('#bar-chart').hide();
-	$('#line-chart').hide();
-	$('#pie-chart').hide();
-	$('#bar-chart-div').removeClass('tab-select');
-	$('#line-chart-div').removeClass('tab-select');
-	$('#pie-chart-div').removeClass('tab-select');
-	
-	$('#'+chart_id).show();
-	$('#'+ chart_id +'-div').addClass('tab-select');
-}
-</script>
-
-
-
-<script type="text/javascript">
-jQuery(document).ready(function(){
-$('#plot-graph').click(function(){
-     $('#bar-chart').hide();
-     $('#pie-chart').hide();
-     var xaxis_val=$("select#xaxis").val();
-     var yaxis_val=$("select#yaxis").val();
-      
-     $.ajax({
-        url: "<%= parse_json_url %>",
-        data:{
-           xaxis: xaxis_val,
-           yaxis:  yaxis_val
-        },
-        success:function(dat){
-
-            json=jQuery.parseJSON(dat);
-            //alert(json[0]);
-            var a0=json[0];
-            var a1=json[1];
-            var a2=json[2];
-            var a3=json[3];
-            var a4=json[4];
-            minx=json['0_x'][0];
-            maxx=json['0_x'][1];
-            miny=json['0_y'][0];
-            maxy=json['0_y'][1];
-            var options0 = {
-                title: " ",
-                axes:{xaxis:{min:minx, max:maxx},yaxis:{min:miny, max:maxy}},
-                lengend:{show:true},
-                cursor:{show:true, zoom:true},
-                //axesDefaults:{useSeriesColor:true}
-                tickOptions: {formatString: ''}
-               }
-            $('#line-chart1').html('');
-            plot2 = $.jqplot('line-chart1', [a0],  options0);
-        }
-     });
+    $.ajax({
+      url: "<%= url_for :controller => 'api', :action => 'shared_properties', :ids => params[:ids], :format => 'json' %>",
+      global: false,
+      success: function(data) { 
+        sharedProperties = data;
+        $(document).trigger('loadDataForSharedPropertiesAndGraph');
+      }
+    });    
+          
   });
-});
 </script>
-
-
+<%
+=begin %>
 <div class="tab-menu-body">
-	<div class="tab-menu">
-		<%= link_to 'WE Data Map', :controller => 'tools', :action => 'map', :id => @id %>
-	</div>
-	<div class="tab-menu tab-menu-select">
-		<%= link_to 'WE Data Graphs', :controller => 'tools', :action => 'chart', :id => @id %>
-	</div>
-	<div class="tab-menu">
-		<%= link_to 'Developers', :controller => 'tools', :action => 'developers', :id => @id %>
-	</div>
+  <div class="tab-menu">
+    <%= link_to 'Maps', :controller => 'tools', :action => 'map', :id => @id %>
+  </div>
+  <div class="tab-menu tab-menu-select">
+    <%= link_to 'Graphs', :controller => 'tools', :action => 'chart', :id => @id %>
+  </div>  
+  <div class="tab-menu">
+    <%= link_to 'Developers', :controller => 'tools', :action => 'developers', :id => @id %>
+  </div>
 </div>
 <div class="clear"></div>
+<%
+=end %>
 
 <div class="sub-content-body">
-	<div class="sub-content-left">
-		<div class="left-tab-body">
-			<div id="bar-chart-div" class="left-tab">
-				Bar
-			</div>
-			<div id="line-chart-div" class="left-tab">
-				Line
-			</div>
-			<div id="pie-chart-div" class="left-tab">
-				Pie
-			</div>
-			<div id="table-chart-div" class="left-tab">
-				<%= link_to 'Table', :controller => 'tools', :action => 'table' %>
-			</div>
-		</div>
-		<div class="clear"></div>
-		<div id="filter-container">
-		 <div id="filter-content">
-		  <div id="filter-1">
-			<div class="filter-part">
-				<div class="filter-left">
-					<input type="checkbox" id="filter-check-1" name="filter-check" value="1">
-				</div>
-				<div class="filter-right">
-					<div>
-						<select class="select-box-1">
-							<option>Dataset</option>
-						</select>
-					</div>
-					<div>
-                                               <!--
-						<select class="select-box-2">
-							<option>X-axis</option>
-						</select>
-                                                         -->
-                                                 <% data= @data_set.each_with_index{|x, y| [x, y] } %>
-                                                 Xaxis: <%= select_tag(:xaxis,options_for_select(data),:class=>"select-box-2",:prompt => "X-axis" )%>
-					</div>
-					<div><!--
-						<select class="select-box-2">
-							<option>Y-axis</option>
-						</select> -->
-                                                Yaxis:  <%= select_tag(:yaxis,options_for_select(data),:class=>"select-box-2",:prompt => "Y-axis" )%> 
-					</div>
-				</div>
-			</div>
-			<div class="clear"></div>
-		  </div>
-
-		<!--  <div id="filter-2">
-			<div class="filter-part">
-				<div class="filter-left">
-					<input type="checkbox" id="filter-check-2" name="filter-check" value="2">
-				</div>
-				<div class="filter-right">
-					<div>
-						<select class="select-box-1">
-							<option>Dataset</option>
-						</select>
-					</div>
-					<div>
-						<select class="select-box-2">
-							<option>X-axis</option>
-						</select>
-					</div>
-					<div>
-						<select class="select-box-2">
-							<option>Y-axis</option>
-						</select>
-					</div>
-				</div>
-			</div>
-			<div class="clear"></div>
-		  </div>  -->
-		 </div>
-			<div class="filter-part">
-				<div class="filter-left">
-					&nbsp;
-				</div>
-				<div class="filter-right">
-					<div>
-						<span class="button">
-						<!--	<button>Graph</button> -->
-                                                        <button id="plot-graph">Graph</button>
-						</span>
-						<span class="button">
-							<button onclick="remove_dataset(); return false;">Remove</button>
-						</span>
-					</div>
-					<div>
-						<span class="button">
-							<button onclick="add_new_dataset(); return false;">+ Dataset</button>
-						</span>
-					</div>
-				</div>
-			</div>
-			<div class="clear"></div>
-			
-		</div>
-	</div>
-	<input type="hidden" name="hid_last_cnt" id="hid_last_cnt" value="2">
-	<div class="sub-content-center">
-		<div class="chart-body">
-			<div id="bar-chart" class="chart">
-				<div id="chart1" class="plot" style="width:530px;height:360px;"></div>
-				<div id="chart2" class="plot" style="width:530px;height:60px;"></div>
-			</div>
-			<div id="line-chart" class="chart">
-				<div id="line-chart1" class="plot" style="width:530px;height:360px;"></div>
-				<div id="line-chart2" class="plot" style="width:530px;height:60px;"></div>
-			</div>
-			
-			<div id="pie-chart" class="chart">
-			<div id="pie-chart1" class="plot" style="width:530px;height:360px;"></div>
-			</div>
-			
-					
-		</div>
-		
-	</div>
-	<div class="sub-content-right">
-    <%= render 'shared/right_panel' %>		
-	</div>
-	<div class="clear"></div>
+  <div class="sub-content-left">
+<%
+=begin %>        
+    <div class="left-tab-body">
+      <div id="bar-chart-div" class="left-tab">
+        Bar
+      </div>
+      <div id="line-chart-div" class="left-tab">
+        Line
+      </div>
+      <div id="pie-chart-div" class="left-tab">
+        Pie
+      </div>
+      <div id="table-chart-div" class="left-tab">
+        <%= link_to 'Table', :controller => 'tools', :action => 'table' %>
+      </div>
+    </div>
+    <div class="clear"></div>
+<%
+=end %>            
+  
+    <div id="filter-container">
+      <div id="filter-content">
+        <div id="filter-1">
+          <div class="filter-part">
+            <div class="filter-left">
+              <input type="checkbox" id="filter-check-1" name="filter-check" value="1">
+            </div>
+            <div class="filter-right">
+              <div>
+                <select class="select-box-1">
+                  <option>Dataset</option>
+                </select>
+              </div>
+              <div>
+                <select class="select-box-2">
+                  <option>X-axis</option>
+                </select>
+              </div>
+              <div>
+                <select class="select-box-2">
+                  <option>Y-axis</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="clear"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sub-content-center">
+    <div class="chart-body">
+      <div id="chart1" style="width:530px; height:360px;"></div>
+    </div>    
+  </div>
+  <div class="sub-content-right">
+    <%= render 'shared/right_panel' %>    
+  </div>
+  <div class="clear"></div>
 </div>

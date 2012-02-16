@@ -1,5 +1,7 @@
 class ToolsController < ApplicationController
 
+  respond_to :json, :xml
+  
   def test
     render :layout => false
   end
@@ -10,11 +12,29 @@ class ToolsController < ApplicationController
   end
   
   def chart
-    @id = params[:id]
-    f = File.read("#{Rails.root}/public/chart.json")
-    @json = f.strip
-    @breadcrumb = ['Tools', 'Data Graph']
+    @breadcrumb = ['Tools', 'Graph']
     @main_menu = 'we_tools'
+
+    if params[:id]
+      params[:ids] = [params[:id]]
+    end
+    
+    @datasets = catalogue_instance.api_datasets(params)
+  end
+  
+  def chart_feature
+    result = catalogue_instance.api_feature(params)
+    
+    property = nil
+    values = []
+    result.features.each_with_index do |feature, i|
+      if i == 0
+        property = feature.properties.keys[0]
+      end
+      values.push(Float(feature.properties[property]))
+    end
+
+    respond_with(values)
   end
   
   def table

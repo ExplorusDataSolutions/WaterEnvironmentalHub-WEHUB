@@ -155,6 +155,12 @@ class CatalogueTranslator
   def api_datasets(params)
     datasets = xml_to_mash(get("#{api_uri}/datasets?#{clean(params).to_query}"))['datasets']
   end
+
+  def api_shared_properties(params)
+    params = CGI.unescape(clean(params, 'json').to_query)
+    result = get("#{api_uri}/shared_properties?#{params}")
+    json_to_mash(result)
+  end
   
   def api_dataset_raw(dataset_id, format)
     get("#{api_uri}/dataset?id=#{dataset_id}&format=#{format}")
@@ -162,6 +168,10 @@ class CatalogueTranslator
 
   def api_feature_raw(params)
     get("#{api_uri}/feature?#{params.to_query}")
+  end
+  
+  def api_feature(params)
+    json_to_mash(get("#{api_uri}/feature?#{clean(params, 'json').to_query}&output=json"))
   end
 
   def datasets_by_type

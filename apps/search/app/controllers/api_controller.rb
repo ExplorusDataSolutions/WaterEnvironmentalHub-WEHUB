@@ -42,6 +42,18 @@ class ApiController < ApplicationController
     end    
   end
   
+  def shared_properties
+    result = catalogue_instance.api_shared_properties(params)
+    if result.numeric
+      result.numeric.delete('gid')
+      result.numeric.delete('id')
+    end
+    if result.string
+      result.string.delete('nid')
+    end
+    respond_with(result)
+  end
+  
   def dataset
     render :text => catalogue_instance.api_dataset_raw(params[:id], params[:output])
   end
