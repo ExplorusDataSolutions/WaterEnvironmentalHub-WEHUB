@@ -262,8 +262,18 @@ class Feature
     keywords
   end
   
+  def feature_fields
+    fields = []
+    fields_with_types = self.feature_fields_by_type
+    fields_with_types.each { |key, value|  fields = fields + value } unless !fields_with_types
+    fields
+  end
+  
   def feature_fields_by_type
-    geoserver_translator.feature_fields_by_type(uuid)    
+    if is_data_source?('geoserver')
+      geoserver_translator.feature_fields_by_type(uuid)
+    else
+    end
   end
   
   def name

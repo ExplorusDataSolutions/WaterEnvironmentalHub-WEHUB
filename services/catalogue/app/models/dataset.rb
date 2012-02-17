@@ -69,7 +69,7 @@ class Dataset < ActiveRecord::Base
       end unless author.nil?
       begin      
         if feature.keywords
-          xml.tag!(:properties, feature.keywords.join(', ').chop!)
+          xml.tag!(:keywords, feature.keywords.join(', ').chop!)
         end
       rescue
       end
@@ -102,7 +102,11 @@ class Dataset < ActiveRecord::Base
             end
           end
         end unless feature.layers.count == 0
-      end      
+      end
+      
+      if self.feature && self.feature.feature_fields
+        xml.tag!(:properties, self.feature.feature_fields.join(', ').chop!)
+      end
     end
   end
 
