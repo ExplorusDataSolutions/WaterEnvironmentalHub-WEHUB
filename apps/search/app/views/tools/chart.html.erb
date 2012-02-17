@@ -1,23 +1,120 @@
+<style>
+  .sub-content-center .chart-body {
+    width: 773px;
+  }
+  .chart1 {
+    width: 780px;
+    height: 360px;
+  }
+  #filter-container ul {
+    padding: 0px;
+    margin: 0 -6px 0 20px;
+  }
+  #filter-container li {
+    font-size: 30px;
+    line-height: 18px;
+  }
+  .mini-loading-dialog {
+    background: white url(/images/spinner.gif) center top no-repeat;
+    height: 55px;
+    opacity: 0.6;
+  }
+  .property-selector {
+    margin-left: 45px;
+  }
+</style>
 <script>
   $(document).ready(function() {
    
-    var graphData = [];
+    var allGraphData = {};
     var sharedProperties = {};
+
+  <% @datasets.each_with_index do |dataset,i| %>
+    <%= "allGraphData['#{dataset.id}'] = {};" -%>
+    <%= "allGraphData['#{dataset.id}']['colour'] = '#{css_colour(i)[:code]}';" -%>
+    <%= "allGraphData['#{dataset.id}']['name'] = '#{dataset.name}';" -%>    
+  <% end %>
+
+
+    function idFromUrl(url) { return url.match(/id=([\w-]*)/)[1]; }
+    function propertyFromUrl(url) { return url.match(/properties=([\w]*)/)[1]; }
     function idsFromSearch() { return window.location.search.match(/ids=([\w-,]*)/)[1].split(','); }
+    function idsFromForm() {
+      var ids = []
+      $('[name=dataset]:checked').each(function() { ids.push($(this).val()); });
+      return ids;
+    }
     
-    $(document).bind('drawGraph', function() { $.jqplot('chart1', graphData); })
+    $(document).bind('drawGraph', function() { 
+      var uuids = idsFromForm();
+
+      var graphData = [];
+      var graphColours = [];
+      for(var i=0; i < uuids.length; i++) {
+        var uuid = uuids[i];
+        if (allGraphData[uuid] && allGraphData[uuid]['data']) {
+          graphData.push(allGraphData[uuid]['data']);
+          graphColours.push({ color: allGraphData[uuid]['colour'], label: allGraphData[uuid]['name'] });
+        }
+      }      
+      
+      $('#chart1').html('');
+      if (graphData.length > 0) {
+        $.jqplot('chart1', graphData, { series: graphColours, legend: { show: false } }); 
+      }
+    });
+    
+    function loadGraphData(uuid, property) {
+      $.ajax({
+        url: "<%= url_for :controller => 'tools', :action => 'chart_feature', :format => 'json' %>" + '&properties=' + property + '&id=' + uuid,
+        global: false,
+        success: function(data) {
+          var uuid = idFromUrl(this.url);
+          allGraphData[uuid]['data'] = data;
+          
+          $('.datasets.' + uuid).removeClass('mini-loading-dialog');
+          
+          var checkbox = $('[name=datasets] .' + uuid + ' [name=dataset]');
+          checkbox.attr('checked', true).removeAttr('disabled');
+          checkbox.click(function() { $(document).trigger('drawGraph'); });            
+
+          $('.property-selector.' + uuid)
+            .removeAttr('disabled')
+            .val(propertyFromUrl(this.url))
+            .unbind()
+            .change(function(event) {
+              $('.datasets.' + uuid).addClass('mini-loading-dialog');
+              loadGraphData(uuid, this.value);
+            }
+          );
+
+          $(document).trigger('drawGraph');
+        },
+        error: function() {
+          var uuid = idFromUrl(this.url);
+          allGraphData[uuid]['data'] = [];
+          
+          $('[name=datasets] .' + uuid + ' [name=dataset]').attr('checked', false);
+
+          $('.datasets.' + uuid).removeClass('mini-loading-dialog').addClass('ui-state-disabled');
+          $('.datasets.' + uuid + ' input').attr('disabled', true);
+          $('.property-selector.' + uuid ).change(function(event) {
+              $('.datasets.' + uuid).addClass('mini-loading-dialog').removeClass('ui-state-disabled');              
+              loadGraphData(uuid, this.value);
+            }
+          );
+
+          $(document).trigger('drawGraph');
+        }
+      });
+    }
+    
     $(document).bind('loadDataForSharedPropertiesAndGraph', function() {
       property = 'accuracy'; //sharedProperties.numeric[0];
-      uuids = idsFromSearch();      
-      for (i in uuids) {
-        $.ajax({
-          url: "<%= url_for :controller => 'tools', :action => 'chart_feature', :format => 'json' %>" + '&properties=' + property + '&id=' + uuids[i],
-          global: false,
-          success: function(data) {
-            graphData.push(data);
-            $(document).trigger('drawGraph');
-          }
-        });
+      var uuids = idsFromSearch();      
+      for (var i=0; i < uuids.length; i++) {
+        var uuid = uuids[i];
+        loadGraphData(uuid, property);
       }
     });
 
@@ -29,7 +126,7 @@
         $(document).trigger('loadDataForSharedPropertiesAndGraph');
       }
     });    
-          
+        
   });
 </script>
 <%
@@ -73,41 +170,49 @@
   
     <div id="filter-container">
       <div id="filter-content">
-        <div id="filter-1">
-          <div class="filter-part">
-            <div class="filter-left">
-              <input type="checkbox" id="filter-check-1" name="filter-check" value="1">
-            </div>
-            <div class="filter-right">
-              <div>
-                <select class="select-box-1">
-                  <option>Dataset</option>
-                </select>
-              </div>
-              <div>
-                <select class="select-box-2">
-                  <option>X-axis</option>
-                </select>
-              </div>
-              <div>
-                <select class="select-box-2">
-                  <option>Y-axis</option>
-                </select>
-              </div>
-            </div>
+      <%= form_for :datasets, :html => { :name => 'datasets' } do |f| %>
+      <%  @datasets.each_with_index do |dataset,i| %>
+        <div class="mini-loading-dialog datasets <%= "#{dataset.id}" -%>">
+          <div class="float-left">
+            <%= check_box_tag "dataset", dataset.id, false, :id => "dataset_#{dataset.id}" %>
           </div>
-          <div class="clear"></div>
+          <div class="float-left width-5">&nbsp;</div>
+          <div class="float-left"><label for='<%= "dataset_#{dataset.id}" %>'><ul><li style='color: <%= "#{css_colour(i)[:code]}" %>'></li></ul></label></div>
+          <div class="float-left width-5">&nbsp;</div>
+          <div class="float-left width-210">
+            <label for='<%= "dataset_#{dataset.id}" %>'>
+              <div class="tool-left-link">
+              <%= link_to "#{dataset.name}", {:controller => 'catalogue', :action => 'details', :id => dataset.id}, :target => 'blank' %>
+              </div>
+              <div class="tool-left-text">
+              <%= more_markup(dataset.description).html_safe -%>
+              </div>
+            </label>
+          </div>
         </div>
+        <select class="select-box-2 property-selector <%= "#{dataset.id}" %>">
+          <% dataset.properties.split(',').each do |prop| %>
+          <%= "<option>#{prop}</option>".html_safe -%>
+          <% end %>
+        </select>        
+        <div class="clear height-5">&nbsp;</div>
+      <% end unless !@datasets %>
+      <% end %>
+            
       </div>
     </div>
   </div>
   <div class="sub-content-center">
     <div class="chart-body">
-      <div id="chart1" style="width:530px; height:360px;"></div>
+      <div id="chart1"></div>
     </div>    
   </div>
+<%
+=begin %>  
   <div class="sub-content-right">
     <%= render 'shared/right_panel' %>    
   </div>
+<%
+=end %>  
   <div class="clear"></div>
 </div>
