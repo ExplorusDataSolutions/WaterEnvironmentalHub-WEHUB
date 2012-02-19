@@ -54,9 +54,8 @@ class Feature
       result = execute("SELECT * FROM #{tablename} LIMIT 1")[0]
       if result
         has_geom = result.keys.include?('the_geom')
-        column_names = result.keys & filter_properties if !filter_properties.empty?        
-        column_names = result.keys if column_names.empty?
-        
+        column_names = result.keys & filter_properties if filter_properties && !filter_properties.empty?        
+        column_names = result.keys if !column_names || column_names.empty?
         if has_geom
           column_names = column_names.collect {|x| "\"#{x}\"" }.join(', ')
 
