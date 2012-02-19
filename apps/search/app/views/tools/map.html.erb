@@ -133,30 +133,8 @@
   });    
 </script>
 
-<div class="tab-menu-body">
-<%
-=begin %>
-  <div class="tab-menu tab-menu-select">
-    <%= link_to 'Data Map', :controller => 'tools', :action => 'map', :id => @id %>
-  </div>
-  <div class="tab-menu">
-    <%= link_to 'WE Data Graphs', :controller => 'tools', :action => 'chart', :id => @id %>
-  </div>
-  <div class="tab-menu">
-    <%= link_to 'Developers', :controller => 'tools', :action => 'developers', :id => @id %>
-  </div>
-<%
-=end %>  
-  <div class="tab-menu-right">
-    <div class="top-container-tab tab-download">
-      <div class="float-left">Download</div>
-      <div class="float-left tab-download-arrow"></div>   
-    </div>
-    <div class="clear"></div>
-    
-    <%= render '/catalogue/download_format_selector' %>
-  </div>
-</div>
+<%= render 'tool_tab_menu' %>
+
 <div class="clear"></div>
 <style>
   #filter-container ul {

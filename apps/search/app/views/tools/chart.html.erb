@@ -37,7 +37,7 @@
 
 
     function idFromUrl(url) { return url.match(/id=([\w-]*)/)[1]; }
-    function propertyFromUrl(url) { return url.match(/properties=([\w]*)/)[1]; }
+    function propertyFromUrl(url) { return url.match(/properties=(.[^&]*)/)[1]; }
     function idsFromSearch() { return window.location.search.match(/ids=([\w-,]*)/)[1].split(','); }
     function idsFromForm() {
       var ids = []
@@ -83,8 +83,10 @@
             .val(propertyFromUrl(this.url))
             .unbind()
             .change(function(event) {
-              $('.datasets.' + uuid).addClass('mini-loading-dialog');
-              loadGraphData(uuid, this.value);
+              if (this.value !== '') {
+                $('.datasets.' + uuid).addClass('mini-loading-dialog');
+                loadGraphData(uuid, this.value);
+              }
             }
           );
 
@@ -110,7 +112,7 @@
     }
     
     $(document).bind('loadDataForSharedPropertiesAndGraph', function() {
-      property = 'accuracy'; //sharedProperties.numeric[0];
+      property = sharedProperties.numeric[0];
       var uuids = idsFromSearch();      
       for (var i=0; i < uuids.length; i++) {
         var uuid = uuids[i];
@@ -119,7 +121,7 @@
     });
 
     $.ajax({
-      url: "<%= url_for :controller => 'api', :action => 'shared_properties', :ids => params[:ids], :format => 'json' %>",
+      url: "<%= (url_for :controller => 'api', :action => 'shared_properties', :ids => params[:ids], :format => 'json').html_safe %>",
       global: false,
       success: function(data) { 
         sharedProperties = data;
@@ -129,22 +131,8 @@
         
   });
 </script>
-<%
-=begin %>
-<div class="tab-menu-body">
-  <div class="tab-menu">
-    <%= link_to 'Maps', :controller => 'tools', :action => 'map', :id => @id %>
-  </div>
-  <div class="tab-menu tab-menu-select">
-    <%= link_to 'Graphs', :controller => 'tools', :action => 'chart', :id => @id %>
-  </div>  
-  <div class="tab-menu">
-    <%= link_to 'Developers', :controller => 'tools', :action => 'developers', :id => @id %>
-  </div>
-</div>
-<div class="clear"></div>
-<%
-=end %>
+
+<%= render 'tool_tab_menu' %>
 
 <div class="sub-content-body">
   <div class="sub-content-left">
@@ -191,8 +179,11 @@
           </div>
         </div>
         <select class="select-box-2 property-selector <%= "#{dataset.id}" %>">
+          <option></option>
           <% dataset.properties.split(',').each do |prop| %>
+          <% if !prop.match(/latitude|longitude/i) %>
           <%= "<option>#{prop}</option>".html_safe -%>
+          <% end %>
           <% end %>
         </select>        
         <div class="clear height-5">&nbsp;</div>

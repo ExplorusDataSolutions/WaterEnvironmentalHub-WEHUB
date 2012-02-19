@@ -44,11 +44,11 @@ class ApiController < ApplicationController
   
   def shared_properties
     result = catalogue_instance.api_shared_properties(params)
-    if result.numeric
+    if result.numeric && result.numeric.length > 1
       result.numeric.delete('gid')
       result.numeric.delete('id')
     end
-    if result.string
+    if result.string && result.string.length > 1
       result.string.delete('nid')
     end
     respond_with(result)
