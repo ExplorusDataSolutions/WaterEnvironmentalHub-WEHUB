@@ -3,6 +3,9 @@ require 'active_support/core_ext'
 require 'rexml/document'
 
 class GeoServerTranslator
+
+  include FeatureHelper
+  
   attr_accessor :server_address, :timeout, :cache_directory
   
   def initialize(server_address='localhost:8080', timeout=300, cache_directory='tmp/cache')
@@ -52,30 +55,10 @@ class GeoServerTranslator
     
     fields
   end
-  
-  def get_type(string)
-    type = :string
-    begin
-      Float(string)
-      type = :numeric
-    rescue
-    end
-    type
-  end
-  
+    
   def feature_fields_by_type(uuid)
-    fields_with_types = {}
-    
-    hash = get_features(uuid)
-    hash = hash['features'][0]['properties']
-    hash.each do |result|
-      if fields_with_types[get_type(result[1])].nil? 
-        fields_with_types[get_type(result[1])] = []
-      end
-      fields_with_types[get_type(result[1])].push(result[0])
-    end
-    
-    fields_with_types
+    results = get_features(uuid)
+    get_types(results['features'][0]['properties']) unless !results
   end
     
   def get_features(uuid)

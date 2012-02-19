@@ -1,6 +1,7 @@
 class Feature 
 
   include DatabaseHelper
+  include FeatureHelper
   include GisHelper  
   include ActiveModel::Validations
   include ActiveModel::Conversion  
@@ -272,7 +273,11 @@ class Feature
   def feature_fields_by_type
     if is_data_source?('geoserver')
       geoserver_translator.feature_fields_by_type(uuid)
+    elsif is_data_source?('catalogue')
+      observation_data = data_lightweight
+      get_types(observation_data[:data][0]) unless !observation_data
     else
+      raise ArgumentError, "Feature field types could not be retrieved for feature with a feature source of #{feature_source.name}"      
     end
   end
   

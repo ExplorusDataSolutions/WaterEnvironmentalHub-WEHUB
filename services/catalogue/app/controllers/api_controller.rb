@@ -84,9 +84,14 @@ class ApiController < ApplicationController
           common_terms_with_types[key] = common_terms_with_types[key] & value
         end
       end
-    end
+    end unless uuids.length < 2
 
     respond_with(common_terms_with_types)
   end
   
+  def feature_fields_by_type
+    dataset = Dataset.find_by_uuid(params[:id])
+    feature = dataset.feature unless !dataset
+    respond_with(feature.feature_fields_by_type)
+  end
 end
