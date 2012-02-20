@@ -38,7 +38,10 @@
 
     function idFromUrl(url) { return url.match(/id=([\w-]*)/)[1]; }
     function propertyFromUrl(url) { return url.match(/properties=(.[^&]*)/)[1]; }
-    function idsFromSearch() { return window.location.search.match(/ids=([\w-,]*)/)[1].split(','); }
+    function idsFromSearch() { 
+      var unescapedSearch = unescape(window.location.search);
+      return unescapedSearch.match(/ids=([\w-,]*)/)[1].split(','); 
+      }
     function idsFromForm() {
       var ids = []
       $('[name=dataset]:checked').each(function() { ids.push($(this).val()); });
