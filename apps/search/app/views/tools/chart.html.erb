@@ -38,10 +38,11 @@
 
     function idFromUrl(url) { return url.match(/id=([\w-]*)/)[1]; }
     function propertyFromUrl(url) { return url.match(/properties=(.[^&]*)/)[1]; }
+    function graphTypeFromUrl(url) { return window.location.hash.replace('#',''); }
     function idsFromSearch() { 
       var unescapedSearch = unescape(window.location.search);
       return unescapedSearch.match(/ids=([\w-,]*)/)[1].split(','); 
-      }
+    }
     function idsFromForm() {
       var ids = []
       $('[name=dataset]:checked').each(function() { ids.push($(this).val()); });
@@ -50,6 +51,7 @@
     
     $(document).bind('drawGraph', function() { 
       var uuids = idsFromForm();
+      var type = graphTypeFromUrl()
 
       var graphData = [];
       var graphColours = [];
@@ -60,22 +62,61 @@
           graphColours.push({ color: allGraphData[uuid]['colour'], label: allGraphData[uuid]['name'] });
         }
       }      
-      
-      $('#chart1').html('');
-      if (graphData.length > 0) {
-        $.jqplot('chart1', graphData, { series: graphColours, legend: { show: false } }); 
+
+      if (type === 'pie') {
+        var graphOptions = {
+          seriesDefaults: {
+            // Make this a pie chart.
+            renderer: jQuery.jqplot.PieRenderer,
+            rendererOptions: {
+              // Put data labels on the pie slices.
+              // By default, labels show the percentage of the slice.
+              showDataLabels: true
+            }
+          },
+          series: graphColours,
+          legend: { 
+            show: true,
+            placement: 'outsideGrid' 
+          }
+        }
+      } else {
+        var graphOptions = {
+          series: graphColours,
+          legend: { show: false }
+        }
       }
+        
+      $('#chart1').html('');
+      $('#chart1').height('auto');
+      if (graphData.length > 0) {
+        $.jqplot('chart1', graphData, graphOptions); 
+      }
+      
+      var legendHeight = $('table.jqplot-table-legend').height();      
+      if (legendHeight) {
+        $('#chart1').height(legendHeight + 40);
+      }
+      
+      if ($('#chart1').html() === '') {
+        $('#chart1').html("<div style='padding: 20px;'><strong>We're sorry, a chart for that dataset / property combination couldn't be generated. Please try another combination.</strong></div>");
+      }
+      
     });
     
     function loadGraphData(uuid, property) {
+      var type = arguments[2] ? arguments[2] : 'line';
+
+      $('.datasets.' + uuid).addClass('mini-loading-dialog');
+      
       $.ajax({
-        url: "<%= url_for :controller => 'tools', :action => 'chart_feature', :format => 'json' %>" + '&properties=' + property + '&id=' + uuid,
+        url: "<%= url_for :controller => 'tools', :action => 'chart_feature', :format => 'json' %>" + '&properties=' + property + '&id=' + uuid + '&type=' + type,
         global: false,
         success: function(data) {
           var uuid = idFromUrl(this.url);
           allGraphData[uuid]['data'] = data;
           
-          $('.datasets.' + uuid).removeClass('mini-loading-dialog');
+          $('.datasets.' + uuid).removeClass('mini-loading-dialog').removeClass('ui-state-disabled');
           
           var checkbox = $('[name=datasets] .' + uuid + ' [name=dataset]');
           checkbox.attr('checked', true).removeAttr('disabled');
@@ -88,7 +129,7 @@
             .change(function(event) {
               if (this.value !== '') {
                 $('.datasets.' + uuid).addClass('mini-loading-dialog');
-                loadGraphData(uuid, this.value);
+                loadGraphData(uuid, this.value, type);
               }
             }
           );
@@ -103,8 +144,7 @@
 
           $('.datasets.' + uuid).removeClass('mini-loading-dialog').addClass('ui-state-disabled');
           $('.datasets.' + uuid + ' input').attr('disabled', true);
-          $('.property-selector.' + uuid ).change(function(event) {
-              $('.datasets.' + uuid).addClass('mini-loading-dialog').removeClass('ui-state-disabled');              
+          $('.property-selector.' + uuid ).change(function(event) {           
               loadGraphData(uuid, this.value);
             }
           );
@@ -131,7 +171,34 @@
         $(document).trigger('loadDataForSharedPropertiesAndGraph');
       }
     });    
+    
+    $('.chart-button').click(function(event) {
+      event.preventDefault();
+
+      var type = event.target.hash ? event.target.hash : event.target.children[0].hash;
+      type = type.replace('#','');
+      window.location.hash = type;
+      
+      if (type == 'pie') {
+        if ($('[name=dataset]:checked').length > 1) {
+          $('[name=dataset]').each(function() { $(this).attr('checked', false); });
+          $('[name=dataset]:first').attr('checked', true);
+        }
+      }
+      $('.chart-button').removeClass('tab-select');
+      $('.' + type + '-chart').addClass('tab-select');
+      
+      var uuids = idsFromForm();
+      for (var i=0; i < uuids.length; i++) {
+        var uuid = uuids[i];
+        var property = $('.property-selector.' + uuid).val();
         
+        loadGraphData(uuid, property, type);
+      }   
+
+    });
+    
+    $('.' + window.location.hash.replace('#','') + '-chart').addClass('tab-select');    
   });
 </script>
 
@@ -139,25 +206,15 @@
 
 <div class="sub-content-body">
   <div class="sub-content-left">
-<%
-=begin %>        
     <div class="left-tab-body">
-      <div id="bar-chart-div" class="left-tab">
-        Bar
+      <div class="left-tab chart-button line-chart tab-select">
+        <a href="#line">Line</a>
       </div>
-      <div id="line-chart-div" class="left-tab">
-        Line
-      </div>
-      <div id="pie-chart-div" class="left-tab">
-        Pie
-      </div>
-      <div id="table-chart-div" class="left-tab">
-        <%= link_to 'Table', :controller => 'tools', :action => 'table' %>
+      <div class="left-tab chart-button pie-chart">
+        <a href="#pie">Pie</a>
       </div>
     </div>
     <div class="clear"></div>
-<%
-=end %>            
   
     <div id="filter-container">
       <div id="filter-content">

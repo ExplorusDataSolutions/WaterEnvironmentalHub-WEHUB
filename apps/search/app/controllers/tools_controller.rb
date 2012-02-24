@@ -23,17 +23,32 @@ class ToolsController < ApplicationController
   end
   
   def chart_feature
+    values = []
+    property = nil    
     result = catalogue_instance.api_feature(params)
     
-    property = nil
-    values = []
-    result.features.each_with_index do |feature, i|
-      if i == 0
+    if params[:type] == 'pie' || params[:type] == 'bar'
+      bucket = {}
+      result.features.each_with_index do |feature, i|
         property = feature.properties.keys[0]
+        if bucket[feature.properties[property]]
+          bucket[feature.properties[property]] = bucket[feature.properties[property]] + 1
+        else
+          bucket[feature.properties[property]] = 1
+        end
       end
-      values.push(Float(feature.properties[property]))
+      
+      bucket.each do |key, value|
+        values.push([key, value])
+      end
+    else      
+      result.features.each_with_index do |feature, i|
+        if i == 0
+          property = feature.properties.keys[0]
+        end
+        values.push(Float(feature.properties[property]))
+      end
     end
-
     respond_with(values)
   end
   
