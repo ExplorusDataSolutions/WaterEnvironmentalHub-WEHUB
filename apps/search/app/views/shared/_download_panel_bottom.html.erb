@@ -70,9 +70,9 @@
       $('[type=checkbox][name=download]').attr('checked', true);
     });
     
-    $('.map-link').click(function(event) {
+    $('.map-link, .graph-link').click(function(event) {
       var checked = $('[type=checkbox][name=download]:checked');
-      
+
       if (checked.length > 1) {
         event.preventDefault();
 
@@ -82,7 +82,7 @@
         })
 
         var url = event.target.parentElement.href;
-        window.location = url.replace(/map\/(.*)/, 'map/?ids=' + ids.join(','));
+        window.location = (url.match(/.*\?ids=/)[0] + ids.join(','));
       }
     });
 

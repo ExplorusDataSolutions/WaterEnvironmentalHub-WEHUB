@@ -56,13 +56,9 @@
     <% end %>
     </div>
     <div class="search-btm-image-link">
-      <%= link_to image_tag('2.png', :alt => 'Map this', :border => 0), { :controller => 'tools', :action => 'map', :id => dataset.id }, { :class => 'map-link' } %>
-<%
-=begin %>
-      <%= link_to image_tag('1.png', :alt => 'Chart', :border => 0), { :controller => 'tools', :action => 'chart', :id => dataset.id } %>
-<%
-=end %>
-      <%= link_to image_tag('3.png', :alt => 'More details', :border => 0), { :controller => 'catalogue', :action => 'details', :id => dataset.id, :seo => scrub_for_seo(dataset.name) } %>
+      <%= link_to(image_tag('2.png', :alt => 'Map it', :border => 0), { :controller => 'tools', :action => 'map', :ids => dataset.id }, { :class => 'map-link' }).html_safe %>
+      <%= link_to(image_tag('1.png', :alt => 'Graph it', :border => 0), { :controller => 'tools', :action => 'graph', :ids => dataset.id }, { :class => 'graph-link' }).html_safe %>
+      <%= link_to(image_tag('3.png', :alt => 'More details', :border => 0), { :controller => 'catalogue', :action => 'details', :id => dataset.id, :seo => scrub_for_seo(dataset.name) }).html_safe %>
     </div>
   </div>
   <div class="clear"></div>

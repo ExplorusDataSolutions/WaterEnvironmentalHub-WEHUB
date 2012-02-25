@@ -11,7 +11,7 @@ class ToolsController < ApplicationController
     @main_menu = 'we_tools'
   end
   
-  def chart
+  def graph
     @breadcrumb = ['Tools', 'Graph']
     @main_menu = 'we_tools'
 
