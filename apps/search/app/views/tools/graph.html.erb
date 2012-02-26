@@ -33,7 +33,7 @@
     <%= "allGraphData['#{dataset.id}'] = {};" -%>
     <%= "allGraphData['#{dataset.id}']['colour'] = '#{css_colour(i)[:code]}';" -%>
     <%= "allGraphData['#{dataset.id}']['name'] = '#{dataset.name}';" -%>    
-  <% end %>
+  <% end unless !@datasets %>
 
 
     function idFromUrl(url) { return url.match(/id=([\w-]*)/)[1]; }
@@ -144,7 +144,7 @@
 
           $('.datasets.' + uuid).removeClass('mini-loading-dialog').addClass('ui-state-disabled');
           $('.datasets.' + uuid + ' input').attr('disabled', true);
-          $('.property-selector.' + uuid ).change(function(event) {           
+          $('.property-selector.' + uuid ).unbind().change(function(event) {           
               loadGraphData(uuid, this.value);
             }
           );
@@ -163,14 +163,28 @@
       }
     });
 
-    $.ajax({
-      url: "<%= (url_for :controller => 'api', :action => 'shared_properties', :ids => params[:ids], :format => 'json').html_safe %>",
-      global: false,
-      success: function(data) { 
-        sharedProperties = data;
-        $(document).trigger('loadDataForSharedPropertiesAndGraph');
-      }
-    });    
+    if (idsFromSearch().length > 1) {
+      $.ajax({
+        url: "<%= (url_for :controller => 'api', :action => 'shared_properties', :ids => params[:ids], :format => 'json').html_safe %>",
+        global: false,
+        success: function(data) {
+          if (data) {
+            sharedProperties = data;
+            $(document).trigger('loadDataForSharedPropertiesAndGraph');
+          }
+        }
+      });
+    } else {
+      $.ajax({
+        url: "<%= (url_for :controller => 'api', :action => 'feature_fields_by_type', :id => params[:ids], :format => 'json').html_safe %>",
+        global: false,
+        success: function(data) {
+          if (data && data.numeric.length > 1) {
+            loadGraphData(idsFromSearch()[0], data.numeric[0]);
+          }
+        }
+      });
+    }
     
     $('.chart-button').click(function(event) {
       event.preventDefault();

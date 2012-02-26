@@ -51,7 +51,14 @@ class ApiController < ApplicationController
     if result.string && result.string.length > 1
       result.string.delete('nid')
     end
+    if result.empty?
+      result = nil
+    end    
     respond_with(result)
+  end
+  
+  def feature_fields_by_type
+    respond_with(catalogue_instance.api_feature_fields_by_type(params))
   end
   
   def dataset
