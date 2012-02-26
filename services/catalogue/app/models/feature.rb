@@ -256,7 +256,7 @@ class Feature
     if !keywords.nil?
       keywords = clean_id_fields(keywords)
       
-      keywords.uniq + synonyms.uniq
+      keywords.uniq
     end
     
     keywords
@@ -354,13 +354,9 @@ class Feature
 
     keywords
   end
-      
-  def synonyms
-    synonyms = []
-  end
-    
+          
   def clean_id_fields(keywords)
-    ['id','gid','nid'].each do |item|
+    ['id','gid','nid','the_geom'].each do |item|
       keywords.delete(item)
     end
     keywords.delete_if { |keyword| keyword.index('_id') }
