@@ -199,6 +199,17 @@
     });
     
     $('.' + window.location.hash.replace('#','') + '-chart').addClass('tab-select');    
+    
+    function uuids() {
+      var ids = []
+      $('[name=dataset]:checked').each(function() { ids.push($(this).val()); });
+      return ids;
+    }
+            
+    $('form[name=datasets] [name=dataset]').click(function(event) {
+      $('form[name=download] [name=ids]').val(uuids().join(','));
+    });
+    
   });
 </script>
 
