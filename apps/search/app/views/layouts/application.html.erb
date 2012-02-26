@@ -59,7 +59,10 @@
       $(document).ready(function() {
         $('.more a').click(function(event) {
           event.preventDefault();
-          $(event.target).parent().hide('fast').next('span').slideToggle('fast');
+          $(event.target).parent().hide('fast').next('.more-content').slideToggle('fast');
+          $(event.target).parent().next().find('.less').unbind().click(function() {                
+            $(this).parent().slideToggle('fast').prev('.more').show('fast');
+          });
         });
       });
     </script>
