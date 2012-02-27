@@ -94,7 +94,7 @@
       }
       
       var legendHeight = $('table.jqplot-table-legend').height();      
-      if (legendHeight) {
+      if (legendHeight && $('#chart1').height() < legendHeight) {
         $('#chart1').height(legendHeight + 40);
       }
       
