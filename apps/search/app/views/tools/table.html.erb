@@ -34,7 +34,9 @@ $(document).ready(function() {
       table.find('tbody').append(tr);
     }
 
-    $('#table-chart').tablesorter({widthFixed: true, widgets: ['zebra']}).tablesorterPager({container: $("#table-chart-pager")});
+    $('#table-chart')
+      .tablesorter({widthFixed: true, widgets: ['zebra']})
+      .tablesorterPager({container: $("#table-chart-pager"), positionFixed: false, size: $('.pagesize option:selected')[0].value});
     $('#table-chart-pager').show();
   }
   
