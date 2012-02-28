@@ -1,0 +1,3 @@
+<%= form_for :datasets, :html => { :name => 'datasets' } do |f| %>
+<%= render(:partial => 'dataset', :collection => @datasets, :locals => { :show_dataset_properties => show_dataset_properties }) -%>
+<% end %>

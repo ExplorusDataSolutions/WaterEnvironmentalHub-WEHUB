@@ -1,3 +1,4 @@
+<%= render 'modal_error' %>
 <style>
   .sub-content-center .chart-body {
     width: 773px;
@@ -231,49 +232,13 @@
 
 <div class="sub-content-body">
   <div class="sub-content-left">
-    <div class="left-tab-body">
-      <div class="left-tab chart-button line-chart tab-select">
-        <a href="#line">Line</a>
-      </div>
-      <div class="left-tab chart-button pie-chart">
-        <a href="#pie">Pie</a>
-      </div>
-    </div>
-    <div class="clear"></div>
+    
+    <%= render 'chart_menu' %>
   
     <div id="filter-container">
       <div id="filter-content">
-      <%= form_for :datasets, :html => { :name => 'datasets' } do |f| %>
-      <%  @datasets.each_with_index do |dataset,i| %>
-        <div class="mini-loading-dialog datasets <%= "#{dataset.id}" -%>">
-          <div class="float-left">
-            <%= check_box_tag "dataset", dataset.id, false, :id => "dataset_#{dataset.id}" %>
-          </div>
-          <div class="float-left width-5">&nbsp;</div>
-          <div class="float-left"><label for='<%= "dataset_#{dataset.id}" %>'><ul><li style='color: <%= "#{css_colour(i)[:code]}" %>'></li></ul></label></div>
-          <div class="float-left width-5">&nbsp;</div>
-          <div class="float-left width-210">
-            <label for='<%= "dataset_#{dataset.id}" %>'>
-              <div class="tool-left-link">
-              <%= link_to "#{dataset.name}", {:controller => 'catalogue', :action => 'details', :id => dataset.id}, :target => 'blank' %>
-              </div>
-              <div class="tool-left-text">
-              <%= more_markup(dataset.description).html_safe -%>
-              </div>
-            </label>
-          </div>
-        </div>
-        <select class="select-box-2 property-selector <%= "#{dataset.id}" %>">
-          <option></option>
-          <% dataset.properties.split(',').each do |prop| %>
-          <% if !prop.match(/latitude|longitude/i) %>
-          <%= "<option>#{prop}</option>".html_safe -%>
-          <% end %>
-          <% end %>
-        </select>        
-        <div class="clear height-5">&nbsp;</div>
-      <% end unless !@datasets %>
-      <% end %>
+      
+      <%= render(:partial => 'datasets_form', :locals => {:show_dataset_properties => true}) -%>
             
       </div>
     </div>

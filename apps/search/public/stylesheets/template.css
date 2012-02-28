@@ -1529,46 +1529,6 @@ ul.sub-menu li {
   color:#565656;
   border:none;
 }
-.graph-table{
-  border:solid 1px #C5C5C5;
-  -moz-border-radius-bottomleft:5px;
-  -moz-border-radius-bottomright:5px;
-  -moz-border-radius-topleft:5px;
-  -moz-border-radius-topright:5px;
-  -webkit-border-bottom-left-radius: 5px;
-  -webkit-border-bottom-right-radius: 5px;
-  -webkit-border-top-left-radius: 5px;
-  -webkit-border-top-right-radius: 5px;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-}
-.graph-table th{
-  background:#E3E3E1;
-  padding:10px 2px 10px 10px;
-  font-size:16px;
-  font-weight:normal;
-}
-.graph-table th select{
-  border:none;
-  background:#E3E3E1;
-  font-size:15px;
-  font-weight:normal;
-}
-.graph-table td{
-  border-bottom:solid 1px #E1E0DE;
-  border-right:solid 1px #E1E0DE;
-  padding:10px 2px 7px 15px;
-  color:#696969;
-  font-size:14px;
-}
-.graph-table tr:hover{
-  background:#E0F9FE !important;
-}
-.graph-table tr.alt{
-  background:#F0F9FE;
-}
 .border-right-none{
   border-right:none !important;
 }

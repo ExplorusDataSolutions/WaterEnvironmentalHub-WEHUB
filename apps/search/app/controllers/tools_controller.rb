@@ -53,8 +53,14 @@ class ToolsController < ApplicationController
   end
   
   def table
-    @breadcrumb = ['Tools', 'Charts']
+    @breadcrumb = ['Tools', 'Tables']
     @main_menu = 'we_tools'
+
+    if params[:id]
+      params[:ids] = [params[:id]]
+    end
+    
+    @datasets = catalogue_instance.api_datasets(params)
   end
   
   def map

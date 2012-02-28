@@ -1,212 +1,147 @@
-<div class="tab-menu-body">
-	<div class="tab-menu">
-		<a href="#">WE Data Map</a>
-	</div>
-	<div class="tab-menu tab-menu-select">
-		<a href="#">WE Data Graphs</a>
-	</div>
-	<div class="tab-menu">
-		<a href="#">Developers</a>
-	</div>
-</div>
-<div class="clear"></div>
+<%= render 'modal_error' %>
+<style>
+  .mini-loading-dialog {
+    background: white url(/images/spinner.gif) center top no-repeat;
+    height: 55px;
+    opacity: 0.6;
+  }
+  .sub-content-center .table-body {
+    width: 773px;
+    overflow: auto;
+    padding-bottom: 15px;    
+  }
+</style>
+<script>
+$(document).ready(function() {
+  var table = $('#table-chart');
 
+  function idFromUrl(url) { return url.match(/id=([\w-]*)/)[1]; } 
+  
+  function drawTable(features) {
+    table.html('<thead></thead><tbody></tbody>');
+    var tr = $('<tr></tr>');
+    for (property in features[0].properties) {
+      tr.append("<th>" + property + "</th>");
+    }
+    table.find('thead').append(tr);
+      
+    for (var i=0 ; i<features.length ; i++){
+      var feature = features[i];
+      tr = $('<tr></tr>');
+      for (property in feature.properties) {
+        tr.append("<td>" + feature.properties[property] + "</td>");
+      }
+      table.find('tbody').append(tr);
+    }
+
+    $('#table-chart').tablesorter({widthFixed: true, widgets: ['zebra']}).tablesorterPager({container: $("#table-chart-pager")});
+    $('#table-chart-pager').show();
+  }
+  
+  function loadDataAndDrawTable(uuid) {
+    var datasetElement = $('.datasets.' + uuid);
+    datasetElement.addClass('mini-loading-dialog');
+
+    $.ajax({
+      url: "<%= (url_for :controller => 'api', :action => 'feature', :output => 'json').html_safe %>&id=" + uuid ,
+      global: false,
+      dataType: 'json',
+      success: function(data) {
+        if (data.features) {
+
+          var checkbox = $('[name=datasets] .' + idFromUrl(this.url) + ' [name=dataset]');
+          checkbox.attr('checked', true).removeAttr('disabled');
+          datasetElement.removeClass('mini-loading-dialog');
+          
+          drawTable(data.features);
+
+          $('form[name=download] [name=ids]').val($('[name=dataset]:checked').val());
+        }
+      },
+      error: function() {
+        disableDataset(idFromUrl(this.url));
+      }
+    });
+  }
+  
+  function disableDataset(uuid) {
+    var datasetElement = $('.datasets.' + uuid);
+    datasetElement.removeClass('mini-loading-dialog').addClass('ui-state-disabled')
+    datasetElement.find('input').attr('disabled', true);
+    $('#table-chart-pager').hide();
+    table.html("<div style='padding: 20px;'><strong>We're sorry, we couldn't retrieve the feature data for this dataset. Please try another dataset.</strong></div>");
+  }
+
+  
+  $('.datasets').removeClass('mini-loading-dialog');
+  $('form[name=datasets] [name=dataset]').click(function(event) {
+    $('[name=datasets] [name=dataset]').attr('checked', false);
+    loadDataAndDrawTable(event.target.value);
+  });
+  
+  $('form[name=datasets] [name=dataset]:checked').each(function() {
+    loadDataAndDrawTable(this.value);
+  });
+  
+  if ($('form[name=datasets] [name=dataset]:checked').length === 0) {
+    $('form[name=datasets] [name=dataset]:first').trigger('click');
+  }
+});
+
+</script>
+<%= render 'tool_tab_menu' %>
+<div class="clear"></div>
+<style>
+  #filter-container ul {
+    padding: 0px;
+    margin: 0 -6px 0 20px;
+  }
+  #filter-container li {
+    font-size: 30px;
+    line-height: 18px;
+  }
+</style>
 <div class="sub-content-body">
 	<div class="sub-content-left">
-		<div class="left-tab-body">
-			<div id="bar-chart-div" class="left-tab">
-				<%= link_to 'Bar', :controller => 'tools', :action => 'chart', :anchor => 'bar' %>
-			</div>
-			<div id="line-chart-div" class="left-tab">
-				<%= link_to 'Line', :controller => 'tools', :action => 'chart', :anchor => 'line' %>
-			</div>
-			<div id="pie-chart-div" class="left-tab">
-				<%= link_to 'Pie', :controller => 'tools', :action => 'chart', :anchor => 'pie' %>
-			</div>
-			<div class="left-tab tab-select">
-				<%= link_to 'Table', :controller => 'tools', :action => 'table' %>
-			</div>
-		</div>
-		<div class="clear"></div>
-		<div id="filter-container">
-			<div class="filter-part">
-				<div class="filter-right">
-					<div>
-						<select class="select-box-1">
-							<option>Dataset</option>
-						</select>
-					</div>
-				</div>
-			</div>
-			<div class="clear"></div>
-			
-			<div class="filter-part">
-				<div class="filter-right">
-					<div>
-						<span class="button">
-							<button>Graph</button>
-						</span>
-					</div>
-				</div>
-			</div>
-			<div class="clear"></div>
-						
-			
-		</div>
+		
+    <div id="filter-container">
+      <div id="filter-content">
+      
+      <%= render(:partial => 'datasets_form', :locals => { :show_dataset_properties => false }) -%>
+            
+      </div>
+    </div>
+    
 	</div>
 	<div class="sub-content-center">
-		<div class="">
-			<table width="100%" cellpadding="5" cellspacing="0" class="graph-table">
-				<tr class="first-tr">
-					<th align="left">
-						<select>
-							<option>Geographic Area</option>
-						</select>
-					</th>
-					<th align="center">
-						<select>
-							<% for i in 1..12%>
-							<option>7/<%= i%>/2008</option>
-							<% end%>
-						</select>
-					</th>
-					<th align="center">
-						<select>
-							<% for i in 1..12%>
-							<option>7/<%= i%>/2007</option>
-							<% end%>
-						</select>
-					</th>
-					<th align="center">
-						<select>
-							<% for i in 1..12%>
-							<option>7/<%= i%>/2006</option>
-							<% end%>
-						</select>
-					</th>
-				</tr>
-				<% alt_cnt = 0 %>
-				<% alt_cnt += 1 %>
-				<tr class="<%= alt_cnt % 2 == 0 ? 'alt' : '' %>">
-					<td align="left">United State</td>
-					<td align="center">516544</td>
-					<td align="center">516544</td>
-					<td align="center" class="border-right-none">516544</td>
-				</tr>
-				<% alt_cnt += 1 %>
-				<tr class="<%= alt_cnt % 2 == 0 ? 'alt' : '' %>">
-					<td align="left">Northeast</td>
-					<td align="center">1651</td>
-					<td align="center">1651</td>
-					<td align="center" class="border-right-none">1651</td>
-				</tr>
-				<% alt_cnt += 1 %>
-				<tr class="<%= alt_cnt % 2 == 0 ? 'alt' : '' %>">
-					<td align="left">Mideast</td>
-					<td align="center">1654165</td>
-					<td align="center">1654165</td>
-					<td align="center" class="border-right-none">1654165</td>
-				</tr>
-				<% alt_cnt += 1 %>
-				<tr class="<%= alt_cnt % 2 == 0 ? 'alt' : '' %>">
-					<td align="left">South</td>
-					<td align="center">45616</td>
-					<td align="center">45616</td>
-					<td align="center" class="border-right-none">45616</td>
-				</tr>
-				<% alt_cnt += 1 %>
-				<tr class="<%= alt_cnt % 2 == 0 ? 'alt' : '' %>">
-					<td align="left">West</td>
-					<td align="center">5165165</td>
-					<td align="center">5165165</td>
-					<td align="center" class="border-right-none">5165165</td>
-				</tr>
-				
-				<% alt_cnt += 1 %>
-				<tr class="<%= alt_cnt % 2 == 0 ? 'alt' : '' %>">
-					<td align="left">United State</td>
-					<td align="center">1616</td>
-					<td align="center">1616</td>
-					<td align="center" class="border-right-none">1616</td>
-				</tr>
-				<% alt_cnt += 1 %>
-				<tr class="<%= alt_cnt % 2 == 0 ? 'alt' : '' %>">
-					<td align="left">Northeast</td>
-					<td align="center">14616</td>
-					<td align="center">14616</td>
-					<td align="center" class="border-right-none">14616</td>
-				</tr>
-				<% alt_cnt += 1 %>
-				<tr class="<%= alt_cnt % 2 == 0 ? 'alt' : '' %>">
-					<td align="left">Mideast</td>
-					<td align="center">4496498</td>
-					<td align="center">4496498</td>
-					<td align="center" class="border-right-none">4496498</td>
-				</tr>
-				<% alt_cnt += 1 %>
-				<tr class="<%= alt_cnt % 2 == 0 ? 'alt' : '' %>">
-					<td align="left">South</td>
-					<td align="center">4148998</td>
-					<td align="center">4148998</td>
-					<td align="center" class="border-right-none">4148998</td>
-				</tr>
-				<% alt_cnt += 1 %>
-				<tr class="<%= alt_cnt % 2 == 0 ? 'alt' : '' %>">
-					<td align="left">West</td>
-					<td align="center">7894498</td>
-					<td align="center">7894498</td>
-					<td align="center" class="border-right-none">7894498</td>
-				</tr>
-				
-				
-				<% alt_cnt += 1 %>
-				<tr class="<%= alt_cnt % 2 == 0 ? 'alt' : '' %>">
-					<td align="left">United State</td>
-					<td align="center">446156198</td>
-					<td align="center">446156198</td>
-					<td align="center" class="border-right-none">446156198</td>
-				</tr>
-				<% alt_cnt += 1 %>
-				<tr class="<%= alt_cnt % 2 == 0 ? 'alt' : '' %>">
-					<td align="left">Northeast</td>
-					<td align="center">1649848</td>
-					<td align="center">1649848</td>
-					<td align="center" class="border-right-none">1649848</td>
-				</tr>
-				<% alt_cnt += 1 %>
-				<tr class="<%= alt_cnt % 2 == 0 ? 'alt' : '' %>">
-					<td align="left">Mideast</td>
-					<td align="center">16494</td>
-					<td align="center">16494</td>
-					<td align="center" class="border-right-none">16494</td>
-				</tr>
-				<% alt_cnt += 1 %>
-				<tr class="<%= alt_cnt % 2 == 0 ? 'alt' : '' %>">
-					<td align="left">South</td>
-					<td align="center">18498</td>
-					<td align="center">18498</td>
-					<td align="center" class="border-right-none">18498</td>
-				</tr>
-				<% alt_cnt += 1 %>
-				<tr class="<%= alt_cnt % 2 == 0 ? 'alt' : '' %>">
-					<td align="left">West</td>
-					<td align="center">568487</td>
-					<td align="center">568487</td>
-					<td align="center" class="border-right-none">568487</td>
-				</tr>
-				
-				<tr>
-					<td class="border-bottom-none">&nbsp;</td>
-					<td class="border-bottom-none">&nbsp;</td>
-					<td class="border-bottom-none">&nbsp;</td>
-					<td class="border-bottom-none border-right-none">&nbsp;</td>
-				</tr>
-			</table>
-		</div>
-		
+		<div class="table-body">
+
+      <table id="table-chart" class="table-sorter"></table>
+
+      <div id="table-chart-pager" class="pager" style="display: none;">
+	      <form>
+		      <img src="/images/table-sorter-pager-first.png" class="first"/>
+		      <img src="/images/table-sorter-pager-prev.png" class="prev"/>
+		      <input type="text" class="pagedisplay"/>
+		      <img src="/images/table-sorter-pager-next.png" class="next"/>
+		      <img src="/images/table-sorter-pager-last.png" class="last"/>
+		      <select class="pagesize">
+		      <% 10.times do |i| %>
+		        <% option_value = (i+1)*10 %>
+		        <%= "<option value='#{option_value}'>#{option_value}</option>".html_safe -%>
+		      <% end %>
+		      </select>
+	      </form>
+      </div>
+      
+		</div>		
 	</div>
+<%
+=begin %>	
 	<div class="sub-content-right">
     	<%= render 'shared/right_panel' %>		
 	</div>
+<%
+=end %>	
 	<div class="clear"></div>
 </div>

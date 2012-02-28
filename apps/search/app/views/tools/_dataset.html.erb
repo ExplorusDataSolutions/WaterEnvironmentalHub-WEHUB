@@ -1,0 +1,30 @@
+<% i = dataset_counter + 1 %>
+<div class="mini-loading-dialog datasets <%= "#{dataset.id}" -%>">
+  <div class="float-left">
+    <%= check_box_tag "dataset", dataset.id, false, :id => "dataset_#{dataset.id}" %>
+  </div>
+  <div class="float-left width-5">&nbsp;</div>
+  <div class="float-left"><label for='<%= "dataset_#{dataset.id}" %>'><ul><li style='color: <%= "#{css_colour(i)[:code]}" %>'></li></ul></label></div>
+  <div class="float-left width-5">&nbsp;</div>
+  <div class="float-left width-210">
+    <label for='<%= "dataset_#{dataset.id}" %>'>
+      <div class="tool-left-link">
+      <%= link_to "#{dataset.name}", {:controller => 'catalogue', :action => 'details', :id => dataset.id}, :target => 'blank' %>
+      </div>
+      <div class="tool-left-text">
+      <%= more_markup(dataset.description).html_safe -%>
+      </div>
+    </label>
+  </div>
+</div>
+<% if show_dataset_properties %>
+<select class="select-box-2 property-selector <%= "#{dataset.id}" %>">
+  <option></option>
+  <% dataset.properties.split(',').each do |prop| %>
+  <% if !prop.match(/latitude|longitude/i) %>
+  <%= "<option>#{prop}</option>".html_safe -%>
+  <% end %>
+  <% end %>
+</select>
+<% end %>
+<div class="clear height-5">&nbsp;</div>

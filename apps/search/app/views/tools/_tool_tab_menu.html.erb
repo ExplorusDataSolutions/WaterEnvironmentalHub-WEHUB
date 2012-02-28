@@ -21,7 +21,10 @@ $(document).ready(function() {
     <%= (link_to 'Graphs', :controller => 'tools', :action => 'graph', :ids => params[:ids] ? params[:ids] : params[:id]).html_safe %>
   </div>
   <div class="tab-menu">
-    <%= link_to 'Developers', :controller => 'tools', :action => 'developers' %>
+    <%= (link_to 'Tables', :controller => 'tools', :action => 'table', :ids => params[:ids] ? params[:ids] : params[:id]).html_safe %>
+  </div>
+  <div class="tab-menu">
+    <%= link_to 'Build your own', :controller => 'tools', :action => 'developers' %>
   </div>
   <div class="tab-menu-right">
     <div class="top-container-tab tab-download">

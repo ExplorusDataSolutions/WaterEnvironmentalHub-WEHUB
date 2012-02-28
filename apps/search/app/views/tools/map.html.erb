@@ -1,3 +1,4 @@
+<%= render 'modal_error' %>
 <style>
 .mini-loading-dialog {
   background: white url(/images/spinner.gif) center top no-repeat;
@@ -5,14 +6,6 @@
   opacity: 0.6;
 }
 </style>
-<script>
-  $(document).ready(function() {
-    if (<%= !@datasets || @datasets.count == 0 %>) {
-      WEHub.modal("We're Sorry", "The maps for these datasets couldn't be retrieved");
-      $('button.remove').hide();
-    }
-  });
-</script>
 <script>
   $(document).ready(function() {
 
@@ -163,6 +156,7 @@
 =end %>    
     <div id="filter-container">
       <div id="filter-content">
+      
       <%= form_for :datasets, :html => { :name => 'datasets' } do |f| %>
       <%  @datasets.each_with_index do |dataset,i| %>
         <div class="mini-loading-dialog datasets <%= "#{dataset.id}" -%>">
@@ -186,6 +180,7 @@
         <div class="clear height-5">&nbsp;</div>
       <% end unless !@datasets %>
       <% end %>
+      
       </div>
 
 <%
