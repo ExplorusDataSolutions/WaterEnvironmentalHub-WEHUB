@@ -1389,8 +1389,8 @@ ul.sub-menu li {
   font-size:13px;
 }
 .search-result-each .search-btm-image-link{
-  float:right;
-  margin:0 10px;
+  text-align: right;
+  margin: 10px 0 0 0;
 }
 .search-result-each .search-btm-image-link a{
   margin:0 5px;

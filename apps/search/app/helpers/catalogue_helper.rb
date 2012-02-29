@@ -219,7 +219,7 @@ module CatalogueHelper
   
   def more_markup(content, length=125)
     if content.length > length
-      "#{content[0..length]}<span class='more'>... <a href='#more'>more</a></span><span class='more-content' style='display: none;'>#{content[length+1..-1]} <span class='less'><a href='#less'>less</a></span></span>"
+      "#{content[0..length]}<span class='more' title='Show more'>... <a href='#more'>more</a></span><span class='more-content' style='display: none;'>#{content[length+1..-1]} <span class='less'><a href='#less' title='Show less'>less</a></span></span>"
     else
       content
     end

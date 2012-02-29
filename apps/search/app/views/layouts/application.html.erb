@@ -145,9 +145,13 @@
         </script>
         <div class="header-tab">
           <ul>
+<%
+=begin %>          
             <li class="<%= @main_menu == 'home' ? 'selected' : ''%>">
               <%= link_to 'Home', :root %>
             </li>
+<%
+=end %>            
             <li class="<%= @main_menu == 'about' ? 'selected' : ''%>">
               <%= link_to 'Learn About Us', {:controller => 'about'}, :class => 'top-menu' %>
               <ul style="display: none;">
@@ -166,13 +170,9 @@
                 <li><%= link_to 'How To Participate', {:controller => 'catalogue', :action => 'participate'} %></li>                
               </ul>              
             </li>
-<%
-=begin %>            
             <li class="<%= @main_menu == 'we_tools' ? 'selected' : ''%>">
               <%= link_to 'Tools', :controller => 'tools' %>
             </li>
-<%
-=end %>            
             <li class="<%= @main_menu == 'we_community' ? 'selected' : ''%>">
               <%= link_to 'Community', {:controller => 'community'}, :class => 'top-menu community' %>
               <ul style="display: none;">

@@ -2,75 +2,67 @@
 	<div class="tools-landing-box-top">
 		<img src="/images/Map.jpg" alt="Map" title="Map" border="0" />
 		<h2>Map</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula. Fusce vestibulum, ipsum eget imperdiet rhoncus, augue leo semper massa,
+    Visualize our data through a map.
 	</div>
 	<div class="clear"></div>
 	<div class="tools-landing-box-bottom">
-    <%= link_to 'Click here >>', :controller => 'tools', :action => 'map' %>
+    <%= link_to 'Click here >>', :controller => 'tools', :action => 'map', :ids => '60a6b3bf-13b7-4db6-9e27-fddb757cacc4,72de0ee7-642c-43f2-a316-e01a4f2f4f03' %>
 	</div>
 	<div class="clear"></div>
 </div>
 <div class="tools-landing-top-seperator">&nbsp;</div>
-
-
-
-
-<div class="float-left">
-	<div class="tools-landing-box-top">
-		<img src="/images/BarGraph.jpg" alt="BarGraph" title="BarGraph" border="0" />
-		<h2>Bar Graph</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula. Fusce vestibulum, ipsum eget imperdiet rhoncus, augue leo semper massa,
-	</div>
-	<div class="clear"></div>
-	<div class="tools-landing-box-bottom">
-    <%= link_to 'Click here >>', :controller => 'tools', :action => 'chart', :anchor => 'bar' %>
-	</div>
-	<div class="clear"></div>
-</div>
-<div class="tools-landing-top-seperator">&nbsp;</div>
-
-
 
 <div class="float-left">
 	<div class="tools-landing-box-top">
 		<img src="/images/LineGraph.jpg" alt="LineGraph" title="LineGraph" border="0" />
 		<h2>Line Graph</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula. Fusce vestibulum, ipsum eget imperdiet rhoncus, augue leo semper massa,
+    Visualize our data in a line graph.
 	</div>
 	<div class="clear"></div>
 	<div class="tools-landing-box-bottom">
-    <%= link_to 'Click here >>', :controller => 'tools', :action => 'chart', :anchor => 'line' %>
+    <%= link_to 'Click here >>', :controller => 'tools', :action => 'graph', :anchor => 'line', :ids => '60a6b3bf-13b7-4db6-9e27-fddb757cacc4,72de0ee7-642c-43f2-a316-e01a4f2f4f03' %>
 	</div>
 	<div class="clear"></div>
 </div>
 <div class="tools-landing-top-seperator">&nbsp;</div>
-
-
 
 <div class="float-left">
 	<div class="tools-landing-box-top">
 		<img src="/images/PieGraph.jpg" alt="PieGraph" title="PieGraph" border="0" />
 		<h2>Pie Graph</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula. Fusce vestibulum, ipsum eget imperdiet rhoncus, augue leo semper massa,
+    Visualize our data in a pie graph.
 	</div>
 	<div class="clear"></div>
 	<div class="tools-landing-box-bottom">
-    <%= link_to 'Click here >>', :controller => 'tools', :action => 'chart', :anchor => 'pie' %>
+    <%= link_to 'Click here >>', :controller => 'tools', :action => 'graph', :anchor => 'pie', :ids => '60a6b3bf-13b7-4db6-9e27-fddb757cacc4,72de0ee7-642c-43f2-a316-e01a4f2f4f03' %>
 	</div>
 	<div class="clear"></div>
 </div>
 <div class="tools-landing-top-seperator">&nbsp;</div>
 
-
 <div class="float-left">
 	<div class="tools-landing-box-top">
 		<img src="/images/Table.jpg" alt="Table" title="Table" border="0" />
 		<h2>Table</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec lorem ligula. Fusce vestibulum, ipsum eget imperdiet rhoncus, augue leo semper massa,
+    Visualize our data in a table.
 	</div>
 	<div class="clear"></div>
 	<div class="tools-landing-box-bottom">
-    <%= link_to 'Click here >>', :controller => 'tools', :action => 'table' %>
+    <%= link_to 'Click here >>', :controller => 'tools', :action => 'table', :ids => '60a6b3bf-13b7-4db6-9e27-fddb757cacc4,72de0ee7-642c-43f2-a316-e01a4f2f4f03' %>
+	</div>
+	<div class="clear"></div>
+</div>
+<div class="tools-landing-top-seperator">&nbsp;</div>
+
+<div class="float-left">
+	<div class="tools-landing-box-top">
+		<img src="/images/BarGraph.jpg" alt="BarGraph" title="BarGraph" border="0" />
+		<h2>Build your own</h2>
+    Use our API to mine our data and build your own tool.
+	</div>
+	<div class="clear"></div>
+	<div class="tools-landing-box-bottom">
+    <%= link_to 'Click here >>', :controller => 'api', :action => 'index' %>
 	</div>
 	<div class="clear"></div>
 </div>
@@ -78,6 +70,8 @@
 
 <div class="clear height-50"></div>
 
+<%
+=begin %>
 <table width="100%" border="0" align="center" cellpadding="10">
 	<tr>
 		<td align="right" valign="middle" width="35%">
@@ -88,3 +82,5 @@
 		</td>
 	</tr>
 </table>
+<%
+=end %>
