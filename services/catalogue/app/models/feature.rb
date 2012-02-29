@@ -56,6 +56,7 @@ class Feature
         has_geom = result.keys.include?('the_geom')
         column_names = result.keys & filter_properties if filter_properties && !filter_properties.empty?        
         column_names = result.keys if !column_names || column_names.empty?
+        column_names.delete('the_geom')
         if has_geom
           column_names = column_names.collect {|x| "\"#{x}\"" }.join(', ')
 
