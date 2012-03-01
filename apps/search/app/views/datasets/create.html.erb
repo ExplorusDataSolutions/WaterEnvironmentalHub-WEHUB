@@ -17,7 +17,7 @@
       $.each(fragments, function(idex, fragment){
         var parent = fragmentId(fragment.id);
         var inputs = parent.find('input');
-        if (fragment.id === targetId) {      	        
+        if (fragment.id === targetId) {                
           parent.removeClass('disabled');
           inputs.removeAttr('disabled');
         } else {
@@ -58,10 +58,10 @@
           height: 250,
           width: 600,
           title: 'Terms and conditions',
-	        modal: true,
-	        buttons: { 
-	          "Yes, I agree": function() { form.submit(); },
-	          "No, I do not agree": function() { $(this).dialog("close"); }
+          modal: true,
+          buttons: { 
+            "Yes, I agree": function() { form.submit(); },
+            "No, I do not agree": function() { $(this).dialog("close"); }
           }
         });
       }
@@ -69,8 +69,12 @@
   });
 
   $(document).ready(function() {
-    $.get(<%= "'/user/groups?user_id=#{logged_in? ? current_user.id : 0}&format=html'" %>, function(html) {
-      $('#groups').html($(html).find('option')).val(0);
+    $.ajax({
+      url: <%= "'/user/groups?user_id=#{logged_in? ? current_user.id : 0}&format=html'" %>,
+      global: false,
+      success: function(html) {
+        $('#groups').html($(html).find('option')).val(0);
+      }
     });
   });
 
@@ -86,157 +90,156 @@
 
 <div class="profile-right-container">
   <%= render '/shared/menu_horizontal_tabs' %>
-	<div class="community-tab-right">
-		<div class="profile-tab profile-tab-select">
-			<%= link_to 'Profile', :controller => 'user', :action => 'profile' %>
-		</div>
-	</div>
-	<div class="clear"></div>
-	<div class="profile-content-container">
+  <div class="community-tab-right">
+    <div class="profile-tab profile-tab-select">
+      <%= link_to 'Profile', :controller => 'user', :action => 'profile' %>
+    </div>
+  </div>
+  <div class="clear"></div>
+  <div class="profile-content-container">
     <%= render 'upper_navbar' %>
-		
-		<div class="dataset-upload-container">
+    
+    <div class="dataset-upload-container">
       <div id="error-explanation" tabindex="100">  
       </div>  
 
 <%= form_for :dataset, :url => "http://#{request.host}:3000/items/create", :html => {:multipart => true} do |f| %>
 
-			<table width="100%" cellpadding="8" cellspacing="0" border="0">
-				<tr>
-					<td align="right" width="20%">
-            <%= f.label :name, 'Title' %>
-					</td>
-					<td align="left" width="80%">
-						<div class="text-plain-left"></div>
-						<div class="text-plain-repeat-280">
-							<%= f.text_field :name, :class => 'required', :friendly => 'Title' %>
-						</div>
-						<div class="text-plain-right"></div>
-					</td>
-				</tr>
-				
-				<tr>
-					<td align="right" valign="top">
-						<%= f.label :description, 'Description' %>
-					</td>
-					<td align="left">
-						<div class="textarea-plain-left"></div>
-						<div class="textarea-plain-repeat-280">
-              <%= f.text_area :description, :class => 'required', :friendly => 'Description' %>
-						</div>
-            <div class="textarea-plain-right"></div>
-					</td>
-				</tr>
-				<tr>
-					<td align="right" valign="top">
-            <%= label_tag :filename, 'File' %>
-					</td>	
-					<td align="left">
-            <%= file_field_tag :filename, :class => 'required', :friendly => 'File' %>
-						<div class="">
-							Valid uploads includes: Spreadsheet in .csv, .ods, .xls, or .xlsx format, or Shape files (a .zip file) containing atleast a .shp and .dbf file
-							
-							If the file is in a spreadsheet format it must only have 1 sheet. Multiple sheet uploads will not be successful using the WEHUB uploader. 
-														
-							Shape files will not need to be altered but will need to be converted into WGS84 Geographic ESPG 4326 (http://spatialreference.org/ref/epsg/4326/) and can be directly uploaded into the WEHub. If the data is in any other format it will need to be lightly altered to fit the following specifications:
-											
-							1. The file will be set up in a horizontal data representation with the first row being the column headings with units.
-												
-							2. The file will have an FID column which will represent the feature ID for each individual feature (e.g., a station, a person, etc.) in the table. This can have one to many values. 
-														
-							3. The file will have a Date\Time column. This column can be in multiple formats as long as it is present and populated with values.  
-														
-							4. The file will have a Latitude column. This column will be populated with the features latitude in WGS84 in decimal degrees (example 52.495912).
-												
-							5. The file will have a Longitude column. This column will be populated with the features longitude in WGS84 in decimal degrees (example -114.19012).
-						</div>
-					</td>
-				</tr>
+      <table width="100%" cellpadding="8" cellspacing="0" border="0">
         <tr>
-					<td align="right" valign="top">
+          <td align="right" width="20%">
+            <%= f.label :name, 'Title' %>
+          </td>
+          <td align="left" width="80%">
+            <div class="text-plain-left"></div>
+            <div class="text-plain-repeat-280">
+              <%= f.text_field :name, :class => 'required', :friendly => 'Title' %>
+            </div>
+            <div class="text-plain-right"></div>
+          </td>
+        </tr>
+        
+        <tr>
+          <td align="right" valign="top">
+            <%= f.label :description, 'Description' %>
+          </td>
+          <td align="left">
+            <div class="textarea-plain-left"></div>
+            <div class="textarea-plain-repeat-280">
+              <%= f.text_area :description, :class => 'required', :friendly => 'Description' %>
+            </div>
+            <div class="textarea-plain-right"></div>
+          </td>
+        </tr>
+        <tr>
+          <td align="right" valign="top">
+            <%= label_tag :filename, 'File' %>
+          </td>  
+          <td align="left">
+            <%= file_field_tag :filename, :class => 'required', :friendly => 'File' %>
+            <div class="">
+              <p>
+              Valid uploads includes: Spreadsheet in .csv, .ods, .xls, or .xlsx format, or Shape files (a .zip file) containing at least a .shp and .dbf file.
+              </p>
+              <p>
+              If the file is in a spreadsheet format it must only have 1 sheet. Multiple sheet uploads will not be successful using the WEHUB uploader. <br />
+              </p>          
+              Shape files will not need to be altered but will need to be converted into WGS84 Geographic ESPG 4326 (<a href="http://spatialreference.org/ref/epsg/4326/">http://spatialreference.org/ref/epsg/4326/</a>) and can be directly uploaded into the WEHub. If the data is in any other format it will need to be lightly altered to fit the following specifications:
+              <ol>                      
+                <li>The file will be set up in a horizontal data representation with the first row being the column headings with units.</li>
+                <li>The file will have an FID column which will represent the feature ID for each individual feature (e.g., a station, a person, etc.) in the table. This can have one to many values. </li>
+                <li>The file will have a Date\Time column. This column can be in multiple formats as long as it is present and populated with values.</li>
+                <li>The file will have a Latitude column. This column will be populated with the features latitude in WGS84 in decimal degrees (example 52.495912).</li>                        
+                <li>The file will have a Longitude column. This column will be populated with the features longitude in WGS84 in decimal degrees (example -114.19012).</li>
+              </ol>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td align="right" valign="top">
             <%= f.label :source, 'Source (optional)' %>
           </td>
           <td>
-						<div class="text-plain-left"></div>
-						<div class="text-plain-repeat-280">
-							<%= f.text_field :source %>
-						</div>
-						<div class="text-plain-right"></div>
-						<div class="clear">
-							The source could be a link, name of a friend, email address, organization...
-						</div>
+            <div class="text-plain-left"></div>
+            <div class="text-plain-repeat-280">
+              <%= f.text_field :source %>
+            </div>
+            <div class="text-plain-right"></div>
+            <div class="clear">
+              The source could be a link, name of a friend, email address, organization...
+            </div>
           </td>
         </tr>
 
-				<tr>
-					<td align="right">
-						<strong>Author<strong>
-					</td>
-					<td>&nbsp;</td>
-				</tr>
         <tr>
-					<td align="right" valign="top">
+          <td align="right">
+            <strong>Author<strong>
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td align="right" valign="top">
             <%= label_tag "author[name]", 'Author name (optional)' %>
           </td>
           <td>
-						<div class="text-plain-left"></div>
-						<div class="text-plain-repeat-280">
-							<%= text_field_tag "author[name]" %>
-						</div>
-						<div class="text-plain-right"></div>
+            <div class="text-plain-left"></div>
+            <div class="text-plain-repeat-280">
+              <%= text_field_tag "author[name]" %>
+            </div>
+            <div class="text-plain-right"></div>
           </td>
-        </tr>				
+        </tr>        
         <tr>
-					<td align="right" valign="top">
+          <td align="right" valign="top">
               <%= label_tag "author[email]", 'Email (optional)' %>
           </td>
           <td>
-						<div class="text-plain-left"></div>
-						<div class="text-plain-repeat-280">
-							<%= text_field_tag "author[email]" %>
-						</div>
-						<div class="text-plain-right"></div>
+            <div class="text-plain-left"></div>
+            <div class="text-plain-repeat-280">
+              <%= text_field_tag "author[email]" %>
+            </div>
+            <div class="text-plain-right"></div>
           </td>
         </tr>
-				
-				<tr>
-					<td align="right">
-						<strong>Feature type<strong>
-					</td>
-					<td>&nbsp;</td>
-				</tr>
-				<tr>
-					<td align="right" valign="top">
+        
+        <tr>
+          <td align="right">
+            <strong>Feature type<strong>
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td align="right" valign="top">
             <%= f.label :feature_type_static, 'Non-temporal (static)' %>
-					</td>
-					<td align="left">
-						<div class="float-left">
+          </td>
+          <td align="left">
+            <div class="float-left">
               <%= f.radio_button :feature_type, :observation_data_static, { :id => :dataset_feature_type_static } %>
-						</div>
+            </div>
             <%= render 'static_observation' %>
-					</td>
-				</tr>
-				
-				<tr>
-					<td align="right" valign="top">
+          </td>
+        </tr>
+        
+        <tr>
+          <td align="right" valign="top">
             <%= f.label :feature_type_dynamic, 'Temporal (dynamic)' %>
-					</td>
-					<td align="left">
+          </td>
+          <td align="left">
             <div class="float-left">
               <%= f.radio_button :feature_type, :observation_data_dynamic, { :id => :dataset_feature_type_dynamic } %>
             </div>
             <div class="float-left width-5">&nbsp;</div>
             <%= render 'dynamic_observation' %>
-					</td>
-				</tr>
+          </td>
+        </tr>
 
-				<tr>
-					<td align="right">
-						<strong>Permissions<strong>
-					</td>
-					<td>&nbsp;</td>
-				</tr>
-				<tr>
+        <tr>
+          <td align="right">
+            <strong>Permissions<strong>
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
           <td colspan="2" style="padding-left:50px;">
           <table>
             <tr>
@@ -259,27 +262,27 @@
               </td>
             </tr>
           </table>
-					</td>
-				</tr>
+          </td>
+        </tr>
 
         <%= render :partial => 'creative_commons' %>
-				
-				<tr>
-					<td>&nbsp;</td>
-					<td align="left">
+        
+        <tr>
+          <td>&nbsp;</td>
+          <td align="left">
             <div class="create-dataset-button">
                 <%= f.submit :search, :name => 'search' %>
             </div>
-					</td>
-				</tr>
-				
-			</table>
+          </td>
+        </tr>
+        
+      </table>
 
 <% end %>
 
-		</div>
-		<div class="clear"></div>		
-	</div>
+    </div>
+    <div class="clear"></div>    
+  </div>
 </div>
 <div class="clear"></div>
 
