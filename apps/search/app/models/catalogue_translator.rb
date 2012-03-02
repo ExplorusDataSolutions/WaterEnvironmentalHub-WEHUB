@@ -56,6 +56,10 @@ class CatalogueTranslator
     get(download_uri(params))
   end
   
+  def create(params)
+    json_to_mash(post_json("#{url}/items/create", params))
+  end
+  
   def add_recently_viewed(user_id, dataset_uuid)
     response = post_json(user_recently_viewed_uri, { 
       :user_id => "#{user_id}", 
@@ -242,6 +246,8 @@ class CatalogueTranslator
   end
 
   def post_json(uri, json_hash={})
+    json_hash.delete(:utf8)
+    json_hash.delete(:authenticity_token)
     json_hash.merge!(:format => "json")
     timeout = 500
     url = URI.parse(uri)

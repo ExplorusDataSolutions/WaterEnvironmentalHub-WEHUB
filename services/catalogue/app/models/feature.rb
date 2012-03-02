@@ -176,11 +176,13 @@ class Feature
   end
 
   def create(params)
-    
-    if is_a_file?(params)
+    if params.key?(:filename)
       tablename = resolve_tablename
-      if !params.match(/(\.xls|\.xlsx|\.ods.|\.csv)$/).nil?
-        sheet_translator = SpreadsheetTranslator.new(params, "#{Rails.root}/public/uploads", "#{Rails.root}/tmp/spreadsheets")
+      filename = Pathname.new(params[:filename]).basename.to_s     
+      directory = Pathname.new(params[:filename]).dirname.to_s
+
+      if !filename.match(/(\.xls|\.xlsx|\.ods.|\.csv)$/).nil?
+        sheet_translator = SpreadsheetTranslator.new(filename, directory, "#{Rails.root}/tmp/spreadsheets")
               
         execute("CREATE TABLE #{tablename} (#{sheet_translator.fields_sql})")
         execute(["COPY #{tablename} FROM ? WITH CSV", sheet_translator.filename])
@@ -198,8 +200,8 @@ class Feature
         rescue Exception => e
         end
 
-      elsif !params.match(/(\.zip)$/).nil?
-        shape_translator = ShapeTranslator.new(params, tablename, '4326', "#{Rails.root}/public/uploads", "#{Rails.root}/tmp/shape_scripts")
+      elsif !filename.match(/(\.zip)$/).nil?
+        shape_translator = ShapeTranslator.new(filename, tablename, '4326', directory, "#{Rails.root}/tmp/shape_scripts")
             
         execute(shape_translator.shape_sql)
       else
@@ -274,8 +276,8 @@ class Feature
     if is_data_source?('geoserver')
       geoserver_translator.feature_fields_by_type(uuid)
     elsif is_data_source?('catalogue')
-      observation_data = data_lightweight
-      get_types(observation_data[:data][0]) unless !observation_data
+      observation_data = data_lightweight      
+      get_types(observation_data[:data][0]) unless !observation_data || observation_data[:data].count == 0
     else
       raise ArgumentError, "Feature field types could not be retrieved for feature with a feature source of #{feature_source.name}"      
     end
@@ -305,10 +307,6 @@ class Feature
     is_data_source?('geocens') || is_data_source?('water_cloud') || is_data_source?('alberta_water_portal')
   end
   private 
-
-  def is_a_file?(params)
-    params.is_a?(String)
-  end
       
   def resolve_tablename
     if uuid.match(/[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12}/) != nil

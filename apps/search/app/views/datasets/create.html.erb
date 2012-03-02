@@ -1,3 +1,33 @@
+<style>
+  span.required {
+    color: #FF0000;
+    font-weight: bold;
+    vertical-align: middle;
+    line-height: 0;
+  }
+  .dataset-upload-container [type="text"], .dataset-upload-container textarea {
+    width: 500px;
+  }
+  .dataset-upload-container textarea {
+    height: 150px;
+  }
+  .dataset-upload-container .observation-data [type="text"] {
+    width: 85px;
+  }
+  .dataset-upload-container .label {
+    text-align: right;
+    vertical-align: top;
+  }
+  .dataset-upload-container .label-header {  
+    padding-top: 15px;
+  }
+  .dataset-upload-container .label-extended {  
+    text-align: right;
+  }  
+  .dataset-upload-container [type="submit"] {
+    height: 40px;
+  }
+</style>
 <script>
   $(document).ready(function() {
     function fragmentId(id) {
@@ -35,7 +65,10 @@
       $('#permission_group').attr('checked', true);
     });
 
-    $('.create-dataset-button').click(function() {
+
+    $('[type="submit"]').click(function(event) {
+      event.preventDefault();
+      
       var required = ['dataset[feature_type]', 'permission'];
       $('form .required').each(function(i,e) { required.push($(e).attr('name')); });
       var form = $('form');
@@ -43,7 +76,9 @@
       var errors = []
       $(required).each(function(i,e) {
         element = $('form').find('[name="' + e + '"]');
+        element.removeClass('error');
         if (element.val() === '') {
+          element.addClass('error');
           errors.push(element.attr('friendly') ? element.attr('friendly') : e);
         }
       });
@@ -51,21 +86,48 @@
       if (errors.length > 0) {
         var errorMsg = ''
         $(errors).each(function(i,e) { errorMsg += '<li>' + e + ' can\'t be blank</li>'; });
-        $('#error-explanation').html('<ul>' + errorMsg + '</ul>').focus();
+        $('#error-explanation').html('<strong>Errors:</strong><ul>' + errorMsg + '</ul>').focus();
+        $('#error-explanation, .error').effect("highlight", {}, 3000);
       } else {
         $("#terms-dialog").dialog({
-          zIndex: 2000, /* override Open Layers */
+          zIndex: 2000, 
           height: 250,
           width: 600,
           title: 'Terms and conditions',
           modal: true,
           buttons: { 
-            "Yes, I agree": function() { form.submit(); },
+            "Yes, I agree": function() {
+              $(this).dialog("close");
+              
+              $.ajax({
+                url: '<%= "/item/upload" %>',
+                data: new FormData($('form[name=create]')[0]),
+                type: 'POST',
+                contentType: false,
+                processData: false,        
+                success: function(data){
+                  if (data && data.callback) {
+                    $("#success-dialog").dialog({
+                      height: 250,
+                      width: 600,
+                      title: 'Thanks!',
+                      modal: true,
+                      buttons: { "Ok": function() { window.location = data.callback; } }
+                    });
+                    setTimeout(function() { window.location = data.callback; }, 18000);
+                  }
+                }, 
+                error: function(data){
+debugger;
+                }
+              });
+            },
             "No, I do not agree": function() { $(this).dialog("close"); }
           }
         });
       }
-    });    
+    });
+
   });
 
   $(document).ready(function() {
@@ -79,12 +141,10 @@
   });
 
   $(document).ready(function() {
-  <%# jQuery datepicker %>
-    $("[name='dataset[feature_period_start]'], [name='dataset[feature_period_end]'], [name='dataset[feature_period]']").datepicker({ dateFormat: 'dd/mm/yy' });
+    <%# jQuery datepicker %>
+    $("[name='dataset[feature_period_start]'], [name='dataset[feature_period_end]'], [name='dataset[feature_period]']").datepicker({ dateFormat: 'dd/mm/yy' });    
   });
-</script>
-
-
+</script> 
 
 <%= render '/shared/left_panel' %>
 
@@ -103,40 +163,37 @@
       <div id="error-explanation" tabindex="100">  
       </div>  
 
-<%= form_for :dataset, :url => "http://#{request.host}:3000/items/create", :html => {:multipart => true} do |f| %>
+<%= form_for :dataset, :url => "http://#{request.host}:3000/items/create", :html => { :multipart => true, :name => 'create' } do |f| %>
 
-      <table width="100%" cellpadding="8" cellspacing="0" border="0">
+      <table width="100%">
         <tr>
-          <td align="right" width="20%">
-            <%= f.label :name, 'Title' %>
+          <td colspan="2">
+            <em>Required fields are denoted by an asterisk (<%= required_markup.html_safe -%>).</em>
           </td>
-          <td align="left" width="80%">
-            <div class="text-plain-left"></div>
-            <div class="text-plain-repeat-280">
-              <%= f.text_field :name, :class => 'required', :friendly => 'Title' %>
-            </div>
-            <div class="text-plain-right"></div>
+        </tr>
+        <tr>
+          <td width="25%" class="label">
+            <%= f.label :name, 'Title' -%>
+          </td>
+          <td width="75%" class="input">
+            <%= f.text_field :name, :class => 'required', :friendly => 'Title' -%> <%= required_markup.html_safe -%>
           </td>
         </tr>
         
         <tr>
-          <td align="right" valign="top">
-            <%= f.label :description, 'Description' %>
+          <td class="label">
+            <%= f.label :description, 'Description' -%>
           </td>
-          <td align="left">
-            <div class="textarea-plain-left"></div>
-            <div class="textarea-plain-repeat-280">
-              <%= f.text_area :description, :class => 'required', :friendly => 'Description' %>
-            </div>
-            <div class="textarea-plain-right"></div>
+          <td class="input">
+            <%= f.text_area :description, :class => 'required', :friendly => 'Description' %> <%= required_markup.html_safe -%>
           </td>
         </tr>
         <tr>
-          <td align="right" valign="top">
-            <%= label_tag :filename, 'File' %>
+          <td class="label">
+            <%= label_tag :filename, 'File' -%>
           </td>  
-          <td align="left">
-            <%= file_field_tag :filename, :class => 'required', :friendly => 'File' %>
+          <td class="input">
+            <%= file_field_tag :filename, :class => 'required', :friendly => 'File' %> <%= required_markup.html_safe -%>
             <div class="">
               <p>
               Valid uploads includes: Spreadsheet in .csv, .ods, .xls, or .xlsx format, or Shape files (a .zip file) containing at least a .shp and .dbf file.
@@ -156,63 +213,51 @@
           </td>
         </tr>
         <tr>
-          <td align="right" valign="top">
-            <%= f.label :source, 'Source (optional)' %>
+          <td class="label">
+            <%= f.label :source, 'Source' %>
           </td>
-          <td>
-            <div class="text-plain-left"></div>
-            <div class="text-plain-repeat-280">
-              <%= f.text_field :source %>
-            </div>
-            <div class="text-plain-right"></div>
+          <td class="input">
+            <%= f.text_field :source %>
             <div class="clear">
-              The source could be a link, name of a friend, email address, organization...
+              The source could be a link, name of a friend, email address, an organization...
             </div>
           </td>
         </tr>
 
         <tr>
-          <td align="right">
+          <td class="label-header">
             <strong>Author<strong>
           </td>
           <td>&nbsp;</td>
         </tr>
         <tr>
-          <td align="right" valign="top">
-            <%= label_tag "author[name]", 'Author name (optional)' %>
+          <td class="label">
+            <%= label_tag "author[name]", 'Author name' %>
           </td>
-          <td>
-            <div class="text-plain-left"></div>
-            <div class="text-plain-repeat-280">
-              <%= text_field_tag "author[name]" %>
-            </div>
-            <div class="text-plain-right"></div>
+          <td class="input">
+            <%= text_field_tag "author[name]" %>
           </td>
         </tr>        
         <tr>
-          <td align="right" valign="top">
-              <%= label_tag "author[email]", 'Email (optional)' %>
+          <td class="label">
+            <%= label_tag "author[email]", 'Email' %>
           </td>
-          <td>
-            <div class="text-plain-left"></div>
-            <div class="text-plain-repeat-280">
-              <%= text_field_tag "author[email]" %>
-            </div>
-            <div class="text-plain-right"></div>
+          <td class="input">
+            <%= text_field_tag "author[email]" %>
           </td>
         </tr>
         
         <tr>
-          <td align="right">
+          <td class="label-header">
             <strong>Feature type<strong>
           </td>
           <td>&nbsp;</td>
         </tr>
         <tr>
-          <td align="right" valign="top">
+          <td class="label-extended">
             <%= f.label :feature_type_static, 'Non-temporal (static)' %>
           </td>
-          <td align="left">
+          <td class="input">
             <div class="float-left">
               <%= f.radio_button :feature_type, :observation_data_static, { :id => :dataset_feature_type_static } %>
             </div>
@@ -221,10 +266,10 @@
         </tr>
         
         <tr>
-          <td align="right" valign="top">
+          <td class="label-extended">
             <%= f.label :feature_type_dynamic, 'Temporal (dynamic)' %>
           </td>
-          <td align="left">
+          <td class="input">
             <div class="float-left">
               <%= f.radio_button :feature_type, :observation_data_dynamic, { :id => :dataset_feature_type_dynamic } %>
             </div>
@@ -234,7 +279,7 @@
         </tr>
 
         <tr>
-          <td align="right">
+          <td class="label-header">
             <strong>Permissions<strong>
           </td>
           <td>&nbsp;</td>
@@ -244,12 +289,11 @@
           <table>
             <tr>
               <td align="right">
-                <%= label_tag :permission_group, 'Share with one of your groups' %>
+                <%= label_tag :permission_group, 'Share with a group' %>
               </td>
               <td>       
                 <%= radio_button_tag :permission, :group %>
-                select group
-                <%= select :owner, :group_id, ['Loading...'], {}, { :id => 'groups' } %>
+                Share with members of the <%= select :owner, :group_id, ['Loading...'], {}, { :id => 'groups' } %> group.
                 <%= hidden_field_tag "owner[user_id]", current_user.id %>
               </td>
             </tr>
@@ -268,11 +312,8 @@
         <%= render :partial => 'creative_commons' %>
         
         <tr>
-          <td>&nbsp;</td>
-          <td align="left">
-            <div class="create-dataset-button">
-                <%= f.submit :search, :name => 'search' %>
-            </div>
+          <td colspan="2" style="text-align: center;">
+            <button type="submit" name="upload">Upload</button>
           </td>
         </tr>
         
@@ -288,4 +329,8 @@
 
 <div id="terms-dialog" style="display: none;">
   I agree that the data I am about to upload meets our definition of openness. <p>Openness: <strong>"A piece of content or data is open if anyone is free to use, reuse, and redistribute it &mdash; subject only, at most, to the requirement to attribute and share-alike."</strong></p>
+</div>
+
+<div id="success-dialog" style="display: none;">
+  <p><strong>Thanks for your contribution! Your data submission was a success.</strong></p><p>Our search indexing bot should pick up this submission in a couple hours.</p>
 </div>

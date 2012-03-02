@@ -1,4 +1,7 @@
 class ItemController < ApplicationController
+
+  respond_to :json, :xml
+
   protect_from_forgery :except => :do_create
   
   def id
@@ -20,18 +23,47 @@ class ItemController < ApplicationController
   def create
   end
   
-  def do_create
-    debugger
-#    render :text => request.body.to_json
-#    render :text => request.host
-    url = URI.parse(catalogue_instance.create_uri)
-    pass_request = Net::HTTP::Post.new(url.path)
-    pass_request.body = request.body
-    puts request.content_type
-    pass_request.content_type = request.content_type
-
-    response = Net::HTTP.start(url.host, url.port) {|http| http.request(request)}
-
+  def success
+    render 'thank-you'
   end
+  
+  def upload
+    uploaded_file = params[:filename]
     
+    filename = sanitize_filename(uploaded_file.original_filename)
+
+    filename_and_path = Rails.root.join('public', 'uploads', filename)
+    File.open(filename_and_path, 'wb') do |file|
+      file.write(uploaded_file.read)
+    end
+
+    params[:filename] = filename_and_path
+
+    response = {}
+    begin
+      response = catalogue_instance.create(params)
+      
+      if response && response.key?(:uuid)        
+        response.merge!({ :callback => (url_for :controller => 'datasets', :action => 'show', :anchor => 'mine', :id => response[:uuid]) })
+        response.delete(:uuid)
+      end
+    rescue Exception => e
+      response.merge!({:upload_exception => e})
+    end
+
+    respond_with(response, :location => nil)
+  end
+  
+  def sanitize_filename(filename)
+    filename.strip.tap do |name|
+      # NOTE: File.basename doesn't work right with Windows paths on Unix
+      # get only the filename, not the whole path
+      name.sub! /\A.*(\\|\/)/, ''
+      # Finally, replace all non alphanumeric, underscore
+      # or periods with underscore
+      name.gsub! /[^\w\.\-]/, '_'
+    end
+  end
+
+  
 end

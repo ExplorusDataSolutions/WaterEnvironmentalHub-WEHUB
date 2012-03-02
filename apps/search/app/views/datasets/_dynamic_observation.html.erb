@@ -1,21 +1,13 @@
-<div id="dataset_feature_type_dynamic_fragment" class="fragment">
+<div id="dataset_feature_type_dynamic_fragment" class="fragment observation-data">
   <div class="float-left">
       <%= label_tag :dataset_feature_period_dynamic_start, 'Date / time' %>
   </div>
   <div class="float-left width-5">&nbsp;</div>
   <div class="float-left">
-	  <div class="text-plain-left"></div>
-	  <div class="text-plain-repeat-135">
-      <%= text_field_tag "dataset[feature_period_start]", '', :id => 'dataset_feature_period_dynamic_start'  %>
-	  </div>
-	  <div class="text-plain-right"></div>
+    <%= text_field_tag "dataset[feature_period_start]", '', :id => 'dataset_feature_period_dynamic_start'  %>
   </div>
   <div class="float-left width-5">&nbsp;</div>
   <div class="float-left">
-	  <div class="text-plain-left"></div>
-	  <div class="text-plain-repeat-135">
-		  <%= text_field_tag "dataset[feature_period_end]", '', :id => 'dataset_feature_period_static_end'  %>
-	  </div>
-	  <div class="text-plain-right"></div>
+	  <%= text_field_tag "dataset[feature_period_end]", '', :id => 'dataset_feature_period_static_end'  %>
   </div>
 </div>

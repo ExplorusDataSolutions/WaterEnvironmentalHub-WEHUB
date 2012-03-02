@@ -1,5 +1,8 @@
 <script>
   $(document).ready(function() {
+    function uuidFromUri() {
+      return window.location.search ? window.location.search.match(/id=([^&]*)/)[1] : false;
+    }
     function toggleViews(eventId) {
       var selected = 'selected';
       $('.share-middle-filter').children().removeClass(selected)
@@ -20,6 +23,10 @@
           $('#my-dataset-list').show();
           $('#friend-dataset-list, #group-dataset-list').hide();
           $('#my-datasets').addClass(selected);
+          var uuid = uuidFromUri();
+          if (uuid) {
+            $('.dataset.' + uuidFromUri()).effect("highlight", {}, 6000);
+          }
         break;
         default:
       }

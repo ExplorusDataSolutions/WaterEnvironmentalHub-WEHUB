@@ -2,6 +2,8 @@ require 'zip/zip'
 
 class ItemsController < ApplicationController
 
+  include DatasetHelper
+  
   caches_action :index, :cache_path => Proc.new { |c| c.params }, :expires_in => 24.hours
 
   respond_to :json, :xml
@@ -86,55 +88,33 @@ class ItemsController < ApplicationController
   
   def create
     errors = {}
-
-    uploaded_file = params[:filename]
-
     if errors.empty?
-      filename = sanitize_filename(uploaded_file.original_filename)
-      filename_and_path = Rails.root.join('public', 'uploads', filename)
-      File.open(filename_and_path, 'wb') do |file|
-        file.write(uploaded_file.read)
-      end
-      
       dataset = Dataset.create(dataset_params(params))
       
       if dataset.valid?
-        owner = owner(params[:owner])
-        author = author(params[:author])
-        creative_commons_license = creative_commons_license(params[:creative_commons_license])
         begin
-          dataset.feature.create(filename)
-          dataset.owner = owner 
-          dataset.author = author 
-          dataset.creative_commons_license = creative_commons_license
-          dataset.save
-        rescue Exception => e
-          Dataset.destroy(dataset.id)
-          Owner.destroy(owner.id) unless owner.nil?
-          Author.destroy(author.id) unless author.nil?
-          
+          dataset.transaction do
+            dataset.feature.create({ :filename => params[:filename][:path] })
+            dataset.owner = create_owner(params[:owner])
+            dataset.author = create_author(params[:author])
+            dataset.creative_commons_license = creative_commons_license(params[:creative_commons_license])
+            dataset.save        
+          end
+        rescue Exception => e 
           errors.store('spreadsheet', e)
         end
       else
         dataset.errors.each do |key, value|
           errors.store('dataset', "#{key} #{value}")
         end
-      end
+      end      
     end
     
-    response = ''
     if !errors.empty?
-      errors.each do |key, value|
-        response = response + "#{value}"
-      end
-    else
-      if request.referer.scan(/datasets\/create/).count == 1
-          redirect_to "#{request.referer.slice(0..request.referer.rindex('/'))}success" and return
-      end
-      render :xml => dataset and return
+      respond_with({ :errors => errors }, :location => nil) and return
     end
     
-    render :text => response
+    respond_with({ :uuid => dataset.uuid }, :location => nil) and return
   end
   
   def load_external_meta_content
@@ -217,60 +197,6 @@ class ItemsController < ApplicationController
       end
     end
     nil
-  end
-
-  def creative_commons_license(params)
-    (params.nil? || params.empty? || params == 'none') ? nil : CreativeCommonsLicense.find_by_name(params)
-  end
-  
-  def author(params)
-
-    first = ''
-    last = ''
-    email = params[:email]
-    if params.key?('name')
-      name = params[:name]
-      if name.scan(' ').count > 0
-        names = name.split(' ')
-        (0..names.count-2).each do |i|
-          first << "#{names[i]} "
-        end
-        first.chop!
-        last = names[names.count-1]
-      else
-        last = name
-      end
-    end
-
-    if !(first.empty? || last.empty? || email.empty?)
-      return Author.create(:first_name => first, :last_name => last, :email => email)
-    else 
-      return nil
-    end
-  end
-  
-  def feature_period(params)
-    if params.key?('feature_period')
-      params[:feature_period]
-    else
-      "#{params[:feature_period_start]} - #{params[:feature_period_end]}"
-    end
-  end
-
-  def owner(owner)
-    owner.delete_if {|key, value| key == "group_id" && (value == "0" || value == "") }
-    Owner.create(owner)
-  end
-
-  def dataset_params(params)
-    dataset_params = params[:dataset]
-
-    dataset_params[:feature_period] = feature_period(dataset_params)
-    dataset_params.delete_if {|key, value| key == 'feature_period_start' || key == 'feature_period_end' }
-    dataset_params[:feature_type] =  FeatureType.find_by_name(dataset_params[:feature_type])
-    dataset_params[:feature_source] = FeatureSource.find_by_name('catalogue')
-
-    dataset_params
   end
   
   def sanitize_filename(filename)
