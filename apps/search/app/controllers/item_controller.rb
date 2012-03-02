@@ -22,11 +22,7 @@ class ItemController < ApplicationController
   
   def create
   end
-  
-  def success
-    render 'thank-you'
-  end
-  
+    
   def upload
     uploaded_file = params[:filename]
     
@@ -44,7 +40,7 @@ class ItemController < ApplicationController
       response = catalogue_instance.create(params)
       
       if response && response.key?(:uuid)        
-        response.merge!({ :callback => (url_for :controller => 'datasets', :action => 'show', :anchor => 'mine', :id => response[:uuid]) })
+        response.merge!({ :callback => (url_for :controller => 'datasets', :show => 'action', :anchor => 'mine', :id => response[:uuid]) })
         response.delete(:uuid)
       end
     rescue Exception => e
