@@ -27,6 +27,12 @@
   .dataset-upload-container [type="submit"] {
     height: 40px;
   }
+  .dataset-upload-container legend {
+    font-weight: bold;
+  }
+  .dataset-upload-container table {
+    width: 100%;
+  }
 </style>
 <script>
   $(document).ready(function() {
@@ -39,12 +45,13 @@
     }
     
     var fragments = []
-    fragments.push(fragment('#dataset_feature_type_static'))
-    fragments.push(fragment('#dataset_feature_type_dynamic'))
+    fragments.push(fragment('#dataset_feature_type_observation_data_static'))
+    fragments.push(fragment('#dataset_feature_type_observation_data_dynamic'))
+
     
     $('[name="dataset[feature_type]"]').change(function(event) {
       var targetId = '#' + event.target.id;
-      $.each(fragments, function(idex, fragment){
+      $.each(fragments, function(i, fragment){
         var parent = fragmentId(fragment.id);
         var inputs = parent.find('input');
         if (fragment.id === targetId) {                
@@ -56,16 +63,18 @@
         }
       });
     });
-    
-    $('#dataset_feature_type_static').attr('checked', true).trigger('change');
+
+    if ($('[name="dataset[feature_type]"]:checked').length === 0) {
+      $('#dataset_feature_type_observation_data_static').attr('checked', true);
+    } 
+    $('[name="dataset[feature_type]"]:checked').trigger('change');
 
     $('#permission_public').attr('checked', true);
 
     $('#groups').click(function(event) {
       $('#permission_group').attr('checked', true);
     });
-
-
+    
     $('[type="submit"]').click(function(event) {
       event.preventDefault();
       
@@ -100,7 +109,6 @@
               $(this).dialog("close");
               
               $.ajax({
-                url: '<%= "/item/upload" %>',
                 data: new FormData($('form[name=create]')[0]),
                 type: 'POST',
                 contentType: false,
@@ -118,7 +126,6 @@
                   }
                 }, 
                 error: function(data){
-debugger;
                 }
               });
             },
@@ -126,8 +133,7 @@ debugger;
           }
         });
       }
-    });
-
+    });    
   });
 
   $(document).ready(function() {
@@ -160,10 +166,17 @@ debugger;
     <%= render 'upper_navbar' %>
     
     <div class="dataset-upload-container">
-      <div id="error-explanation" tabindex="100">  
+      <div id="error-explanation" tabindex="100">
+        <% if flash[:errors] %>
+          <ul>
+          <% flash[:errors].each do |error| %>
+            <li><%= error[1] %></li>
+          <% end %>
+          </ul>
+        <% end %>
       </div>  
 
-<%= form_for :dataset, :url => "http://#{request.host}:3000/items/create", :html => { :multipart => true, :name => 'create' } do |f| %>
+<%= form_for :dataset, :html => { :multipart => true, :name => 'create' } do |f| %>
 
       <table width="100%">
         <tr>
@@ -225,91 +238,118 @@ debugger;
         </tr>
 
         <tr>
-          <td class="label-header">
-            <strong>Author<strong>
+          <td colspan="2">
+            <%= f.fields_for :author, @dataset.author do |a| %>
+            <fieldset>
+              <legend>Author</legend>
+              <table>
+                <tr>
+                  <td class="label"><%= a.label :name -%></td>
+                  <td class="input"><%= a.text_field :name -%></td>
+                </tr>        
+                <tr>
+                  <td class="label"><%= a.label :email -%></td>
+                  <td class="input"><%= a.text_field :email -%></td>
+                </tr>
+              </table>
+            </fieldset>
+            <% end %>
           </td>
-          <td>&nbsp;</td>
+        </tr>  
+        <tr>
+          <td colspan="2">
+            <fieldset>
+              <legend>Feature type</legend>
+              <table>
+                <tr>
+                  <td class="label-extended"><%= f.label :feature_type_observation_data_static, 'Non-temporal (static)' -%></td>
+                  <td class="input">
+                    <div class="float-left">
+                      <%= f.radio_button :feature_type, :observation_data_static -%>
+                    </div>
+                    <div id="dataset_feature_type_observation_data_static_fragment" class="fragment observation-data">
+                      <div class="float-left width-5">&nbsp;</div>
+                      <div class="float-left">
+                        <%= f.label :feature_period, 'Date / time' -%>
+                      </div>
+                      <div class="float-left width-5">&nbsp;</div>
+                      <div class="float-left">
+		                      <%= f.text_field :feature_period -%>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td class="label-extended"><%= f.label :feature_type_observation_data_dynamic, 'Temporal (dynamic)' -%></td>
+                  <td class="input">
+                    <div class="float-left">
+                      <%= f.radio_button :feature_type, :observation_data_dynamic -%>
+                    </div>
+                    <div class="float-left width-5">&nbsp;</div>
+                    <div id="dataset_feature_type_observation_data_dynamic_fragment" class="fragment observation-data">
+                      <div class="float-left">
+                          <%= f.label :feature_period_start, 'Date / time' -%>
+                      </div>
+                      <div class="float-left width-5">&nbsp;</div>
+                      <div class="float-left">
+                        <%= f.text_field :feature_period_start -%>
+                      </div>
+                      <div class="float-left width-5">&nbsp;</div>
+                      <div class="float-left">
+	                      <%= f.text_field :feature_period_end -%>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </fieldset>
+          </td>
         </tr>
+
         <tr>
-          <td class="label">
-            <%= label_tag "author[name]", 'Author name' %>
-          </td>
-          <td class="input">
-            <%= text_field_tag "author[name]" %>
-          </td>
-        </tr>        
-        <tr>
-          <td class="label">
-            <%= label_tag "author[email]", 'Email' %>
-          </td>
-          <td class="input">
-            <%= text_field_tag "author[email]" %>
-          </td>
-        </tr>
-        
-        <tr>
-          <td class="label-header">
-            <strong>Feature type<strong>
-          </td>
-          <td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td class="label-extended">
-            <%= f.label :feature_type_static, 'Non-temporal (static)' %>
-          </td>
-          <td class="input">
-            <div class="float-left">
-              <%= f.radio_button :feature_type, :observation_data_static, { :id => :dataset_feature_type_static } %>
-            </div>
-            <%= render 'static_observation' %>
-          </td>
-        </tr>
-        
-        <tr>
-          <td class="label-extended">
-            <%= f.label :feature_type_dynamic, 'Temporal (dynamic)' %>
-          </td>
-          <td class="input">
-            <div class="float-left">
-              <%= f.radio_button :feature_type, :observation_data_dynamic, { :id => :dataset_feature_type_dynamic } %>
-            </div>
-            <div class="float-left width-5">&nbsp;</div>
-            <%= render 'dynamic_observation' %>
+          <td colspan="2">
+            <%= f.fields_for :permissions, @dataset.permissions do |p| %>
+            <fieldset>
+              <legend>Permissions</legend>
+              <table>
+                <tr>
+                  <td colspan="2" style="padding-left:50px;">
+                  <table>
+                    <tr>
+                      <td align="right">
+                        <%= p.label :group_true, 'Share with a group' %>
+                      </td>
+                      <td>       
+                        <%= p.radio_button :group, true %>
+                        <%= p.fields_for :owner do |o| %>
+                          Share with members of the <%= o.select :group_id, ['Loading...'], {}, { :id => 'groups' } %> group.
+                          <%= o.hidden_field :user_id, :value => current_user.id %>
+                        <% end %>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="right">
+                        <%= p.label :group_false, 'Make this data public' %>
+                      </td>
+                      <td>
+                        <%= p.radio_button :group, false, {:checked => true} %>
+                      </td>
+                    </tr>
+                  </table>
+                  </td>
+                </tr>
+              </table>
+            </fieldset>
+            <% end %>
           </td>
         </tr>
 
         <tr>
-          <td class="label-header">
-            <strong>Permissions<strong>
-          </td>
-          <td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td colspan="2" style="padding-left:50px;">
-          <table>
-            <tr>
-              <td align="right">
-                <%= label_tag :permission_group, 'Share with a group' %>
-              </td>
-              <td>       
-                <%= radio_button_tag :permission, :group %>
-                Share with members of the <%= select :owner, :group_id, ['Loading...'], {}, { :id => 'groups' } %> group.
-                <%= hidden_field_tag "owner[user_id]", current_user.id %>
-              </td>
-            </tr>
-            <tr>
-              <td align="right">
-                <%= label_tag :permission_public, 'Make this data public' %>
-              </td>
-              <td>
-                <%= radio_button_tag :permission, :public %>
-              </td>
-            </tr>
-          </table>
+          <td colspan="2">
+            <%= render :partial => 'creative_commons' %>
           </td>
         </tr>
-
-        <%= render :partial => 'creative_commons' %>
         
         <tr>
           <td colspan="2" style="text-align: center;">
@@ -332,5 +372,5 @@ debugger;
 </div>
 
 <div id="success-dialog" style="display: none;">
-  <p><strong>Thanks for your contribution! Your data submission was a success.</strong></p><p>Our search indexing bot should pick up this submission in a couple hours.</p>
+  <p><strong>Thank-you for your contribution!</strong></p><p>Your data submission was successful, but it will be a couple hours before you can find it in our search index. Please sit tight as our search bot indexes your data.</p>
 </div>

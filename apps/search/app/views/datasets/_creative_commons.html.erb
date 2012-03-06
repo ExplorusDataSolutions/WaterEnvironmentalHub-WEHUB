@@ -1,27 +1,27 @@
-<tr>
-	<td class="label-header">
-		<strong>Licensing<strong>
-	</td>
-	<td>&nbsp;</td>
-</tr>
-<tr>
-  <td></td>
-  <td>       
-    You can associate a Creative Commons license with your content if you wish, to grant people the right to use your work under certain circumstances. For more information on what your options are, please visit the <a href="http://www.creativecommons.org/">Creative Commons</a> website.
+<fieldset>
+  <legend>Licensing</legend>
+  <table>
+  <tr>
+    <td></td>
+    <td>       
+      You can associate a Creative Commons license with your content if you wish, to grant people the right to use your work under certain circumstances. For more information on what your options are, please visit the <a href="http://www.creativecommons.org/">Creative Commons</a> website.
 
-    <p><strong>Note:</strong> Don't forget to make sure that you have all the necessary rights and you won't be infringing on any third parties with any content that you license on the WEHUB. As per our Community Guidelines, accounts are intended for members to share content that they themselves have created.</p>
+      <p><strong>Note:</strong> Don't forget to make sure that you have all the necessary rights and you won't be infringing on any third parties with any content that you license on the WEHUB. As per our Community Guidelines, accounts are intended for members to share content that they themselves have created.</p>
 
-    <p><strong>Select a license</strong></p>
+      <p><strong>Select a license</strong></p>
 
-    <p>
-	    <input type="radio" name="creative_commons_license" id="cc_none" value="none" checked="true" /><label for="cc_none">None (All rights reserved)</label><br />
-
-	    <input type="radio" name="creative_commons_license" id="cc_by" value="by" /><label for="cc_by">Attribution Creative Commons</label><br />
-	    <input type="radio" name="creative_commons_license" id="cc_by-sa" value="by-sa" /><label for="cc_by-sa">Attribution-ShareAlike Creative Commons</label><br />
-	    <input type="radio" name="creative_commons_license" id="cc_by-nc" value="by-nc" /><label for="cc_by-nc">Attribution-NonCommercial Creative Commons</label><br />
-	    <input type="radio" name="creative_commons_license" id="cc_by-nd" value="by-nd" /><label for="cc_by-nd">Attribution-NoDerivs Creative Commons</label><br />
-	    <input type="radio" name="creative_commons_license" id="cc_by-na-sa" value="by-nc-sa" /><label for="cc_by-na-sa">Attribution-NonCommercial-ShareAlike Creative Commons</label><br />
- 	    <input type="radio" name="creative_commons_license" id="cc_by-nc-nd" value="by-nc-nd" /><label for="cc_by-nc-nd">Attribution-NonCommercial-NoDerivs Creative Commons</label>
-    </p>
-  </td>
-</tr>
+      <p>
+        <% [ ['none', 'None (All rights reserved)'], 
+             ['by', 'Attribution Creative Commons'], 
+             ['by-sa', 'Attribution-ShareAlike Creative Commons'], 
+             ['by-nc', 'Attribution-NonCommercial Creative Commons'], 
+             ['by-nd', 'Attribution-NoDerivs Creative Commons'], 
+             ['by-nc-sa', 'Attribution-NonCommercial-ShareAlike Creative Commons'],
+             ['by-nc-nd', 'Attribution-NonCommercial-NoDerivs Creative Commons'] ].each do |license| %>
+          <%= radio_button_tag :creative_commons_license, license[0], (license[0] == (params[:creative_commons_license] ? params[:creative_commons_license] : 'none')) -%><%= label_tag "creative_commons_license[#{license[0]}]", license[1] -%><br />
+        <% end %>
+      </p>
+    </td>
+  </tr>
+  </table>
+</fieldset>

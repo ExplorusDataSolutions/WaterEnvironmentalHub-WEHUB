@@ -95,9 +95,6 @@ class ItemsController < ApplicationController
         begin
           dataset.transaction do
             dataset.feature.create({ :filename => params[:filename][:path] })
-            dataset.owner = create_owner(params[:owner])
-            dataset.author = create_author(params[:author])
-            dataset.creative_commons_license = creative_commons_license(params[:creative_commons_license])
             dataset.save        
           end
         rescue Exception => e 

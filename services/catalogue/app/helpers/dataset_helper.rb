@@ -27,7 +27,7 @@ module DatasetHelper
   end
 
   def create_owner(owner)
-    owner.delete_if {|key, value| key == "group_id" && (value == "0" || value == "") }
+    owner.delete_if {|key, value| key == "group_id" && (value == "0" || value == "" || value == "Loading...") }
     Owner.create(owner)
   end
   
@@ -38,7 +38,15 @@ module DatasetHelper
     dataset_params.delete_if {|key, value| key == 'feature_period_start' || key == 'feature_period_end' }
     dataset_params[:feature_type] =  FeatureType.find_by_name(dataset_params[:feature_type])
     dataset_params[:feature_source] = FeatureSource.find_by_name('catalogue')
-
+    dataset_params[:author] = create_author(dataset_params[:author])
+    dataset_params[:creative_commons_license] = creative_commons_license(dataset_params[:creative_commons_license])
+    
+    permissions = dataset_params[:permissions]
+    if permissions      
+      dataset_params[:owner] = create_owner(permissions[:owner])
+      dataset_params.delete(:permissions)
+    end
+    
     dataset_params
   end
 
