@@ -5,54 +5,59 @@ class DatasetsController < ApplicationController
   before_filter :verify_logged_in
 
   caches_action :show, :cache_path => :datasets_key.to_proc, :expires_in => 30.minutes
+  
+  def new
+    @breadcrumb = ['Community', 'Datasets']
+    @main_menu = 'we_community'
     
+    @dataset = params[:dataset] ? Hashie::Mash.new(params[:dataset]) : Hashie::Mash.new({:source => nil, :author => nil})  
+  end
+  
   def create
     @breadcrumb = ['Community', 'Datasets']
     @main_menu = 'we_community'
 
-    @dataset = params[:dataset] ? Hashie::Mash.new(params[:dataset]) : Hashie::Mash.new({:source => nil, :author => nil})
-
-    expire_fragment datasets_key
+    @dataset = params[:dataset] ? Hashie::Mash.new(params[:dataset]) : Hashie::Mash.new({:source => nil, :author => nil})  
     
-    if request.post?
-      uploaded_file = params[:filename]
+    expire_fragment datasets_key
 
-      response = {}
-            
-      if uploaded_file
-        filename = sanitize_filename(uploaded_file.original_filename)
+    uploaded_file = params[:filename]
 
-        filename_and_path = Rails.root.join('public', 'uploads', filename)
-        File.open(filename_and_path, 'wb') do |file|
-          file.write(uploaded_file.read)
-        end
-
-        params[:filename] = filename_and_path
-                        
-        begin
-          response = catalogue_instance.create(params)
+    response = {}
           
-          if response && response.key?(:uuid)        
-            response.merge!({ :callback => (url_for :controller => 'datasets', :action => 'show', :anchor => 'mine', :id => response[:uuid]) })
-            response.delete(:uuid)
-          end
-        rescue Exception => e
-          response.merge!({:errors => e})
-        end
-      else
-        response[:errors] = [['filename', 'file can\'t be blank']]
+    if uploaded_file
+      filename = sanitize_filename(uploaded_file.original_filename)
+
+      filename_and_path = Rails.root.join('public', 'uploads', filename)
+      File.open(filename_and_path, 'wb') do |file|
+        file.write(uploaded_file.read)
       end
 
-      respond_with(response, :location => nil) do |format|
-        format.html { 
-          if response.key?(:errors)
-            flash[:errors] = response[:errors]
-          else
-            redirect_to response[:callback]
-          end
-        }
+      params[:filename] = filename_and_path
+                      
+      begin
+        response = catalogue_instance.create(params)
+        
+        if response && response.key?(:uuid)        
+          response.merge!({ :callback => (url_for :controller => 'datasets', :action => 'show', :anchor => 'mine', :id => response[:uuid]) })
+          response.delete(:uuid)
+        end
+      rescue Exception => e
+        response.merge!({:errors => e})
       end
-          
+    else
+      response[:errors] = [['filename', 'file can\'t be blank']]
+    end
+
+    respond_with(response, :location => nil) do |format|
+      format.html { 
+        if response.key?(:errors)
+          flash[:errors] = response[:errors]
+          render 'new'
+        else
+          redirect_to response[:callback]
+        end
+      }
     end
   end  
 

@@ -109,6 +109,7 @@
               $(this).dialog("close");
               
               $.ajax({
+                url: "<%= url_for :controller => 'datasets', :action => 'create' %>",
                 data: new FormData($('form[name=create]')[0]),
                 type: 'POST',
                 contentType: false,
@@ -126,6 +127,7 @@
                   }
                 }, 
                 error: function(data){
+                  WEHub.modal("We're Sorry", "We're exeriencing an issue with the data you've submitted. <p>" + data + "</p>");
                 }
               });
             },
@@ -170,13 +172,13 @@
         <% if flash[:errors] %>
           <ul>
           <% flash[:errors].each do |error| %>
-            <li><%= error[1] %></li>
-          <% end %>
+            <li><%= error[1] -%></li>
+          <% end unless !flash[:errors].is_a?(Array) %>
           </ul>
         <% end %>
       </div>  
 
-<%= form_for :dataset, :html => { :multipart => true, :name => 'create' } do |f| %>
+<%= form_for :dataset, :url => { :controller => 'datasets', :action => 'create', :anchor => 'share' }, :html => { :multipart => true, :name => 'create' } do |f| %>
 
       <table width="100%">
         <tr>
