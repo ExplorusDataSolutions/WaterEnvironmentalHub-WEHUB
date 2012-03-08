@@ -1,16 +1,20 @@
 module GisHelper
   
   def latitude_longitude_from_bbox(bounding_box)
-    if bounding_box.is_a? Hash
-      bounding_box =  "#{bounding_box[:west]} #{bounding_box[:south]}, #{bounding_box[:east]} #{bounding_box[:north]}"
-    end
-    latitude = ''
-    longitude = ''
-    centroid = "centroid('MULTIPOINT(#{bounding_box})')"
-    result = execute("SELECT x(#{centroid}), y(#{centroid})")[0]
-    if result
-      latitude = result.select{ |column| column =~ /^y$/i }.first[1]
-      longitude = result.select{ |column| column =~ /^x$/i }.first[1]
+    latitude = '0'
+    longitude = '0'
+
+    if bounding_box
+      if bounding_box.is_a? Hash
+        bounding_box =  "#{bounding_box[:west]} #{bounding_box[:south]}, #{bounding_box[:east]} #{bounding_box[:north]}"
+      end
+      centroid = "centroid('MULTIPOINT(#{bounding_box})')"
+      
+      result = execute("SELECT x(#{centroid}), y(#{centroid})")[0]
+      if result
+        latitude = result.select{ |column| column =~ /^y$/i }.first[1]
+        longitude = result.select{ |column| column =~ /^x$/i }.first[1]
+      end
     end
     
     "#{latitude},#{longitude}"

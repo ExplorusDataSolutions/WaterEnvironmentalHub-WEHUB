@@ -47,9 +47,9 @@ class MefFactory
         end
       end
       
-      puts "Success, mef #{filepath(uuid)} was built"
+      return { :status => 'Successful', :uuid => uuid }
     rescue
-      puts "Failure, mef #{uuid} could not be built"
+      return { :status => 'Failed', :uuid => uuid }
     end
   end
   
@@ -57,9 +57,26 @@ class MefFactory
     uuid_list = Hash.from_xml(http_get("http://#{server_address}/geonetwork/mef-import-list.xml"))['strings']
     puts "#{uuid_list.count} Mef files will be created"
     
+    errors = {}
     uuid_list.each do |uuid|
-      build(uuid)
+      result = build(uuid)
+
+      if !errors[result[:status]]
+        errors[result[:status]] = [] 
+      end
+      errors[result[:status]].push(result[:uuid])
     end
+    
+    puts "-------"
+    puts "Mef build summary"
+    puts "\tTotal records: #{uuid_list.count}"
+    errors.each do |key, value|    
+      puts "\t#{key} records: #{errors[key].count}"
+      if key == 'Failed'
+        puts "\t#{key} record ids: #{errors[key].join(',')}"
+      end
+    end
+    puts "-------"
   end
   
   def http_get(uri)

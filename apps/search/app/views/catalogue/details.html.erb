@@ -109,7 +109,7 @@ $(document).ready(function() {
   }
         
   function setLayer(name, uuid){
-    var datasetLayer = new OpenLayers.Layer.WMS(name, <%= "'#{Rails.application.config.geoserver_address}/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=gn:'".html_safe %> + uuid,
+    var datasetLayer = new OpenLayers.Layer.WMS(name, <%= "'#{Rails.application.config.geoserver_address}/geoserver/gn/wms?service=WMS&version=1.1.0&request=GetMap&layers=gn:'".html_safe %> + uuid,
       { transparent: true,
         layers: name,
         format: 'image/png',

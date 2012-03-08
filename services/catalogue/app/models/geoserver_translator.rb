@@ -8,6 +8,8 @@ class GeoServerTranslator
   
   attr_accessor :server_address, :timeout, :cache_directory
   
+  @bounding_box = nil
+  
   def initialize(server_address='localhost:8080', timeout=300, cache_directory='tmp/cache')
     @server_address = server_address
     @timeout = timeout
@@ -23,6 +25,9 @@ class GeoServerTranslator
   end
   
   def bounding_box(uuid)
+    if @bounding_box
+      return @bounding_box
+    end
     doc = REXML::Document.new(http_get("GetCapabilities"))
     doc.elements.each('WFS_Capabilities/FeatureTypeList/FeatureType') do |feature|
 
@@ -34,23 +39,28 @@ class GeoServerTranslator
 
       if element_uuid && element_uuid == uuid
         bbox = feature.elements['LatLongBoundingBox']
-        return { 
+        @bounding_box = { 
           :north => bbox.attributes['maxy'],
           :east => bbox.attributes['maxx'],
           :south => bbox.attributes['miny'],
           :west => bbox.attributes['minx'],
         }
+        return @bounding_box
       end  
 
     end
+    
+    return nil
   end
     
   def feature_fields(uuid)
     fields = []
     hash = get_features(uuid)
-    hash = hash['features'][0]['properties']
-    hash.each do |result|      
-      fields.push(result[0])
+    if !hash['features'].empty?
+      hash = hash['features'][0]['properties']
+      hash.each do |result|      
+        fields.push(result[0])
+      end
     end
     
     fields
