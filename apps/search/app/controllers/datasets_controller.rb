@@ -43,7 +43,7 @@ class DatasetsController < ApplicationController
           response.delete(:uuid)
         end
       rescue Exception => e
-        response.merge!({:errors => e})
+        respond_with({ :exception => e.to_s, :status => 500 }, :location => nil) and return
       end
     else
       response[:errors] = [['filename', 'file can\'t be blank']]

@@ -89,6 +89,7 @@ class ItemsController < ApplicationController
   def create
     errors = {}
     if errors.empty?
+
       dataset = Dataset.create(dataset_params(params))
       
       if dataset.valid?
@@ -98,6 +99,7 @@ class ItemsController < ApplicationController
             dataset.save        
           end
         rescue Exception => e 
+          dataset.destroy
           errors.store('exception', e.to_s)
         end
       else

@@ -18,7 +18,7 @@
              ['by-nd', 'Attribution-NoDerivs Creative Commons'], 
              ['by-nc-sa', 'Attribution-NonCommercial-ShareAlike Creative Commons'],
              ['by-nc-nd', 'Attribution-NonCommercial-NoDerivs Creative Commons'] ].each do |license| %>
-          <%= radio_button_tag :creative_commons_license, license[0], (license[0] == (params[:creative_commons_license] ? params[:creative_commons_license] : 'none')) -%><%= label_tag "creative_commons_license[#{license[0]}]", license[1] -%><br />
+          <%= radio_button_tag "dataset[creative_commons_license]", license[0], (license[0] == (params[:creative_commons_license] ? params[:creative_commons_license] : 'none')) -%><%= label_tag "creative_commons_license[#{license[0]}]", license[1] -%><br />
         <% end %>
       </p>
     </td>

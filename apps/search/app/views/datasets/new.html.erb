@@ -127,7 +127,7 @@
                   }
                 }, 
                 error: function(data){
-                  WEHub.modal("We're Sorry", "We're exeriencing an issue with the data you've submitted. <p>" + data + "</p>");
+                  WEHub.modal("We're Sorry", "We're exeriencing an issue with the data you've submitted. <p>Error: <em>" + data.responseText + "</em></p>");
                 }
               });
             },

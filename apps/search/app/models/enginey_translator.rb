@@ -236,12 +236,16 @@ class EngineYTranslator
   end
 
   def get(uri)
-    url = URI.parse(uri)
-    request = Net::HTTP::Get.new(url.to_s)    
-    response = Net::HTTP.start(url.host, url.port) { |http| http.request(request) }
+    begin
+      url = URI.parse(uri)
+      request = Net::HTTP::Get.new(url.to_s)    
+      response = Net::HTTP.start(url.host, url.port) { |http| http.request(request) }
 
-    check_response(response)
-    response.body
+      check_response(response)
+      response.body
+    rescue
+      nil
+    end
   end
 
   def post_json(uri, json_hash={})
