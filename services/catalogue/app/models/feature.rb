@@ -321,7 +321,11 @@ class Feature
     if tablename != nil          
       dataset_name = tablename.gsub("_#{uuid}", '')
       
-      { :tablename => dataset_name, :data => execute("SELECT * FROM #{tablename} LIMIT 1") }
+      begin
+        { :tablename => dataset_name, :data => execute("SELECT * FROM #{tablename} LIMIT 1") }
+      rescue
+        nil
+      end
     end
   end
 

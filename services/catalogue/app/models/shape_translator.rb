@@ -4,12 +4,12 @@ class ShapeTranslator
     @filename = filename
     @uploads_directory = uploads_directory
     
-    @filename_sql = "#{path}/#{sql_directory}/#{tablename}.sql"
+    @filename_sql = "#{sql_directory}/#{tablename}.sql"
     filename_shape = unzip(upload_path(filename))
-    
+
     result = %x[shp2pgsql -s 4326 "#{upload_path(filename_shape)}" "#{tablename}" > "#{@filename_sql}"]
     if $?.exitstatus == 127
-     raise "Executable shp2pgsql could not be found"
+     raise "ShapeTranslator: Executable shp2pgsql could not be found"
     end
   end
   
@@ -31,7 +31,7 @@ class ShapeTranslator
   def unzip(filename_upload)  
     filename_shape = ''
     has_dbf = false
-    
+
     Zip::ZipFile.open(filename_upload) do |zip_file|
      zip_file.each do |file|
        
@@ -56,15 +56,7 @@ class ShapeTranslator
   end
       
   def upload_path(filename)
-    "#{path}/#{@uploads_directory}/#{filename}"
+    "#{@uploads_directory}/#{filename}"
   end
   
-  def path
-    if defined? RAILS_ROOT
-      "#{RAILS_ROOT}"
-    else
-      File.realpath("../../")
-    end
-  end
-
 end

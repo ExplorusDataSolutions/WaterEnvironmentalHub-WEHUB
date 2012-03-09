@@ -98,7 +98,7 @@ class ItemsController < ApplicationController
             dataset.save        
           end
         rescue Exception => e 
-          errors.store('spreadsheet', e)
+          errors.store('exception', e.to_s)
         end
       else
         dataset.errors.each do |key, value|
