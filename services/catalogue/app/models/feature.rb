@@ -279,7 +279,6 @@ class Feature
       observation_data = data_lightweight      
       get_types(observation_data[:data][0]) unless !observation_data || observation_data[:data].count == 0
     else
-      raise ArgumentError, "Feature field types could not be retrieved for feature with a feature source of #{feature_source.name}"      
     end
   end
   
