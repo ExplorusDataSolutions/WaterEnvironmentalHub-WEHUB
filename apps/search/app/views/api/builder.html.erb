@@ -7,8 +7,23 @@
     
     secondaries.change(function(event) {
       $('#builder_response').hide('fast');
+      if ($('[name=info_type]').val() !== 'feature') {
+        $('#feature_type_filter').hide('fast');
+      }
     });
-        
+    
+    $('[name=info_type], [name=datasets]').change(function(event) {
+      var filterPanel = $('#feature_type_filter');
+      if ($('[name=info_type]').val() === 'feature') {
+        $.get("<%= url_for :controller => 'api', :action => 'feature_fields', :format => 'html' %>" + "&id=" + $('[name=datasets]').val(), function(data) {
+          $('[name=feature_fields]').html($(data).html());
+        });
+        filterPanel.slideDown('fast');
+      } else {
+        filterPanel.slideUp('fast');
+      }
+    });
+     
     $('[name=feature_type]').change(function(event) {
       $('#search_builder_response').hide('fast');
       $('#north, #east, #south, #west, #start, #end').val('');
@@ -206,6 +221,9 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
     <div class="circle"><h3>3</h3></div>
     <%= label_tag 'info_type', 'Select the type of Information you would like to request' %>
     <%= select_tag 'info_type', options_for_select([ ['Dataset Information', 'dataset'], ['Feature Data', 'feature'] ]), { :include_blank => true } %>
+    <div id="feature_type_filter" style="display: none;">
+      Select a feature field to filter by (optional) <%= select_tag 'feature_fields', nil, { :include_blank => true } %>
+    </div>    
   </div>
   <div class="rounded">
     <div class="circle"><h3>4</h3></div>
@@ -214,7 +232,7 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
   </div>
   <div class="rounded">
     <div class="circle"><h3>5</h3></div>
-    <%= submit_tag 'Generate the API call' %>
+    <%= submit_tag 'Build the API call' %>
   </div>
   
   <div id="builder_response" style="display: none;">

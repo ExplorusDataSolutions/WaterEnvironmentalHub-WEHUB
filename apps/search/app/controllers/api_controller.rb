@@ -60,6 +60,13 @@ class ApiController < ApplicationController
   def feature_fields_by_type
     respond_with(catalogue_instance.api_feature_fields_by_type(params))
   end
+
+  def feature_fields
+    @feature_fields = catalogue_instance.api_feature_fields(params)
+    respond_with(@feature_fields) do |format|
+      format.html { render :partial => 'feature_fields' }
+    end
+  end
   
   def dataset
     render :text => catalogue_instance.api_dataset_raw(params[:id], params[:output])
@@ -96,6 +103,11 @@ class ApiController < ApplicationController
           @extent = { :start => params[:start], :end => params[:end] }
           feature_request.merge(@extent)
           @extent = "&#{@extent.to_query}"
+        end
+        
+        @properties = ''
+        if params[:feature_fields] && !params[:feature_fields].empty?
+          @properties = "&properties=#{params[:feature_fields]}"
         end
         
       end

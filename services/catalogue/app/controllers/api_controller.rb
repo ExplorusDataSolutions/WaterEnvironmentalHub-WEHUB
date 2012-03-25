@@ -94,4 +94,11 @@ class ApiController < ApplicationController
     feature = dataset.feature unless !dataset
     respond_with(feature.feature_fields_by_type)
   end
+  
+  def feature_fields
+    dataset = Dataset.find_by_uuid(params[:id])
+    feature = dataset.feature unless !dataset
+    respond_with(feature.feature_fields)
+  end
+
 end

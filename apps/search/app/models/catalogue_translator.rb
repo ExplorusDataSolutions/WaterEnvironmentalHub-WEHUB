@@ -169,6 +169,10 @@ class CatalogueTranslator
   def api_feature_fields_by_type(params)
     json_to_mash(get("#{api_uri}/feature_fields_by_type?#{clean(params, 'json').to_query}"))
   end
+
+  def api_feature_fields(params)
+    JSON.parse(get("#{api_uri}/feature_fields?#{clean(params, 'json').to_query}"))
+  end
   
   def api_dataset_raw(dataset_id, format)
     get("#{api_uri}/dataset?id=#{dataset_id}&format=#{format}")

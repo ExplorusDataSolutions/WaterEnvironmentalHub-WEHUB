@@ -68,7 +68,7 @@ class GeoServerTranslator
     
   def feature_fields_by_type(uuid)
     results = get_features(uuid)
-    get_types(results['features'][0]['properties']) unless !results
+    get_types(results['features'][0]['properties']) unless !results || !results['features'] || results['features'].empty?
   end
     
   def get_features(uuid)
