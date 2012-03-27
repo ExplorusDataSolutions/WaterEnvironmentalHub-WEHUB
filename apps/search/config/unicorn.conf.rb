@@ -26,8 +26,8 @@ working_directory APP_PATH # available in 0.94.0+
 
 # listen on both a Unix domain socket and a TCP port,
 # we use a shorter backlog for quicker failover when busy
-listen APP_PATH + "/tmp/.sock", :backlog => 64
-listen 80, :tcp_nopush => true
+listen APP_PATH + "/tmp/unicorn.sock", :backlog => 64
+#listen 80, :tcp_nopush => true
 
 # nuke workers after 30 seconds instead of 60 seconds (the default)
 timeout 1200
