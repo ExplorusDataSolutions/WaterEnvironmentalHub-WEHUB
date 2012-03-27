@@ -74,6 +74,10 @@ class DatasetsController < ApplicationController
     @group_datasets = group_datasets
   end
 
+  def markitup_preview
+    render :layout => false
+  end
+
   private 
 
   def friend_datasets
@@ -97,7 +101,7 @@ class DatasetsController < ApplicationController
   def my_datasets
     catalogue_instance.find_datasets_by_user(current_user.id)
   end
-
+  
   def sanitize_filename(filename)
     filename.strip.tap do |name|
       # NOTE: File.basename doesn't work right with Windows paths on Unix

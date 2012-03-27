@@ -5,11 +5,18 @@
     vertical-align: middle;
     line-height: 0;
   }
-  .dataset-upload-container [type="text"], .dataset-upload-container textarea {
+  span.required-override .required {
+    float: right;
+    margin: 20px 29px 0px 0px;
+  }
+  .dataset-upload-container [type="text"] {
     width: 500px;
   }
   .dataset-upload-container textarea {
-    height: 150px;
+    width: 440px;
+  }
+  .dataset-upload-container textarea {
+    height: 200px;
   }
   .dataset-upload-container .observation-data [type="text"] {
     width: 85px;
@@ -152,6 +159,27 @@
     <%# jQuery datepicker %>
     $("[name='dataset[feature_period_start]'], [name='dataset[feature_period_end]'], [name='dataset[feature_period]']").datepicker({ dateFormat: 'dd/mm/yy' });    
   });
+
+  $(document).ready(function() {
+var myHtmlSettings = {
+    nameSpace:       "html", // Useful to prevent multi-instances CSS conflict
+    onShiftEnter:    {keepDefault:false, replaceWith:'<br />\n'},
+    onCtrlEnter:     {keepDefault:false, openWith:'\n<p>', closeWith:'</p>\n'},
+    onTab:           {keepDefault:false, openWith:'     '},
+    previewAutoRefresh: true,
+    previewTemplatePath: '<%= url_for :controller => 'datasets', :action => 'markitup_preview', :format => 'html' %>',
+    markupSet:  [
+        {name:'Paragraph', openWith:'<p(!( class="[![Class]!]")!)>', closeWith:'</p>'  },
+        {separator:'---------------' },
+        {name:'Bold', key:'B', openWith:'<strong>', closeWith:'</strong>' },
+        {name:'Italic', key:'I', openWith:'<em>', closeWith:'</em>'  },
+        {separator:'---------------' },
+        {name:'Preview', call:'preview', className:'preview' }        
+    ]
+};
+    $('#dataset_description').markItUp(myHtmlSettings);
+  });
+
 </script> 
 
 <%= render '/shared/left_panel' %>
@@ -200,7 +228,8 @@
             <%= f.label :description, 'Description' -%>
           </td>
           <td class="input">
-            <%= f.text_area :description, :class => 'required', :friendly => 'Description' %> <%= required_markup.html_safe -%>
+            <span class="required-override"><%= required_markup.html_safe -%></span>
+            <%= f.text_area :description, :class => 'required', :friendly => 'Description' %> 
           </td>
         </tr>
         <tr>

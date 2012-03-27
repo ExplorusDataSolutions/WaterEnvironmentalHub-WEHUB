@@ -40,6 +40,7 @@ module DatasetHelper
     dataset_params[:feature_source] = FeatureSource.find_by_name('catalogue')
     dataset_params[:author] = create_author(dataset_params[:author])
     dataset_params[:creative_commons_license] = creative_commons_license(dataset_params[:creative_commons_license])
+    dataset_params[:description] = sanitize_markup(dataset_params[:description])
     
     permissions = dataset_params[:permissions]
     if permissions      
@@ -60,6 +61,36 @@ module DatasetHelper
     else
       "#{params[:feature_period_start]} - #{params[:feature_period_end]}"
     end
+  end
+  
+  def sanitize_markup(dirty)
+    acceptable_tags = ['p','em','strong']
+    acceptable_tags.each do |tag|
+      2.times do |index|
+        if index == 0
+          dirty.gsub!("<#{tag}>", "_#{tag}_")
+        else
+          dirty.gsub!("</#{tag}>", "_/#{tag}_")                  
+        end
+      end
+    end
+    dirty.gsub!("<br>", "_br_")
+    dirty.gsub!("<br />", "_br_")
+    
+    cleaned = Nokogiri::HTML(dirty).search('text()').to_s
+    acceptable_tags.each do |tag|
+      2.times do |index|
+        if index == 0
+          cleaned.gsub!("_#{tag}_", "<#{tag}>")
+        else
+          cleaned.gsub!("_/#{tag}_", "</#{tag}>")
+        end
+      end
+    end
+    
+    cleaned.gsub!("_br_", "<br/>")
+
+    cleaned
   end
 
 end
