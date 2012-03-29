@@ -10,6 +10,8 @@ class ApiController < ApplicationController
   before_filter :verify_logged_in, :only => [:builder, :builder_response]  
   before_filter :verify_api_key, :only => [:dataset, :feature]
   
+  include CatalogueHelper
+  
   def builder
     @breadcrumb = ['Build An App', 'API Builder']
     @feature_types = catalogue_instance.api_feature_types
@@ -27,7 +29,7 @@ class ApiController < ApplicationController
     west = params[:west]
     
     if feature_type_id
-      @datasets = catalogue_instance.api_datasets_by_feature_type_id(feature_type_id)
+      @datasets = catalogue_instance.api_datasets_by_feature_type_id(feature_type_id)      
     elsif ((date_start && date_end) && !(date_start.empty? && date_end.empty?)) || ((north && east && south && west) && !(north.empty? && east.empty? && south.empty? && west.empty))
       search = search_instance.do_query_advanced('all', date_start, date_end, south, east, north, west)
       @datasets = search.results
@@ -78,6 +80,21 @@ class ApiController < ApplicationController
   
   def is_feature_external
     render :text => catalogue_instance.api_is_feature_external(params[:id])
+  end
+  
+  def external_datasets
+    respond_with(catalogue_instance.api_external_datasets)
+  end
+  
+  def external_layers
+    dataset = catalogue_instance.dataset(params[:id])
+    @layers = dataset.layers
+    @layers.each_with_index do |layer, i|
+      @layers[i]['colour'] = css_colour(i)
+    end
+    respond_with(@layers) do |format|
+      format.html { render :partial => 'layers' }
+    end    
   end
   
   def builder_response  

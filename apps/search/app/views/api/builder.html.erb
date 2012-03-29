@@ -1,7 +1,90 @@
 <% cache "api_builder" do %>
 <script>
   $('document').ready(function() {
-  
+    $('#feature_layer_filter').hide();
+    
+    var externalDatasets = [];
+    $.ajax({
+      url: "<%= url_for :controller => 'api', :action => 'external_datasets', :format => 'json' %>",
+      global: false,
+      success: function(data) { 
+        externalDatasets = data; 
+      }
+    })
+      
+    function isExternalDataset(uuid) {
+      for (var i=0 ; i < externalDatasets.length ; i++) {
+        if (externalDatasets[i] === uuid) {
+          return true;
+        }
+      }
+      return false;
+    }
+    
+    function externalLayerSelector(uuid) {
+      $.ajax({
+        url: "<%= url_for :controller => 'api', :action => 'external_layers', :format => 'html' %>" + "&id=" + uuid,
+        success: function(data) {         
+
+          var layers = []
+          $.ajax({
+            url: "<%= url_for :controller => 'api', :action => 'external_layers', :format => 'json' %>" + "&id=" + uuid,
+            success: function(data) { 
+
+              for (var i=0 ; i < data.length ; i++) {
+                var layer = data[i];
+                var bounds = new OpenLayers.Bounds();
+                bounds.extend(new OpenLayers.LonLat(layer.bounding_box.east,layer.bounding_box.north).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));
+                bounds.extend(new OpenLayers.LonLat(layer.bounding_box.west,layer.bounding_box.south).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));  
+                layers.push({bounds: bounds, colour: layer.colour.code});  
+              }
+              
+              var displayLayersOnBuilder = $('select[name=layer]');
+              if (displayLayersOnBuilder.find('option').length == 1) {
+                for (var i=0 ; i < data.length ; i++) {
+                  var layer = data[i];          
+                  var option = $('<option></option>').attr('value',layer.layer_id).text(layer.name);
+                  if (i === 0) {
+                    option.attr('selected', 'selected');
+                  }
+                  displayLayersOnBuilder.append(option);
+                }
+              }
+
+              function drawLayer(layer) {
+                var boxes = new OpenLayers.Layer.Boxes('boxes');
+                var box = new OpenLayers.Marker.Box(layer.bounds);
+                box.setBorder(layer.colour, 2);
+                boxes.addMarker(box);
+                map.addLayer(boxes);
+                
+                map.zoomToExtent(layer.bounds);
+              }
+
+              drawLayer(layers[0]);
+
+              $('[name=layer]').unbind().change(function(event) {
+                var index = $('[name=layer]').index(event.target);
+                drawLayer(layers[index-1]);     
+                $(displayLayersOnBuilder.find('option')[index]).attr('selected','selected');
+              })
+
+            }
+          });
+          
+          WEHub.modal("Layer selector", data, { 
+            width: 1090, 
+            zIndex: 0,
+            buttons: [{
+              text: "Ok",
+              click: function() { $(this).dialog("close"); }
+            }]
+          });
+          loadMapAndAssignBoundingBox('#layer-bounding-box', 'layer');
+        }
+      });      
+    }
+    
     var secondaries = $('[name=datasets], [name=info_type], [name=output], [name=commit]');
     secondaries.attr('disabled', true);
     
@@ -14,14 +97,26 @@
     
     $('[name=info_type], [name=datasets]').change(function(event) {
       var filterPanel = $('#feature_type_filter');
+      var uuid = $('[name=datasets]').val();
       if ($('[name=info_type]').val() === 'feature') {
-        $.get("<%= url_for :controller => 'api', :action => 'feature_fields', :format => 'html' %>" + "&id=" + $('[name=datasets]').val(), function(data) {
-          $('[name=feature_fields]').html($(data).html());
-        });
-        filterPanel.slideDown('fast');
+        if (!isExternalDataset(uuid)) {
+          $.get("<%= url_for :controller => 'api', :action => 'feature_fields', :format => 'html' %>" + "&id=" + uuid, function(data) {
+            $('[name=feature_fields]').html($(data).html());
+          });
+          filterPanel.slideDown('fast');
+          $('#feature_layer_filter').hide('fast');          
+        } else {          
+          externalLayerSelector(uuid);
+          $('#feature_layer_filter').slideDown('fast');          
+        }
       } else {
         filterPanel.slideUp('fast');
       }
+    });
+    
+    $('#layer-selector').click(function(event) {
+      event.preventDefault();
+      externalLayerSelector($('[name=datasets]').val());
     });
      
     $('[name=feature_type]').change(function(event) {
@@ -57,7 +152,6 @@
           WEHub.modal("We're Sorry", "No data could be retrieved. Try making a new request."); 
         }
       });
-
     });
        
     $('[name=commit]').click(function(event) {
@@ -75,7 +169,7 @@
     
     $('#advanced_search_selector').find('[name=start],[name=end]').datepicker({ dateFormat: 'dd/mm/yy' });
 
-    function loadMap() {
+    function loadMapAndAssignBoundingBox(boundingBoxParent, boundingBoxPrefix) {
       map = new OpenLayers.Map('map');
       
       var gphy = new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP});
@@ -95,24 +189,30 @@
         }
       });
       
+      function buildPrefix(prefix, name) {
+        return prefix ? "\"" + prefix + "[" + name + "]\"" : name
+      }
       function setBoundingBox(north, east, south, west) {
-        $('[name=north]').val(north);
-        $('[name=east]').val(east);
-        $('[name=south]').val(south);
-        $('[name=west]').val(west);
+        var parent = $(boundingBoxParent);
+        var prefix = boundingBoxPrefix;
+        parent.find('[name=' + buildPrefix(prefix, 'north') + ']').val(north);
+        parent.find('[name=' + buildPrefix(prefix, 'east') + ']').val(east);
+        parent.find('[name=' + buildPrefix(prefix, 'south') + ']').val(south);
+        parent.find('[name=' + buildPrefix(prefix, 'west') + ']').val(west);
       }   
 
       map.addControl(boxControl);
       boxControl.box.activate();
     }
 
-    $('#bbox_selector').click(function() {
+    $('#bbox_selector').click(function(event) {
+      event.preventDefault();
       WEHub.modal("Bounding box selector", 'Select a bounding box <div id="map" style="width:565px; height:320px"></div>');
       $("#dialog-modal").dialog('option', 'buttons', [{
         text: "Ok",
         click: function() { $(this).dialog("close"); }
       }]);
-      loadMap();
+      loadMapAndAssignBoundingBox('#bbox-selector');
     });    
   });
 </script>
@@ -124,7 +224,7 @@ form {
 form .round div {
   padding-top: 10px;
 }
-#advanced_search_selector input {
+#advanced_search_selector input, #layer-bounding-box input {
   width: 80px;
 }
 #builder_result, #response div {
@@ -166,6 +266,15 @@ form .round div {
   padding: 10px;
   margin-bottom: 10px;
 }
+.emphasized {
+  background-color: #DEECF4;
+}
+#layer-selector {
+  text-align: left;
+}
+#layer-selector table td {
+  vertical-align: top;
+}
 </style>
 
 <p>
@@ -180,9 +289,9 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
 <%= form_for :query_builder, :html => { :id => 'query_builder' } do |f| %>
   <div class="rounded">
     <div class="circle"><h3>1</h3></div>
-    <table style="width: 995px;">
+    <table style="width: 995px;" >
       <tr>
-        <td>
+        <td class="rounded emphasized">
     <div id="advanced_search_selector" style="">
       <div id="date-range"><%= label_tag :start, "Enter a date range" %> <%= text_field_tag :start %> - <%= text_field_tag :end %></div>
       <div id="bbox-selector">Enter a bounding box (<a href="#" id="bbox_selector">click here</a> for a map selector)
@@ -198,7 +307,7 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
         <td style="padding: 80px;">
     <h3>or</h3>
         </td>
-        <td>
+        <td class="rounded emphasized">
     <div>
     <%= label_tag 'feature_type', 'Select a Feature type' %>
     <%= select_tag 'feature_type', options_from_collection_for_select(@feature_types, 'id', 'description'), { :include_blank => true } %>
@@ -223,7 +332,19 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
     <%= select_tag 'info_type', options_for_select([ ['Dataset Information', 'dataset'], ['Feature Data', 'feature'] ]), { :include_blank => true } %>
     <div id="feature_type_filter" style="display: none;">
       Select a feature field to filter by (optional) <%= select_tag 'feature_fields', nil, { :include_blank => true } %>
-    </div>    
+    </div>
+    <div id="feature_layer_filter" style="margin: 10px 0px 10px 50px; display: none;" class="rounded emphasized">
+      Selected layer: <%= select_tag 'layer' , options_for_select([]), { :include_blank => true } %>
+      <div>
+      Selected bounding box: 
+      <table id="layer-bounding-box" >
+        <tr><td></td><td><%= text_field_tag "layer[north]"  %></td><td></td></tr>
+        <tr><td style="padding-left: 97px"><%= text_field_tag "layer[west]" %></td><td></td><td><%= text_field_tag "layer[east]" %></td></tr>
+        <tr><td></td><td><%= text_field_tag "layer[south]" %></td><td></td></tr>
+      </table>
+      </div>
+      <a href="#" id="layer-selector">Click here</a> to select a new layer and bounding box.
+    </div>
   </div>
   <div class="rounded">
     <div class="circle"><h3>4</h3></div>
@@ -240,7 +361,4 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
   </div>
 <% end %>
 
-<p>
-<i>Requests for feature data via the API is resource intensive. We're doing our best to mitigate the latency times, but please bear with us as we fine tune our caching strategies.</i>
-</p>
 <% end %>

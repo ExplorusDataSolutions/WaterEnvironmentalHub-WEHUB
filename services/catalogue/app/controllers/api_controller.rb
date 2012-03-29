@@ -24,6 +24,13 @@ class ApiController < ApplicationController
     end    
   end
   
+  def external_datasets
+    @uuids = []
+    results = ActiveRecord::Base.connection.execute("SELECT uuid FROM datasets WHERE feature_source_id <> 1 AND feature_source_id <> 2")  
+    results.each { |r| @uuids.push(r['uuid']) } if results
+    respond_with(@uuids)
+  end
+  
   def datasets
     feature_type_id = params[:feature_type_id]
     uuids = params[:ids].split(',') unless !params[:ids]

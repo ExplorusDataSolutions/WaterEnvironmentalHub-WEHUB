@@ -161,29 +161,47 @@ $(document).ready(function() {
           $('#map').effect("pulsate", { times:1 }, 2000);
         }
       });
+      
+      $('[name="layer[name]"], form[name=download] [name=layer]').change(function(event) {
+        var index = $('[name="layer[name]"]').index(this) 
+        if (index < 0) {
+          index = $('form[name=download] [name=layer]').index(this);
+        }
+        drawLayer(layers[index]);
+        syncLayerSelectors(index);
+      });
+      
+      function syncLayerSelectors(index) {
+        $($('[name="layer[name]"]')[index]).attr('checked', true);
+        $($('form[name=download] [name=layer]')[index]).attr('checked', true);
+      }      
+      
+      function drawLayer(layer) {
+        var boxes = new OpenLayers.Layer.Boxes('boxes');
+        var box = new OpenLayers.Marker.Box(layer.bounds);
+        box.setBorder(layer.colour, 2);
+        boxes.addMarker(box);
+        map.addLayer(boxes);
+        
+        map.zoomToExtent(layer.bounds);
+      }
 
+  var layers = [];
   <% if @dataset.layers %>
     <% @dataset.layers.each_with_index do |layer, i| %>
       <% if layer.bounding_box %>
   <%=
-  "var bounds#{i} = new OpenLayers.Bounds();
+  "
+  var bounds#{i} = new OpenLayers.Bounds();
   bounds#{i}.extend(new OpenLayers.LonLat(#{layer.bounding_box[:east]},#{layer.bounding_box[:north]}).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));
   bounds#{i}.extend(new OpenLayers.LonLat(#{layer.bounding_box[:west]},#{layer.bounding_box[:south]}).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));  
-  var boxes = new OpenLayers.Layer.Boxes('boxes');
-  var box = new OpenLayers.Marker.Box(bounds#{i});
-  box.setBorder('#{box_colours(i)}', 2);  
-  boxes.addMarker(box);
-  map.addLayer(boxes);
-  
-  var bounds = new OpenLayers.Bounds();
-  bounds.extend(new OpenLayers.LonLat(#{@dataset.bounding_box[:east]},#{@dataset.bounding_box[:north]}).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));
-  bounds.extend(new OpenLayers.LonLat(#{@dataset.bounding_box[:west]},#{@dataset.bounding_box[:south]}).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));  
-  map.zoomToExtent(bounds);
-  
-  ".html_safe    
+  layers.push({bounds: bounds#{i}, colour: '#{box_colours(i)}'});  
+  ".html_safe
   -%>
       <% end %>
     <% end %>
+    drawLayer(layers[0]);
+    
   <% else %>
   <%=
   "var bounds = new OpenLayers.Bounds();
@@ -250,7 +268,7 @@ $(document).ready(function() {
       
       <div class="float-left width-165 title">Abstract</div>
       <div class="float-left width-500 text">
-        <%= @dataset.description_with_html.html_safe %>
+        <%= @dataset.description_with_html %>
         <% if !@dataset.source.nil? %>
         <br />
         <% 
@@ -323,10 +341,17 @@ $(document).ready(function() {
       <div class="clear"></div>
     <% if @dataset.layers %>
       <h2 class="green-dot-blue-head">Feature Layers</h2>
+      <%
+        unique_bboxes = []
+        @dataset.layers.each { |b| unique_bboxes.push(b.bounding_box.to_s) }
+        unique_bboxes.uniq!
+      %>
       <% @dataset.layers.each_with_index do |layer, i| %>
-        <% if layer.bounding_box %>
-      <div class="float-left width-165 title">Layer <%= i+1 %> (<span style="color: <%= box_colours(i) %>"><%= box_colours(i) %></span>)</div>
-      <div class="float-left width-500 text"><%= layer.name %>, <%= layer.period %></div>
+         <% if layer.bounding_box %>
+      <div class="float-left width-165 title">
+      <%= radio_button("layer", "name", layer.layer_id, :checked => (i == 0)) %><%= label("layer", "name", ("Layer #{i+1}").html_safe, :value => layer.layer_id) %>
+      </div>
+      <div class="float-left width-500 text"><%= layer.name %>, <%= layer.period %></div>          
       <div class="clear"></div>
         <% end %>
       <% end %>

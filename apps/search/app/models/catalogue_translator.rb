@@ -152,6 +152,10 @@ class CatalogueTranslator
     feature_types = get("#{api_uri}/is_feature_external?id=#{dataset_id}&format=json")
   end
 
+  def api_external_datasets
+    feature_types = get("#{api_uri}/external_datasets?format=json")
+  end
+
   def api_datasets_by_feature_type_id(feature_type_id)
     datasets = xml_to_mash(get("#{api_uri}/datasets?feature_type_id=#{feature_type_id}&format=xml"))['datasets']
   end

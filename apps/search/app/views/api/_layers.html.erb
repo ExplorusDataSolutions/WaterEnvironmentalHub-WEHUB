@@ -1,0 +1,23 @@
+<div id="layer-selector">
+  <table style="width: 100%">
+    <tr>
+      <td class="rounded">
+        <div class="circle"><h3>A</h3></div>
+        <div style="padding: 7px 0 15px 0;">Select a layer</div>
+
+        <table style="padding-left: 40px">
+          <% @layers.each_with_index do |layer, i| %>
+            <% if layer.bounding_box %>
+          <tr><td><%= radio_button_tag :layer, layer.layer_id, i == 0 %></td><td><%= label_tag "layer[#{layer.layer_id}]", layer.name %></td></tr>
+            <% end %>
+          <% end %>
+        </table>
+      </td>
+      <td class="rounded">
+        <div class="circle"><h3>B</h3></div>
+        <div style="padding: 7px 0 15px 0;">Select a bounding box (click and drag)</div>
+        <div style="padding-left: 50px;"><div id="map" style="width:565px; height:320px;"></div></div>
+      </td>
+    </tr>
+  </table>
+</div>

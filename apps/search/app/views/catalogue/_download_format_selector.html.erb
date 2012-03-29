@@ -105,7 +105,9 @@
           <td valign="top" rowspan="<%= @dataset.layers.count + 1 %>">Select a feature layer</td>
         </tr>        
         <% @dataset.layers.each_with_index do |layer, i| %>
-        <tr><td><%= radio_button_tag :layer, layer.layer_id %></td><td><%= label_tag "layer[#{layer.layer_id}]", "#{layer.name} (<span style='color: #{box_colours(i)}'>#{box_colours(i)}</span>)".html_safe %></td></tr>
+          <% if layer.bounding_box %>
+        <tr><td><%= radio_button_tag :layer, layer.layer_id %></td><td><%= label_tag "layer[#{layer.layer_id}]", layer.name %></td></tr>
+          <% end %>
         <% end %>
       </table>
     </div>

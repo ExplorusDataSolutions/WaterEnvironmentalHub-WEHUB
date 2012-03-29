@@ -1,26 +1,34 @@
 WEHub = {};
 
-WEHub.dialog = function(title, message) {
+WEHub.dialog = function(title, message, options) {
   var modal = $("#dialog-modal");
   modal.html(message);
-  modal.dialog({
+  var defaults = {
     zIndex: 2000, /* override Open Layers */
     height: 400,
     width: 600,
     title: title
-  });
+  }
+  if (options) {
+    $.extend(defaults, options)
+  }  
+  modal.dialog(defaults);
 }
 
-WEHub.modal = function(title, message) {
+WEHub.modal = function(title, message, options) {
   var modal = $("#dialog-modal");
   modal.html(message);
-  modal.dialog({
+  var defaults = {
     zIndex: 2000, /* override Open Layers */
     minHeight: 200,
     width: 600,
     title: title,
   	modal: true
-  });
+  }
+  if (options) {
+    $.extend(defaults, options)
+  }
+  modal.dialog(defaults);
 }
 
 WEHub.logged_in = function() {
@@ -81,56 +89,4 @@ WEHub.OpenLayers.setCenter = function(map, lon, lat, zoomLevel) {
     new OpenLayers.Projection("EPSG:4326"),
     map.getProjectionObject()
   ), zoomLevel);
-}
-
-function add_new_dataset(){
-	var hid_last_cnt	=	$('#hid_last_cnt').val()*1 + 1;
-	$('#hid_last_cnt').val(hid_last_cnt);
-	$.ajax({
-      url: "/tools/add_new_dataset/",
-      type:'POST',
-      dataType:'html',
-      data:{"hid_last_cnt": hid_last_cnt},
-      success: function(data) {
-                          $('#filter-content').append(data);
-                      },
-      error: function (data){alert("An error occurred:");}
-    });
-}
-
-function remove_dataset(){
-	jQuery("input[name=filter-check]:checked").each
-    (
-      function()
-      {
-	  	var id 	=	jQuery(this).val();
-		$('#filter-' + id).remove();
-      }
-    );
-}
-
-function add_new_dataset_map(){
-	var hid_last_cnt	=	$('#hid_last_cnt').val()*1 + 1;
-	$('#hid_last_cnt').val(hid_last_cnt);
-	$.ajax({
-      url: "/tools/add_new_dataset_map/",
-      type:'POST',
-      dataType:'html',
-      data:{"hid_last_cnt": hid_last_cnt},
-      success: function(data) {
-                          $('#filter-content').append(data);
-                      },
-      error: function (data){alert("An error occurred:");}
-    });
-}
-
-function remove_dataset_map(){
-	jQuery("input[name=filter-check]:checked").each
-    (
-      function()
-      {
-	  	var id 	=	jQuery(this).val();
-		$('#filter-' + id).remove();
-      }
-    );
 }
