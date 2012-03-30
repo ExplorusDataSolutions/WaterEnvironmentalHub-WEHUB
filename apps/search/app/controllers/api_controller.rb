@@ -115,7 +115,7 @@ class ApiController < ApplicationController
           @bounds = "&#{@bounds.to_query}"
         end
 
-        if params[:is_external]
+        if params[:source] == 'external'
           if params[:layer_north] && !params[:layer_north].empty?
             @bounds = { :north => params[:layer_north], :east => params[:layer_east], :south => params[:layer_south], :west => params[:layer_west] }
             feature_request.merge(@bounds)
@@ -137,25 +137,25 @@ class ApiController < ApplicationController
           @extent = "&#{@extent.to_query}"
         end
         
-        if params[:is_external]
+        if params[:source] == 'external'
           if params[:filter_layer_start] && !params[:filter_layer_start].empty?
             @extent = { :start => params[:filter_layer_start], :end => params[:filter_layer_end] }
             feature_request.merge(@extent)
             @extent = "&#{@extent.to_query}"
           end
-        end 
-        
-        @properties = ''
-        if params[:feature_fields] && !params[:feature_fields].empty?
-          @properties = "&properties=#{params[:feature_fields]}"
+        else
+          @properties = ''
+          if params[:feature_fields] && !params[:feature_fields].empty?
+            @properties = "&properties=#{params[:feature_fields]}"
+          end
         end
-        
+                
       end
     end
 
     render :partial => 'builder_response'
   end
-    
+      
   private
   
   def verify_api_key

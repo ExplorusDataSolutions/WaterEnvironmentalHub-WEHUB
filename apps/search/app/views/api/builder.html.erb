@@ -13,14 +13,12 @@
     })
       
     function isExternalDataset(uuid) {
-      var isExternalFormElement = $('[name=is_external]');
       for (var i=0 ; i < externalDatasets.length ; i++) {
         if (externalDatasets[i] === uuid) {
-          isExternalFormElement.val(true);
+          $('[name=source]').val('external');
           return true;
         }
       }
-      isExternalFormElement.val(false);      
       return false;
     }
     
@@ -108,6 +106,7 @@
     secondaries.attr('disabled', true);
     
     secondaries.change(function(event) {
+      $('[name=source]').val('');
       $('#builder_response').hide('fast');
       if ($('[name=info_type]').val() !== 'feature') {
         $('#feature_type_filter').hide('fast');
@@ -320,7 +319,7 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
 
 <h2>The API Builder</h2>
 <%= form_for :query_builder, :html => { :id => 'query_builder' } do |f| %>
-  <%= hidden_field_tag 'is_external', false %>
+  <%= hidden_field_tag 'source', false %>
   <div class="rounded">
     <div class="circle"><h3>1</h3></div>
     <h4>Search</h4>
