@@ -111,26 +111,31 @@
       $('#builder_response').hide('fast');
       if ($('[name=info_type]').val() !== 'feature') {
         $('#feature_type_filter').hide('fast');
+        if (!isExternalDataset($('[name=datasets]').val())) {
+          $('#feature_layer_filter').hide('fast');
+        }
       }
     });
     
     $('[name=info_type], [name=datasets]').change(function(event) {
       var filterPanel = $('#feature_type_filter');
+      var externalLayerPanel = $('#feature_layer_filter');
       var uuid = $('[name=datasets]').val();
       if ($('[name=info_type]').val() === 'feature') {
         if (!isExternalDataset(uuid)) {
           $.get("<%= url_for :controller => 'api', :action => 'feature_fields', :format => 'html' %>" + "&id=" + uuid, function(data) {
             $('[name=feature_fields]').html($(data).html());
           });
+          externalLayerPanel.hide('fast');
           filterPanel.slideDown('fast');
-          $('#feature_layer_filter').hide('fast');          
-        } else {          
+        } else {
+          filterPanel.hide('fast'); 
           externalLayerSelector(uuid);
-          $('#feature_layer_filter').slideDown('fast');
+          externalLayerPanel.slideDown('fast');
         }
       } else {
         filterPanel.slideUp('fast');
-        $('#feature_layer_filter').slideUp('fast');
+        externalLayerPanel.slideUp('fast');
       }
     });
     
