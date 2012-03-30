@@ -13,11 +13,14 @@
     })
       
     function isExternalDataset(uuid) {
+      var isExternalFormElement = $('[name=is_external]');
       for (var i=0 ; i < externalDatasets.length ; i++) {
         if (externalDatasets[i] === uuid) {
+          isExternalFormElement.val(true);
           return true;
         }
       }
+      isExternalFormElement.val(false);      
       return false;
     }
     
@@ -312,6 +315,7 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
 
 <h2>The API Builder</h2>
 <%= form_for :query_builder, :html => { :id => 'query_builder' } do |f| %>
+  <%= hidden_field_tag 'is_external', false %>
   <div class="rounded">
     <div class="circle"><h3>1</h3></div>
     <h4>Search</h4>

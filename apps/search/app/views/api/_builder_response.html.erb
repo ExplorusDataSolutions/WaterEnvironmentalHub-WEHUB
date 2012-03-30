@@ -3,10 +3,10 @@
     <strong>API Call</strong>
     <div class="uri">
       <% if @info_type == 'dataset' %>
-        <% url = CGI.unescape(url_for :controller => 'api', :action => 'dataset', :id => "#{@datasets}?key=#{current_user.api_key}}&output=#{@output}", :only_path => false) %>
+        <% url = CGI.unescape(url_for( :controller => 'api', :action => 'dataset', :only_path => false) + "?id=#{@datasets}&key=#{current_user.api_key}&output=#{@output}") %>
         <%= "<a href=\"#{url}\" target=\"blank\">#{url}</a>".html_safe %>      
       <% else %>
-        <% url = CGI.unescape(url_for :controller => 'api', :action => 'feature', :id => "#{@datasets}?key=#{current_user.api_key}#{@bounds}#{@layer}#{@extent}#{@properties}&output=#{@output}", :only_path => false) %>
+        <% url = CGI.unescape(url_for( :controller => 'api', :action => 'feature', :only_path => false) + "?id=#{@datasets}&key=#{current_user.api_key}#{@bounds}#{@layer}#{@extent}#{@properties}&output=#{@output}") %>
         <%= "<a href=\"#{url}\" target=\"blank\">#{url}</a>".html_safe %>      
       <% end %>
 
