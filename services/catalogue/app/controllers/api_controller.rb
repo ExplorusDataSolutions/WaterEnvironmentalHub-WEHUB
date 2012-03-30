@@ -7,7 +7,7 @@ class ApiController < ApplicationController
   respond_to :json, :xml
   
   def feature_types
-    @feature_types = FeatureType.where("name = ? OR name = ?", 'base_data_static', 'observation_data_dynamic')
+    @feature_types = FeatureType.where("name = ? OR name = ? OR name = ?", 'base_data_static', 'observation_data_dynamic', 'observation_data_static')
     
     respond_with(@feature_types, :dasherize => false)
   end
@@ -102,7 +102,7 @@ class ApiController < ApplicationController
     respond_with(feature.feature_fields_by_type)
   end
   
-  def feature_fields
+  def feature_fields    
     dataset = Dataset.find_by_uuid(params[:id])
     feature = dataset.feature unless !dataset
     respond_with(feature.feature_fields)

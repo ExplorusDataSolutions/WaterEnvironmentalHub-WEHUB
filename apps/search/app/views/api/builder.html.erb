@@ -30,32 +30,42 @@
           $.ajax({
             url: "<%= url_for :controller => 'api', :action => 'external_layers', :format => 'json' %>" + "&id=" + uuid,
             success: function(data) { 
-
+            
               for (var i=0 ; i < data.length ; i++) {
                 var layer = data[i];
-                var bounds = new OpenLayers.Bounds();
-                bounds.extend(new OpenLayers.LonLat(layer.bounding_box.east,layer.bounding_box.north).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));
-                bounds.extend(new OpenLayers.LonLat(layer.bounding_box.west,layer.bounding_box.south).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));  
-                layers.push({bounds: bounds, colour: layer.colour.code});  
+                var boundingBox = layer.bounding_box;
+                if (boundingBox) {
+                  var bounds = new OpenLayers.Bounds();
+                  bounds.extend(new OpenLayers.LonLat(boundingBox.east,boundingBox.north).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));
+                  bounds.extend(new OpenLayers.LonLat(boundingBox.west,boundingBox.south).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));  
+                  layers.push({bounds: bounds, colour: layer.colour.code});  
+                }
               }
               
               var displayLayersOnBuilder = $('select[name=layer]');
-              if (displayLayersOnBuilder.find('option').length == 1) {
-                for (var i=0 ; i < data.length ; i++) {
-                  var layer = data[i];          
-                  var option = $('<option></option>').attr('value',layer.layer_id).text(layer.name);
-                  if (i === 0) {
-                    option.attr('selected', 'selected');
-                  }
-                  displayLayersOnBuilder.append(option);
+              displayLayersOnBuilder.html('');
+              for (var i=0 ; i < data.length ; i++) {
+                var layer = data[i];
+                
+                var displayName = layer.name ? layer.name : layer.period;
+                var option = $('<option></option>').attr('value',layer.layer_id).text(displayName);
+                if (i === 0) {
+                  option.attr('selected', 'selected');
                 }
+                displayLayersOnBuilder.append(option);
               }
 
               function drawLayer(layer) {
+                var oldBoxes = map.getLayersByName('boxes');
+                for (var i=0 ; i<oldBoxes.length ; i++) {
+                  map.removeLayer(oldBoxes[i]);
+                }
+                
                 var boxes = new OpenLayers.Layer.Boxes('boxes');
                 var box = new OpenLayers.Marker.Box(layer.bounds);
                 box.setBorder(layer.colour, 2);
                 boxes.addMarker(box);
+
                 map.addLayer(boxes);
                 
                 map.zoomToExtent(layer.bounds);

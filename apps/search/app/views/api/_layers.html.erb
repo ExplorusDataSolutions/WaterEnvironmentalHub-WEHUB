@@ -6,17 +6,19 @@
         <div style="padding: 7px 0 15px 0;">Select a layer</div>
 
         <table style="padding-left: 40px">
+          <% has_selected = false %>
           <% @layers.each_with_index do |layer, i| %>
             <% if layer.bounding_box %>
-          <tr><td><%= radio_button_tag :layer, layer.layer_id, i == 0 %></td><td>
-            <% if layer.name.empty? %>
-            <%= label_tag "layer[#{layer.layer_id}]", "#{layer.period}" %>
-            <% elsif layer.period.empty? %>
+          <tr><td><%= radio_button_tag :layer, layer.layer_id, !has_selected %></td><td>
+            <% if layer.name && !layer.name.empty? && layer.period && !layer.period.empty? %>
+            <%= label_tag "layer[#{layer.layer_id}]", "#{layer.name}, <span>#{layer.period}</span>".html_safe %>            
+            <% elsif layer.name && !layer.name.empty?%>
             <%= label_tag "layer[#{layer.layer_id}]", "#{layer.name}" %>
             <% else %>
-            <%= label_tag "layer[#{layer.layer_id}]", "#{layer.name}, <span>#{layer.period}</span>".html_safe %>
+            <%= label_tag "layer[#{layer.layer_id}]", "#{layer.period}" %>
             <% end %>
           </td></tr>
+            <% has_selected = true %>
             <% end %>
           <% end %>
         </table>

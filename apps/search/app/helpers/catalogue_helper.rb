@@ -214,7 +214,11 @@ module CatalogueHelper
       { 'BDB76B' => 'dark khaki' }, { 'FFF8DC' => 'corn silk' }, { '6495ED' => 'corn flower blue' }, { '5F9EA0' => 'cadet blue' }, 
       { 'DC143C' => 'crimson' }, { 'A9A9A9' => 'dark gray' }, { 'F0FFFF' => 'azure' }, { 'FFE4C4' => 'bisque' }, { '000000' => 'black' }, 
       { 'FF8C00' => 'dark orange' } ]
-    { :name => colours[i].values[0], :code => "##{colours[i].keys[0]}" }
+    if colours[i]
+      { :name => colours[i].values[0], :code => "##{colours[i].keys[0]}" }
+    else
+      { :name => colours[0].values[0], :code => "##{colours[0].keys[0]}" }
+    end
   end
   
   def more_markup(content, length=125)
