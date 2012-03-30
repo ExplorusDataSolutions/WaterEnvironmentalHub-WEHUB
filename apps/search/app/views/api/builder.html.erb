@@ -76,11 +76,17 @@
             width: 1090, 
             zIndex: 0,
             buttons: [{
-              text: "Ok",
-              click: function() { $(this).dialog("close"); }
+              text: "Next",
+              click: function() { 
+                $(this).dialog("close"); 
+                $('#feature_layer_filter .filter_layer_display').slideDown('fast');
+                $('[name=filter_layer_start]').val($('[name=layer_start]').val());
+                $('[name=filter_layer_end]').val($('[name=layer_end]').val());
+              }
             }]
           });
-          loadMapAndAssignBoundingBox('#layer-bounding-box', 'layer');
+          $('#layer-selector').find('[name=layer_start],[name=layer_end]').datepicker({ dateFormat: 'dd/mm/yy' });
+          loadMapAndAssignBoundingBox('.layer-bounding-box', 'layer_');
         }
       });      
     }
@@ -107,14 +113,15 @@
           $('#feature_layer_filter').hide('fast');          
         } else {          
           externalLayerSelector(uuid);
-          $('#feature_layer_filter').slideDown('fast');          
+          $('#feature_layer_filter').slideDown('fast');
         }
       } else {
         filterPanel.slideUp('fast');
+        $('#feature_layer_filter').slideUp('fast');
       }
     });
     
-    $('#layer-selector').click(function(event) {
+    $('#layer-selector-hook').click(function(event) {
       event.preventDefault();
       externalLayerSelector($('[name=datasets]').val());
     });
@@ -158,7 +165,7 @@
       event.preventDefault();
       $.ajax({
         url: "<%= url_for :controller => 'api', :action => 'builder_response' %>",
-        data: $('form').serialize(),
+        data: decodeURIComponent($('form').serialize()),
         success: function(data) { $('#builder_response').html(data).show('fast'); },
         error: function() { 
           WEHub.modal("We're Sorry", "No data could be retrieved. Try making a new request."); 
@@ -168,6 +175,7 @@
     });
     
     $('#advanced_search_selector').find('[name=start],[name=end]').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#feature_layer_filter').find('[name=filter_layer_start],[name=filter_layer_end]').datepicker({ dateFormat: 'dd/mm/yy' });    
 
     function loadMapAndAssignBoundingBox(boundingBoxParent, boundingBoxPrefix) {
       map = new OpenLayers.Map('map');
@@ -190,7 +198,7 @@
       });
       
       function buildPrefix(prefix, name) {
-        return prefix ? "\"" + prefix + "[" + name + "]\"" : name
+        return prefix ? prefix + name : name
       }
       function setBoundingBox(north, east, south, west) {
         var parent = $(boundingBoxParent);
@@ -224,7 +232,7 @@ form {
 form .round div {
   padding-top: 10px;
 }
-#advanced_search_selector input, #layer-bounding-box input {
+#advanced_search_selector input, #layer-selector input, #feature_layer_filter input {
   width: 80px;
 }
 #builder_result, #response div {
@@ -275,6 +283,13 @@ form .round div {
 #layer-selector table td {
   vertical-align: top;
 }
+#layer-selector .layers span {
+  font-size: 10pt;
+}
+#query_builder h4 {
+  padding: 0px;
+  margin: 0px;
+}
 </style>
 
 <p>
@@ -289,6 +304,7 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
 <%= form_for :query_builder, :html => { :id => 'query_builder' } do |f| %>
   <div class="rounded">
     <div class="circle"><h3>1</h3></div>
+    <h4>Search</h4>
     <table style="width: 995px;" >
       <tr>
         <td class="rounded emphasized">
@@ -307,8 +323,9 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
         <td style="padding: 80px;">
     <h3>or</h3>
         </td>
-        <td class="rounded emphasized">
-    <div>
+        <td>
+    <h4>Select</h4>
+    <div class="rounded emphasized">
     <%= label_tag 'feature_type', 'Select a Feature type' %>
     <%= select_tag 'feature_type', options_from_collection_for_select(@feature_types, 'id', 'description'), { :include_blank => true } %>
     </div>
@@ -334,16 +351,19 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
       Select a feature field to filter by (optional) <%= select_tag 'feature_fields', nil, { :include_blank => true } %>
     </div>
     <div id="feature_layer_filter" style="margin: 10px 0px 10px 50px; display: none;" class="rounded emphasized">
-      Selected layer: <%= select_tag 'layer' , options_for_select([]), { :include_blank => true } %>
-      <div>
-      Selected bounding box: 
-      <table id="layer-bounding-box" >
-        <tr><td></td><td><%= text_field_tag "layer[north]"  %></td><td></td></tr>
-        <tr><td style="padding-left: 97px"><%= text_field_tag "layer[west]" %></td><td></td><td><%= text_field_tag "layer[east]" %></td></tr>
-        <tr><td></td><td><%= text_field_tag "layer[south]" %></td><td></td></tr>
-      </table>
+      <div class="filter_layer_display" style="display: none;">
+        Selected layer: <%= select_tag 'layer' , options_for_select([]), { :include_blank => true } %>
+        <div>
+        Selected bounding box: 
+        <table class="layer-bounding-box" >
+          <tr><td></td><td><%= text_field_tag "layer_north"  %></td><td></td></tr>
+          <tr><td style="padding-left: 97px"><%= text_field_tag "layer_west" %></td><td></td><td><%= text_field_tag "layer_east" %></td></tr>
+          <tr><td></td><td><%= text_field_tag "layer_south" %></td><td></td></tr>
+        </table>
+        </div>
+        <div id="date-range"><%= label_tag :filter_layer_start, "Select a date range" %> <%= text_field_tag :filter_layer_start %> - <%= text_field_tag :filter_layer_end %></div>
       </div>
-      <a href="#" id="layer-selector">Click here</a> to select a new layer and bounding box.
+      <a href="#" id="layer-selector-hook">Click here</a> to open our layer selector.
     </div>
   </div>
   <div class="rounded">

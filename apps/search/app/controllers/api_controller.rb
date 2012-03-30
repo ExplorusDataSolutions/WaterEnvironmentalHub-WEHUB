@@ -110,14 +110,33 @@ class ApiController < ApplicationController
 
         @bounds = ''
         if params[:north] && !params[:north].empty?
-          @bounds = { :north => params[:north], :east => params[:east], :south => params[:south], :west => params[:south] }
+          @bounds = { :north => params[:north], :east => params[:east], :south => params[:south], :west => params[:west] }
           feature_request.merge(@bounds)
           @bounds = "&#{@bounds.to_query}"
+        end
+        
+        if params[:layer_north] && !params[:layer_north].empty?
+          @bounds = { :north => params[:layer_north], :east => params[:layer_east], :south => params[:layer_south], :west => params[:layer_west] }
+          feature_request.merge(@bounds)
+          @bounds = "&#{@bounds.to_query}"
+        end
+        
+        @layer = ''
+        if params[:layer]
+          @layer = params[:layer]
+          feature_request[:layer] = @layer
+          @layer = "&layer=#{@layer}"
         end
         
         @extent = ''
         if params[:start] && !params[:start].empty?
           @extent = { :start => params[:start], :end => params[:end] }
+          feature_request.merge(@extent)
+          @extent = "&#{@extent.to_query}"
+        end
+        
+        if params[:filter_layer_start] && !params[:filter_layer_start].empty?
+          @extent = { :start => params[:filter_layer_start], :end => params[:filter_layer_end] }
           feature_request.merge(@extent)
           @extent = "&#{@extent.to_query}"
         end

@@ -1,22 +1,43 @@
 <div id="layer-selector">
-  <table style="width: 100%">
+  <table style="width: 100%" class="layers">
     <tr>
-      <td class="rounded">
+      <td class="rounded" rowspan="3">
         <div class="circle"><h3>A</h3></div>
         <div style="padding: 7px 0 15px 0;">Select a layer</div>
 
         <table style="padding-left: 40px">
           <% @layers.each_with_index do |layer, i| %>
             <% if layer.bounding_box %>
-          <tr><td><%= radio_button_tag :layer, layer.layer_id, i == 0 %></td><td><%= label_tag "layer[#{layer.layer_id}]", layer.name %></td></tr>
+          <tr><td><%= radio_button_tag :layer, layer.layer_id, i == 0 %></td><td>
+            <% if layer.name.empty? %>
+            <%= label_tag "layer[#{layer.layer_id}]", "#{layer.period}" %>
+            <% elsif layer.period.empty? %>
+            <%= label_tag "layer[#{layer.layer_id}]", "#{layer.name}" %>
+            <% else %>
+            <%= label_tag "layer[#{layer.layer_id}]", "#{layer.name}, <span>#{layer.period}</span>".html_safe %>
+            <% end %>
+          </td></tr>
             <% end %>
           <% end %>
         </table>
       </td>
+    </tr>
+    <tr>
       <td class="rounded">
         <div class="circle"><h3>B</h3></div>
         <div style="padding: 7px 0 15px 0;">Select a bounding box (click and drag)</div>
-        <div style="padding-left: 50px;"><div id="map" style="width:565px; height:320px;"></div></div>
+        <div style="padding: 0px 0px 30px 50px;"><div id="map" style="width:565px; height:320px;"></div></div>        
+        <table class="layer-bounding-box" >
+          <tr><td></td><td><%= text_field_tag "layer_north"  %></td><td></td></tr>
+          <tr><td style="padding-left: 97px"><%= text_field_tag "layer_west" %></td><td></td><td><%= text_field_tag "layer_east" %></td></tr>
+          <tr><td></td><td><%= text_field_tag "layer_south" %></td><td></td></tr>
+        </table>        
+      </td>
+    </tr>
+    <tr>
+      <td class="rounded">
+        <div class="circle"><h3>C</h3></div>
+        <div id="date-range"><%= label_tag :layer_start, "Select a date range" %> <%= text_field_tag :layer_start %> - <%= text_field_tag :layer_end %></div>
       </td>
     </tr>
   </table>
