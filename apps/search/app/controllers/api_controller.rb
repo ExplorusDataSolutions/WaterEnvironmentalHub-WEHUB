@@ -53,7 +53,7 @@ class ApiController < ApplicationController
     if result.string && result.string.length > 1
       result.string.delete('nid')
     end
-    if result.empty?
+    if result.empty? || (result.string.empty? && result.numeric.empty?)
       result = nil
     end    
     respond_with(result)

@@ -16,13 +16,29 @@
     var points = new OpenLayers.Geometry.MultiPoint();
     var layers = []
 
-    map = new OpenLayers.Map( 'map' );
+    var options = {
+      displayProjection: new OpenLayers.Projection("EPSG:4326"),
+      units: "m",
+      numZoomLevels: 22,
+      maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34)
+    };  
+    map = new OpenLayers.Map('map', options);
     map.addLayer(new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP}));    
-            
-    function drawJSON(data, colour, coordinates, datasetId) {
+    
+    function centerMap(coordinates) {
+      points.addPoint(OpenLayers.Geometry.fromWKT('POINT(' + coordinates + ')'));
+      var centroid = points.getCentroid(true);
+      WEHub.OpenLayers.setCenter(map, centroid.y, centroid.x, 4);
+    }
+    
+    function enableMapControl(datasetId) {
       var datasetElement = $('.datasets.' + datasetId);
       datasetElement.removeClass('mini-loading-dialog');      
       datasetElement.find('input').attr('checked', true);
+    }
+
+    function drawJSON(data, colour, coordinates, datasetId) {
+      enableMapControl(datasetId);
       
       var geojson_format = new OpenLayers.Format.GeoJSON({
         'externalProjection': new OpenLayers.Projection('EPSG:4326'),
@@ -37,10 +53,28 @@
             
       map.addLayer(vector_layer);      
       vector_layer.addFeatures(geojson_format.read(data));
+      
+      centerMap(coordinates);
+    }
+    
+    function drawWMS(colour, coordinates, datasetId) {
+      enableMapControl(datasetId);
+      
+      var wmsLayer = new OpenLayers.Layer.WMS(datasetId, <%= "'#{Rails.application.config.geoserver_address}/geoserver/gn/wms?service=WMS&version=1.1.0&request=GetMap&layers=gn:'".html_safe %> + datasetId,
+        { 
+          transparent: true,
+          layers: datasetId,
+          format: 'image/png',
+          srs: 'EPSG:4326'
+        },
+        { 
+          reproject: false
+        }
+      );
+      
+      map.addLayer(wmsLayer);
 
-      points.addPoint(OpenLayers.Geometry.fromWKT('POINT(' + coordinates + ')'));
-      var centroid = points.getCentroid(true);
-      WEHub.OpenLayers.setCenter(map, centroid.y, centroid.x, 4);
+      centerMap(coordinates);
     }
     
     function disableDataset(datasetId) {
@@ -52,15 +86,19 @@
     <% 
       @datasets.each_with_index do |dataset, i|
     %>
-
+      <% puts dataset.wms %>
+      <% if dataset.wms == 'true' %>
+    <%= "drawWMS('#{css_colour(i)[:code]}', '#{dataset.coordinates.gsub(',', ' ')}', '#{dataset.id}');" %>
+      <% else %>    
     $.ajax({
       url: "<%= url_for :controller => 'api', :action => 'feature', :id => dataset.id, :output => 'json' %>",
       global: false,
       success: function(data) { <%= "drawJSON(data,'#{css_colour(i)[:code]}', '#{dataset.coordinates.gsub(',', ' ')}', '#{dataset.id}');" -%> },
       error: function(data) { disableDataset('<%= dataset.id %>'); }
       
-    });    
-
+    });
+      
+      <% end %>
     <%
       end unless !@datasets
     %>

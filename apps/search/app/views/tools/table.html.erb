@@ -17,20 +17,28 @@ $(document).ready(function() {
 
   function idFromUrl(url) { return url.match(/id=([\w-]*)/)[1]; } 
   
-  function drawTable(features) {
+  function drawTable(data) {
     table.html('<thead></thead><tbody></tbody>');
     var tr = $('<tr></tr>');
-    for (property in features[0].properties) {
-      tr.append("<th>" + property + "</th>");
+    
+    var rows = data.split(/\n/);
+    rows.pop(rows.length-1);
+    
+    var header = rows[0].split(',');
+    for (var i=0 ; i<header.length ; i++ ) {
+      tr.append("<th>" + header[i] + "</th>");
     }
     table.find('thead').append(tr);
-      
-    for (var i=0 ; i<features.length ; i++){
-      var feature = features[i];
+    
+    for (var i=1 ; i<rows.length ; i++) {
       tr = $('<tr></tr>');
-      for (property in feature.properties) {
-        tr.append("<td>" + feature.properties[property] + "</td>");
+      
+      var columns = rows[i].split(',');      
+      for (var j=0 ; j<columns.length ; j++) {
+        var column = columns[j];
+        tr.append("<td>" + column + "</td>");
       }
+      
       table.find('tbody').append(tr);
     }
 
@@ -40,22 +48,23 @@ $(document).ready(function() {
     $('#table-chart-pager').show();
   }
   
-  function loadDataAndDrawTable(uuid) {
+  function loadDataAndDrawTable(uuid, wms) {
     var datasetElement = $('.datasets.' + uuid);
     datasetElement.addClass('mini-loading-dialog');
 
     $.ajax({
-      url: "<%= (url_for :controller => 'api', :action => 'feature', :output => 'json').html_safe %>&id=" + uuid ,
+      url: "<%= (url_for :controller => 'api', :action => 'feature', :output => 'csv').html_safe %>&id=" + uuid ,
       global: false,
-      dataType: 'json',
+      dataType: 'text',
       success: function(data) {
-        if (data.features) {
+
+        if (data != '') {
 
           var checkbox = $('[name=datasets] .' + idFromUrl(this.url) + ' [name=dataset]');
           checkbox.attr('checked', true).removeAttr('disabled');
           datasetElement.removeClass('mini-loading-dialog');
           
-          drawTable(data.features);
+          drawTable(data);
 
           $('form[name=download] [name=ids]').val($('[name=dataset]:checked').val());
         }
@@ -78,11 +87,11 @@ $(document).ready(function() {
   $('.datasets').removeClass('mini-loading-dialog');
   $('form[name=datasets] [name=dataset]').click(function(event) {
     $('[name=datasets] [name=dataset]').attr('checked', false);
-    loadDataAndDrawTable(event.target.value);
+    loadDataAndDrawTable(event.target.value, $(event.target).attr('wms'));
   });
   
   $('form[name=datasets] [name=dataset]:checked').each(function() {
-    loadDataAndDrawTable(this.value);
+    loadDataAndDrawTable(this.value, $(this).attr('wms'));
   });
   
   if ($('form[name=datasets] [name=dataset]:checked').length === 0) {
@@ -104,8 +113,8 @@ $(document).ready(function() {
   }
 </style>
 <div class="sub-content-body">
-	<div class="sub-content-left">
-		
+  <div class="sub-content-left">
+    
     <div id="filter-container">
       <div id="filter-content">
       
@@ -114,36 +123,36 @@ $(document).ready(function() {
       </div>
     </div>
     
-	</div>
-	<div class="sub-content-center">
-		<div class="table-body">
+  </div>
+  <div class="sub-content-center">
+    <div class="table-body">
 
       <table id="table-chart" class="table-sorter"></table>
 
       <div id="table-chart-pager" class="pager" style="display: none;">
-	      <form>
-		      <img src="/images/table-sorter-pager-first.png" class="first"/>
-		      <img src="/images/table-sorter-pager-prev.png" class="prev"/>
-		      <input type="text" class="pagedisplay"/>
-		      <img src="/images/table-sorter-pager-next.png" class="next"/>
-		      <img src="/images/table-sorter-pager-last.png" class="last"/>
-		      <select class="pagesize">
-		      <% 10.times do |i| %>
-		        <% option_value = (i+1)*10 %>
-		        <%= "<option value='#{option_value}'>#{option_value}</option>".html_safe -%>
-		      <% end %>
-		      </select>
-	      </form>
+        <form>
+          <img src="/images/table-sorter-pager-first.png" class="first"/>
+          <img src="/images/table-sorter-pager-prev.png" class="prev"/>
+          <input type="text" class="pagedisplay"/>
+          <img src="/images/table-sorter-pager-next.png" class="next"/>
+          <img src="/images/table-sorter-pager-last.png" class="last"/>
+          <select class="pagesize">
+          <% 10.times do |i| %>
+            <% option_value = (i+1)*10 %>
+            <%= "<option value='#{option_value}'>#{option_value}</option>".html_safe -%>
+          <% end %>
+          </select>
+        </form>
       </div>
       
-		</div>		
-	</div>
+    </div>    
+  </div>
 <%
-=begin %>	
-	<div class="sub-content-right">
-    	<%= render 'shared/right_panel' %>		
-	</div>
+=begin %>  
+  <div class="sub-content-right">
+      <%= render 'shared/right_panel' %>    
+  </div>
 <%
-=end %>	
-	<div class="clear"></div>
+=end %>  
+  <div class="clear"></div>
 </div>

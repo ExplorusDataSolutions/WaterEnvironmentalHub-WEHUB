@@ -4,11 +4,12 @@ require 'active_support/core_ext'
 require 'hashie'
 
 class CatalogueTranslator
-  attr_accessor :url, :cache
+  attr_accessor :url, :cache, :feature_cache
   
   def initialize(url="http://localhost:3000", cache={})
     @url = url
     @cache = cache
+    @feature_cache = FeatureCache.new("#{Rails.root}/tmp/cache/geoserver")
   end
   
   def item_uri(id)
@@ -182,12 +183,27 @@ class CatalogueTranslator
     get("#{api_uri}/dataset?id=#{dataset_id}&format=#{format}")
   end
 
-  def api_feature_raw(params)
-    get("#{api_uri}/feature?#{params.to_query}")
+  def api_feature_raw(params)  
+    response = nil
+    if params[:output] == 'csv'
+      response = feature_cache.data('csv', params[:id])
+    end
+    if !response
+      response = get("#{api_uri}/feature?#{params.to_query}")
+    end
+    response
   end
   
   def api_feature(params)
-    json_to_mash(get("#{api_uri}/feature?#{clean(params, 'json').to_query}&output=json"))
+    response = nil
+    if params[:format] == 'json'
+      response = feature_cache.data('json', params[:id], params[:properties])
+      response = json_to_mash(response) unless !response
+    end
+    if !response  
+      response = json_to_mash(get("#{api_uri}/feature?#{clean(params, 'json').to_query}&output=json"))
+    end
+    response
   end
 
   def datasets_by_type

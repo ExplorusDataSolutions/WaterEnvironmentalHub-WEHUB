@@ -39,7 +39,7 @@
 
     function idFromUrl(url) { return url.match(/id=([\w-]*)/)[1]; }
     function propertyFromUrl(url) { return url.match(/properties=(.[^&]*)/)[1]; }
-    function graphTypeFromUrl(url) { return window.location.hash.replace('#',''); }
+    function graphTypeFromUrl() { return window.location.hash.replace('#',''); }
     function idsFromSearch() { 
       var unescapedSearch = unescape(window.location.search);
       return unescapedSearch.match(/ids=([\w-,]*)/)[1].split(','); 
@@ -100,13 +100,21 @@
       }
       
       if ($('#chart1').html() === '') {
-        $('#chart1').html("<div style='padding: 20px;'><strong>We're sorry, a chart for that dataset / property combination couldn't be generated. Please try another combination.</strong></div>");
+        var errorMsg = "<div style='padding: 20px;'><p>We're sorry, we couldn't chart that dataset / property combination.</p> <p>Please try selecting another dataset / property combination (on the left)</p></div>";
+        if (graphTypeFromUrl() == 'line') {
+          errorMsg = "<div style='padding: 20px;'><p>We're sorry, we couldn't chart that dataset / property combination.</p> <p>Some properties can't be plotted on a line graph as their values are non numeric.  Please try selecting another dataset / property combination (on the left) or visualize this data in pie graph.</p></div>";
+        }
+        $('#chart1').html(errorMsg);
       }
       
     });
     
     function loadGraphData(uuid, property) {
-      var type = arguments[2] ? arguments[2] : 'line';
+      property = property ? property : '';
+      var type = window.location.hash;
+      if (type) {
+        type = type.replace('#','');
+      }
 
       $('.datasets.' + uuid).addClass('mini-loading-dialog');
       
@@ -129,8 +137,8 @@
             .unbind()
             .change(function(event) {
               if (this.value !== '') {
-                $('.datasets.' + uuid).addClass('mini-loading-dialog');
-                loadGraphData(uuid, this.value, type);
+                $('.datasets.' + uuid).addClass('mini-loading-dialog');                
+                loadGraphData(uuid, this.value);
               }
             }
           );
@@ -164,6 +172,21 @@
       }
     });
 
+    function loadGraphDataWithFirstNumericValue(url) {
+      $.ajax({
+        url: url,
+        global: false,
+        success: function(data) {
+          var property = (data.numeric && data.numeric[0]) ? data.numeric[0] : '';
+          var uuids = idsFromSearch();      
+          for (var i=0; i < uuids.length; i++) {
+            var uuid = uuids[i];
+            loadGraphData(uuid, property);
+          }          
+        }
+      });    
+    }
+    
     if (idsFromSearch().length > 1) {
       $.ajax({
         url: "<%= (url_for :controller => 'api', :action => 'shared_properties', :ids => params[:ids], :format => 'json').html_safe %>",
@@ -172,19 +195,13 @@
           if (data) {
             sharedProperties = data;
             $(document).trigger('loadDataForSharedPropertiesAndGraph');
+          } else {
+            loadGraphDataWithFirstNumericValue("<%= (url_for :controller => 'api', :action => 'feature_fields_by_type', :format => 'json').html_safe %>" + "&id=" + idsFromSearch()[0])
           }
         }
       });
     } else {
-      $.ajax({
-        url: "<%= (url_for :controller => 'api', :action => 'feature_fields_by_type', :id => params[:ids], :format => 'json').html_safe %>",
-        global: false,
-        success: function(data) {
-          if (data && data.numeric.length > 1) {
-            loadGraphData(idsFromSearch()[0], data.numeric[0]);
-          }
-        }
-      });
+      loadGraphDataWithFirstNumericValue("<%= (url_for :controller => 'api', :action => 'feature_fields_by_type', :id => params[:ids], :format => 'json').html_safe %>");
     }
     
     $('.chart-button').click(function(event) {
@@ -208,7 +225,7 @@
         var uuid = uuids[i];
         var property = $('.property-selector.' + uuid).val();
         
-        loadGraphData(uuid, property, type);
+        loadGraphData(uuid, property);
       }   
 
     });

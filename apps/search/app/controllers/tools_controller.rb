@@ -1,5 +1,7 @@
 class ToolsController < ApplicationController
 
+  include ToolHelper
+
   respond_to :json, :xml
   
   def test
@@ -15,9 +17,7 @@ class ToolsController < ApplicationController
     @breadcrumb = ['Tools', 'Graph']
     @main_menu = 'we_tools'
 
-    if params[:id]
-      params[:ids] = [params[:id]]
-    end
+    add_param_ids_array(params)
     
     @datasets = catalogue_instance.api_datasets(params)
   end
@@ -26,7 +26,7 @@ class ToolsController < ApplicationController
     values = []
     property = nil    
     result = catalogue_instance.api_feature(params)
-    
+
     if params[:type] == 'pie' || params[:type] == 'bar'
       bucket = {}
       result.features.each_with_index do |feature, i|
@@ -41,7 +41,7 @@ class ToolsController < ApplicationController
       bucket.each do |key, value|
         values.push([key, value])
       end
-    else      
+    else    
       result.features.each_with_index do |feature, i|
         if i == 0
           property = feature.properties.keys[0]
@@ -50,16 +50,15 @@ class ToolsController < ApplicationController
       end
     end
     respond_with(values)
+
   end
   
   def table
     @breadcrumb = ['Tools', 'Tables']
     @main_menu = 'we_tools'
 
-    if params[:id]
-      params[:ids] = [params[:id]]
-    end
-    
+    add_param_ids_array(params)
+
     @datasets = catalogue_instance.api_datasets(params)
   end
   
@@ -67,9 +66,8 @@ class ToolsController < ApplicationController
     @breadcrumb = ['Tools', 'Maps']
     @main_menu = 'we_tools'
     
-    if params[:id]
-      params[:ids] = [params[:id]]
-    end
+    add_param_ids_array(params)
+    
     @datasets = catalogue_instance.api_datasets(params)
   end
   

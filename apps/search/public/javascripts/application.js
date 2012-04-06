@@ -43,6 +43,10 @@ WEHub.id = function() {
   return $.cookie('we_hub') ? $.cookie('we_hub').match(/id=([^&]*)/)[1] : '';
 }
 
+WEHub.isProductionSite = function() {
+  return document.domain.match(/waterenvironmentalhub\.ca/) ? true : false;
+}
+
 WEHub.OpenLayers = {}
 
 WEHub.OpenLayers.setMarker = function setMarker(map, markers, lon, lat, html){
