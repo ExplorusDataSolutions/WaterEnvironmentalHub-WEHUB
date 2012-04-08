@@ -1,21 +1,25 @@
 require 'csv'
 
-json_files = Dir.glob("#{File.dirname(__FILE__)}/tmp/*.csv")
-json_files.each do |file|
+csv_files = Dir.glob("#{File.dirname(__FILE__)}/tmp/*.csv")
+csv_files.delete_if { |f| f.match(/properties/) }
+
+time_of_start = Time.now
+puts "#{csv_files.length} files to extract properties from"
+puts "starting extraction process #{time_of_start}"
+
+csv_files.each_with_index do |file, i|
   filename = File.basename(file)
   time = Time.now
 
-  if !filename.match(/properties/)
-    puts "start #{time} #{filename}"
+  puts "start #{time}, file number #{i}, filename #{filename}"
 
-    property_data = {}
-
-    File.open("#{File.dirname(__FILE__)}/tmp/#{File.basename(file).gsub('.csv','.properties.csv')}", "w") do |f|
-      CSV.foreach(file) do |row|
-        f.puts(row[1..-2].join(","))
-      end    
-    end
-    
-    puts "end #{Time.now - time}"
-  end 
+  File.open("#{File.dirname(__FILE__)}/tmp/#{File.basename(file).gsub('.csv','.properties.csv')}", "w") do |f|
+    CSV.foreach(file) do |row|
+      f.puts(row[1..-2].join(","))
+    end    
+  end
+  
+  puts "end #{Time.now - time}"
 end
+
+puts "end of extraction process #{Time.now - time_of_start}"
