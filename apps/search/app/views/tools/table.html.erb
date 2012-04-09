@@ -18,29 +18,7 @@ $(document).ready(function() {
   function idFromUrl(url) { return url.match(/id=([\w-]*)/)[1]; } 
   
   function drawTable(data) {
-    table.html('<thead></thead><tbody></tbody>');
-    var tr = $('<tr></tr>');
-    
-    var rows = data.split(/\n/);
-    rows.pop(rows.length-1);
-    
-    var header = rows[0].split(',');
-    for (var i=0 ; i<header.length ; i++ ) {
-      tr.append("<th>" + header[i] + "</th>");
-    }
-    table.find('thead').append(tr);
-    
-    for (var i=1 ; i<rows.length ; i++) {
-      tr = $('<tr></tr>');
-      
-      var columns = rows[i].split(',');      
-      for (var j=0 ; j<columns.length ; j++) {
-        var column = columns[j];
-        tr.append("<td>" + column + "</td>");
-      }
-      
-      table.find('tbody').append(tr);
-    }
+    table.html(data);
 
     $('#table-chart')
       .tablesorter({widthFixed: true, widgets: ['zebra']})
@@ -53,7 +31,7 @@ $(document).ready(function() {
     datasetElement.addClass('mini-loading-dialog');
 
     $.ajax({
-      url: "<%= (url_for :controller => 'api', :action => 'feature', :output => 'csv').html_safe %>&id=" + uuid ,
+      url: "<%= (url_for :controller => 'tools', :action => 'table_feature', :format => 'html').html_safe %>&id=" + uuid ,
       global: false,
       dataType: 'text',
       success: function(data) {

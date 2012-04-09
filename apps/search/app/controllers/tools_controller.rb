@@ -3,10 +3,8 @@ class ToolsController < ApplicationController
   include ToolHelper
 
   respond_to :json, :xml
-  
-  def test
-    render :layout => false
-  end
+
+  caches_action :table_feature, :cache_path => Proc.new { |c| c.params }, :expires_in => 1.hours  
   
   def index
     @breadcrumb = ['Tools']
@@ -62,6 +60,13 @@ class ToolsController < ApplicationController
     @datasets = catalogue_instance.api_datasets(params)
   end
   
+  def table_feature
+    params[:output] = 'csv'
+
+    @feature_csv = catalogue_instance.api_feature_raw(params)
+    render :partial => 'table_feature'
+  end
+  
   def map
     @breadcrumb = ['Tools', 'Maps']
     @main_menu = 'we_tools'
@@ -79,14 +84,4 @@ class ToolsController < ApplicationController
     @main_menu = 'we_tools'
   end
   
-  def add_new_dataset
-    @id = params[:hid_last_cnt]
-    render :layout => false
-  end
-  
-  def add_new_dataset_map
-    @id = params[:hid_last_cnt]
-    render :layout => false
-  end
-
 end
