@@ -20,9 +20,13 @@ $(document).ready(function() {
   <div class="tab-menu">
     <%= (link_to 'Graphs', :controller => 'tools', :action => 'graph', :ids => params[:ids] ? params[:ids] : params[:id]).html_safe %>
   </div>
+<%
+=begin %>  
   <div class="tab-menu">
     <%= (link_to 'Tables', :controller => 'tools', :action => 'table', :ids => params[:ids] ? params[:ids] : params[:id]).html_safe %>
   </div>
+<%
+=end %>
   <div class="tab-menu">
     <%= link_to 'Build your own', :controller => 'tools', :action => 'developers' %>
   </div>
