@@ -15,7 +15,7 @@
 $(document).ready(function() {
   var table = $('#table-chart');
 
-  function idFromUrl(url) { return url.match(/id=([\w-]*)/)[1]; } 
+  function idFromUrl(url) { return url.match(/([\w-]*).html/)[1]; } 
   
   function drawTable(data) {
     table.html(data);
@@ -31,7 +31,7 @@ $(document).ready(function() {
     datasetElement.addClass('mini-loading-dialog');
 
     $.ajax({
-      url: "<%= (url_for :controller => 'tools', :action => 'table_feature', :format => 'html').html_safe %>&id=" + uuid ,
+      url: '<%= (url_for :controller => 'tools', :action => 'table_feature').html_safe %>' + '/' + uuid + '.html',
       global: false,
       dataType: 'text',
       success: function(data) {
