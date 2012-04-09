@@ -58,6 +58,11 @@
     }
     
     function drawWMS(colour, coordinates, datasetId) {
+      <% #Filter out datasets with invalid coordinate systems %>
+      if (Math.abs(coordinates.split(' ')[1]) > 180) {      
+        return disableDataset(datasetId);
+      }
+
       enableMapControl(datasetId);
       
       var wmsLayer = new OpenLayers.Layer.WMS(datasetId, <%= "'#{Rails.application.config.geoserver_address}/geoserver/gn/wms?service=WMS&version=1.1.0&request=GetMap&layers=gn:'".html_safe %> + datasetId,
