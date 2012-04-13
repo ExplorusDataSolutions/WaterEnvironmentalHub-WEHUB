@@ -47,16 +47,17 @@ class Feature
   
   def data(advanced_search_params=nil)
     filter_properties = filter_properties_from_params(advanced_search_params)
-
+        
     if is_data_source?('geoserver')
       geoserver_translator.data(uuid, filter_properties)
     elsif is_data_source?('catalogue')
       result = execute("SELECT * FROM #{tablename} LIMIT 1")[0]
       if result
         has_geom = result.keys.include?('the_geom')
-        column_names = result.keys & filter_properties if filter_properties && !filter_properties.empty?        
-        column_names = result.keys if !column_names || column_names.empty?
-        column_names.delete('the_geom')
+        column_names = result.keys & filter_properties if filter_properties && !filter_properties.empty?
+        column_names = result.keys if (!column_names || column_names.empty?) && !filter_properties
+
+        column_names.delete('the_geom') unless column_names.nil?
         if has_geom
           column_names = column_names.collect {|x| "\"#{x}\"" }.join(', ')
 
@@ -291,10 +292,10 @@ class Feature
   end
   
   def tablename
-    if is_data_source?('catalogue')
+    if is_data_source?('catalogue') || is_data_source?('geoserver')
       resolve_tablename
     else
-      raise ArgumentError, "Features of type base data don't have tables"
+      raise ArgumentError, "Features of type #{feature_source.name} data don't have tables"
     end
   end
     

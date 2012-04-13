@@ -62,8 +62,11 @@ class ToolsController < ApplicationController
   
   def table_feature
     params[:output] = 'csv'
+    if !params[:page]
+      params[:page] = { :start => 0, :size => 100 }
+    end
 
-    @feature_csv = catalogue_instance.api_feature_raw(params)
+    @feature_csv = catalogue_instance.api_feature_raw(params)    
     render :partial => 'table_feature'
   end
   

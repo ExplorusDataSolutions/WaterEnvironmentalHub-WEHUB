@@ -15,23 +15,46 @@
 $(document).ready(function() {
   var table = $('#table-chart');
 
-  function idFromUrl(url) { return url.match(/([\w-]*).html/)[1]; } 
-  
-  function drawTable(data) {
-    table.html(data);
+  var page = 0;
+  var columnName;
+  var direction = 'ASC';
+  $(document).bind('tablesorterMoveToNextPage', function() {
+    page = page + 1;
+    loadDataAndDrawTable($('[name=dataset]:checked').val(), page)
+  });
 
-    $('#table-chart')
-      .tablesorter({widthFixed: true, widgets: ['zebra']})
-      .tablesorterPager({container: $("#table-chart-pager"), positionFixed: false, size: $('.pagesize option:selected')[0].value});
-    $('#table-chart-pager').show();
-  }
+  $(document).bind('tablesorterMoveToPrevPage', function() {
+    page = page - 1;
+    if (page < 0) {
+      page = 0;
+    }
+    loadDataAndDrawTable($('[name=dataset]:checked').val(), page)
+  });
   
-  function loadDataAndDrawTable(uuid, wms) {
+  $(document).bind('sortStart', function(event) {
+    if (columnName && columnName == columnName) {
+      direction = (direction === 'DESC') ? 'ASC' : 'DESC';
+    } 
+    columnName = $(arguments[1]).text();
+    
+    loadDataAndDrawTable($('[name=dataset]:checked').val(), page, { by: columnName, direction: direction} )
+  });
+  
+  function idFromUrl(url) { return url.match(/([\w-]*).html/)[1]; } 
+    
+  function loadDataAndDrawTable(uuid, page, sort) {
+    var page = !page ? 0 : page;
+    var size = 100;
+    var sortQuery = ''
+    if (sort) {
+      sortQuery = '&sort[by]=' + sort.by + '&sort[direction]=' + sort.direction;
+    }
+    
     var datasetElement = $('.datasets.' + uuid);
     datasetElement.addClass('mini-loading-dialog');
 
     $.ajax({
-      url: '<%= (url_for :controller => 'tools', :action => 'table_feature').html_safe %>' + '/' + uuid + '.html',
+      url: '<%= (url_for :controller => 'tools', :action => 'table_feature').html_safe %>' + '/' + uuid + '.html' + '?page[start]=' + page + '&page[size]=' + size + sortQuery,
       global: false,
       dataType: 'text',
       success: function(data) {
@@ -42,7 +65,12 @@ $(document).ready(function() {
           checkbox.attr('checked', true).removeAttr('disabled');
           datasetElement.removeClass('mini-loading-dialog');
           
-          drawTable(data);
+          table.html(data);
+          
+          table
+            .tablesorter({widthFixed: true, widgets: ['zebra']})
+            .tablesorterPager({container: $("#table-chart-pager"), positionFixed: false, size: 100});
+          $('#table-chart-pager').show();
 
           $('form[name=download] [name=ids]').val($('[name=dataset]:checked').val());
         }
@@ -65,11 +93,11 @@ $(document).ready(function() {
   $('.datasets').removeClass('mini-loading-dialog');
   $('form[name=datasets] [name=dataset]').click(function(event) {
     $('[name=datasets] [name=dataset]').attr('checked', false);
-    loadDataAndDrawTable(event.target.value, $(event.target).attr('wms'));
+    loadDataAndDrawTable(event.target.value);
   });
   
   $('form[name=datasets] [name=dataset]:checked').each(function() {
-    loadDataAndDrawTable(this.value, $(this).attr('wms'));
+    loadDataAndDrawTable(this.value);
   });
   
   if ($('form[name=datasets] [name=dataset]:checked').length === 0) {
@@ -109,17 +137,29 @@ $(document).ready(function() {
 
       <div id="table-chart-pager" class="pager" style="display: none;">
         <form>
+<%
+=begin %>
           <img src="/images/table-sorter-pager-first.png" class="first"/>
+<%
+=end %>
           <img src="/images/table-sorter-pager-prev.png" class="prev"/>
+<%
+=begin %>
           <input type="text" class="pagedisplay"/>
+<%
+=end %>
           <img src="/images/table-sorter-pager-next.png" class="next"/>
+<%
+=begin %>
           <img src="/images/table-sorter-pager-last.png" class="last"/>
           <select class="pagesize">
-          <% 10.times do |i| %>
-            <% option_value = (i+1)*10 %>
+          <% 5.times do |i| %>
+            <% option_value = (i+1)*100 %>
             <%= "<option value='#{option_value}'>#{option_value}</option>".html_safe -%>
           <% end %>
           </select>
+<%
+=end %>          
         </form>
       </div>
       

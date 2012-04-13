@@ -10,11 +10,9 @@
 <% end %>
 <%= "<tbody>".html_safe -%>
 <% CSV.parse(@feature_csv, { :headers => true }).each_with_index do |row, i| %>
-  <% if i > 0 %>
 <%= "<tr>".html_safe -%>  
 <% row.each do |item| %><%= "<td>#{item[1]}</td>".html_safe -%><% end %>
 <%= "</tr>".html_safe -%> 
-  <% end %>   
 <% end %>
 <%= "</tbody>".html_safe -%>
 </table>

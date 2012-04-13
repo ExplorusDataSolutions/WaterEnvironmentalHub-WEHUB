@@ -713,22 +713,21 @@
                     // this is to big, perhaps break it out?
                     $headers.click(
 
-                    function (e) {
+                    function (e) {    
                         var totalRows = ($this[0].tBodies[0] && $this[0].tBodies[0].rows.length) || 0;
                         if (!this.sortDisabled && totalRows > 0) {
                             // Only call sortStart if sorting is
                             // enabled.
-                            $this.trigger("sortStart");
+                            $this.trigger("sortStart", [this]);
                             // store exp, for speed
                             var $cell = $(this);
                             // get current column index
                             var i = this.column;
                             // get current column sort order
                             this.order = this.count++ % 2;
-							// always sort on the locked order.
-							if(this.lockedOrder) this.order = this.lockedOrder;
-							
-							// user only whants to sort on one
+							              // always sort on the locked order.
+							              if(this.lockedOrder) this.order = this.lockedOrder;
+							              // user only whants to sort on one
                             // column
                             if (!e[config.sortMultiSortKey]) {
                                 // flush the sort list
@@ -770,7 +769,7 @@
                                 appendToTable(
 	                                $this[0], multisort(
 	                                $this[0], config.sortList, cache)
-								);
+                								);
                             }, 1);
                             // stop normal event by returning false
                             return false;

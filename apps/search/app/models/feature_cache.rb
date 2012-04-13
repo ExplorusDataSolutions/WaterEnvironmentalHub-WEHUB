@@ -4,17 +4,18 @@ class FeatureCache
 
   include UuidHelper
   
-  attr_accessor :format, :cache, :uuid 
+  attr_accessor :format, :cache, :memory_cache, :uuid 
   
-  def initialize(cache="")
+  def initialize(cache="", memory_cache={})
     @cache = cache
+    @memory_cache = memory_cache
   end
 
   def filename(uuid)
     "#{cache}/#{uuid}.properties.csv"
   end  
-  
-  def data(format, uuid, properties=nil)
+    
+  def data(format, uuid, properties=nil, sort_by=nil)
     if properties
       properties = properties.split(',')
     end
@@ -23,9 +24,7 @@ class FeatureCache
     end
 
     begin  
-      if format == 'csv'
-          File.open(filename(uuid), "r").read    
-      elsif format == 'json'
+      if format == 'json'
         build_geojson_from_csv(filename(uuid), properties)
       else
         return nil

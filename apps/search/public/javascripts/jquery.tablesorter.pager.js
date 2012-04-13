@@ -122,7 +122,7 @@
 			};
 			
 			this.defaults = {
-				size: 10,
+				size: 100,
 				offset: 0,
 				page: 0,
 				totalRows: 0,
@@ -151,23 +151,27 @@
 					
 					config.size = parseInt($(".pagesize",pager).val());
 					
-					$(config.cssFirst,pager).click(function() {
+					$(config.cssFirst,pager).unbind().click(function() {
 						moveToFirstPage(table);
+//            $(document).trigger('tablesorterMoveToFirstPage');
 						return false;
 					});
-					$(config.cssNext,pager).click(function() {
-						moveToNextPage(table);
+					$(config.cssNext,pager).unbind().click(function() {
+//						moveToNextPage(table);
+            $(document).trigger('tablesorterMoveToNextPage');
 						return false;
 					});
-					$(config.cssPrev,pager).click(function() {
-						moveToPrevPage(table);
+					$(config.cssPrev,pager).unbind().click(function() {
+//						moveToPrevPage(table);
+            $(document).trigger('tablesorterMoveToPrevPage');
 						return false;
 					});
-					$(config.cssLast,pager).click(function() {
+					$(config.cssLast,pager).unbind().click(function() {
 						moveToLastPage(table);
+//            $(document).trigger('tablesorterMoveToLastPage');
 						return false;
 					});
-					$(config.cssPageSize,pager).change(function() {
+					$(config.cssPageSize,pager).unbind().change(function() {
 						setPageSize(table,parseInt($(this).val()));
 						return false;
 					});

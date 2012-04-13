@@ -184,14 +184,7 @@ class CatalogueTranslator
   end
 
   def api_feature_raw(params)  
-    response = nil
-    if params[:output] == 'csv'
-      response = feature_cache.data('csv', params[:id])
-    end
-    if !response
-      response = get("#{api_uri}/feature?#{params.to_query}")
-    end
-    response
+    get("#{api_uri}/feature?#{params.to_query}")
   end
   
   def api_feature(params)
