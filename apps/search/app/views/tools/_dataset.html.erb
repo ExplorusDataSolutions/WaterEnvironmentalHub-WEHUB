@@ -17,7 +17,7 @@
     </label>
   </div>
 </div>
-<% if show_dataset_properties %>
+<% if show_dataset_properties && dataset.properties %>
 <select class="select-box-2 property-selector <%= "#{dataset.id}" %>">
   <option></option>
   <% dataset.properties.split(',').each do |prop| %>

@@ -90,24 +90,23 @@
 
     <% 
       @datasets.each_with_index do |dataset, i|
+        if dataset && dataset.coordinates
+          if dataset.wms == 'true'
     %>
-      <% puts dataset.wms %>
-      <% if dataset.wms == 'true' %>
     <%= "drawWMS('#{css_colour(i)[:code]}', '#{dataset.coordinates.gsub(',', ' ')}', '#{dataset.id}');" %>
-      <% else %>    
+       <% else %>    
     $.ajax({
       url: "<%= url_for :controller => 'api', :action => 'feature', :id => dataset.id, :output => 'json' %>",
       global: false,
       success: function(data) { <%= "drawJSON(data,'#{css_colour(i)[:code]}', '#{dataset.coordinates.gsub(',', ' ')}', '#{dataset.id}');" -%> },
       error: function(data) { disableDataset('<%= dataset.id %>'); }
       
-    });
-      
-      <% end %>
+    });      
     <%
+          end
+        end
       end unless !@datasets
-    %>
-    
+    %>    
 
     function matchesLayer(layer, ids) {
       if (layer && layer['name']) {
