@@ -268,7 +268,7 @@ $(document).ready(function() {
       
       <div class="float-left width-165 title">Abstract</div>
       <div class="float-left width-500 text">
-        <%= @dataset.description_with_html %>
+        <%= @dataset.description_with_html.html_safe %>
         <% if !@dataset.source.nil? %>
         <br />
         <% 
