@@ -47,8 +47,17 @@ class Dataset < ActiveRecord::Base
     xml.instruct! unless options[:skip_instruct]
     xml.dataset do 
       xml.tag!(:date, created_at)
-      xml.tag!(:description, description.gsub(/<(.*?)>/, ' ')) unless description.nil?
-      xml.tag!(:description_with_html, description) unless description.nil?
+      if !description.nil?
+        xml.tag!(:description, description.gsub(/<(.*?)>/, ' '))
+
+        description_with_html = description
+        description_with_html.gsub!(/\r\n?/, '<br />')
+        description_with_html.gsub!(/[ ]{2,}\+?/, '')
+        description_with_html.gsub!(/>\+?/, '>')
+        description_with_html.gsub!(/\n?/, '')
+
+        xml.tag!(:description_with_html, description_with_html)
+      end    
       if !feature_period.nil?
         xml.tag!(:period, feature_period)
       end
