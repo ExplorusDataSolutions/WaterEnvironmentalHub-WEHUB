@@ -2,7 +2,7 @@ require 'geonetwork_translator.rb'
 require 'catalogue_translator.rb'
 
 class Search
-  attr_accessor :results, :query, :base_data, :observation_data
+  attr_accessor :results, :query, :base_data, :observation_data, :all_results
   
   def geonetwork
     @geonetwork
@@ -17,10 +17,12 @@ class Search
 
     @catalogue = CatalogueTranslator.new
     
-    @results = geonetwork.search_results(query)
-    @base_data = geonetwork.search_results_by_groups(["20", "21"])
-    @observation_data = geonetwork.search_results_by_groups(["22", "23"])
-    @query = query
+    if query
+      @results = geonetwork.search_results(query)
+      @base_data = geonetwork.search_results_by_groups(["20", "21"])
+      @observation_data = geonetwork.search_results_by_groups(["22", "23"])
+      @query = query
+    end
   end
   
   def do_query(keywords, target='public', user_id, group_ids)

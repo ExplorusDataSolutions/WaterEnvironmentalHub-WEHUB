@@ -22,10 +22,12 @@
     var pages = <%= @pages %>;
     var pathname = window.location.pathname
     var page = getPage();
-
-    var pagePrevRef = $('.page-previous');
+    var pageTabs = 7;
+    
+    var pagePrevRef = $('.page-previous');    
     if (page === 1) {
       pagePrevRef.addClass('disabled');
+      pagePrevRef.click(function(event) { event.preventDefault(); });
     } else {
       pagePrevRef.removeClass('disabled');
       pagePrevRef.attr('href', getPagePathname(page - 1));
@@ -34,6 +36,7 @@
     var pageNextRef = $('.page-next');
     if (page === pages) {
       pageNextRef.addClass('disabled');
+      pageNextRef.click(function(event) { event.preventDefault(); });      
     } else {
       pageNextRef.removeClass('disabled');
       pageNextRef.attr('href', getPagePathname(page + 1));
@@ -41,25 +44,37 @@
     
     var pageTabFragment = $('<a class="page-tab" href=""></a>');
 
-    var pageTabs = 7;
-    if (page > pageTabs/2) {
+    if (pages < pageTabs) {
       for(var i = pageTabs ; i > 0 ; i--) {
-        var tabPage = page - 4 + i;
-        if (i === 4) {
-          pagePrevRef.after(pageTabFragment.clone().attr('href', getPagePathname(tabPage)).addClass('current').text(tabPage));
-        } else if (tabPage > 0 && tabPage < pages) {
-          pagePrevRef.after(pageTabFragment.clone().attr('href', getPagePathname(tabPage)).text(tabPage));
+        var tabPage = page - 2 + i;
+        var fragment = pageTabFragment.clone().attr('href', getPagePathname(i)).text(i);
+        if (i == page) {
+          fragment.addClass('current');
         }
-      }
-    } else {
-      for(var i = pageTabs ; i > 0 ; i--) {
-        var tabPage = page - 1 + i;
-        if (i === 1) {
-          pagePrevRef.after(pageTabFragment.clone().attr('href', getPagePathname(tabPage)).addClass('current').text(tabPage));
-        } else if (tabPage > 0 && tabPage < pages) {
-          pagePrevRef.after(pageTabFragment.clone().attr('href', getPagePathname(tabPage)).text(tabPage));
+        if (i <= pages) {
+          pagePrevRef.after(fragment);
         }
       }    
+    } else {
+      if (page > pageTabs/2) {
+        for(var i = pageTabs ; i > 0 ; i--) {
+          var tabPage = page - 4 + i;
+          if (i === 4) {
+            pagePrevRef.after(pageTabFragment.clone().attr('href', getPagePathname(tabPage)).addClass('current').text(tabPage));
+          } else if (tabPage > 0 && tabPage < pages) {
+            pagePrevRef.after(pageTabFragment.clone().attr('href', getPagePathname(tabPage)).text(tabPage));
+          }
+        }
+      } else {
+        for(var i = pageTabs ; i > 0 ; i--) {
+          var tabPage = page - 1 + i;
+          if (i === 1) {
+            pagePrevRef.after(pageTabFragment.clone().attr('href', getPagePathname(tabPage)).addClass('current').text(tabPage));
+          } else if (tabPage > 0 && tabPage < pages) {
+            pagePrevRef.after(pageTabFragment.clone().attr('href', getPagePathname(tabPage)).text(tabPage));
+          }
+        }
+      }
     }
   });
 </script>

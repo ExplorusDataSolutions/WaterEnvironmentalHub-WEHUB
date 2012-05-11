@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
   
   def search_instance
     if @search_instance.nil?
-      @search_instance = Search.new(Rails.application.config.geonetwork_address, Rails.cache)
+      @search_instance = Search.new(Rails.application.config.geonetwork_address, Rails.cache, nil)
     end
     @search_instance
   end

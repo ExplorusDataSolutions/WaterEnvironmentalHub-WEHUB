@@ -1,3 +1,4 @@
+<% if dataset %>
 <% cache "search_dataset_#{dataset.uuid}" do %>
 <div class="search-result-each search-result-each-box dataset <%= dataset.uuid %>">
   <div class="search-checkbox">
@@ -31,7 +32,7 @@
       <span><%= dataset.period %></span><br />
     <% end %>
     <% if dataset.keywords %>
-      <span class="head">Number of Observed Properties: </span><span><%= dataset.keywords.scan(/,/).count %></span><br />
+      <span class="head">Number of Observed Properties: </span><span><%= dataset.keywords.scan(/,/).count + 1 %></span><br />
       <span class="head">Features: </span><span>
         <%= more_markup(dataset.keywords, 120).html_safe -%>
       </span><br />
@@ -64,4 +65,5 @@
   <div class="clear"></div>
 </div>
 <div class="clear"></div>
+<% end %>
 <% end %>

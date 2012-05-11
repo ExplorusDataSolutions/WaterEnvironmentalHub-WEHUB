@@ -13,6 +13,10 @@ class GeoNetworkTranslator
   def cache_key(query)
     "search_results_#{query}"
   end
+  
+  def cookies_cache_key
+    "search_cookies"
+  end
 
   def search_results_by_groups(group_ids)
     results = nil
@@ -35,12 +39,18 @@ class GeoNetworkTranslator
     results 
   end
   
-  def search_results(query)
+  def search_results(query, request='auto')
     results = nil
     if cache.exist?(cache_key(query))
       results = cache.fetch(cache_key(query))
-    else  
-      response = post("xml.search", "<request><any>#{query}</any></request>")
+    else 
+      if query == 'all'
+        response = post("xml.search", "<request><any>#{query}</any></request>")
+      elsif request == 'uuid'
+        response = post("xml.search", "<request><uuid>#{query}</uuid></request>")
+      else
+        response = post("xml.search", "<request><abstract>#{query}</abstract></request>")
+      end
       search_terms = response.body
   
       results = translate_to_search_results(search_terms)
@@ -54,7 +64,7 @@ class GeoNetworkTranslator
   
     bounds = ''
     if ((south && !south.empty?) && (east && !east.empty?) && (north && !north.empty?) && (west && !west.empty?)) 
-      bounds = "<eastBL>#{east}</eastBL><southBL>#{south}</southBL><northBL>#{north}</northBL><westBL>#{west}</westBL>"
+      bounds = "<eastBL>#{east}</eastBL><southBL>#{south}</southBL><northBL>#{north}</northBL><westBL>#{west}</westBL><relation>overlaps</relation><sortBy>relevance</sortBy><attrset>geo</attrset>"
     end
     
     date = ''
@@ -69,7 +79,7 @@ class GeoNetworkTranslator
     search_terms = nil
     
     begin    
-      response = post("xml.search", "<request><any>#{query}</any>#{bounds}#{date}</request>")  
+      response = post("xml.search", "<request><abstract>#{query}</abstract>#{bounds}#{date}</request>")  
       search_terms = response.body
     rescue
     end
@@ -82,7 +92,7 @@ class GeoNetworkTranslator
     if cache.exist?(cache_key(id))
       result = cache.fetch(cache_key(id))
     else
-      result = search_results(id).first
+      result = search_results(id, 'uuid').first
 
       cache.write(cache_key(id), result)
     end    
@@ -137,7 +147,7 @@ class GeoNetworkTranslator
         end
         
         if !keywords.empty?
-          result.properties = keywords.join(', ').chop!
+          result.properties = keywords.join(', ')
         end
       end
       
@@ -146,24 +156,29 @@ class GeoNetworkTranslator
     result    
   end
   
-  def post(uri, xmlRequest)
-    if @cookies == nil && uri != "xml.user.login"
-      authenticate
+  def post(uri, xmlRequest, depth=0)
+    if !cache.exist?(cookies_cache_key) && uri != "xml.user.login"
+      cache.write(cookies_cache_key, authenticate)
     end
-    puts xmlRequest
+    puts "GeoNetwork request: #{xmlRequest}"
     url = URI.parse("#{server_address}/geonetwork/srv/en/#{uri}")
     request = Net::HTTP::Post.new(url.path)
     request.body = "<?xml version='1.0' encoding='UTF-8'?>#{xmlRequest}"
     request.content_type = "text/xml"
-    request['cookie'] = @cookies
+    request['cookie'] = cache.fetch(cookies_cache_key)
     response = Net::HTTP.start(url.host, url.port) {|http| http.request(request)}
     
     check_response(response)
-    
-    response
+
+    if !response.body.match(/summary count="0"/).nil? && depth == 0
+      cache.delete(cookies_cache_key)
+      post(uri, xmlRequest, depth+1)
+    else  
+      response
+    end
   end
 
-  def check_response(response)
+  def check_response(response)  
     case response
     when Net::HTTPSuccess, Net::HTTPRedirection
     else
@@ -177,11 +192,7 @@ class GeoNetworkTranslator
     
     response = post("xml.user.login", "<request><username>#{username}</username><password>#{password}</password></request>")
     
-    @cookies = response['set-cookie']
+    response['set-cookie']
   end
-  
-  def refresh
-#    cache.clear()
-  end
-  
+    
 end

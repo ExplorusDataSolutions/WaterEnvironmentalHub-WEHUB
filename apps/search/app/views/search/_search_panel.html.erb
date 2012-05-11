@@ -30,8 +30,9 @@
       var action = $.url($('form').attr('action')).attr('path');      
       var params = '?keywords=' + $('[name=query]').val() + '&datasets=' + datasets.join(',') + '&type=' + $('[name=type]').val()
       if ($('[name=type]').val() == 'advanced') {
-        params += '&from=' + $('[name=date_start]').val() + '&to=' + $('[name=date_end]').val()
+        params += '&from=' + $('[name=date_start]').val() + '&to=' + $('[name=date_end]').val();
         params += '&south=' + $('[name="bounding_box[south]"]').val() + '&east=' + $('[name="bounding_box[east]"]').val() + '&north=' + $('[name="bounding_box[north]"]').val() + '&west=' + $('[name="bounding_box[west]"]').val();
+        params += '&relation=' + $('[name="bounding_box[relation]"]').val();
       }
       
       return action + params;
@@ -75,7 +76,7 @@
     });
 
     function searchParam(param) {
-      var inParams = new RegExp(param +'=([\\w-+/]*)', 'i').exec(window.location.search)
+      var inParams = new RegExp(param +'=([\\w-+/\.]*)', 'i').exec(window.location.search)
       if (inParams && inParams.length === 2) {
         return inParams[1];        
       }
@@ -90,8 +91,11 @@
 
     if (searchParam('type') === 'advanced') {
       searchMode.trigger('click');
-      $('#box_selector').trigger('click');
+      if (searchParam('north') !== '') { 
+        $('#box_selector').trigger('click');
+      }
       setBoundingBox(searchParam('north'), searchParam('east'), searchParam('south'), searchParam('west'));
+      $('[name="bounding_box[relation]"]').val(searchParam('relation'));
       $('#date_start').val(searchParam('from'));
       $('#date_end').val(searchParam('to'));      
     }
@@ -141,7 +145,7 @@
 	  <div class="bounding-box-text" id="box_selector">
 		  <a href="#">Bounding Box</a>
 	  </div>
-	  <div id="box_display" style="display:none;">
+	  <div id="box_display" style="display:none;" class="bounding-box-selector">
 	  <%= fields_for :bounding_box do |bbox| %>  
 	    <table>
 	      <tr>
@@ -153,8 +157,11 @@
 	      <tr>
 	        <td></td><td><%= bbox.text_field :south, :size => 4 %></td><td></td>
 	      </tr>
-	    </table>
-	  <% end %>
+	      <tr>
+	        <td colspan="2"><%= bbox.select :relation, options_for_select(['equal', 'overlaps', 'encloses', 'fullyOutsideOf', 'intersection', 'crosses', 'touches', 'within' ], 'overlaps') %></td>
+	      </tr>
+	    </table>	    
+	  <% end %>	  
 	  </div>
   </div>
 

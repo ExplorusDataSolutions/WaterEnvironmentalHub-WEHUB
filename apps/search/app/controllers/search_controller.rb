@@ -41,6 +41,7 @@ class SearchController < ApplicationController
       results = @search.results    
     end
     
+    @all_results_count = @search.results.count
     page = params[:page]
     if page
       page = Integer(page)-1
@@ -51,7 +52,7 @@ class SearchController < ApplicationController
       @current = 1
     end
     
-    @pages = Integer(results.count / page_size)
+    @pages = (Float(results.count) / Float(page_size)).ceil
   end
   
   def page_size

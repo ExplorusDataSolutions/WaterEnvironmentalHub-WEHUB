@@ -51,17 +51,12 @@
       });
     }        
 
-    <%
-    if !@search.results.empty? 
-    %>
     loadMap();
-    <%
-    end
-    %>
+
     <% 
     if @search.results && !@search.results.empty? 
       @search.results.each_with_index do |result, index| 
-        if result.coordinates
+        if result && result.coordinates
           coords = result.coordinates.split(',') 
           if coords.length == 2 && (coords[0].scan(/ /).empty? || coords[1].scan(/ /).empty?)
           %>
@@ -77,7 +72,7 @@
 </script>
 
 <div class="top-search-result">
-	<span class="grey">Search Result:</span>&nbsp;<span class="black"><%= @search.query %></span>
+	<span class="grey"><%= @all_results_count %> results returned for</span>&nbsp;<span class="black"><%= @search.query %></span>
 </div>
 <div class="clear height-10"></div>
 
@@ -86,7 +81,7 @@
 <div class="search-center-container">
 	<div id="map" style="width:577px;"></div>
 	<div class="clear height-15"></div>
-	<div class="dashed-header"><h2>Search results:</h2></div>
+	<div class="dashed-header"><h2>Search results</h2></div>
 	<div class="clear height-15"></div>
 	
   <%= render(:partial => '/shared/dataset', :collection => @search.results) || render('/shared/no_results') %>
@@ -95,7 +90,7 @@
   
   <div class="clear height-10"></div>
 
-  <%= render '/shared/pagination' %>
+  <%= render '/shared/pagination' unless @all_results_count < 10 %>
 
   <%= render '/shared/download_panel_bottom' %>
 	  
