@@ -168,22 +168,25 @@ class GeoNetworkTranslator
     request['cookie'] = cache.fetch(cookies_cache_key)
     response = Net::HTTP.start(url.host, url.port) {|http| http.request(request)}
     
-    check_response(response)
+    case response
+    when Net::HTTPSuccess, Net::HTTPRedirection
+    when Net::HTTPForbidden
+      # try authenticating again
+      if depth == 0
+        cache.delete(cookies_cache_key)
+        post(uri, xmlRequest, depth+1)
+      end
+    else
+      puts "Geonetwork error: #{response.body}"
+      response.error!  
+    end
 
     if !response.body.match(/summary count="0"/).nil? && depth == 0
+      # sometimes we get an empty response when we're not authenticated, so... try authenticating again    
       cache.delete(cookies_cache_key)
       post(uri, xmlRequest, depth+1)
     else  
       response
-    end
-  end
-
-  def check_response(response)  
-    case response
-    when Net::HTTPSuccess, Net::HTTPRedirection
-    else
-      puts response.body
-      response.error!  
     end
   end
   
