@@ -24,7 +24,13 @@ class Search
       @query = query
     end
   end
-  
+
+  def load_browse_data  
+      @base_data = geonetwork.search_results_by_groups(["20", "21"])
+      @observation_data = geonetwork.search_results_by_groups(["22", "23"])
+      self
+  end
+
   def do_query(keywords, target='public', user_id, group_ids)
     if target.nil?
       target = 'public'

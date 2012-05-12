@@ -46,12 +46,13 @@ class CatalogueController < ApplicationController
     @breadcrumb = ['Discover Our Data', 'Browse']
     @main_menu = 'we_catalogue'
     
-    query = 'all'
-    if params[:query] != nil
-      query = params[:query]
-    end
+    @search = search_instance.load_browse_data
 
-    @search = search_instance.do_query(query, nil, nil)
+    @base_data = build_groups(@search.base_data.dup)
+
+    @observation_data = build_groups(@search.observation_data.dup)
+
+    @search = search_instance.do_query('all', nil, nil)
     results = @search.results
     
     page = params[:page]
@@ -65,10 +66,6 @@ class CatalogueController < ApplicationController
     end
     
     @pages = Integer(results.count / page_size)    
-      
-    @base_data = build_groups(@search.base_data.dup)
-
-    @observation_data = build_groups(@search.observation_data.dup)
   end
   
   def page_size
