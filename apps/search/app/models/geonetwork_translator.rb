@@ -33,7 +33,7 @@ class GeoNetworkTranslator
       search_terms = response.body
       
       results = translate_to_search_results(search_terms)
-      cache.write(cache_key(query), results)
+      cache.write(cache_key(query), results) unless !results || results.empty?
     end   
     
     results 
@@ -54,7 +54,7 @@ class GeoNetworkTranslator
       search_terms = response.body
   
       results = translate_to_search_results(search_terms)
-      cache.write(cache_key(query), results)
+      cache.write(cache_key(query), results) unless !results || results.empty?
     end    
 
     results
@@ -94,7 +94,7 @@ class GeoNetworkTranslator
     else
       result = search_results(id, 'uuid').first
 
-      cache.write(cache_key(id), result)
+      cache.write(cache_key(id), result) unless !result
     end    
     
     result
@@ -151,7 +151,7 @@ class GeoNetworkTranslator
         end
       end
       
-      cache.write(cache_key(result.id), result)
+      cache.write(cache_key(result.id), result) unless !result
     end
     result    
   end
