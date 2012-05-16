@@ -2,7 +2,7 @@ require 'geonetwork_translator.rb'
 require 'catalogue_translator.rb'
 
 class Search
-  attr_accessor :results, :query, :base_data, :observation_data, :all_results
+  attr_accessor :results, :query, :properties, :base_data, :observation_data, :all_results
   
   def geonetwork
     @geonetwork
@@ -12,7 +12,7 @@ class Search
     @catalogue
   end
 
-  def initialize(geonetwork_address='http://localhost:8080', cache={}, query='all')
+  def initialize(geonetwork_address='http://localhost:8080', cache={}, query='')
     @geonetwork = GeoNetworkTranslator.new(geonetwork_address, cache)
 
     @catalogue = CatalogueTranslator.new
@@ -31,7 +31,7 @@ class Search
       self
   end
 
-  def do_query(keywords, target='public', user_id, group_ids)
+  def do_query(keywords, target='public', user_id, group_ids, geonetwork_target)
     if target.nil?
       target = 'public'
     end
@@ -48,7 +48,7 @@ class Search
     end
 
     if target.scan(/public/).any?
-      @results |= geonetwork.search_results(keywords)
+      @results |= geonetwork.search_results(keywords, geonetwork_target)
     end
 
     @query = keywords

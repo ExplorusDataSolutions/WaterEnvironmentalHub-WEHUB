@@ -7,15 +7,18 @@ class SearchController < ApplicationController
   def index
     @breadcrumb = ['Discover Our Data', 'Search']
     @main_menu = 'we_catalogue'
-  
-    query = 'all'
-    if !(params[:query].nil? || params[:query].empty?)
+    
+    query = ''
+    target = 'auto'
+    if !(params[:query].nil? || params[:query].empty?) && !(params[:query] == 'search by keywords')
       query = params[:query]
     end
-    if !(params[:keywords].nil? || params[:keywords].empty?)
-      if query == 'all'
-        query = params[:keywords]
-      end
+    if !(params[:keywords].nil? || params[:keywords].empty?) && !(params[:keywords] == 'search by keywords')
+      query = params[:keywords]
+    end
+    if !(params[:properties].nil? || params[:properties].empty?) && !(params[:properties] == 'search by feature properties')  
+      query = params[:properties]
+      target = 'properties'
     end
     
     if (params[:type].nil? || params[:type] == 'simple')
@@ -34,7 +37,7 @@ class SearchController < ApplicationController
         end
       end
 
-      @search = search_instance.do_query(query, params[:datasets], user_id, group_ids)  
+      @search = search_instance.do_query(query, params[:datasets], user_id, group_ids, target)  
       results = @search.results
     else     
       @search = search_instance.do_query_advanced(query, params[:date_start], params[:date_end], params[:south], params[:east], params[:north], params[:west])
@@ -43,7 +46,7 @@ class SearchController < ApplicationController
     
     @all_results_count = @search.results.count
     page = params[:page]
-    if page
+    if page && results
       page = Integer(page)-1
       @search.results = results[(page*page_size)..(page*page_size+page_size-1)]
       @current = page+1

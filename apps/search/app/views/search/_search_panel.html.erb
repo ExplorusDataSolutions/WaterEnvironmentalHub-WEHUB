@@ -16,6 +16,12 @@
       $('[name=query]').val(keywords);
     }
 
+    var properties = $.url(window.location).param('properties');
+    if (properties) {
+      $('[name=properties]').val(properties);
+    }
+
+
     function buildFormAction() {
       var datasets = []
       $('[name=datasets]').each(function(i,e) { 
@@ -28,7 +34,7 @@
       }
 
       var action = $.url($('form').attr('action')).attr('path');      
-      var params = '?keywords=' + $('[name=query]').val() + '&datasets=' + datasets.join(',') + '&type=' + $('[name=type]').val()
+      var params = '?keywords=' + $('[name=query]').val() + '&datasets=' + datasets.join(',') + '&type=' + $('[name=type]').val() + '&properties=' + $('[name=properties]').val();
       if ($('[name=type]').val() == 'advanced') {
         params += '&from=' + $('[name=date_start]').val() + '&to=' + $('[name=date_end]').val();
         params += '&south=' + $('[name="bounding_box[south]"]').val() + '&east=' + $('[name="bounding_box[east]"]').val() + '&north=' + $('[name="bounding_box[north]"]').val() + '&west=' + $('[name="bounding_box[west]"]').val();
@@ -112,6 +118,12 @@
 	<div class="text-shade-repeat-205">
 	  <%= f.text_field :query, :name => 'query' %>
 	</div>
+	<div class="text-shade-right"></div>
+	<div class="clear height-10"></div>
+	<div class="text-shade-left"></div>
+        <div class="text-shade-repeat-205">
+	  <%= f.text_field :properties, :name => 'properties' %>
+        </div>
 	<div class="text-shade-right"></div>
 	<div class="clear height-10"></div>
 

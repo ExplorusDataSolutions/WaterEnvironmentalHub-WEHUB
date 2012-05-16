@@ -48,8 +48,11 @@ class GeoNetworkTranslator
         response = post("xml.search", "<request><any>#{query}</any></request>")
       elsif request == 'uuid'
         response = post("xml.search", "<request><uuid>#{query}</uuid></request>")
+      elsif request == 'properties'
+        response = post("xml.search", "<request><themekey>#{query}</themekey></request>")
       else
         response = post("xml.search", "<request><abstract>#{query}</abstract></request>")
+
       end
       search_terms = response.body
   

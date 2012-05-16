@@ -31,8 +31,18 @@
     <%#Focus the cursor on the first form input %>
     <script>
       $(document).ready(function() {
-        $('[name=query]').focus(function() { if (this.value == 'all') { $(this).val(''); }});
-        $('[name=query]').blur(function() { if (this.value == '') { $(this).val('all'); }});
+        var defaultKeywordText = 'search by keywords';
+        $('[name=query]').focus(function() { if (this.value == defaultKeywordText) { $(this).val(''); }});
+        $('[name=query]').blur(function() { if (this.value == '') { $(this).val(defaultKeywordText); }});
+        if ($('[name=query]').val() === '') {
+          $('[name=query]').val(defaultKeywordText);
+        }        
+        var defaultPropertiesText = 'search by feature properties';
+        $('[name=properties]').focus(function() { if (this.value == defaultPropertiesText) { $(this).val(''); }});
+        $('[name=properties]').blur(function() { if (this.value == '') { $(this).val(defaultPropertiesText); }});
+        if ($('[name=properties]').val() === '') {
+          $('[name=properties]').val(defaultPropertiesText);
+        }        
         
         $('#loading-dialog')
         .hide()  // hide it initially
