@@ -1,5 +1,7 @@
 class SearchController < ApplicationController
 
+  include SearchHelper
+  
   caches_action :index, 
     :if => Proc.new { (params[:datasets].nil? && params[:type].nil?) || (params[:datasets] == 'public' && params[:type] == 'simple') || (params[:datasets].nil? && params[:type] == 'simple') || (params[:type].nil? && params[:datasets] == 'public') }, 
     :cache_path => Proc.new { "?keywords=#{params[:keywords] ? params[:keywords] : (params[:query] ? params[:query] : 'all')}&page=#{params[:page] ? params[:page] : 0}" }
@@ -9,16 +11,20 @@ class SearchController < ApplicationController
     @main_menu = 'we_catalogue'
     
     query = ''
-    target = 'auto'
-    if !(params[:query].nil? || params[:query].empty?) && !(params[:query] == 'search by keywords')
-      query = params[:query]
-    end
-    if !(params[:keywords].nil? || params[:keywords].empty?) && !(params[:keywords] == 'search by keywords')
-      query = params[:keywords]
-    end
-    if !(params[:properties].nil? || params[:properties].empty?) && !(params[:properties] == 'search by feature properties')  
-      query = params[:properties]
-      target = 'properties'
+    search_target = ''
+    if params[:keywords] || params[:query] || params[:properties]
+      if !param_default(params[:query], constants.text.search)
+        query = params[:query]
+      end
+      if !param_default(params[:keywords], constants.text.search)
+        query = params[:keywords]
+      end        
+
+      if !param_default(params[:properties], constants.text.properties)
+        query = { :properties => params[:properties] }
+        query.store(:keywords, params[:keywords]) if !param_default(params[:keywords], constants.text.search)
+        search_target = 'properties'
+      end
     end
     
     if (params[:type].nil? || params[:type] == 'simple')
@@ -37,7 +43,7 @@ class SearchController < ApplicationController
         end
       end
 
-      @search = search_instance.do_query(query, params[:datasets], user_id, group_ids, target)  
+      @search = search_instance.do_query(query, params[:datasets], user_id, group_ids, search_target)
       results = @search.results
     else     
       @search = search_instance.do_query_advanced(query, params[:date_start], params[:date_end], params[:south], params[:east], params[:north], params[:west])

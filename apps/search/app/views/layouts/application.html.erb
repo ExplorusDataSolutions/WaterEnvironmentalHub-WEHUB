@@ -31,13 +31,13 @@
     <%#Focus the cursor on the first form input %>
     <script>
       $(document).ready(function() {
-        var defaultKeywordText = 'search by keywords';
+        var defaultKeywordText = '<%= constants.text.search %>';
         $('[name=query]').focus(function() { if (this.value == defaultKeywordText) { $(this).val(''); }});
         $('[name=query]').blur(function() { if (this.value == '') { $(this).val(defaultKeywordText); }});
         if ($('[name=query]').val() === '') {
           $('[name=query]').val(defaultKeywordText);
         }        
-        var defaultPropertiesText = 'search by feature properties';
+        var defaultPropertiesText = '<%= constants.text.properties %>';
         $('[name=properties]').focus(function() { if (this.value == defaultPropertiesText) { $(this).val(''); }});
         $('[name=properties]').blur(function() { if (this.value == '') { $(this).val(defaultPropertiesText); }});
         if ($('[name=properties]').val() === '') {

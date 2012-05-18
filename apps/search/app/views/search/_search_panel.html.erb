@@ -21,6 +21,9 @@
       $('[name=properties]').val(properties);
     }
 
+    function filterDefaultParamValue(param, defaultValue) {
+      return param !== defaultValue ? param : '';
+    }
 
     function buildFormAction() {
       var datasets = []
@@ -34,7 +37,7 @@
       }
 
       var action = $.url($('form').attr('action')).attr('path');      
-      var params = '?keywords=' + $('[name=query]').val() + '&datasets=' + datasets.join(',') + '&type=' + $('[name=type]').val() + '&properties=' + $('[name=properties]').val();
+      var params = '?keywords=' + filterDefaultParamValue($('[name=query]').val(), '<%= constants.text.search %>') + '&datasets=' + datasets.join(',') + '&type=' + $('[name=type]').val() + '&properties=' + filterDefaultParamValue($('[name=properties]').val(), '<%= constants.text.properties %>');
       if ($('[name=type]').val() == 'advanced') {
         params += '&from=' + $('[name=date_start]').val() + '&to=' + $('[name=date_end]').val();
         params += '&south=' + $('[name="bounding_box[south]"]').val() + '&east=' + $('[name="bounding_box[east]"]').val() + '&north=' + $('[name="bounding_box[north]"]').val() + '&west=' + $('[name="bounding_box[west]"]').val();

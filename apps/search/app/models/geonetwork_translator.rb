@@ -49,7 +49,9 @@ class GeoNetworkTranslator
       elsif request == 'uuid'
         response = post("xml.search", "<request><uuid>#{query}</uuid></request>")
       elsif request == 'properties'
-        response = post("xml.search", "<request><themekey>#{query}</themekey></request>")
+        keywords_xml = query[:keywords] ? "<abstract>#{query[:keywords]}</abstract>" : ''
+        properties_xml = "<themekey>#{query[:properties]}</themekey>"
+        response = post("xml.search", "<request>#{properties_xml}#{keywords_xml}</request>")
       else
         response = post("xml.search", "<request><abstract>#{query}</abstract></request>")
 
@@ -79,10 +81,13 @@ class GeoNetworkTranslator
       date = "<extFrom>#{date_start}</extFrom><extTo>#{date_end}</extTo>"      
     end
 
+    keywords = query[:keywords] && !query[:keywords].empty? ? "<abstract>#{query[:keywords]}</abstract>" : ''
+    properties = query[:properties] && !query[:properties].empty? ? "<themekey>#{query[:properties]}</themekey>" : ''
+
     search_terms = nil
     
-    begin    
-      response = post("xml.search", "<request><abstract>#{query}</abstract>#{bounds}#{date}</request>")  
+    begin
+      response = post("xml.search", "<request>#{properties}#{keywords}#{bounds}#{date}</request>")  
       search_terms = response.body
     rescue
     end
