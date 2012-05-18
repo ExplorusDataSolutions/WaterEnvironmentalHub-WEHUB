@@ -51,7 +51,7 @@ class Search
       @results |= geonetwork.search_results(keywords, geonetwork_target)
     end
     
-    @query = keywords.is_a?(Hash) && keywords[:keywords] ? keywords[:keywords] : keywords
+    @query = find_query(keywords)
     
     self
   end
@@ -59,12 +59,25 @@ class Search
   def do_query_advanced(keywords, date_start, date_end, south, east, north, west)
     @results = geonetwork.search_results_advanced(keywords, date_start, date_end, south, east, north, west)
 
-    @query = keywords.is_a?(Hash) && keywords[:keywords] ? keywords[:keywords] : keywords
+    @query = find_query(keywords)
     
     self
   end
-
   
+  def find_query(keywords)
+    if keywords.is_a?(Hash) 
+      if keywords[:keywords] 
+        if !keywords[:keywords].nil?
+          keywords[:keywords]
+        else
+          ''
+        end
+      end
+    else
+      keywords
+    end
+  end
+
   def info(id)
     geonetwork.search_result(id)
   end

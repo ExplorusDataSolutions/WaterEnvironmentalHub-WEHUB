@@ -87,7 +87,7 @@
         </tr>
         <tr>
           <td>
-            <%= render 'datasets_counter' %>
+            <%= render 'datasets_counter' if @datasets_counter && !@datasets_counter.empty? %>
           </td>
         </tr>
       </table>
