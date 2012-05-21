@@ -18,5 +18,5 @@ echo $(date)
 for i in "${urls[@]}"
 do
   echo $base$i
-  echo $(curl -IL $base$i)
+  echo $(curl -m 30 -IL $base$i) &
 done
