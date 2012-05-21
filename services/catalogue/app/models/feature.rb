@@ -259,8 +259,10 @@ class Feature
     
     if !keywords.nil?
       keywords = clean_id_fields(keywords)
-      
-      keywords.uniq
+      keywords.map { |k| k.downcase! }
+      keywords = enrich_with_space_delimited_fields(keywords)
+      keywords.uniq!
+      keywords.sort! { |a,b| a <=> b }
     end
     
     keywords
@@ -277,7 +279,7 @@ class Feature
     if is_data_source?('geoserver')
       geoserver_translator.feature_fields_by_type(uuid)
     elsif is_data_source?('catalogue')
-      observation_data = data_lightweight      
+      observation_data = data_lightweight
       get_types(observation_data[:data][0]) unless !observation_data || observation_data[:data].count == 0
     else
     end
@@ -339,7 +341,7 @@ class Feature
     result
   end
         
-  def extract_keywords(observation_data)
+  def extract_keywords(observation_data)  
     keywords = []
     
     observation_data.each do |k, v|
@@ -367,6 +369,15 @@ class Feature
        keywords[index] = keyword.gsub('_',' ')
      end
     keywords
+  end
+  
+  def enrich_with_space_delimited_fields(keywords)
+    new_keywords = []
+    keywords.each do |keyword|
+      keyword.split(' ').each { |k| new_keywords.push(k) }
+    end
+    
+    keywords | new_keywords
   end
   
 end
