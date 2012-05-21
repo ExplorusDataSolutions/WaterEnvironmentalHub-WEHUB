@@ -82,7 +82,7 @@ class GeoNetworkTranslator
     end
 
     keywords = query[:keywords] && !query[:keywords].empty? ? "<abstract>#{query[:keywords]}</abstract>" : ''
-    properties = query[:properties] && !query[:properties].empty? ? "<themekey>#{query[:properties]}</themekey>" : ''
+    properties = query[:properties] && !query[:properties].empty? ? "<themekey>#{query[:properties].downcase}</themekey>" : ''
 
     search_terms = nil
     
