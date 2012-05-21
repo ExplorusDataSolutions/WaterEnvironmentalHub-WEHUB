@@ -271,7 +271,8 @@ class Feature
       raise ArgumentError, "Properties could not be retrieved for feature source of #{feature_source.name}"
     end
     
-    properties
+    properties.uniq!
+    properties.compact.reject { |s| s.nil? or s.empty? }
   end
   
   def feature_fields
