@@ -243,19 +243,7 @@ class Feature
   end
   
   def keywords
-    if is_data_source?('geoserver')
-      observation_data = geoserver_translator.feature_fields(uuid)
-      keywords = extract_keywords(observation_data)
-    elsif is_data_source?('catalogue')
-      observation_data = data_lightweight
-      if observation_data[:data].count > 0
-        keywords = extract_keywords(observation_data[:data][0])
-      end
-    elsif is_data_source_external?
-      keywords = FeatureMetaContent.find_by_dataset_uuid(uuid).keywords.split(',')
-    else 
-      raise ArgumentError, "Keywords could not be retrieved for feature source of #{feature_source.name}"
-    end   
+    keywords = self.properties
     
     if !keywords.nil?
       keywords = clean_id_fields(keywords)
@@ -266,6 +254,24 @@ class Feature
     end
     
     keywords
+  end
+  
+  def properties
+    if is_data_source?('geoserver')
+      observation_data = geoserver_translator.feature_fields(uuid)
+      properties = extract_property_names(observation_data)
+    elsif is_data_source?('catalogue')
+      observation_data = data_lightweight
+      if observation_data[:data].count > 0
+        properties = extract_property_names(observation_data[:data][0])
+      end
+    elsif is_data_source_external?
+      properties = FeatureMetaContent.find_by_dataset_uuid(uuid).keywords.split(',')
+    else 
+      raise ArgumentError, "Properties could not be retrieved for feature source of #{feature_source.name}"
+    end
+    
+    properties
   end
   
   def feature_fields
@@ -341,7 +347,7 @@ class Feature
     result
   end
         
-  def extract_keywords(observation_data)  
+  def extract_property_names(observation_data)  
     keywords = []
     
     observation_data.each do |k, v|

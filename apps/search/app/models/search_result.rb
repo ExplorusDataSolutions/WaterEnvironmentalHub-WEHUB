@@ -5,8 +5,4 @@ class SearchResult
     @id = @uuid = uuid
   end
   
-  def keywords
-    @properties
-  end
-
 end

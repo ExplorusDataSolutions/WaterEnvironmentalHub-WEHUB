@@ -82,6 +82,10 @@ xml.Metadata('xmlns:geonet' => 'http://www.fao.org/geonetwork') do
     message.update({:coordinates => "#{@dataset.feature.latitude_longitude}"})
   end
   
+  if @dataset.feature.properties && !@dataset.feature.properties.empty?
+    message.update({:properties => @dataset.feature.properties.join(',')})
+  end
+  
   if !@review_summary.nil?
     message.update({:review_summary => @review_summary})
   end

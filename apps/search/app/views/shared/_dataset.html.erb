@@ -32,9 +32,9 @@
       <span><%= dataset.period %></span><br />
     <% end %>
     <% if dataset.keywords %>
-      <span class="head">Number of Observed Properties: </span><span><%= dataset.keywords.scan(/,/).count + 1 %></span><br />
+      <span class="head">Number of Observed Properties: </span><span><%= dataset.properties.scan(/,/).count + 1 %></span><br />
       <span class="head">Features: </span><span>
-        <%= more_markup(dataset.keywords, 120).html_safe -%>
+        <%= more_markup(dataset.properties, 120).html_safe -%>
       </span><br />
       
       <% if dataset.review_summary && dataset.review_summary.average %>      

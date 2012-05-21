@@ -149,14 +149,20 @@ class GeoNetworkTranslator
         result.coordinates = additional_info['coordinates']
         result.review_summary = Hashie::Mash.new(additional_info['review_summary'])
 
+        properties = additional_info['properties']
+        if properties
+          result.properties = properties.gsub(',', ', ')
+        end
+
         keywords = []
         item.elements.each('dataIdInfo/descKeys') do |keyword|
           keywords.push(keyword.elements['keyword'].text)
         end
         
         if !keywords.empty?
-          result.properties = keywords.join(', ')
+          result.keywords = keywords.join(', ')
         end
+        
       end
       
       cache.write(cache_key(result.id), result) unless !result
