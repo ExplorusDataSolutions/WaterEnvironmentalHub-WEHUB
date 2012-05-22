@@ -2,7 +2,4 @@
 
 [[ "`/usr/bin/tty`" == "not a tty" ]] && . ~/.bash_profile
 
-DIRECTORY=$(cd `dirname $0` && pwd)
-
-$DIRECTORY/do_clear_search_cache.sh > $DIRECTORY/do_clear_search_cache.log
-mail -s "Search cache clearing log `date`" adam.kahtava@tesera.com < $DIRECTORY/do_clear_search_cache.log
+. do_run_script_and_email_results.sh do_clear_search_cache.sh
