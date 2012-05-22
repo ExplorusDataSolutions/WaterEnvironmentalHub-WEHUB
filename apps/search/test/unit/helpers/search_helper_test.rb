@@ -12,5 +12,17 @@ class SearchHelperTest < ActionView::TestCase
     assert !param_default(params[:keywords], 'search by keyword')
   end
   
+  test "nil param should return false" do
+    assert !param_provided(nil)
+  end
+
+  test "empty param should return false" do
+    assert !param_provided('')
+  end
+
+  test "some param should return true" do
+    assert param_provided('some param')
+  end
+  
 end
 

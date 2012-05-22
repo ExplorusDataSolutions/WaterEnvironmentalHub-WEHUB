@@ -9,18 +9,18 @@ class SearchController < ApplicationController
   def index
     @breadcrumb = ['Discover Our Data', 'Search']
     @main_menu = 'we_catalogue'
-    
+
     query = ''
     search_target = ''
     if params[:keywords] || params[:query] || params[:properties]
-      if !param_default(params[:query], constants.text.search)
+      if !param_default(params[:query], constants.text.search) && param_provided(params[:query])
         query = params[:query]
       end
-      if !param_default(params[:keywords], constants.text.search)
+
+      if !param_default(params[:keywords], constants.text.search) && param_provided(params[:keywords])
         query = params[:keywords]
       end        
-
-      if !param_default(params[:properties], constants.text.properties)
+      if !param_default(params[:properties], constants.text.properties) && param_provided(params[:properties])
         query = { :properties => params[:properties] }
         query.store(:keywords, params[:keywords]) if !param_default(params[:keywords], constants.text.search)
         search_target = 'properties'
