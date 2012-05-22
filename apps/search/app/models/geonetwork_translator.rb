@@ -50,7 +50,7 @@ class GeoNetworkTranslator
         response = post("xml.search", "<request><uuid>#{query}</uuid></request>")
       elsif request == 'properties'
         keywords_xml = query[:keywords] ? "<abstract>#{query[:keywords]}</abstract>" : ''
-        properties_xml = "<themekey>#{query[:properties]}</themekey>"
+        properties_xml = "<themekey>#{query[:properties].downcase}</themekey>"
         response = post("xml.search", "<request>#{properties_xml}#{keywords_xml}</request>")
       else
         response = post("xml.search", "<request><abstract>#{query}</abstract></request>")
