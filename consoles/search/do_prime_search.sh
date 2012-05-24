@@ -2,7 +2,7 @@
 
 base='http://localhost'
 
-urls=('' '/api/datasets?feature_type_id=1&format=html' '/api/datasets?feature_type_id=4&format=html' '/twitter/index?format=json')
+urls=('' '/api/datasets?feature_type_id=1&format=html' '/api/datasets?feature_type_id=4&format=html' '/twitter/index?format=json', '/catalogue/browse', '/search')
 
 urls_push() {
   urls=("${urls[@]}" "$1")

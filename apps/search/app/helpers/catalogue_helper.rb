@@ -228,4 +228,13 @@ module CatalogueHelper
       content
     end
   end
+  
+  def dataset_source_markup(source)
+    if source.match(/^http:\/\//i)
+      "(source: #{link_to source, source})"
+    else
+      "(source: #{source})"
+    end
+  end
+
 end

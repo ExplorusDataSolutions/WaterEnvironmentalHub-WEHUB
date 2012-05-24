@@ -40,6 +40,7 @@ class GeoNetworkTranslator
   end
   
   def search_results(query, request='auto')
+
     results = nil
     if cache.exist?(cache_key(query))
       results = cache.fetch(cache_key(query))
@@ -49,9 +50,7 @@ class GeoNetworkTranslator
       elsif request == 'uuid'
         response = post("xml.search", "<request><uuid>#{query}</uuid></request>")
       elsif request == 'properties'
-        keywords_xml = query[:keywords] ? "<abstract>#{query[:keywords]}</abstract>" : ''
-        properties_xml = "<themekey>#{query[:properties].downcase}</themekey>"
-        response = post("xml.search", "<request>#{properties_xml}#{keywords_xml}</request>")
+        response = post("xml.search", "<request>#{build_properties(query)}#{build_keywords(query)}</request>")
       else
         response = post("xml.search", "<request><abstract>#{query}</abstract></request>")
 
@@ -81,13 +80,10 @@ class GeoNetworkTranslator
       date = "<extFrom>#{date_start}</extFrom><extTo>#{date_end}</extTo>"      
     end
 
-    keywords = query[:keywords] && !query[:keywords].empty? ? "<abstract>#{query[:keywords]}</abstract>" : ''
-    properties = query[:properties] && !query[:properties].empty? ? "<themekey>#{query[:properties].downcase}</themekey>" : ''
-
     search_terms = nil
     
     begin
-      response = post("xml.search", "<request>#{properties}#{keywords}#{bounds}#{date}</request>")  
+      response = post("xml.search", "<request>#{build_properties(query)}#{build_keywords(query)}#{bounds}#{date}</request>")  
       search_terms = response.body
     rescue
     end
@@ -204,6 +200,14 @@ class GeoNetworkTranslator
     end
   end
   
+  def build_properties(query)
+    query[:properties] && !query[:properties].empty? ? "<themekey>#{query[:properties].downcase}</themekey>" : ''
+  end
+  
+  def build_keywords(query)
+    query[:keywords] && !query[:keywords].empty? ? "<abstract>#{query[:keywords]}</abstract>" : ''
+  end
+
   def authenticate(username='development', password='development')
     puts "Authenticating user #{username} with GeoNetwork"
     
