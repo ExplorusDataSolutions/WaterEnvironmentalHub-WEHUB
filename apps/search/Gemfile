@@ -7,6 +7,7 @@ gem 'nokogiri'
 gem 'spreadsheet'
 gem 'hashie'
 gem 'dalli'
+gem 'exception_notification', :require => 'exception_notifier'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
