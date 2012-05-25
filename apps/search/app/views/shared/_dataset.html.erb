@@ -33,7 +33,7 @@
     <% end %>
     <% if dataset.keywords %>
       <span class="head">Number of Observed Properties: </span><span><%= dataset.properties.scan(/,/).count + 1 %></span><br />
-      <span class="head">Features: </span><span>
+      <span class="head">Properties: </span><span>
         <%= more_markup(dataset.properties, 120).html_safe -%>
       </span><br />
       
