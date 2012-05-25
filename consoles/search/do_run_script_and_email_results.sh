@@ -10,5 +10,5 @@ script=$(basename $1)
 
 logfile=${script/.sh/.log}
 
-$(./$script > $dir/$logfile)
+$($dir/$script > $dir/$logfile)
 $(mail -s "Log for: $script `date`" $email_address < $dir/$logfile)
