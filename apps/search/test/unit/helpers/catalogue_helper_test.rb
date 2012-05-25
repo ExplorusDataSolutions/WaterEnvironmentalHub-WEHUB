@@ -435,6 +435,13 @@ class CatalogueHelperTest < ActionView::TestCase
      assert groups['National'] && groups['National'].count == 0
   end
   
+  test "should verify dataset_source_markup" do 
+    assert dataset_source_markup('the quick brown fox. something rather.') == "(source: the quick brown fox. something rather.)", dataset_source_markup('the quick brown fox. something rather.')
+    assert dataset_source_markup('www.google.com') == "(source: www.google.com)", dataset_source_markup('www.google.com')
+    assert dataset_source_markup('this.. sentance... contains many periods...') == "(source: this.. sentance... contains many periods...)", dataset_source_markup('this.. sentance... contains many periods...')
+    assert dataset_source_markup('this was found on http://www.google.com') == "(source: this was found on http://www.google.com)"
+  end
+  
   def to_mash(hash)
     Hashie::Mash.new(hash)
   end  
