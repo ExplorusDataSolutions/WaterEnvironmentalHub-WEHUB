@@ -6,42 +6,89 @@
 </style>
 <script>
   $(document).ready(function() {
- 	
-    var map, layer;
-
-    function loadMap() {
-      map = new OpenLayers.Map('map');
    
-      map.addLayer(new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP}));
-      
-      WEHub.OpenLayers.setCenter(map, -113.873291, 52.293992, 3);
-      
-      markers = new OpenLayers.Layer.Markers("Features");
-      map.addLayer(markers);           
-    }   
+    var map, vectorlayer, googleLayer, features, styleMap, select;
+  
+    var showInformation = function(evt){
+      var feature = evt.feature;
+      var info = '';
+      var lonLat;
+      if (feature.cluster.length === 1) {
+        info = feature.cluster[0].attributes.html;
+        lonLat = feature.cluster[0].geometry.bounds.centerLonLat;
+      } else if (feature.cluster) {
+        info = 'Cluster of ' + feature.attributes.count + ' datasets. Zoom in for more details';
+        lonLat = feature.geometry.bounds.centerLonLat;
+      }
+      var popup = new OpenLayers.Popup.FramedCloud("featurePopup", lonLat, null, info, null, true, null);
+      popup.feature = feature;
+      map.addPopup(popup, true);
+    };
+
+    map = new OpenLayers.Map("map");
     
-    <%
-    if !@search.results.empty? 
-    %>
-    loadMap();
-    <%
-    end
-    %>
-    <% 
-    if @search.results && !@search.results.empty? 
-     @search.results.each_with_index do |result, index| 
-       if result && result.coordinates
-         coords = result.coordinates.split(',') 
-         if coords.length == 2 && (coords[0].scan(/ /).empty? || coords[1].scan(/ /).empty?)
-         %>
-<%= "WEHub.OpenLayers.setMarker(map, markers, #{coords[1]}, #{coords[0]}, '#{result.name.gsub('\'','')}. <a href=\"/catalogue/details/#{result.uuid}/#{u(scrub_for_seo(result.name))}\">More details</a>');".html_safe -%>
-         <% 
-         end
-       end
-     end
-    end 
-    %>
+    googleLayer = new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP});
+      
+    var style = new OpenLayers.Style({
+      pointRadius: "${radius}",
+      fillColor: "${getFillColor}",
+      fillOpacity: 0.8,
+      strokeColor: "${getStrokeColor}",
+      strokeWidth: 2,
+      strokeOpacity: 0.8
+    }, {
+      context: {
+        radius: function(feature) {
+          return Math.min(feature.cluster.length, 9) + 6;
+        }, 
+        getFillColor: function(feature) {
+          return feature.cluster.length > 1 ? "#ffcc66" : "#7CC9FF";
+        },
+        getStrokeColor: function(feature) {
+          return feature.cluster.length > 1 ? "#cc6633" : "#000000";
+        }
+      }
     });
+
+    styleMap = new OpenLayers.StyleMap({
+      "default": style,
+      "select": {
+        fillColor: "#8aeeef",
+        strokeColor: "#32a8a9"
+      }
+    })
+      
+    // the vectorlayer
+    vectorlayer = new OpenLayers.Layer.Vector('Vectorlayer', {styleMap: styleMap, strategies: [
+      new OpenLayers.Strategy.Cluster({ distance: 40 })    
+    ]});
+      
+    // the select control
+    select = new OpenLayers.Control.SelectFeature(vectorlayer);
+    map.addControl(select);
+    select.activate();
+    vectorlayer.events.on({"featureselected": showInformation});
+
+    map.addLayers([googleLayer, vectorlayer]);
+    map.addControl(new OpenLayers.Control.LayerSwitcher());
+    WEHub.OpenLayers.setCenter(map, -113.873291, 52.293992, 3);  
+    
+    features = [];
+  <%
+    @search.results.each_with_index do |result, index| 
+      if result && result.coordinates
+        coords = result.coordinates.split(',') 
+          if coords.length == 2 && (coords[0].scan(/ /).empty? || coords[1].scan(/ /).empty?)
+  %> 
+    features.push(WEHub.OpenLayers.buildFeature(map, <%= "#{coords[1]}" -%>, <%= "#{coords[0]}" -%>, <%= "'#{escape_javascript(result.name)}. <a href=\"/catalogue/details/#{result.uuid}/#{u(scrub_for_seo(result.name))}\">More details</a>'".html_safe -%>));
+  <%
+        end
+      end
+    end
+  %>    
+    vectorlayer.addFeatures(features);
+   
+  });
 </script>
 
 <div class="home-top">

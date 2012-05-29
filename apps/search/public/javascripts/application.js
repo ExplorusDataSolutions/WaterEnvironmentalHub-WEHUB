@@ -88,6 +88,11 @@ WEHub.OpenLayers.setMarker = function setMarker(map, markers, lon, lat, html){
   markers.addMarker(marker);
 }
 
+WEHub.OpenLayers.buildFeature = function(map, lon, lat, html){
+  var point = new OpenLayers.Geometry.Point(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
+  return new OpenLayers.Feature.Vector(point, { html: html });
+}
+
 WEHub.OpenLayers.setCenter = function(map, lon, lat, zoomLevel) {
   map.setCenter(new OpenLayers.LonLat(lon, lat).transform(
     new OpenLayers.Projection("EPSG:4326"),
