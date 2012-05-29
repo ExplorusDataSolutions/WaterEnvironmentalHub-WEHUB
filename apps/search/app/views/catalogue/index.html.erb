@@ -7,8 +7,10 @@
 <script>
   $(document).ready(function() {
    
-    var map, vectorlayer, googleLayer, features, styleMap, select;
+    var map, vectorlayer, googleLayer, features, styleMap, select, zoomThreshold;
   
+    zoomThreshold = 7;
+    
     var showInformation = function(evt){
       var feature = evt.feature;
       var info = '';
@@ -19,7 +21,7 @@
       } else if (feature.cluster) {
         info = 'Cluster of ' + feature.cluster.length + ' datasets. ';
         lonLat = feature.geometry.bounds.centerLonLat;
-        if (map.getZoom() > 5) {
+        if (map.getZoom() > zoomThreshold) {
           info += '<br>';
           for (var i=0 ; i < feature.cluster.length ; i++) {
             info += feature.cluster[i].attributes.html + '<br>';
@@ -50,10 +52,10 @@
           return Math.min(feature.cluster.length, 9) + 6;
         }, 
         getFillColor: function(feature) {
-          return feature.cluster.length > 1 ? "#ffcc66" : "#7CC9FF";
+          return (map.getZoom() > zoomThreshold) || (feature.cluster.length === 1) ?  "#7CC9FF" : "#ffcc66";
         },
         getStrokeColor: function(feature) {
-          return feature.cluster.length > 1 ? "#cc6633" : "#000000";
+          return (map.getZoom() > zoomThreshold) || (feature.cluster.length === 1) ? "#000000" : "#cc6633";
         }
       }
     });
