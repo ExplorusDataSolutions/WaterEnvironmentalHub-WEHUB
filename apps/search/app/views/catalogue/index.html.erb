@@ -17,8 +17,16 @@
         info = feature.cluster[0].attributes.html;
         lonLat = feature.cluster[0].geometry.bounds.centerLonLat;
       } else if (feature.cluster) {
-        info = 'Cluster of ' + feature.attributes.count + ' datasets. Zoom in for more details';
+        info = 'Cluster of ' + feature.cluster.length + ' datasets. ';
         lonLat = feature.geometry.bounds.centerLonLat;
+        if (map.getZoom() > 5) {
+          info += '<br>';
+          for (var i=0 ; i < feature.cluster.length ; i++) {
+            info += feature.cluster[i].attributes.html + '<br>';
+          }
+        } else {
+          info += 'Zoom in for more details';          
+        }
       }
       var popup = new OpenLayers.Popup.FramedCloud("featurePopup", lonLat, null, info, null, true, null);
       popup.feature = feature;
@@ -60,7 +68,7 @@
       
     // the vectorlayer
     vectorlayer = new OpenLayers.Layer.Vector('Vectorlayer', {styleMap: styleMap, strategies: [
-      new OpenLayers.Strategy.Cluster({ distance: 40 })    
+      new OpenLayers.Strategy.Cluster({ distance: 40 })
     ]});
       
     // the select control
@@ -68,7 +76,7 @@
     map.addControl(select);
     select.activate();
     vectorlayer.events.on({"featureselected": showInformation});
-
+    
     map.addLayers([googleLayer, vectorlayer]);
     map.addControl(new OpenLayers.Control.LayerSwitcher());
     WEHub.OpenLayers.setCenter(map, -113.873291, 52.293992, 3);  
