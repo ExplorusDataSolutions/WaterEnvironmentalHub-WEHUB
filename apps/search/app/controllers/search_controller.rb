@@ -46,6 +46,7 @@ class SearchController < ApplicationController
       @search = search_instance.do_query(query, params[:datasets], user_id, group_ids, search_target)
       results = @search.results
     else     
+      query = { :keywords => params[:keywords], :properties => params[:properties] }
       @search = search_instance.do_query_advanced(query, params[:date_start], params[:date_end], params[:south], params[:east], params[:north], params[:west])
       results = @search.results    
     end
