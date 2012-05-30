@@ -39,7 +39,7 @@
       var action = $.url($('form').attr('action')).attr('path');      
       var params = '?keywords=' + filterDefaultParamValue($('[name=query]').val(), '<%= constants.text.search %>') + '&datasets=' + datasets.join(',') + '&type=' + $('[name=type]').val() + '&properties=' + filterDefaultParamValue($('[name=properties]').val(), '<%= constants.text.properties %>');
       if ($('[name=type]').val() == 'advanced') {
-        params += '&from=' + filterDefaultParamValue($('[name=date_start]').val(), '<%= constants.text.date_start %>') + '&to=' + filterDefaultParamValue($('[name=date_end]').val(), '<%= constants.text.date_end %>');
+        params += '&date_start=' + filterDefaultParamValue($('[name=date_start]').val(), '<%= constants.text.date_start %>') + '&date_end=' + filterDefaultParamValue($('[name=date_end]').val(), '<%= constants.text.date_end %>');
         params += '&south=' + $('[name="bounding_box[south]"]').val() + '&east=' + $('[name="bounding_box[east]"]').val() + '&north=' + $('[name="bounding_box[north]"]').val() + '&west=' + $('[name="bounding_box[west]"]').val();
         params += '&relation=' + $('[name="bounding_box[relation]"]').val();
       }
@@ -107,8 +107,8 @@
       }
       setBoundingBox(searchParam('north'), searchParam('east'), searchParam('south'), searchParam('west'));
       $('[name="bounding_box[relation]"]').val(searchParam('relation'));
-      if (searchParam('from') !== '') { $('#date_start').val(searchParam('from')); }
-      if (searchParam('to') !== '') { $('#date_end').val(searchParam('to')); }
+      if (searchParam('date_start') !== '') { $('#date_start').val(searchParam('date_start')); }
+      if (searchParam('date_end') !== '') { $('#date_end').val(searchParam('date_end')); }
     }
 
   <%# jQuery datepicker %>
