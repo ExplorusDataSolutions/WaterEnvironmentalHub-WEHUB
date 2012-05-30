@@ -4,7 +4,9 @@ module SearchHelper
     Hashie::Mash.new({ :text =>
       { 
         :search => "search by keywords",
-        :properties => "search by properties"
+        :properties => "search by properties",
+        :date_start => "search from date",
+        :date_end => "search to date"
       }
     })
   end
