@@ -1,10 +1,15 @@
 class SearchController < ApplicationController
 
   include SearchHelper
-  
+
+  respond_to :json, :xml, :only => [:status]
+    
   caches_action :index, 
     :if => Proc.new { (params[:datasets].nil? && params[:type].nil?) || (params[:datasets] == 'public' && params[:type] == 'simple') || (params[:datasets].nil? && params[:type] == 'simple') || (params[:type].nil? && params[:datasets] == 'public') }, 
     :cache_path => Proc.new { "?keywords=#{params[:keywords] ? params[:keywords] : (params[:query] ? params[:query] : 'all')}&page=#{params[:page] ? params[:page] : 0}&properties=#{params[:properties] ? params[:properties] : ''}" }
+
+  caches_action :status,
+    :cache_path => Proc.new { |c| c.params }, :expires_in => 15.minutes
   
   def index
     @breadcrumb = ['Discover Our Data', 'Search']
@@ -74,6 +79,13 @@ class SearchController < ApplicationController
     if id != nil
       render :json => search_instance.info(id)
     end
+  end
+  
+  def status
+    random = (0...18).map{65.+(rand(25)).chr}.join
+    @search = search_instance.do_query(random, nil, nil, nil)
+    
+    respond_with({ :status => 'OK', :seed => @search.query }, :location => nil) and return
   end
     
   def refresh
