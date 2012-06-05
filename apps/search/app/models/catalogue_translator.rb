@@ -83,6 +83,16 @@ class CatalogueTranslator
     xml_to_mash(get(item_uri(id)))['dataset']
   end
 
+  def dataset_update(user_id, dataset)
+    params = {:dataset => dataset}
+    params.store(:user_id, user_id)
+    json_to_mash(post_json("#{url}/items/update", params))
+  end
+  
+  def dataset_destroy(user_id, dataset_id)
+    json_to_mash(post_json("#{url}/items/destroy", {:dataset_id => dataset_id, :user_id => user_id }))
+  end
+
   def recently_viewed_key(user_id)
     "#{user_id}_user_recently_viewed"
   end

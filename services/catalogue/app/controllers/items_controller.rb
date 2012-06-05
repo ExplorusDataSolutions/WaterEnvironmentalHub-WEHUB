@@ -110,10 +110,71 @@ class ItemsController < ApplicationController
     end
     
     if !errors.empty?
+      
       respond_with({ :errors => errors }, :location => nil) and return
     end
     
     respond_with({ :uuid => dataset.uuid }, :location => nil) and return
+  end
+  
+  def destroy
+    errors = {}
+ 
+    dataset = Dataset.find_by_uuid(params[:dataset_id])
+    
+    if is_owner(dataset, params)
+      dataset.transaction do
+        dataset.feature.destroy
+        dataset.destroy
+      end
+    else
+      errors.store('permissions', 'you don\'t have permissions to edit this dataset')      
+    end
+
+    if !errors.empty?
+      respond_with({ :errors => errors }, :location => nil) and return
+    end
+    
+    respond_with({ :uuid => dataset.uuid }, :location => nil) and return
+  end
+  
+  def update
+    errors = {}
+
+    dataset = Dataset.find_by_uuid(params[:dataset][:id])
+       
+    if is_owner(dataset, params)
+      
+      updates = params[:dataset].clone
+
+      updates.delete(:id)
+      updates.delete(:feature_source_id)
+            
+      updates[:owner_attributes] = updates[:permissions][:owner]
+      updates.delete(:permissions)
+
+      updates[:author_attributes] = build_author(updates[:author])
+      updates.delete(:author)
+
+      updates[:feature_type] = FeatureType.find_by_name(updates[:feature_type])
+      updates[:creative_commons_license] = creative_commons_license(updates[:creative_commons_license])
+      
+      updates[:feature_period] = feature_period(updates)
+
+      dataset.update_attributes(updates)
+      
+      if !dataset.errors.empty?
+        dataset.errors.each do |key, value|
+          errors.store('dataset', "#{key} #{value}")
+        end
+      else
+        respond_with({ :uuid => dataset.uuid }, :location => nil) and return      
+      end
+    else
+      errors.store('permissions', 'you don\'t have permissions to edit this dataset')
+    end
+    
+    respond_with({ :errors => errors }, :location => nil) and return    
   end
   
   def load_external_meta_content

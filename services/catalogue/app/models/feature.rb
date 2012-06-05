@@ -176,6 +176,10 @@ class Feature
     end
   end
 
+  def destroy
+    execute("DROP TABLE #{tablename}")  
+  end
+  
   def create(params)
     if params.key?(:filename)
       tablename = resolve_tablename

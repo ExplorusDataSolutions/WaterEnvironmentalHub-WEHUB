@@ -13,8 +13,9 @@ Catalogue::Application.routes.draw do
 
   match 'groups/' => 'groups#show'
   match 'community/groups' => 'groups#show'
-  match 'community/datasets' => 'datasets#show'
-
+  match 'community/datasets' => 'dataset#show'
+  match 'datasets/show' => 'dataset#show'
+  
   match 'contact-us' => 'about#contact_us'
   match 'terms-of-service' => 'about#terms_of_service'
   match 'privacy' => 'about#privacy'
@@ -24,6 +25,7 @@ Catalogue::Application.routes.draw do
   match 'parse_json' => 'tools#parse_json', :as=>:parse_json
 
   match 'catalogue/details/:id/*seo' => 'catalogue#details' 
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
