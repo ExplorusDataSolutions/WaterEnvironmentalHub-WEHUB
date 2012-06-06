@@ -34,21 +34,12 @@ class DatasetController < ApplicationController
   end
   
   def update
+    params[:dataset] = map_from_form(params[:dataset])        
+    params['creative_commons_license'] = params[:dataset][:creative_commons_license]
+
     @dataset = Hashie::Mash.new(params[:dataset])
 
     expire_fragment dataset_key
-    
-    # map the catalogue dataset back to the form
-    if @dataset.feature_period_start
-      @dataset[:period] = "#{@dataset.feature_period_start} - #{@dataset.feature_period_end}"
-    end
-    if @dataset.feature_period
-      @dataset[:period] = @dataset.feature_period
-    end
-    if @dataset.permissions && @dataset.permissions.group == true.to_s
-      @dataset[:owner] = @dataset.permissions.owner
-    end
-    params['creative_commons_license'] = @dataset.creative_commons_license
 
     response = catalogue_instance.dataset_update(current_user.id, params[:dataset])
 
@@ -61,6 +52,7 @@ class DatasetController < ApplicationController
   end
   
   def create
+    #ToDo: wrangle this method to be similar to update method (form translation done in search app, not on catalogue service)
     @breadcrumb = ['Community', 'Datasets']
     @main_menu = 'we_community'
 
@@ -158,6 +150,23 @@ class DatasetController < ApplicationController
       # or periods with underscore
       name.gsub! /[^\w\.\-]/, '_'
     end
+  end
+  
+  def map_from_form(params)
+    if params[:feature_period_start]
+      params[:feature_period] = "#{params[:feature_period_start]} - #{params[:feature_period_end]}"
+      params.delete(:feature_period_start)
+      params.delete(:feature_period_end)      
+    end
+    if params[:permissions] && params[:permissions][:group] == true.to_s
+      params[:owner] = params[:permissions][:owner]
+    else
+      params[:owner] = params[:permissions][:owner]
+      params[:owner][:group_id] = nil
+    end
+    params.delete(:permissions)
+
+    params
   end
 
 end
