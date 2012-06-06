@@ -23,11 +23,7 @@ module DatasetHelper
       end
     end
 
-    if !first.empty? || !last.empty? || !email.empty?
-      return {:first_name => first.strip, :last_name => last.strip, :email => email.strip}
-    else 
-      return {}
-    end
+    return {:first_name => first.strip, :last_name => last.strip, :email => email.strip}
   end
   
   def create_author(params)
