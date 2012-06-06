@@ -9,7 +9,7 @@ class SearchController < ApplicationController
     :cache_path => Proc.new { "?keywords=#{params[:keywords] ? params[:keywords] : (params[:query] ? params[:query] : 'all')}&page=#{params[:page] ? params[:page] : 0}&properties=#{params[:properties] ? params[:properties] : ''}" }
 
   caches_action :status,
-    :cache_path => Proc.new { |c| c.params }, :expires_in => 15.minutes
+    :cache_path => Proc.new { |c| c.params }, :expires_in => 5.minutes
   
   def index
     @breadcrumb = ['Discover Our Data', 'Search']
@@ -85,7 +85,7 @@ class SearchController < ApplicationController
     random = (0...18).map{65.+(rand(25)).chr}.join
     @search = search_instance.do_query(random, nil, nil, nil)
     
-    respond_with({ :status => 'OK', :seed => @search.query }, :location => nil) and return
+    respond_with({ :status => 'OK', :seed => @search.query, :time => Time.new }, :location => nil) and return
   end
     
   def refresh
