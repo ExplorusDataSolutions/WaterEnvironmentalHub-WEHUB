@@ -11,7 +11,7 @@ module DatasetHelper
     email = params[:email]
     if params.key?('name')
       name = params[:name]
-      if name.scan(' ').count > 0
+      if name.strip.scan(' ').count > 0
         names = name.split(' ')
         (0..names.count-2).each do |i|
           first << "#{names[i]} "
@@ -23,8 +23,8 @@ module DatasetHelper
       end
     end
 
-    if !(first.empty? || last.empty? || email.empty?)
-      return {:first_name => first, :last_name => last, :email => email}
+    if !first.empty? || !last.empty? || !email.empty?
+      return {:first_name => first.strip, :last_name => last.strip, :email => email.strip}
     else 
       return nil
     end
