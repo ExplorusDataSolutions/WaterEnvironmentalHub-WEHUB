@@ -14,7 +14,8 @@ class DatasetController < ApplicationController
   end
   
   def edit
-    @dataset = catalogue_instance.dataset(params[:id])
+    @dataset = catalogue_instance.dataset(params[:id])    
+    @dataset.description = @dataset.description_with_html
     
     expire_fragment dataset_key
     expire_fragment search_dataset_key(@dataset.id)
@@ -36,7 +37,7 @@ class DatasetController < ApplicationController
   end
   
   def update
-    params[:dataset] = map_from_form(params[:dataset])        
+    params[:dataset] = map_from_form(params[:dataset])     
     params['creative_commons_license'] = params[:dataset][:creative_commons_license]
 
     @dataset = Hashie::Mash.new(params[:dataset])

@@ -26,7 +26,7 @@ module DatasetHelper
     if !first.empty? || !last.empty? || !email.empty?
       return {:first_name => first.strip, :last_name => last.strip, :email => email.strip}
     else 
-      return nil
+      return {}
     end
   end
   
