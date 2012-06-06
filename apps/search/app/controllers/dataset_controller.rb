@@ -17,7 +17,8 @@ class DatasetController < ApplicationController
     @dataset = catalogue_instance.dataset(params[:id])
     
     expire_fragment dataset_key
-    
+    expire_fragment search_dataset_key(@dataset.id)
+        
     params['creative_commons_license'] = @dataset.creative_commons_license    
   end
 
@@ -25,7 +26,8 @@ class DatasetController < ApplicationController
     response = catalogue_instance.dataset_destroy(current_user.id, params[:id])
 
     expire_fragment dataset_key
-    
+    expire_fragment search_dataset_key
+        
     if response.key?(:errors)
       flash[:errors] = response[:errors].values
     end
@@ -40,7 +42,8 @@ class DatasetController < ApplicationController
     @dataset = Hashie::Mash.new(params[:dataset])
 
     expire_fragment dataset_key
-
+    expire_fragment search_dataset_key(@dataset.id)
+    
     response = catalogue_instance.dataset_update(current_user.id, params[:dataset])
 
     if response.key?(:errors)
@@ -59,7 +62,7 @@ class DatasetController < ApplicationController
     @dataset = params[:dataset] ? Hashie::Mash.new(params[:dataset]) : Hashie::Mash.new({:source => nil, :author => nil})  
     
     expire_fragment dataset_key
-
+    
     uploaded_file = params[:filename]
 
     response = {}
@@ -102,6 +105,10 @@ class DatasetController < ApplicationController
 
   def dataset_key
     "dataset/user/#{current_user.id}"
+  end
+  
+  def search_dataset_key(uuid=params[:id])
+    "search_dataset_#{uuid}"
   end
   
   def show
