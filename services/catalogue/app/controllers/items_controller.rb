@@ -3,9 +3,9 @@ require 'zip/zip'
 class ItemsController < ApplicationController
 
   include DatasetHelper
-  
-  caches_action :index, :cache_path => Proc.new { |c| c.params }, :expires_in => 24.hours
 
+  caches_action :index, :cache_path => :dataset_key.to_proc, :expires_in => 24.hours
+  
   respond_to :json, :xml
 
   protect_from_forgery :except => :create
@@ -122,6 +122,9 @@ class ItemsController < ApplicationController
  
     dataset = Dataset.find_by_uuid(params[:dataset_id])
     
+    expire_fragment dataset_key(dataset.uuid, 'xml')
+    expire_fragment dataset_key(dataset.uuid, 'json')    
+    
     if is_owner(dataset, params)
       dataset.transaction do
         dataset.feature.destroy
@@ -142,6 +145,9 @@ class ItemsController < ApplicationController
     errors = {}
 
     dataset = Dataset.find_by_uuid(params[:dataset][:id])
+
+    expire_fragment dataset_key(dataset.uuid, 'xml')
+    expire_fragment dataset_key(dataset.uuid, 'json')        
        
     if is_owner(dataset, params)
       
@@ -246,6 +252,10 @@ class ItemsController < ApplicationController
       render :text => dataset.uuid and return
     end
     render :text => uuid, :status => 500 and return
+  end
+
+  def dataset_key(uuid=params[:id], format=params[:format])
+    "dataset/index/#{uuid}?format=#{format}"
   end
 
   private
