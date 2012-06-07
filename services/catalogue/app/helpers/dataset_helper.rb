@@ -1,7 +1,7 @@
 module DatasetHelper
 
   def is_owner(dataset, params)
-    dataset.owner.user_id == params[:user_id]
+    dataset && dataset.owner && params && params[:user_id] && dataset.owner.user_id == params[:user_id]
   end
   
   def build_author(params)

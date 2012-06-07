@@ -110,6 +110,18 @@
         }, 2000);
       });
     </script>
+    <script>
+      $(document).ready(function() {
+        if (WEHub.logged_in()) {
+          $('.edit-panel').each(function() {
+            var element = $(this);
+            if (element.data('owner') == WEHub.id()) {
+              element.show();
+            }
+          });
+        }
+      });
+    </script>
   </head>
   <body>
     <div id="loading-dialog" style="display: none;"></div>    

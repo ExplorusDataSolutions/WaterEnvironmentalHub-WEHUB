@@ -156,11 +156,11 @@ class ItemsController < ApplicationController
       updates.delete(:id)
       updates.delete(:feature_source_id)
 
-      updates[:owner_attributes] = dataset.owner.attributes            
+      updates[:owner_attributes] = dataset.owner.attributes
       updates[:owner_attributes].merge!(updates[:owner])
       updates.delete(:owner)
 
-      updates[:author_attributes] = dataset.author.attributes
+      updates[:author_attributes] = dataset.author ? dataset.author.attributes : {}
       updates[:author_attributes].merge!(build_author(updates[:author]))
       updates.delete(:author)
 
