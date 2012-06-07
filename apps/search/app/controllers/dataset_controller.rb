@@ -5,6 +5,18 @@ class DatasetController < ApplicationController
   before_filter :verify_logged_in
 
   caches_action :show, :cache_path => :dataset_key.to_proc, :expires_in => 30.minutes
+
+  def dataset_key
+    "dataset/user/#{current_user.id}"
+  end
+  
+  def search_dataset_key(uuid=params[:id])
+    "search_dataset_#{uuid}"
+  end
+  
+  def profile_snapshot_key
+    "user/profile_snapshot/#{current_user.id}"
+  end
   
   def new
     @breadcrumb = ['Community', 'Datasets']
@@ -19,7 +31,8 @@ class DatasetController < ApplicationController
     
     expire_fragment dataset_key
     expire_fragment search_dataset_key(@dataset.id)
-        
+    expire_fragment profile_snapshot_key  
+            
     params['creative_commons_license'] = @dataset.creative_commons_license    
   end
 
@@ -28,6 +41,7 @@ class DatasetController < ApplicationController
 
     expire_fragment dataset_key
     expire_fragment search_dataset_key
+    expire_fragment profile_snapshot_key    
         
     if response.key?(:errors)
       flash[:errors] = response[:errors].values
@@ -44,6 +58,7 @@ class DatasetController < ApplicationController
 
     expire_fragment dataset_key
     expire_fragment search_dataset_key(@dataset.id)
+    expire_fragment profile_snapshot_key    
     
     response = catalogue_instance.dataset_update(current_user.id, params[:dataset])
 
@@ -63,6 +78,7 @@ class DatasetController < ApplicationController
     @dataset = params[:dataset] ? Hashie::Mash.new(params[:dataset]) : Hashie::Mash.new({:source => nil, :author => nil})  
     
     expire_fragment dataset_key
+    expire_fragment profile_snapshot_key    
     
     uploaded_file = params[:filename]
 
@@ -102,15 +118,7 @@ class DatasetController < ApplicationController
         end
       }
     end
-  end  
-
-  def dataset_key
-    "dataset/user/#{current_user.id}"
-  end
-  
-  def search_dataset_key(uuid=params[:id])
-    "search_dataset_#{uuid}"
-  end
+  end    
   
   def show
     @breadcrumb = ['Community', 'Datasets']

@@ -15,12 +15,10 @@
       </span>
       </label>
     </div>
-  <% if dataset.owner && dataset.owner.user_id == current_user.id.to_s %>
-    <div class="float-right">
+    <div class="float-right edit-panel" style="display: none;" data-owner="<%= dataset.owner ? dataset.owner.user_id : '' %>">
       <span class="button"><button onclick="<%= onclick_link_to :controller => 'dataset', :action => 'edit', :id => dataset.uuid %>">Edit</button></span>
       <span class="button"><button onclick="<%= onclick_link_to :controller => 'dataset', :action => 'destroy', :id => dataset.uuid %>">Delete</button></span>
     </div>
-  <% end %>
     <div class="clear"></div>
     <p>
       <span class="head">Abstract:</span>
