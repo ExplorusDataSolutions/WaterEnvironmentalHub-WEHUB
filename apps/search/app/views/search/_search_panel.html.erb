@@ -113,6 +113,10 @@
 
   <%# jQuery datepicker %>
     $("#date_start, #date_end").datepicker({ dateFormat: 'dd/mm/yy' });
+    
+    if (WEHub.logged_in()) {
+      $('.user-search-locations').show();
+    }
   });
 </script>
 
@@ -186,17 +190,14 @@
 		<input type="checkbox" name="datasets" value="public" id="data_public" />
 		<label for="data_public">Public Data</label>
 	</div>
-
-  <% if !current_user.nil? %>
-	<div class="search-shared-check">
+	<div class="search-shared-check user-search-locations" style="display: none;">
 		<input type="checkbox" name="datasets" value="mine" id="data_mine" />
 		<label for="data_mine">My Data</label>
 	</div>
-	<div class="search-shared-check">
+	<div class="search-shared-check user-search-locations" style="display: none;">
 		<input type="checkbox" name="datasets" value="shared" id="data_shared" />
 		<label for="data_shared">Data Shared with Me</label>
 	</div>
-  <% end %>
 
 	<div class="clear height-15"></div>
 	<div class="search-button">

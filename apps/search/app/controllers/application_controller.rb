@@ -53,13 +53,10 @@ class ApplicationController < ActionController::Base
   def verify_logged_in
     if current_user.nil?
       cookies.delete :we_hub
-      redirected_from = request.request_uri
+
+      session[:redirected_from] = request.request_uri
       redirect_to :controller => 'user', :action => 'sign_in'
     end
-  end
-  
-  def redirected_from=(value)
-    session[:redirected_from] = value
   end
   
   def redirected_from
