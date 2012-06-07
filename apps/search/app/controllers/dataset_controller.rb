@@ -1,10 +1,10 @@
-class DatasetsController < ApplicationController
+class DatasetController < ApplicationController
 
   respond_to :json, :xml
   
   before_filter :verify_logged_in
 
-  caches_action :show, :cache_path => :datasets_key.to_proc, :expires_in => 30.minutes
+  caches_action :show, :cache_path => :dataset_key.to_proc, :expires_in => 30.minutes
   
   def new
     @breadcrumb = ['Community', 'Datasets']
@@ -13,14 +13,57 @@ class DatasetsController < ApplicationController
     @dataset = params[:dataset] ? Hashie::Mash.new(params[:dataset]) : Hashie::Mash.new({:source => nil, :author => nil})  
   end
   
+  def edit
+    @dataset = catalogue_instance.dataset(params[:id])    
+    @dataset.description = @dataset.description_with_html
+    
+    expire_fragment dataset_key
+    expire_fragment search_dataset_key(@dataset.id)
+        
+    params['creative_commons_license'] = @dataset.creative_commons_license    
+  end
+
+  def destroy
+    response = catalogue_instance.dataset_destroy(current_user.id, params[:id])
+
+    expire_fragment dataset_key
+    expire_fragment search_dataset_key
+        
+    if response.key?(:errors)
+      flash[:errors] = response[:errors].values
+    end
+
+    redirect_to :action => 'show', :anchor => 'mine'
+  end
+  
+  def update
+    params[:dataset] = map_from_form(params[:dataset])     
+    params['creative_commons_license'] = params[:dataset][:creative_commons_license]
+
+    @dataset = Hashie::Mash.new(params[:dataset])
+
+    expire_fragment dataset_key
+    expire_fragment search_dataset_key(@dataset.id)
+    
+    response = catalogue_instance.dataset_update(current_user.id, params[:dataset])
+
+    if response.key?(:errors)
+      flash[:errors] = response[:errors].values      
+      render 'edit'
+    else
+      redirect_to :action => 'show', :anchor => 'mine', :id => response[:uuid]    
+    end
+  end
+  
   def create
+    #ToDo: wrangle this method to be similar to update method (form translation done in search app, not on catalogue service)
     @breadcrumb = ['Community', 'Datasets']
     @main_menu = 'we_community'
 
     @dataset = params[:dataset] ? Hashie::Mash.new(params[:dataset]) : Hashie::Mash.new({:source => nil, :author => nil})  
     
-    expire_fragment datasets_key
-
+    expire_fragment dataset_key
+    
     uploaded_file = params[:filename]
 
     response = {}
@@ -39,20 +82,20 @@ class DatasetsController < ApplicationController
         response = catalogue_instance.create(params)
         
         if response && response.key?(:uuid)        
-          response.merge!({ :callback => (url_for :controller => 'datasets', :action => 'show', :anchor => 'mine', :id => response[:uuid]) })
+          response.merge!({ :callback => (url_for :controller => 'dataset', :action => 'show', :anchor => 'mine', :id => response[:uuid]) })
           response.delete(:uuid)
         end
       rescue Exception => e
         respond_with({ :exception => e.to_s, :status => 500 }, :location => nil) and return
       end
     else
-      response[:errors] = [['filename', 'file can\'t be blank']]
+      response[:errors] = {:filename => 'file can\'t be blank'}
     end
 
     respond_with(response, :location => nil) do |format|
       format.html { 
         if response.key?(:errors)
-          flash[:errors] = response[:errors]
+          flash[:errors] = response[:errors].values
           render 'new'
         else
           redirect_to response[:callback]
@@ -61,8 +104,12 @@ class DatasetsController < ApplicationController
     end
   end  
 
-  def datasets_key
-    "datasets/user/#{current_user.id}"
+  def dataset_key
+    "dataset/user/#{current_user.id}"
+  end
+  
+  def search_dataset_key(uuid=params[:id])
+    "search_dataset_#{uuid}"
   end
   
   def show
@@ -111,6 +158,23 @@ class DatasetsController < ApplicationController
       # or periods with underscore
       name.gsub! /[^\w\.\-]/, '_'
     end
+  end
+  
+  def map_from_form(params)
+    if params[:feature_period_start]
+      params[:feature_period] = "#{params[:feature_period_start]} - #{params[:feature_period_end]}"
+      params.delete(:feature_period_start)
+      params.delete(:feature_period_end)      
+    end
+    if params[:permissions] && params[:permissions][:group] == true.to_s
+      params[:owner] = params[:permissions][:owner]
+    else
+      params[:owner] = params[:permissions][:owner]
+      params[:owner][:group_id] = nil
+    end
+    params.delete(:permissions)
+
+    params
   end
 
 end

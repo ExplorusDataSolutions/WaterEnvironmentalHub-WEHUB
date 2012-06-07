@@ -57,7 +57,10 @@ class Dataset < ActiveRecord::Base
         description_with_html.gsub!(/\n?/, '')
 
         xml.tag!(:description_with_html, description_with_html)
-      end    
+      end
+      if !feature_type.nil?
+        xml.tag!(:feature_type, feature_type.name)
+      end
       if !feature_period.nil?
         xml.tag!(:period, feature_period)
       end
@@ -65,7 +68,7 @@ class Dataset < ActiveRecord::Base
       xml.tag!(:source, source) unless source.nil?
       xml.tag!(:uuid, uuid)
       xml.tag!(:id, uuid)
-      xml.owner :type => 'array' do
+      xml.owner do
         if !owner.user_id.nil?
           xml.tag!(:user_id, owner.user_id)
         end

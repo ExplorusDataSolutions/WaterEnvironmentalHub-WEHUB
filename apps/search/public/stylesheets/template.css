@@ -305,9 +305,9 @@ a{
   text-decoration:underline;
 }
 #header-body .header-logo{
-  background: url(/images/header-logo-258.png) no-repeat;
-  width:258px;
-  height:70px;
+  background: url(/images/header-logo-300.png) no-repeat;
+  width:300px;
+  height:66px;
   float:left;
 }
 #header-body .header-tab{

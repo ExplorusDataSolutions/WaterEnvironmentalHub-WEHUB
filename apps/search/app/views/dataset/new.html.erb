@@ -1,0 +1,100 @@
+<script>
+  $(document).ready(function() {
+
+    $('#groups').click(function(event) {
+      $('#permission_group').attr('checked', true);
+    });
+    
+    $('[type="submit"]').click(function(event) {
+      event.preventDefault();
+      
+      var required = ['dataset[feature_type]', 'permission'];
+      $('form .required').each(function(i,e) { required.push($(e).attr('name')); });
+      var form = $('form');
+
+      var errors = []
+      $(required).each(function(i,e) {
+        element = $('form').find('[name="' + e + '"]');
+        element.removeClass('error');
+        if (element.val() === '') {
+          element.addClass('error');
+          errors.push(element.attr('friendly') ? element.attr('friendly') : e);
+        }
+      });
+
+      if (errors.length > 0) {
+        var errorMsg = ''
+        $(errors).each(function(i,e) { errorMsg += '<li>' + e + ' can\'t be blank</li>'; });
+        $('#error-explanation').html('<strong>Errors:</strong><ul>' + errorMsg + '</ul>').focus();
+        $('#error-explanation, .error').effect("highlight", {}, 3000);
+      } else {
+        $("#terms-dialog").dialog({
+          zIndex: 2000, 
+          height: 250,
+          width: 600,
+          title: 'Terms and conditions',
+          modal: true,
+          buttons: { 
+            "Yes, I agree": function() {
+              $(this).dialog("close");
+              
+              $.ajax({
+                url: "<%= url_for :controller => 'dataset', :action => 'create' %>",
+                data: new FormData($('form[name=create]')[0]),
+                type: 'POST',
+                contentType: false,
+                processData: false,        
+                success: function(data){
+                  if (data && data.callback) {
+                    $("#success-dialog").dialog({
+                      height: 250,
+                      width: 600,
+                      title: 'Thanks!',
+                      modal: true,
+                      buttons: { "Ok": function() { window.location = data.callback; } }
+                    });
+                    setTimeout(function() { window.location = data.callback; }, 18000);
+                  }
+                }, 
+                error: function(data){
+                  WEHub.modal("We're Sorry", "We're exeriencing an issue with the data you've submitted. <p>Error: <em>" + data.responseText + "</em></p>");
+                }
+              });
+            },
+            "No, I do not agree": function() { $(this).dialog("close"); }
+          }
+        });
+      }
+    });    
+  });
+
+</script> 
+
+<%= render '/shared/left_panel' %>
+
+<div class="profile-right-container">
+  <%= render '/shared/menu_horizontal_tabs' %>
+  <div class="community-tab-right">
+    <div class="profile-tab profile-tab-select">
+      <%= link_to 'Profile', :controller => 'user', :action => 'profile' %>
+    </div>
+  </div>
+  <div class="clear"></div>
+  <div class="profile-content-container">
+    <%= render 'upper_navbar' %>
+    
+    <div>
+      <%= render 'dataset_form' %>
+    </div>
+    <div class="clear"></div>    
+  </div>
+</div>
+<div class="clear"></div>
+
+<div id="terms-dialog" style="display: none;">
+  I agree that the data I am about to upload meets our definition of openness. <p>Openness: <strong>"A piece of content or data is open if anyone is free to use, reuse, and redistribute it &mdash; subject only, at most, to the requirement to attribute and share-alike."</strong></p>
+</div>
+
+<div id="success-dialog" style="display: none;">
+  <p><strong>Thank-you for your contribution!</strong></p><p>Your data submission was successful, but it will be a couple hours before you can find it in our search index. Please sit tight as our search bot indexes your data.</p>
+</div>

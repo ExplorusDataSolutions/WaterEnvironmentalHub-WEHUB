@@ -1,0 +1,336 @@
+<style>
+  span.required {
+    color: #FF0000;
+    font-weight: bold;
+    vertical-align: middle;
+    line-height: 0;
+  }
+  span.required-override .required {
+    float: right;
+    margin: 20px 29px 0px 0px;
+  }
+  .dataset-upload-container [type="text"] {
+    width: 500px;
+  }
+  .dataset-upload-container textarea {
+    width: 440px;
+  }
+  .dataset-upload-container textarea {
+    height: 200px;
+  }
+  .dataset-upload-container .observation-data [type="text"] {
+    width: 85px;
+  }
+  .dataset-upload-container .label {
+    text-align: right;
+    vertical-align: top;
+  }
+  .dataset-upload-container .label-header {  
+    padding-top: 15px;
+  }
+  .dataset-upload-container .label-extended {  
+    text-align: right;
+  }  
+  .dataset-upload-container [type="submit"] {
+    height: 40px;
+  }
+  .dataset-upload-container legend {
+    font-weight: bold;
+  }
+  .dataset-upload-container table {
+    width: 100%;
+  }
+</style>
+<script>
+  $(document).ready(function() {
+    function fragmentId(id) {
+      return $(id + '_fragment');
+    }
+    function fragment(id) {
+      var fragment = fragmentId(id);
+      return {id: id};
+    }
+    
+    var fragments = []
+    fragments.push(fragment('#dataset_feature_type_observation_data_static'))
+    fragments.push(fragment('#dataset_feature_type_observation_data_dynamic'))
+    
+    $('[name="dataset[feature_type]"]').change(function(event) {
+      var targetId = '#' + event.target.id;
+      $.each(fragments, function(i, fragment){
+        var parent = fragmentId(fragment.id);
+        var inputs = parent.find('input');
+        if (fragment.id === targetId) {                
+          parent.removeClass('disabled');
+          inputs.removeAttr('disabled');
+        } else {
+          parent.addClass('disabled');
+          inputs.attr('disabled', true);
+        }
+      });
+    });
+
+<% if @dataset.feature_type %>
+    $('[name="dataset[feature_type]"][value=<%= @dataset.feature_type %>]"').attr('checked', true);
+    var period = '<%= @dataset.period %>';
+    if (period.match(/-/)) {
+      var result = period.match(/(.*) - (.*)/);
+      $('[name="dataset[feature_period_start]"]').val(result[1]);
+      $('[name="dataset[feature_period_end]"]').val(result[2]);
+    } else {
+      $('[name="dataset[feature_period]"]').val(period);
+    }
+<% end %>
+
+    if ($('[name="dataset[feature_type]"]:checked').length === 0) {
+      $('#dataset_feature_type_observation_data_static').attr('checked', true);
+    } 
+    $('[name="dataset[feature_type]"]:checked').trigger('change');
+  });
+
+  $(document).ready(function() {
+    $('#permission_public').attr('checked', true);  
+    
+    $.ajax({
+      url: <%= "'/user/groups?user_id=#{logged_in? ? current_user.id : 0}&format=html'" %>,
+      global: false,
+      success: function(html) {
+        $('#groups').html($(html).find('option')).val(0);
+        
+        var groupId = '<%= @dataset.owner ? @dataset.owner.group_id : "" %>';
+        if (groupId) {
+          $('[name="dataset[permissions][owner][group_id]"]').val(groupId);
+          $('#dataset_permissions_group_true').attr('checked', true);  
+        }
+      }
+    });
+  });
+
+  $(document).ready(function() {
+    <%# jQuery datepicker %>
+    $("[name='dataset[feature_period_start]'], [name='dataset[feature_period_end]'], [name='dataset[feature_period]']").datepicker({ dateFormat: 'dd/mm/yy' });    
+  });
+
+  $(document).ready(function() {
+    var myHtmlSettings = {
+      nameSpace: "html", // Useful to prevent multi-instances CSS conflict
+      onShiftEnter: {keepDefault:false, replaceWith:'<br />\n'},
+      onCtrlEnter: {keepDefault:false, openWith:'\n<p>', closeWith:'</p>\n'},
+      onTab: {keepDefault:false, openWith:'     '},
+      previewAutoRefresh: true,
+      previewTemplatePath: '<%= url_for :controller => 'dataset', :action => 'markitup_preview', :format => 'html' %>',
+      markupSet: [
+        {name:'Paragraph', openWith:'<p(!( class="[![Class]!]")!)>', closeWith:'</p>'  },
+        {separator:'---------------' },
+        {name:'Bold', key:'B', openWith:'<strong>', closeWith:'</strong>' },
+        {name:'Italic', key:'I', openWith:'<em>', closeWith:'</em>'  },
+        {separator:'---------------' },
+        {name:'Preview', call:'preview', className:'preview' }        
+      ]
+    };
+    $('#dataset_description').markItUp(myHtmlSettings);
+  });
+</script>
+
+<div id="error-explanation" tabindex="100">
+  <% if flash[:errors] %>
+    <ul>
+    <% flash[:errors].each do |error| %>
+      <li><%= error -%></li>
+    <% end unless !flash[:errors].is_a?(Array) %>
+    </ul>
+  <% end %>
+</div>  
+
+<div class="dataset-upload-container">
+<%= form_for :dataset, :url => (params[:action] == 'new' || params[:action] == 'create' ? { :action => 'create', :anchor => 'share' } : { :action => 'update' }), :html => { :multipart => true, :name => 'create' } do |f| %>
+  <%= f.hidden_field :id %>
+  <table width="100%">
+    <tr>
+      <td colspan="2">
+        <em>Required fields are denoted by an asterisk (<%= required_markup.html_safe -%>).</em>
+      </td>
+    </tr>
+    <tr>
+      <td width="25%" class="label">
+        <%= f.label :name, 'Title' -%>
+      </td>
+      <td width="75%" class="input">
+        <%= f.text_field :name, :class => 'required', :friendly => 'Title' -%> <%= required_markup.html_safe -%>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="label">
+        <%= f.label :description, 'Description' -%>
+      </td>
+      <td class="input">
+        <span class="required-override"><%= required_markup.html_safe -%></span>
+        <%= f.text_area :description, :class => 'required', :friendly => 'Description' %> 
+      </td>
+    </tr>
+  <% if (params[:action] == 'new' || params[:action] == 'create') %>  
+    <tr>
+      <td class="label">
+        <%= label_tag :filename, 'File' -%>
+      </td>  
+      <td class="input">
+        <%= file_field_tag :filename, :class => 'required', :friendly => 'File' %> <%= required_markup.html_safe -%>
+        <div class="">
+          <p>
+          Valid uploads includes: Spreadsheet in .csv, .ods, .xls, or .xlsx format, or Shape files (a .zip file) containing at least a .shp and .dbf file.
+          </p>
+          <p>
+          If the file is in a spreadsheet format it must only have 1 sheet. Multiple sheet uploads will not be successful using the WEHUB uploader. <br />
+          </p>          
+          Shape files will not need to be altered but will need to be converted into WGS84 Geographic ESPG 4326 (<a href="http://spatialreference.org/ref/epsg/4326/">http://spatialreference.org/ref/epsg/4326/</a>) and can be directly uploaded into the WEHub. If the data is in any other format it will need to be lightly altered to fit the following specifications:
+          <ol>                      
+            <li>The file will be set up in a horizontal data representation with the first row being the column headings with units.</li>
+            <li>The file will have an FID column which will represent the feature ID for each individual feature (e.g., a station, a person, etc.) in the table. This can have one to many values. </li>
+            <li>The file will have a Date\Time column. This column can be in multiple formats as long as it is present and populated with values.</li>
+            <li>The file will have a Latitude column. This column will be populated with the features latitude in WGS84 in decimal degrees (example 52.495912).</li>                        
+            <li>The file will have a Longitude column. This column will be populated with the features longitude in WGS84 in decimal degrees (example -114.19012).</li>
+          </ol>
+        </div>
+      </td>
+    </tr>
+  <% end %>  
+    <tr>
+      <td class="label">
+        <%= f.label :source, 'Source' %>
+      </td>
+      <td class="input">
+        <%= f.text_field :source %>
+        <div class="clear">
+          The source could be a link, name of a friend, email address, an organization...
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="2">
+        <%= f.fields_for :author, @dataset.author do |a| %>
+        <fieldset>
+          <legend>Author</legend>
+          <table>
+            <tr>
+              <td class="label"><%= a.label :name -%></td>
+              <td class="input"><%= a.text_field :name -%></td>
+            </tr>        
+            <tr>
+              <td class="label"><%= a.label :email -%></td>
+              <td class="input"><%= a.text_field :email -%></td>
+            </tr>
+          </table>
+        </fieldset>
+        <% end %>
+      </td>
+    </tr>  
+    <tr>
+      <td colspan="2">
+        <fieldset>
+          <legend>Feature type</legend>
+          <table>
+            <tr>
+              <td class="label-extended"><%= f.label :feature_type_observation_data_static, 'Non-temporal (static)' -%></td>
+              <td class="input">
+                <div class="float-left">
+                  <%= f.radio_button :feature_type, :observation_data_static -%>
+                </div>
+                <div id="dataset_feature_type_observation_data_static_fragment" class="fragment observation-data">
+                  <div class="float-left width-5">&nbsp;</div>
+                  <div class="float-left">
+                    <%= f.label :feature_period, 'Date / time' -%>
+                  </div>
+                  <div class="float-left width-5">&nbsp;</div>
+                  <div class="float-left">
+                      <%= f.text_field :feature_period -%>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            
+            <tr>
+              <td class="label-extended"><%= f.label :feature_type_observation_data_dynamic, 'Temporal (dynamic)' -%></td>
+              <td class="input">
+                <div class="float-left">
+                  <%= f.radio_button :feature_type, :observation_data_dynamic -%>
+                </div>
+                <div class="float-left width-5">&nbsp;</div>
+                <div id="dataset_feature_type_observation_data_dynamic_fragment" class="fragment observation-data">
+                  <div class="float-left">
+                      <%= f.label :feature_period_start, 'Date / time' -%>
+                  </div>
+                  <div class="float-left width-5">&nbsp;</div>
+                  <div class="float-left">
+                    <%= f.text_field :feature_period_start -%>
+                  </div>
+                  <div class="float-left width-5">&nbsp;</div>
+                  <div class="float-left">
+                    <%= f.text_field :feature_period_end -%>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </fieldset>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="2">
+        <%= f.fields_for :permissions, @dataset.permissions do |p| %>
+        <fieldset>
+          <legend>Permissions</legend>
+          <table>
+            <tr>
+              <td colspan="2" style="padding-left:50px;">
+              <table>
+                <tr>
+                  <td align="right">
+                    <%= p.label :group_true, 'Share with a group' %>
+                  </td>
+                  <td>       
+                    <%= p.radio_button :group, true %>
+                    <%= p.fields_for :owner do |o| %>
+                      Share with members of the <%= o.select :group_id, ['Loading...'], {}, { :id => 'groups' } %> group.
+                      <%= o.hidden_field :user_id, :value => current_user.id %>
+                    <% end %>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="right">
+                    <%= p.label :group_false, 'Make this data public' %>
+                  </td>
+                  <td>
+                    <%= p.radio_button :group, false, {:checked => true} %>
+                  </td>
+                </tr>
+              </table>
+              </td>
+            </tr>
+          </table>
+        </fieldset>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="2">
+        <%= render :partial => 'creative_commons' %>
+      </td>
+    </tr>
+    
+    <tr>
+      <td colspan="2" style="text-align: center;">
+  <% if params[:action] == 'new' %>      
+        <button type="submit" name="upload">Upload</button>
+  <% else %>
+        <button type="submit" name="update">Update</button>  
+  <% end %>
+      </td>
+    </tr>
+    
+  </table>
+<% end %>
+</div>

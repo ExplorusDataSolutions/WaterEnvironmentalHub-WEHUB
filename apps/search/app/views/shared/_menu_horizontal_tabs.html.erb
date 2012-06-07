@@ -22,7 +22,7 @@
 				Groups
 			</a>
 		</li>
-		<li class="<%= (action_name == 'datasets' || controller_name == 'datasets') ? 'datasets-selected' : 'datasets' %>" onclick="<%= onclick_link_to :controller => 'community', :action => 'datasets' %>">
+		<li class="<%= (action_name == 'datasets' || controller_name == 'dataset') ? 'datasets-selected' : 'datasets' %>" onclick="<%= onclick_link_to :controller => 'community', :action => 'datasets' %>">
 			<a href="<%= url_for :controller => 'community', :action => 'datasets', :anchor => 'friends' %>">
 				<img src="/images/spacer.gif" border="0" width="51" height="65" /><br />
 				Datasets

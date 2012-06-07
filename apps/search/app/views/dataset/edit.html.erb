@@ -1,0 +1,28 @@
+<%= render '/shared/left_panel' %>
+
+<div class="profile-right-container">
+  <%= render '/shared/menu_horizontal_tabs' %>
+  <div class="community-tab-right">
+    <div class="profile-tab profile-tab-select">
+      <%= link_to 'Profile', :controller => 'user', :action => 'profile' %>
+    </div>
+  </div>
+  <div class="clear"></div>
+  <div class="profile-content-container">
+    <%= render 'upper_navbar' %>
+    
+    <div>
+      <%= render 'dataset_form' %>
+    </div>
+    <div class="clear"></div>    
+  </div>
+</div>
+<div class="clear"></div>
+
+<div id="terms-dialog" style="display: none;">
+  I agree that the data I am about to upload meets our definition of openness. <p>Openness: <strong>"A piece of content or data is open if anyone is free to use, reuse, and redistribute it &mdash; subject only, at most, to the requirement to attribute and share-alike."</strong></p>
+</div>
+
+<div id="success-dialog" style="display: none;">
+  <p><strong>Thank-you for your contribution!</strong></p><p>Your data submission was successful, but it will be a couple hours before you can find it in our search index. Please sit tight as our search bot indexes your data.</p>
+</div>

@@ -7,7 +7,13 @@ xml.Metadata('xmlns:geonet' => 'http://www.fao.org/geonetwork') do
     xml.idCitation do
       xml.resTitle(@dataset.name)
     end
-    xml.idAbs(@dataset.name)
+    
+    if @dataset.feature.is_data_source_external? && @dataset.feature.properties
+      xml.idAbs("#{@dataset.name}. #{@dataset.feature.properties.join(', ')}")
+    else
+      xml.idAbs(@dataset.name)
+    end
+
     xml.idPurp(@dataset.description)
     if !@keywords.nil?
       @keywords.each do |k|

@@ -3,9 +3,9 @@ require 'zip/zip'
 class ItemsController < ApplicationController
 
   include DatasetHelper
-  
-  caches_action :index, :cache_path => Proc.new { |c| c.params }, :expires_in => 24.hours
 
+  caches_action :index, :cache_path => :dataset_key.to_proc, :expires_in => 24.hours
+  
   respond_to :json, :xml
 
   protect_from_forgery :except => :create
@@ -110,10 +110,79 @@ class ItemsController < ApplicationController
     end
     
     if !errors.empty?
+      
       respond_with({ :errors => errors }, :location => nil) and return
     end
     
     respond_with({ :uuid => dataset.uuid }, :location => nil) and return
+  end
+  
+  def destroy
+    errors = {}
+ 
+    dataset = Dataset.find_by_uuid(params[:dataset_id])
+    
+    expire_fragment dataset_key(dataset.uuid, 'xml')
+    expire_fragment dataset_key(dataset.uuid, 'json')    
+    
+    if is_owner(dataset, params)
+      dataset.transaction do
+        dataset.feature.destroy
+        dataset.destroy
+      end
+    else
+      errors.store('permissions', 'you don\'t have permissions to edit this dataset')      
+    end
+
+    if !errors.empty?
+      respond_with({ :errors => errors }, :location => nil) and return
+    end
+    
+    respond_with({ :uuid => dataset.uuid }, :location => nil) and return
+  end
+  
+  def update
+    errors = {}
+
+    dataset = Dataset.find_by_uuid(params[:dataset][:id])
+
+    expire_fragment dataset_key(dataset.uuid, 'xml')
+    expire_fragment dataset_key(dataset.uuid, 'json')        
+       
+    if is_owner(dataset, params)
+      
+      updates = params[:dataset].clone
+
+      updates.delete(:id)
+      updates.delete(:feature_source_id)
+
+      updates[:owner_attributes] = dataset.owner.attributes            
+      updates[:owner_attributes].merge!(updates[:owner])
+      updates.delete(:owner)
+
+      updates[:author_attributes] = dataset.author.attributes
+      updates[:author_attributes].merge!(build_author(updates[:author]))
+      updates.delete(:author)
+
+      updates[:feature_type] = FeatureType.find_by_name(updates[:feature_type])
+      updates[:creative_commons_license] = creative_commons_license(updates[:creative_commons_license])
+      
+      updates[:feature_period] = feature_period(updates)
+
+      dataset.update_attributes(updates)
+      
+      if !dataset.errors.empty?
+        dataset.errors.each do |key, value|
+          errors.store('dataset', "#{key} #{value}")
+        end
+      else
+        respond_with({ :uuid => dataset.uuid }, :location => nil) and return      
+      end
+    else
+      errors.store('permissions', 'you don\'t have permissions to edit this dataset')
+    end
+    
+    respond_with({ :errors => errors }, :location => nil) and return    
   end
   
   def load_external_meta_content
@@ -185,6 +254,10 @@ class ItemsController < ApplicationController
       render :text => dataset.uuid and return
     end
     render :text => uuid, :status => 500 and return
+  end
+
+  def dataset_key(uuid=params[:id], format=params[:format])
+    "dataset/index/#{uuid}?format=#{format}"
   end
 
   private

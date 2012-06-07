@@ -1,13 +1,17 @@
 module DatasetHelper
 
-  def create_author(params)
+  def is_owner(dataset, params)
+    dataset.owner.user_id == params[:user_id]
+  end
+  
+  def build_author(params)
 
     first = ''
     last = ''
     email = params[:email]
     if params.key?('name')
       name = params[:name]
-      if name.scan(' ').count > 0
+      if name.strip.scan(' ').count > 0
         names = name.split(' ')
         (0..names.count-2).each do |i|
           first << "#{names[i]} "
@@ -19,11 +23,11 @@ module DatasetHelper
       end
     end
 
-    if !(first.empty? || last.empty? || email.empty?)
-      return Author.create(:first_name => first, :last_name => last, :email => email)
-    else 
-      return nil
-    end
+    return {:first_name => first.strip, :last_name => last.strip, :email => email.strip}
+  end
+  
+  def create_author(params)
+    Author.create(build_author(params))
   end
 
   def create_owner(owner)
@@ -35,7 +39,7 @@ module DatasetHelper
     dataset_params = params[:dataset]
 
     dataset_params[:feature_period] = feature_period(dataset_params)
-    dataset_params.delete_if {|key, value| key == 'feature_period_start' || key == 'feature_period_end' }
+
     dataset_params[:feature_type] =  FeatureType.find_by_name(dataset_params[:feature_type])
     dataset_params[:feature_source] = FeatureSource.find_by_name('catalogue')
     dataset_params[:author] = create_author(dataset_params[:author])
@@ -56,12 +60,18 @@ module DatasetHelper
   end
   
   def feature_period(params)
+    result = ''
     if params.key?('feature_period')
-      params[:feature_period]
+      result = params[:feature_period]
     else
-      "#{params[:feature_period_start]} - #{params[:feature_period_end]}"
+      result = "#{params[:feature_period_start]} - #{params[:feature_period_end]}"
     end
+
+    params.delete_if {|key, value| key == 'feature_period_start' || key == 'feature_period_end' }
+    
+    result    
   end
+  
   
   def sanitize_markup(dirty)
     acceptable_tags = ['p','em','strong']
