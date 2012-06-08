@@ -56,5 +56,6 @@ Catalogue::Application.configure do
 
   # End points for our various dependencies
   config.geoserver_address = 'http://localhost:8080'
+  config.enginey_address = 'http://localhost:3002'  
 
 end
