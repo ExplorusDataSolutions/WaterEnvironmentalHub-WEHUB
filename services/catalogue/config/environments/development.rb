@@ -24,7 +24,8 @@ Catalogue::Application.configure do
   config.action_dispatch.best_standards_support = :builtin
 
   # End points for our various dependencies
-  config.geoserver_address = 'http://localhost:8080'
+  config.geoserver_address = 'http://184.73.111.158:8080'
+  config.enginey_address = 'http://localhost:3002'  
 
 end
 

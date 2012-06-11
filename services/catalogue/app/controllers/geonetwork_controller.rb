@@ -31,7 +31,9 @@ class GeonetworkController < ApplicationController
   def mef_import_list
     uuids = []
     Dataset.all.each do |dataset|
-      uuids.push(dataset.uuid)
+      if dataset.owner.nil? || socialnetwork_instance.public_group?(dataset.owner.group_id)
+        uuids.push(dataset.uuid)
+      end
     end
     
     render :xml => uuids

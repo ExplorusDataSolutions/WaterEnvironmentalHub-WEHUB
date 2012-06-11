@@ -3,7 +3,7 @@ Catalogue::Application.routes.draw do
 
   root :to => "catalogue#index"
   
-  match 'user/log-in' => 'user#sign_in'
+  match 'user/log-in' => 'user#sign_in', :as => 'sign_in'
   match 'user/log-out' => 'user#sign_out'
 
   match 'user/collection' => 'catalogue#user_collection'
@@ -25,6 +25,8 @@ Catalogue::Application.routes.draw do
   match 'parse_json' => 'tools#parse_json', :as=>:parse_json
 
   match 'catalogue/details/:id/*seo' => 'catalogue#details' 
+  
+  match 'search/status' => 'status#search'
   
   # The priority is based upon order of creation:
   # first created -> highest priority.
