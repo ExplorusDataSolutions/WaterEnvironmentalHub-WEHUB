@@ -154,19 +154,25 @@
       
     });
 
+    function cleanSerializedForm(data) {
+      data = data.replace('<%= CGI::escape(constants.text.search) %>', '');
+      data = data.replace('<%= CGI::escape(constants.text.properties) %>', '');
+      data = data.replace('query=&', '');
+      data = data.replace('properties=&', '');
+      return data.match(/(query.*)/)[1];
+    }
+    
     $('[name=search]').click(function(event) {
       event.preventDefault();
       
       $('[name=feature_type]').val(0)
-      var url = "<%= url_for :controller => 'api', :action => 'datasets', :only_path => false %>" + "?" + "key=<%= current_user.api_key %>" + "&" + $('form').serialize().match(/(query.*south=[^&]*)/)[1];
-      url = url.replace('<%= CGI::escape(constants.text.search) %>', '');
-      url = url.replace('<%= CGI::escape(constants.text.properties) %>', '');
+      var url = "<%= url_for :controller => 'api', :action => 'datasets', :only_path => false %>" + "?" + "key=<%= current_user.api_key %>" + "&" + cleanSerializedForm($('form :input[value]').serialize() + "&format=html");
       
       $.ajax({
-        url: (url + "&format=html"), 
+        url: (url), 
         success: function(data) { 
           var response = $('#search_builder_response');
-          response.find('a').attr('href', (url + "&format=xml")).text((url + "&format=xml"))
+          response.find('a').attr('href', (url + "&format=xml")).text(url.replace('format=html', 'format=xml'))
           response.show('fast');
           $('#second-step').show('fast');
           $('[name=info_type], [name=output]').selectmenu();
@@ -187,7 +193,7 @@
       event.preventDefault();
       $.ajax({
         url: "<%= url_for :controller => 'api', :action => 'builder_response' %>",
-        data: decodeURIComponent($('form').serialize()),
+        data: cleanSerializedForm(decodeURIComponent($('form :input[value]').serialize())),
         success: function(data) { $('#builder_response').html(data).show('fast'); },
         error: function() { 
           WEHub.modal("We're Sorry", "No data could be retrieved. Try making a new request."); 
@@ -422,7 +428,7 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
     <div class="rounded">
       <div class="circle"><h3>4</h3></div>
       <%= label_tag 'output', 'Select a Format' %>    
-      <%= select_tag 'output', options_for_select([ ['XML', 'xml'], ['JSON', 'json'], ['CSV', 'csv'] ]), { :include_blank => true } %>
+      <%= select_tag 'output', options_for_select([ ['XML', 'xml'], ['JSON', 'json']), { :include_blank => true } %>
     </div>
     <div class="rounded">
       <div class="circle"><h3>5</h3></div>
