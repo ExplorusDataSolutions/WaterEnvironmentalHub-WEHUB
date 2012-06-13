@@ -103,7 +103,6 @@
     }
     
     var secondaries = $('[name=datasets], [name=info_type], [name=output], [name=commit]');
-    secondaries.attr('disabled', true);
     
     secondaries.change(function(event) {
       $('[name=source]').val('');
@@ -124,9 +123,9 @@
         if (!isExternalDataset(uuid)) {
           $.get("<%= url_for :controller => 'api', :action => 'feature_fields', :format => 'html' %>" + "&id=" + uuid, function(data) {
             $('[name=feature_fields]').html($(data).html());
+            externalLayerPanel.hide('fast');
+            filterPanel.slideDown('fast');            
           });
-          externalLayerPanel.hide('fast');
-          filterPanel.slideDown('fast');
         } else {
           filterPanel.hide('fast'); 
           externalLayerSelector(uuid);
@@ -150,7 +149,6 @@
       var url = "<%= url_for :controller => 'api', :action => 'datasets' %>" + "?feature_type_id=" + featureTypeId + "&format=html";
       
       $.get(url, function(data) { 
-        secondaries.removeAttr('disabled');
         $('[name=datasets]').html($(data).html()); 
       });
       
@@ -160,20 +158,27 @@
       event.preventDefault();
       
       $('[name=feature_type]').val(0)
-      var url = "<%= url_for :controller => 'api', :action => 'datasets', :only_path => false %>" + "?" + "key=<%= current_user.api_key %>" + "&" + $('form').serialize().match(/(start.*south=[^&]*)/)[1];
-
+      var url = "<%= url_for :controller => 'api', :action => 'datasets', :only_path => false %>" + "?" + "key=<%= current_user.api_key %>" + "&" + $('form').serialize().match(/(query.*south=[^&]*)/)[1];
+      url = url.replace('<%= CGI::escape(constants.text.search) %>', '');
+      url = url.replace('<%= CGI::escape(constants.text.properties) %>', '');
+      
       $.ajax({
         url: (url + "&format=html"), 
         success: function(data) { 
           var response = $('#search_builder_response');
           response.find('a').attr('href', (url + "&format=xml")).text((url + "&format=xml"))
           response.show('fast');
-          secondaries.removeAttr('disabled');
+          $('#second-step').show('fast');
+          $('[name=info_type], [name=output]').selectmenu();
           $('[name=datasets]').html($(data).html());
-          $('[name=datasets]').focus();
+          $('[name=datasets]').selectmenu({
+            width: 875
+          });
+          $('[name=datasets]').focus();          
         },
         error: function() { 
           WEHub.modal("We're Sorry", "No data could be retrieved. Try making a new request."); 
+          $('#second-step').hide('slow');          
         }
       });
     });
@@ -238,7 +243,9 @@
         click: function() { $(this).dialog("close"); }
       }]);
       loadMapAndAssignBoundingBox('#bbox-selector');
-    });    
+    });
+    
+    $('[name=search], [name=commit]').button();
   });
 </script>
 
@@ -307,6 +314,17 @@ form .round div {
   padding: 0px;
   margin: 0px;
 }
+#query_builder .option .circle {
+  background: #fff;
+  border: solid 2px #CBE2F0;
+}
+#query_builder .option h3 {
+  color: #066497;
+}
+#query_builder .ui-widget, .ui-selectmenu-menu ul li {
+  font-size: 0.8em;
+  text-align: left;  
+}
 </style>
 
 <p>
@@ -318,15 +336,41 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
 </p>
 
 <h2>The API Builder</h2>
-<%= form_for :query_builder, :html => { :id => 'query_builder' } do |f| %>
+<%= form_for :query_builder, :html => { :id => 'query_builder', :name => 'builder' } do |f| %>
   <%= hidden_field_tag 'source', false %>
   <div class="rounded">
     <div class="circle"><h3>1</h3></div>
-    <h4>Search</h4>
-    <table style="width: 995px;" >
+    <div>Seach</div>
+    <table style="margin: 30px 0 0 30px;">
       <tr>
+        <td class="option"><div class="circle option"><h3>A</h3></div></td>
+        <td>By keywords / feature properties</td>
+        <td></td>
+        <td class="option"><div class="circle"><h3>B</h3></div></td>
+        <td>By date range / bounding box</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="rounded emphasized" style="width: 368px;">
+          <table>
+            <tr>
+              <td style="width: 125px;"><%= label_tag :keywords, "Enter keywords" %></td>
+              <td><%= f.text_field :keywords, :name => 'query', :size => '23'  %></td>
+            </tr>
+            <tr>
+              <td><%= label_tag :properties, "Enter properties" %></td>
+              <td><%= f.text_field :properties, :name => 'properties', :size => '23' %></td>
+            </tr>
+            <tr>
+              <td style="padding: 20px 0 0 0;"></td>
+              <td><%= submit_tag 'Search', :name => 'search', :style => 'float: right;' %></td>
+            </tr>
+          </table>
+        </td>
+        <td style="padding: 0 0 0 55px;"><h3>- or -</h3></td>
+        <td></td>
         <td class="rounded emphasized">
-    <div id="advanced_search_selector" style="">
+    <div id="advanced_search_selector">
       <div id="date-range"><%= label_tag :start, "Enter a date range" %> <%= text_field_tag :start %> - <%= text_field_tag :end %></div>
       <div id="bbox-selector">Enter a bounding box (<a href="#" id="bbox_selector">click here</a> for a map selector)
         <table>
@@ -336,62 +380,54 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
         </table>
       <%= submit_tag 'Search', :name => 'search', :style => 'float: right;' %>
       </div>
-    </div>
-        </td>
-        <td style="padding: 80px;">
-    <h3>or</h3>
-        </td>
-        <td>
-    <h4>Select</h4>
-    <div class="rounded emphasized">
-    <%= label_tag 'feature_type', 'Select a Feature type' %>
-    <%= select_tag 'feature_type', options_from_collection_for_select(@feature_types, 'id', 'description'), { :include_blank => true } %>
-    </div>
+    </div>        
         </td>
       </tr>
     </table>
   </div>
-  <div id="search_builder_response" style="display: none;">
-    <%= render 'builder_response' %>
-  </div>
-  <div class="rounded">
-    <div class="circle"><h3>2</h3></div>
-    <div>
-    <%= label_tag 'datasets', 'Select a Dataset' %>
-    <%= select_tag 'datasets', nil, { :include_blank => true } %>
+  <div id="second-step" style="display: none;">
+    <div id="search_builder_response" style="display: none;">
+      <%= render 'builder_response' %>
     </div>
-  </div>
-  <div class="rounded">
-    <div class="circle"><h3>3</h3></div>
-    <%= label_tag 'info_type', 'Select the type of Information you would like to request' %>
-    <%= select_tag 'info_type', options_for_select([ ['Dataset Information', 'dataset'], ['Feature Data', 'feature'] ]), { :include_blank => true } %>
-    <div id="feature_type_filter" style="display: none;">
-      Select a feature field to filter by (optional) <%= select_tag 'feature_fields', nil, { :include_blank => true } %>
-    </div>
-    <div id="feature_layer_filter" style="margin: 10px 0px 10px 50px; display: none;" class="rounded emphasized">
-      <div class="filter_layer_display" style="display: none;">
-        Selected layer: <%= select_tag 'layer' , options_for_select([]), { :include_blank => true } %>
-        <div>
-        Selected bounding box: 
-        <table class="layer-bounding-box" >
-          <tr><td></td><td><%= text_field_tag "layer_north"  %></td><td></td></tr>
-          <tr><td style="padding-left: 97px"><%= text_field_tag "layer_west" %></td><td></td><td><%= text_field_tag "layer_east" %></td></tr>
-          <tr><td></td><td><%= text_field_tag "layer_south" %></td><td></td></tr>
-        </table>
-        </div>
-        <div id="date-range"><%= label_tag :filter_layer_start, "Select a date range" %> <%= text_field_tag :filter_layer_start %> - <%= text_field_tag :filter_layer_end %></div>
+    <div class="rounded">
+      <div class="circle"><h3>2</h3></div>
+      <div>
+      <%= label_tag 'datasets', 'Select a Dataset' %>
+      <%= select_tag 'datasets', nil, { :include_blank => true } %>
       </div>
-      <a href="#" id="layer-selector-hook">Click here</a> to open our layer selector.
     </div>
-  </div>
-  <div class="rounded">
-    <div class="circle"><h3>4</h3></div>
-    <%= label_tag 'output', 'Select a Format' %>    
-    <%= select_tag 'output', options_for_select([ ['XML', 'xml'], ['JSON', 'json'] ]), { :include_blank => true } %>
-  </div>
-  <div class="rounded">
-    <div class="circle"><h3>5</h3></div>
-    <%= submit_tag 'Build the API call' %>
+    <div class="rounded">
+      <div class="circle"><h3>3</h3></div>
+      <%= label_tag 'info_type', 'Select the type of Information you would like to request' %>
+      <%= select_tag 'info_type', options_for_select([ ['Dataset Information', 'dataset'], ['Feature Data', 'feature'] ]), { :include_blank => true } %>
+      <div id="feature_type_filter" style="display: none;">
+        Select a feature field to filter by (optional) <%= select_tag 'feature_fields', nil, { :include_blank => true } %>
+      </div>
+      <div id="feature_layer_filter" style="margin: 10px 0px 10px 50px; display: none;" class="rounded emphasized">
+        <div class="filter_layer_display" style="display: none;">
+          Selected layer: <%= select_tag 'layer' , options_for_select([]), { :include_blank => true } %>
+          <div>
+          Selected bounding box: 
+          <table class="layer-bounding-box" >
+            <tr><td></td><td><%= text_field_tag "layer_north"  %></td><td></td></tr>
+            <tr><td style="padding-left: 97px"><%= text_field_tag "layer_west" %></td><td></td><td><%= text_field_tag "layer_east" %></td></tr>
+            <tr><td></td><td><%= text_field_tag "layer_south" %></td><td></td></tr>
+          </table>
+          </div>
+          <div id="date-range"><%= label_tag :filter_layer_start, "Select a date range" %> <%= text_field_tag :filter_layer_start %> - <%= text_field_tag :filter_layer_end %></div>
+        </div>
+        <a href="#" id="layer-selector-hook">Click here</a> to open our layer selector.
+      </div>
+    </div>
+    <div class="rounded">
+      <div class="circle"><h3>4</h3></div>
+      <%= label_tag 'output', 'Select a Format' %>    
+      <%= select_tag 'output', options_for_select([ ['XML', 'xml'], ['JSON', 'json'], ['CSV', 'csv'] ]), { :include_blank => true } %>
+    </div>
+    <div class="rounded">
+      <div class="circle"><h3>5</h3></div>
+      <%= submit_tag 'Build the API call' %>
+    </div>
   </div>
   
   <div id="builder_response" style="display: none;">
