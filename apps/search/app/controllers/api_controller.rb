@@ -3,7 +3,6 @@ class ApiController < ApplicationController
   include SearchHelper
   
   caches_action :dataset, :datasets, :cache_path => Proc.new { |c| c.params }, :expires_in => 24.hours
-  caches_action :builder_response, :cache_path => Proc.new { |c| c.params.delete_if { |k,v| k.starts_with?('utf8') || k.starts_with?('authenticity_token') }}, :expires_in => 24.hours
   
   respond_to :json, :xml
 
@@ -36,15 +35,17 @@ class ApiController < ApplicationController
     elsif ((date_start && date_end) && !(date_start.empty? && date_end.empty?)) || ((north && east && south && west) && !(north.empty? && east.empty? && south.empty? && west.empty))
       search = search_instance.do_query_advanced('all', date_start, date_end, south, east, north, west)
       @datasets = search.results
-      if @datasets.nil? || @datasets.empty?
-        render :status => 500 and return
-      else
+      if !@datasets.nil? || !@datasets.empty?
         @datasets.sort_by! { |dataset| dataset.name } 
       end
     end
-    respond_with(@datasets) do |format|
-      format.html { render :partial => 'datasets' }
-    end    
+    if @datasets.nil? || @datasets.empty?
+      render :status => 500 and return
+    else
+      respond_with(@datasets) do |format|
+        format.html { render :partial => 'datasets' }
+      end 
+    end
   end
   
   def shared_properties

@@ -1,6 +1,6 @@
 <div class="response">
   <div>
-    <strong>API Call</strong>
+    <strong>Resulting API call</strong>
     <div class="uri">
       <% if @info_type == 'dataset' %>
         <% url = CGI.unescape(url_for( :controller => 'api', :action => 'dataset', :only_path => false) + "?id=#{@datasets}&key=#{current_user.api_key}&output=#{@output}") %>
