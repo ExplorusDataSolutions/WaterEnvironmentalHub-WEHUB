@@ -35,10 +35,10 @@ class ShapeTranslator
     Zip::ZipFile.open(filename_upload) do |zip_file|
      zip_file.each do |file|
        
-       if !file.name.match(/.shp$/).nil?       
+       if !file.name.match(/.shp$/i).nil?       
          filename_shape = file.name
        end
-       if !file.name.match(/.dbf$/).nil?
+       if !file.name.match(/.dbf$/i).nil?
          has_dbf = true
        end
        zip_file.extract(file, upload_path(file.name)) { true }

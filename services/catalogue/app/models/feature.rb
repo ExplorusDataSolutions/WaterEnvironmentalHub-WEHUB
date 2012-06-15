@@ -185,7 +185,7 @@ class Feature
       filename = Pathname.new(params[:filename]).basename.to_s     
       directory = Pathname.new(params[:filename]).dirname.to_s
 
-      if !filename.match(/(\.xls|\.xlsx|\.ods.|\.csv)$/).nil?
+      if !filename.match(/(\.xls|\.xlsx|\.ods.|\.csv)$/i).nil?
         sheet_translator = SpreadsheetTranslator.new(filename, directory, "#{Rails.root}/tmp/spreadsheets")
               
         execute("CREATE TABLE #{tablename} (#{sheet_translator.fields_sql})")
@@ -204,7 +204,7 @@ class Feature
         rescue Exception => e
         end
 
-      elsif !filename.match(/(\.zip)$/).nil?
+      elsif !filename.match(/(\.zip)$/i).nil?
         shape_translator = ShapeTranslator.new(filename, tablename, '4326', directory, "#{Rails.root}/tmp/shape_scripts")
             
         execute(shape_translator.shape_sql)
