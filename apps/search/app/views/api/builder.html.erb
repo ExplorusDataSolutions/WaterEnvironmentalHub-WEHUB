@@ -288,7 +288,7 @@ form .round div {
       event.preventDefault();
       $.ajax({
         url: "<%= url_for :controller => 'api', :action => 'builder_response' %>",
-        data: cleanSerializedForm(encodeURIComponent($('form :input[value]').serialize())),
+        data: cleanSerializedForm($('form').find('input, select').not('[name=utf8], [name=authenticity_token], :button, [type=submit]').filter(':input[value]').serialize()),
         success: function(data) { 
           $('#builder_response').html(data).show('fast', function() { $(this).attr('tabindex', -1).focus(); }).effect("highlight", { color: '#FFFFFF' }, 6000); 
         },
