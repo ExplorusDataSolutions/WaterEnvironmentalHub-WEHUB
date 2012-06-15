@@ -1,10 +1,10 @@
 <style>
 .format-selector {
   font-size: 0.8em;
-  margin-left: -110px;
+  margin-left: 40px;
   padding: 1px 8px;
   position: absolute;
-  z-index: 100;
+  z-index: 5000;
 }
 #layer-selector table {
   border-collapse: collapse; 
@@ -86,7 +86,7 @@
     bindDownloadButtonset()
     
     $('.tab-download').click(function() {
-      formatSelector.show();
+      formatSelector.toggle();
     });
     
     $('form[name=download]').find('[name=start],[name=end]').datepicker({ dateFormat: 'dd/mm/yy' });

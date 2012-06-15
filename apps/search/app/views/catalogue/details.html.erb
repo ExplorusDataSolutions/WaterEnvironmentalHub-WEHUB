@@ -18,7 +18,7 @@
     }, 5000);
 
     if (WEHub.logged_in()) {
-      $('#my-collection').show();
+      $('#my-collection').css('visibility', 'visible');
       $('#my-collection').click(function() {
         var ids = [];
         ids.push('<%= @dataset.uuid %>');
@@ -38,7 +38,7 @@
               }
             }
           }  
-          $('#add-review').show();
+          $('#add-review').css('visibility', 'visible');
           $('#add-review').click(function() {
             WEHub.dialog("Review this dataset", $('.new-comment:first').html());
             $('#dialog-modal .rating-container').rating();
@@ -51,7 +51,7 @@
             }]);
           });
         }
-      });
+      });      
     }
   });
 </script>
@@ -177,6 +177,11 @@ $(document).ready(function() {
       }      
       
       function drawLayer(layer) {
+        var oldBoxes = map.getLayersByName('boxes');
+        for (var i=0 ; i<oldBoxes.length ; i++) {
+          map.removeLayer(oldBoxes[i]);
+        }
+        
         var boxes = new OpenLayers.Layer.Boxes('boxes');
         var box = new OpenLayers.Marker.Box(layer.bounds);
         box.setBorder(layer.colour, 2);
@@ -225,8 +230,8 @@ $(document).ready(function() {
     <a href="#" onclick="history.go(-1);return false;">Back to Search Results</a>
 </div>
 <div class="top-container-tab-body" >
-  <div class="top-container-tab" id="add-review" style="display: none;">+ Comments</div>
-  <div class="top-container-tab" id="my-collection" style="display: none;">+ My collection</div>
+  <div class="top-container-tab" id="add-review" style="visibility: hidden;">+ Comments</div>
+  <div class="top-container-tab" id="my-collection" style="visibility: hidden;">+ My collection</div>
   <div class="top-container-tab tab-download">
     <div class="float-left">Download</div>
     <div class="float-left tab-download-arrow"></div>   
