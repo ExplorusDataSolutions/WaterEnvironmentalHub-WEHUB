@@ -1,5 +1,7 @@
 class StatisticsController < ApplicationController
 
+  include DatasetHelper
+  
   respond_to :json, :xml
 
   def datasets_by_type
@@ -10,12 +12,17 @@ class StatisticsController < ApplicationController
   end
   
   def last_uploaded
-    datasets = Dataset.find(:all, :order => 'updated_at DESC', :limit => 2)
+    datasets = Dataset.find(:all, :order => 'updated_at DESC', :limit => 100)
     
     results = []
     datasets.each do |dataset| 
-      results.push({ :uuid => dataset.uuid, :name => dataset.name, :description => dataset.description })
-    end
+      if public_dataset?(dataset)
+        results.push({ :uuid => dataset.uuid, :name => dataset.name, :description => dataset.description })
+      end
+      if results.count == 2
+        break
+      end
+    end 
     
     respond_with(:datasets => results)
   end
