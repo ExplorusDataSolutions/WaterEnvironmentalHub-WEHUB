@@ -2,7 +2,7 @@ class ApiController < ApplicationController
   
   include SearchHelper
   
-  caches_action :dataset, :datasets, :cache_path => Proc.new { |c| c.params }, :expires_in => 24.hours
+#  caches_action :dataset, :datasets, :cache_path => Proc.new { |c| c.params }, :expires_in => 24.hours
   
   respond_to :json, :xml
 
@@ -150,7 +150,7 @@ class ApiController < ApplicationController
         else
           @properties = ''
           if params[:feature_fields] && !params[:feature_fields].empty?
-            @properties = "&properties=#{params[:feature_fields]}"
+            @properties = "&properties=#{CGI::escape(params[:feature_fields])}"
           end
         end
                 

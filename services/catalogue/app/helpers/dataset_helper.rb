@@ -104,7 +104,7 @@ module DatasetHelper
   end
   
   def public_dataset?(dataset)
-    !dataset.owner || dataset.owner.group_id.nil? || dataset.owner.group_id.empty? || dataset.owner.group_id && socialnetwork_instance.public_group?(dataset.owner.group_id)
+    !dataset.owner || dataset.owner.group_id.nil? || dataset.owner.group_id.to_s.empty? || dataset.owner.group_id && socialnetwork_instance.public_group?(dataset.owner.group_id)
   end
 
 end

@@ -59,19 +59,18 @@ class Feature
 
         column_names.delete('the_geom') unless column_names.nil?
         if has_geom
-          column_names = column_names.collect {|x| "\"#{x}\"" }.join(', ')
+          column_names = column_names.collect {|x| "\"#{x}\"" }.join(', ') unless column_names.nil?
 
           properties = execute("SELECT #{column_names} FROM #{tablename}")
           coordinates = execute("SELECT ST_AsGeoJSON(the_geom) AS geometry FROM #{tablename}")
 
           features = []
           properties.each_with_index do |prop, i|
-            if coordinates[i]['geometry']
-              features.push({ :type => "Feature",
-                              :geometry => JSON.parse(coordinates[i]['geometry']),
-                              :properties => properties[i]
-                            })
-            end
+            geometry = coordinates[i]['geometry']
+            features.push({ :type => "Feature",
+                            :geometry => geometry ? JSON.parse(geometry) : 'unknown',
+                            :properties => properties[i]
+                          })
           end            
           
           # returning GeoJSON, for GeoJSON example see: http://geojson.org/geojson-spec.html#examples
