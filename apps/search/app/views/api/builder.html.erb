@@ -1,4 +1,97 @@
 <% cache "api_builder" do %>
+<style>
+form {
+  margin: 10px;
+}
+form .round div {
+  padding-top: 10px;
+}
+#advanced_search_selector input, #layer-selector input, #feature_layer_filter input {
+  width: 85px;
+}
+#builder_result, #response div {
+  padding-top: 10px;
+}
+#response div > div {
+  padding-left: 10px;
+}
+#builder_response, #search_builder_response {
+  margin: 0 0 15px 0;
+  padding: 10px;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;  
+	background: #FFFF9C;	
+}
+#builder_response pre, #search_builder_response pre {
+  height: 300px;
+  overflow: scroll;
+  width: 1070px;
+}
+#builder_response .uri, #search_builder_response .uri {
+  padding: 0 0 0 10px;
+  white-space: nowrap;
+  overflow: auto;
+}
+#feature_type_filter, #feature_layer_filter {
+  padding: 5px 0 0 50px;
+}
+#search_builder_response pre {
+  height: 100px;
+}
+.circle {
+	display: block;
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	vertical-align: middle;
+	text-align: center;
+	background: #CBE2F0;
+	border-radius: 40px;
+	-webkit-border-radius: 40px;
+	padding: 0px;
+	float: left;
+	margin-right: 20px;
+}
+.circle h3 {
+  margin: 0px;
+  color: #066497;
+}
+.rounded {
+  background: none repeat scroll 0 0 #FFFFFF;
+  border: 1px solid #D5D6D8;
+  border-radius: 5px 5px 5px 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.emphasized {
+  background-color: #DEECF4;
+}
+#layer-selector {
+  text-align: left;
+}
+#layer-selector table td {
+  vertical-align: top;
+}
+#layer-selector .layers span {
+  font-size: 10pt;
+}
+#query_builder h4 {
+  padding: 0px;
+  margin: 0px;
+}
+#query_builder .option .circle {
+  background: #fff;
+  border: solid 2px #CBE2F0;
+}
+#query_builder .option h3 {
+  color: #066497;
+}
+#query_builder .ui-widget, .ui-selectmenu-menu ul li {
+  font-size: 0.8em;
+  text-align: left;  
+}
+</style>
+
 <script>
   $('document').ready(function() {
     $('#feature_layer_filter').hide();
@@ -93,6 +186,7 @@
                 $('#feature_layer_filter .filter_layer_display').slideDown('fast');
                 $('[name=filter_layer_start]').val($('[name=layer_start]').val());
                 $('[name=filter_layer_end]').val($('[name=layer_end]').val());
+                $('[name=layer]').selectmenu('destroy').selectmenu();                
               }
             }]
           });
@@ -103,7 +197,6 @@
     }
     
     var secondaries = $('[name=datasets], [name=info_type], [name=output], [name=commit]');
-    secondaries.attr('disabled', true);
     
     secondaries.change(function(event) {
       $('[name=source]').val('');
@@ -124,9 +217,10 @@
         if (!isExternalDataset(uuid)) {
           $.get("<%= url_for :controller => 'api', :action => 'feature_fields', :format => 'html' %>" + "&id=" + uuid, function(data) {
             $('[name=feature_fields]').html($(data).html());
+            externalLayerPanel.hide('fast');
+            filterPanel.slideDown('fast');
+            $('[name=feature_fields]').selectmenu('destroy').selectmenu();            
           });
-          externalLayerPanel.hide('fast');
-          filterPanel.slideDown('fast');
         } else {
           filterPanel.hide('fast'); 
           externalLayerSelector(uuid);
@@ -150,30 +244,42 @@
       var url = "<%= url_for :controller => 'api', :action => 'datasets' %>" + "?feature_type_id=" + featureTypeId + "&format=html";
       
       $.get(url, function(data) { 
-        secondaries.removeAttr('disabled');
         $('[name=datasets]').html($(data).html()); 
       });
       
     });
 
+    function cleanSerializedForm(data) {
+      data = data.replace('&query=<%= CGI::escape(constants.text.search) %>', '');
+      data = data.replace('&properties=<%= CGI::escape(constants.text.properties) %>', '');
+      return data;
+    }
+    
     $('[name=search]').click(function(event) {
       event.preventDefault();
       
       $('[name=feature_type]').val(0)
-      var url = "<%= url_for :controller => 'api', :action => 'datasets', :only_path => false %>" + "?" + "key=<%= current_user.api_key %>" + "&" + $('form').serialize().match(/(start.*south=[^&]*)/)[1];
-
+      
+      var formValues = cleanSerializedForm($('form').find('[name=query], [name=properties], [name=north], [name=east], [name=south], [name=east], [name=west], [name=start], [name=end]').filter(':input[value]').serialize());
+      var url = "<%= url_for :controller => 'api', :action => 'datasets', :only_path => false %>" + "?" + "key=<%= current_user.api_key %>" + "&" + formValues + "&format=html";
+      
       $.ajax({
-        url: (url + "&format=html"), 
+        url: (url), 
         success: function(data) { 
           var response = $('#search_builder_response');
-          response.find('a').attr('href', (url + "&format=xml")).text((url + "&format=xml"))
-          response.show('fast');
-          secondaries.removeAttr('disabled');
+          response.find('a').attr('href', (url + "&format=xml")).text(url.replace('format=html', 'format=xml'))
+          response.show('fast', function() { $(this).attr('tabindex', -1).focus(); });
+          $('#second-step').show('fast');
+          $('[name=info_type], [name=output]').selectmenu('destroy').val(0).trigger('change').selectmenu();
           $('[name=datasets]').html($(data).html());
-          $('[name=datasets]').focus();
+          $('[name=datasets]').selectmenu('destroy').trigger('change').selectmenu({ width: 995 });
+          response.effect("highlight", { color: '#FFFFFF' }, 6000);
+          $('#second-step input:text').val('');
+
         },
         error: function() { 
           WEHub.modal("We're Sorry", "No data could be retrieved. Try making a new request."); 
+          $('#second-step').hide('slow');          
         }
       });
     });
@@ -182,8 +288,10 @@
       event.preventDefault();
       $.ajax({
         url: "<%= url_for :controller => 'api', :action => 'builder_response' %>",
-        data: decodeURIComponent($('form').serialize()),
-        success: function(data) { $('#builder_response').html(data).show('fast'); },
+        data: cleanSerializedForm($('form').find('input, select').not('[name=utf8], [name=authenticity_token], :button, [type=submit]').filter(':input[value]').serialize()),
+        success: function(data) { 
+          $('#builder_response').html(data).show('fast', function() { $(this).attr('tabindex', -1).focus(); }).effect("highlight", { color: '#FFFFFF' }, 6000); 
+        },
         error: function() { 
           WEHub.modal("We're Sorry", "No data could be retrieved. Try making a new request."); 
         },
@@ -238,76 +346,11 @@
         click: function() { $(this).dialog("close"); }
       }]);
       loadMapAndAssignBoundingBox('#bbox-selector');
-    });    
+    });
+    
+    $('[name=search], [name=commit]').button();
   });
 </script>
-
-<style>
-form {
-  margin: 10px;
-}
-form .round div {
-  padding-top: 10px;
-}
-#advanced_search_selector input, #layer-selector input, #feature_layer_filter input {
-  width: 80px;
-}
-#builder_result, #response div {
-  padding-top: 10px;
-}
-#response div > div {
-  padding-left: 10px;
-}
-#builder_response pre, #search_builder_response pre {
-  height: 300px;
-  overflow: scroll;
-  width: 1070px;
-}
-#search_builder_response pre {
-  height: 100px;
-}
-.circle {
-	display: block;
-	width: 30px;
-	height: 30px;
-	line-height: 30px;
-	vertical-align: middle;
-	text-align: center;
-	background: #CBE2F0;
-	-moz-border-radius: 40px;
-	-webkit-border-radius: 40px;
-	padding: 0px;
-	float: left;
-	margin-right: 20px;
-}
-.circle h3 {
-  margin: 0px;
-  color: #066497;
-}
-.rounded {
-  background: none repeat scroll 0 0 #FFFFFF;
-  border: 1px solid #D5D6D8;
-  border-radius: 5px 5px 5px 5px;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-.emphasized {
-  background-color: #DEECF4;
-}
-#layer-selector {
-  text-align: left;
-}
-#layer-selector table td {
-  vertical-align: top;
-}
-#layer-selector .layers span {
-  font-size: 10pt;
-}
-#query_builder h4 {
-  padding: 0px;
-  margin: 0px;
-}
-</style>
 
 <p>
 The WEHUB project offers an innovative aggregator service linked with a unified output service (an application programming interface, or API). This enables computer functions, or Apps, to be developed on top of the water data made available through this website. The WEHUB offers a typical data service for internally-uploaded information, while a translation engine is used to transmit external data in a unified format. This website supports a number of water-related web service standards, including WaterML and Sensor Observation Services.
@@ -318,80 +361,99 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
 </p>
 
 <h2>The API Builder</h2>
-<%= form_for :query_builder, :html => { :id => 'query_builder' } do |f| %>
+<%= form_for :query_builder, :html => { :id => 'query_builder', :name => 'builder' } do |f| %>
   <%= hidden_field_tag 'source', false %>
   <div class="rounded">
     <div class="circle"><h3>1</h3></div>
-    <h4>Search</h4>
-    <table style="width: 995px;" >
+    <div>Search</div>
+    <table style="margin: 30px 0 0 30px;">
       <tr>
+        <td class="option"><div class="circle option"><h3>A</h3></div></td>
+        <td>By keywords / feature properties</td>
+        <td></td>
+        <td class="option"><div class="circle"><h3>B</h3></div></td>
+        <td>By date range / bounding box</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="rounded emphasized" style="width: 368px;">
+          <table>
+            <tr>
+              <td style="width: 125px;"><%= label_tag :keywords, "Enter keywords" %></td>
+              <td><%= f.text_field :keywords, :name => 'query', :size => '23'  %></td>
+            </tr>
+            <tr>
+              <td><%= label_tag :properties, "Enter properties" %></td>
+              <td><%= f.text_field :properties, :name => 'properties', :size => '23' %></td>
+            </tr>
+            <tr>
+              <td style="padding: 20px 0 0 0;"></td>
+              <td><%= submit_tag 'Search', :name => 'search', :style => 'float: right;' %></td>
+            </tr>
+          </table>
+        </td>
+        <td style="padding: 0 0 0 55px;"><h3>- or -</h3></td>
+        <td></td>
         <td class="rounded emphasized">
-    <div id="advanced_search_selector" style="">
-      <div id="date-range"><%= label_tag :start, "Enter a date range" %> <%= text_field_tag :start %> - <%= text_field_tag :end %></div>
-      <div id="bbox-selector">Enter a bounding box (<a href="#" id="bbox_selector">click here</a> for a map selector)
+    <div id="advanced_search_selector">
+      <div id="bbox-selector">Select a bounding box
         <table>
           <tr><td></td><td><%= text_field_tag :north %></td><td></td></tr>
           <tr><td style="padding-left: 97px"><%= text_field_tag :west %></td><td></td><td><%= text_field_tag :east %></td></tr>
           <tr><td></td><td><%= text_field_tag :south %></td><td></td></tr>
+          <tr><td colspan="4"><a href="#" id="bbox_selector">Click here</a> to open our bounding box selector.</td></tr>
+          <tr><td colspan="4"><div id="date-range"><%= label_tag :start, "Select a date range" %> <%= text_field_tag :start %> - <%= text_field_tag :end %></div></td></tr>
+          <tr><td colspan="4" style="align: right">      <%= submit_tag 'Search', :name => 'search', :style => 'float: right;' %></td></tr>
         </table>
-      <%= submit_tag 'Search', :name => 'search', :style => 'float: right;' %>
       </div>
-    </div>
-        </td>
-        <td style="padding: 80px;">
-    <h3>or</h3>
-        </td>
-        <td>
-    <h4>Select</h4>
-    <div class="rounded emphasized">
-    <%= label_tag 'feature_type', 'Select a Feature type' %>
-    <%= select_tag 'feature_type', options_from_collection_for_select(@feature_types, 'id', 'description'), { :include_blank => true } %>
-    </div>
+    </div>        
         </td>
       </tr>
     </table>
   </div>
-  <div id="search_builder_response" style="display: none;">
-    <%= render 'builder_response' %>
-  </div>
-  <div class="rounded">
-    <div class="circle"><h3>2</h3></div>
-    <div>
-    <%= label_tag 'datasets', 'Select a Dataset' %>
-    <%= select_tag 'datasets', nil, { :include_blank => true } %>
+  <div id="second-step" style="display: none;">
+    <div id="search_builder_response" style="display: none;">
+      <%= render 'builder_response' %>
     </div>
-  </div>
-  <div class="rounded">
-    <div class="circle"><h3>3</h3></div>
-    <%= label_tag 'info_type', 'Select the type of Information you would like to request' %>
-    <%= select_tag 'info_type', options_for_select([ ['Dataset Information', 'dataset'], ['Feature Data', 'feature'] ]), { :include_blank => true } %>
-    <div id="feature_type_filter" style="display: none;">
-      Select a feature field to filter by (optional) <%= select_tag 'feature_fields', nil, { :include_blank => true } %>
-    </div>
-    <div id="feature_layer_filter" style="margin: 10px 0px 10px 50px; display: none;" class="rounded emphasized">
-      <div class="filter_layer_display" style="display: none;">
-        Selected layer: <%= select_tag 'layer' , options_for_select([]), { :include_blank => true } %>
-        <div>
-        Selected bounding box: 
-        <table class="layer-bounding-box" >
-          <tr><td></td><td><%= text_field_tag "layer_north"  %></td><td></td></tr>
-          <tr><td style="padding-left: 97px"><%= text_field_tag "layer_west" %></td><td></td><td><%= text_field_tag "layer_east" %></td></tr>
-          <tr><td></td><td><%= text_field_tag "layer_south" %></td><td></td></tr>
-        </table>
-        </div>
-        <div id="date-range"><%= label_tag :filter_layer_start, "Select a date range" %> <%= text_field_tag :filter_layer_start %> - <%= text_field_tag :filter_layer_end %></div>
+    <div class="rounded">
+      <div class="circle"><h3>2</h3></div>
+      <div>
+      <%= label_tag 'datasets', 'Select from the search results' %>
+      <%= select_tag 'datasets', nil, { :include_blank => true } %>
       </div>
-      <a href="#" id="layer-selector-hook">Click here</a> to open our layer selector.
     </div>
-  </div>
-  <div class="rounded">
-    <div class="circle"><h3>4</h3></div>
-    <%= label_tag 'output', 'Select a Format' %>    
-    <%= select_tag 'output', options_for_select([ ['XML', 'xml'], ['JSON', 'json'] ]), { :include_blank => true } %>
-  </div>
-  <div class="rounded">
-    <div class="circle"><h3>5</h3></div>
-    <%= submit_tag 'Build the API call' %>
+    <div class="rounded">
+      <div class="circle"><h3>3</h3></div>
+      <%= label_tag 'info_type', 'Select the type of information you would like to request' %>
+      <%= select_tag 'info_type', options_for_select([ ['Dataset Information', 'dataset'], ['Feature Data', 'feature'] ]) %>
+      <div id="feature_type_filter" style="display: none;">
+        Select an optional feature property to filter your results <%= select_tag 'feature_fields', nil, { :include_blank => true } %>
+      </div>
+      <div id="feature_layer_filter" style="margin: 10px 0px 10px 50px; display: none;" class="rounded emphasized">
+        <div class="filter_layer_display" style="display: none;">
+          Selected layer: <%= select_tag 'layer' , options_for_select([]), { :include_blank => true } %>
+          <div>
+          Selected bounding box: 
+          <table class="layer-bounding-box" >
+            <tr><td></td><td><%= text_field_tag "layer_north"  %></td><td></td></tr>
+            <tr><td style="padding-left: 97px"><%= text_field_tag "layer_west" %></td><td></td><td><%= text_field_tag "layer_east" %></td></tr>
+            <tr><td></td><td><%= text_field_tag "layer_south" %></td><td></td></tr>
+          </table>
+          </div>
+          <div id="date-range"><%= label_tag :filter_layer_start, "Selected date range" %> <%= text_field_tag :filter_layer_start %> - <%= text_field_tag :filter_layer_end %></div>
+        </div>
+        <a href="#" id="layer-selector-hook">Click here</a> to open our layer, bounding box, and date range selector.
+      </div>
+    </div>
+    <div class="rounded">
+      <div class="circle"><h3>4</h3></div>
+      <%= label_tag 'output', 'Select a format' %>    
+      <%= select_tag 'output', options_for_select([['JSON', 'json'], ['XML', 'xml']]) %>
+    </div>
+    <div class="rounded">
+      <div class="circle"><h3>5</h3></div>
+      <%= submit_tag 'Build the API call' %>
+    </div>
   </div>
   
   <div id="builder_response" style="display: none;">

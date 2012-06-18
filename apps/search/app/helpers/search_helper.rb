@@ -19,4 +19,15 @@ module SearchHelper
     !(param.nil? || param.empty?)
   end
   
+  def build_query(params)
+    query = {}
+    if param_provided(params[:query]) && !param_default(params[:query], constants.text.search)
+      query.store(:keywords, params[:query])
+    end
+    if param_provided(params[:properties]) && !param_default(params[:properties], constants.text.properties)
+      query.store(:properties, params[:properties])
+    end
+    query    
+  end
+  
 end

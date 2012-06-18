@@ -59,19 +59,18 @@ class Feature
 
         column_names.delete('the_geom') unless column_names.nil?
         if has_geom
-          column_names = column_names.collect {|x| "\"#{x}\"" }.join(', ')
+          column_names = column_names.collect {|x| "\"#{x}\"" }.join(', ') unless column_names.nil?
 
           properties = execute("SELECT #{column_names} FROM #{tablename}")
           coordinates = execute("SELECT ST_AsGeoJSON(the_geom) AS geometry FROM #{tablename}")
 
           features = []
           properties.each_with_index do |prop, i|
-            if coordinates[i]['geometry']
-              features.push({ :type => "Feature",
-                              :geometry => JSON.parse(coordinates[i]['geometry']),
-                              :properties => properties[i]
-                            })
-            end
+            geometry = coordinates[i]['geometry']
+            features.push({ :type => "Feature",
+                            :geometry => geometry ? JSON.parse(geometry) : 'unknown',
+                            :properties => properties[i]
+                          })
           end            
           
           # returning GeoJSON, for GeoJSON example see: http://geojson.org/geojson-spec.html#examples
@@ -186,7 +185,7 @@ class Feature
       filename = Pathname.new(params[:filename]).basename.to_s     
       directory = Pathname.new(params[:filename]).dirname.to_s
 
-      if !filename.match(/(\.xls|\.xlsx|\.ods.|\.csv)$/).nil?
+      if !filename.match(/(\.xls|\.xlsx|\.ods.|\.csv)$/i).nil?
         sheet_translator = SpreadsheetTranslator.new(filename, directory, "#{Rails.root}/tmp/spreadsheets")
               
         execute("CREATE TABLE #{tablename} (#{sheet_translator.fields_sql})")
@@ -205,7 +204,7 @@ class Feature
         rescue Exception => e
         end
 
-      elsif !filename.match(/(\.zip)$/).nil?
+      elsif !filename.match(/(\.zip)$/i).nil?
         shape_translator = ShapeTranslator.new(filename, tablename, '4326', directory, "#{Rails.root}/tmp/shape_scripts")
             
         execute(shape_translator.shape_sql)

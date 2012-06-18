@@ -1,5 +1,7 @@
 class GeonetworkController < ApplicationController
   
+  include DatasetHelper
+  
   respond_to :xml
   
   def metadata    
@@ -31,7 +33,7 @@ class GeonetworkController < ApplicationController
   def mef_import_list
     uuids = []
     Dataset.all.each do |dataset|
-      if dataset.owner.nil? || socialnetwork_instance.public_group?(dataset.owner.group_id)
+      if public_dataset?(dataset)
         uuids.push(dataset.uuid)
       end
     end

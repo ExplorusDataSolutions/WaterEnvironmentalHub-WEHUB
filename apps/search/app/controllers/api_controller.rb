@@ -1,7 +1,8 @@
 class ApiController < ApplicationController
   
-  caches_action :dataset, :datasets, :cache_path => Proc.new { |c| c.params }, :expires_in => 24.hours
-  caches_action :builder_response, :cache_path => Proc.new { |c| c.params.delete_if { |k,v| k.starts_with?('utf8') || k.starts_with?('authenticity_token') }}, :expires_in => 24.hours
+  include SearchHelper
+  
+#  caches_action :dataset, :datasets, :cache_path => Proc.new { |c| c.params }, :expires_in => 24.hours
   
   respond_to :json, :xml
 
@@ -27,21 +28,24 @@ class ApiController < ApplicationController
     east = params[:east]
     south = params[:south]
     west = params[:west]
-    
-    if feature_type_id
-      @datasets = catalogue_instance.api_datasets_by_feature_type_id(feature_type_id)      
+
+    if !build_query(params).empty?
+      search = search_instance.do_query(build_query(params), nil, nil, 'properties')
+      @datasets = search.results      
     elsif ((date_start && date_end) && !(date_start.empty? && date_end.empty?)) || ((north && east && south && west) && !(north.empty? && east.empty? && south.empty? && west.empty))
       search = search_instance.do_query_advanced('all', date_start, date_end, south, east, north, west)
       @datasets = search.results
-      if @datasets.nil? || @datasets.empty?
-        render :status => 500 and return
-      else
+      if !@datasets.nil? || !@datasets.empty?
         @datasets.sort_by! { |dataset| dataset.name } 
       end
     end
-    respond_with(@datasets) do |format|
-      format.html { render :partial => 'datasets' }
-    end    
+    if @datasets.nil? || @datasets.empty?
+      render :status => 500 and return
+    else
+      respond_with(@datasets) do |format|
+        format.html { render :partial => 'datasets' }
+      end 
+    end
   end
   
   def shared_properties
@@ -67,7 +71,7 @@ class ApiController < ApplicationController
     @feature_fields = catalogue_instance.api_feature_fields(params)
     respond_with(@feature_fields) do |format|
       format.html { render :partial => 'feature_fields' }
-    end
+    end unless @feature_fields.empty?
   end
   
   def dataset
@@ -146,7 +150,7 @@ class ApiController < ApplicationController
         else
           @properties = ''
           if params[:feature_fields] && !params[:feature_fields].empty?
-            @properties = "&properties=#{params[:feature_fields]}"
+            @properties = "&properties=#{CGI::escape(params[:feature_fields])}"
           end
         end
                 

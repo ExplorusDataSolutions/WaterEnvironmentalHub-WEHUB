@@ -55,7 +55,7 @@ class ApplicationController < ActionController::Base
       cookies.delete :we_hub
 
       session[:redirected_from] = request.request_uri
-      redirect_to :controller => 'user', :action => 'sign_in'
+      redirect_to :controller => 'user', :action => 'log-in'
     end
   end
   

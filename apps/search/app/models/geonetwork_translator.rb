@@ -205,7 +205,7 @@ class GeoNetworkTranslator
   end
   
   def build_keywords(query)
-    query[:keywords] && !query[:keywords].empty? ? "<abstract>#{query[:keywords]}</abstract>" : ''
+    query[:keywords] && !query[:keywords].empty? ? "<any>#{query[:keywords]}</any>" : ''
   end
 
   def authenticate(username='development', password='development')
