@@ -52,7 +52,7 @@ class GeoNetworkTranslator
       elsif request == 'properties'
         response = post("xml.search", "<request>#{build_properties(query)}#{build_keywords(query)}</request>")
       else
-        response = post("xml.search", "<request><abstract>#{query}</abstract></request>")
+        response = post("xml.search", "<request><any>#{query}</any></request>")
 
       end
       search_terms = response.body
