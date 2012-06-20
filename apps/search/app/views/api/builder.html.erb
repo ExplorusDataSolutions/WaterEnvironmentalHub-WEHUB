@@ -250,9 +250,9 @@ form .round div {
     });
 
     function cleanSerializedForm(data) {
-      data = data.replace('&query=<%= CGI::escape(constants.text.search) %>', '');
-      data = data.replace('&properties=<%= CGI::escape(constants.text.properties) %>', '');
-      return data;
+      data = data.replace('query=<%= CGI::escape(constants.text.search) %>', '');
+      data = data.replace('properties=<%= CGI::escape(constants.text.properties) %>', '');
+      return data.replace(/&+/g,'&');
     }
     
     $('[name=search]').click(function(event) {
@@ -262,7 +262,7 @@ form .round div {
       
       var formValues = cleanSerializedForm($('form').find('[name=query], [name=properties], [name=north], [name=east], [name=south], [name=east], [name=west], [name=start], [name=end]').filter(':input[value]').serialize());
       var url = "<%= url_for :controller => 'api', :action => 'datasets', :only_path => false %>" + "?" + "key=<%= current_user.api_key %>" + "&" + formValues + "&format=html";
-      
+
       $.ajax({
         url: (url), 
         success: function(data) { 
