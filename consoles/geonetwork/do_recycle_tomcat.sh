@@ -4,7 +4,7 @@
 
 DIRECTORY=$(cd `dirname $0` && pwd)
 
-/usr/local/tomcat/bin/shutdown.sh > $DIRECTORY/recycle.log
+/usr/local/tomcat/bin/shutdown.sh -force > $DIRECTORY/recycle.log
 
 sleep 5
 
