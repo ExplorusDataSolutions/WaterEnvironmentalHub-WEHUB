@@ -26,9 +26,35 @@
       }
     });
     if (location.hash) { $(location.hash).click(); }
+    
+    $('[name=edit-group], [name=create-group], [name=join-group]').button();
+    
+    $('[name=edit-group]').click(function() {
+      $.get("<%= url_for :controller => 'groups', :action => 'edit' %>?id=" + $(this).data().id, function(data) { 
+        WEHub.modal("Edit group", data, { 
+          zIndex: 0,
+          buttons: [{
+            text: "Close",
+            click: function() { 
+              $(this).dialog("close"); 
+            }
+          }]
+        });
+        
+        $('[name=update], [name=delete], [name=promote]').button()
+      });
+    });
   });
 </script>
-
+<style>
+.profile-content-container ul {
+  left: 30px;
+  list-style-type: none;
+  margin-bottom: -25px;
+  position: relative;
+  top: -29px;
+}
+</style>
 <%= render '/shared/left_panel' %>
 
 <div class="profile-right-container">
@@ -48,10 +74,10 @@
 		</div>
 		<div class="clear"></div>
     <div id="all-group-list">
-      <%= render 'all_groups' %>
+      <%= render(:partial => 'group', :collection => @groups) || render('no_groups') %>
     </div>
     <div id="my-group-list" style="display: none;">
-      <%= render 'my_groups' %>
+      <%= render(:partial => 'group', :collection => @my_groups) || render('not_member_of_groups') %>    
     </div>
     <%= render 'create_form' %>
 	</div>

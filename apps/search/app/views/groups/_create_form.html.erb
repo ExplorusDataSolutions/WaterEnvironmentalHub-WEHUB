@@ -4,8 +4,9 @@
 <%= form_for :group, :url => { :action => 'create' } do |f| %>
   <tr><td><%= f.label :name, 'Name' %></td><td><%=  f.text_field :name %></td></tr>
   <tr><td><%= f.label :description, 'Description' %></td><td><%=  f.text_field :description %></td></tr>
-  <tr><td><%= f.label :private, 'Is group private?' %></td><td><%= f.check_box :private %></td></tr>
-  <tr><td><%= f.submit 'Create Group' %></td></tr>
+  <tr><td><%= f.label :private, 'Is this group private?' %></td><td><%= f.check_box :private %></td></tr>
+  <tr><td></td></tr>
+  <tr><td><%= f.submit 'Create', :name => 'create-group' %></td></tr>
 <% end %>
 </table>
 </div>

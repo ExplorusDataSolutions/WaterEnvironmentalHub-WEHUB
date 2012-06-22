@@ -1,0 +1,55 @@
+<style>
+#edit-group, #edit-group th {
+  text-align: left;
+}
+#edit-group td {
+  vertical-align: top;
+}
+</style>
+<div id="edit-group">
+  <h2>Group</h2>
+  <%= form_for :group, :url => { :action => 'update' } do |f| %>
+    <%= f.hidden_field :id %>
+    <table>
+      <tr><th>Group details</th></tr>
+      <tr><td style="text-align: right;"><%= f.label :name, 'Name' %></td><td><%=  f.text_field :name %></td></tr>
+      <tr><td style="text-align: right;"><%= f.label :description, 'Description' %></td><td><%=  f.text_area :description, :cols => '39', :rows => '10' %></td></tr>
+      <tr><td><%= f.label :private, 'Is group private?' %></td><td><%= f.check_box :private %></td></tr>
+      <tr>
+        <td colspan="2" style="text-align: right;">
+      <%= f.submit 'Update', { :id => 'group_update', :name => 'update' } %>
+        </td>
+      </tr>
+    </table>
+  <% end %>
+
+  <div style="height: 30px;"></div>
+
+  <h2>Members</h2>
+  <%= form_for :members, :url => { :action => 'members' } do |f| %>
+    <%= hidden_field_tag "group[id]", @group.id %>
+    <table>
+      <tr><th>Active members</th></tr>
+    <% if !(@members_auth.nil?  || @members_auth.empty?) %>
+      <% @members_auth.each do |member| %>
+        <tr><td><%= label_tag "members[#{member.id}]", "#{member.name} (#{member.email})" %></td><td><%= check_box_tag "members[#{member.id}]", member.authorized %></td><td><%= member.role.scan(/user/).empty? ? "Administrator" : "" %></td></tr>
+      <% end %>
+    <% end %>
+    <% if !(@members_no_auth.nil?  || @members_no_auth.empty?) %>
+      <tr><th>Members pending authorization</th></tr>
+      <% @members_no_auth.each do |member| %>
+      <tr><td><%= label_tag "members[#{member.id}]", "#{member.name} (#{member.email})" %></td><td><%= check_box_tag "members[#{member.id}]", member.authorized %></td></tr>
+      <% end %>
+    <% end %>
+      <tr>
+        <td colspan="3" style="text-align: right;">
+      <% if !(@members_no_auth.nil?  || @members_no_auth.empty?) %>
+        <%= f.submit 'Authorize Members', { :id => 'members_delete', :name => 'authorize' }%>
+      <% end %>
+      <%= f.submit 'Remove member', { :id => 'members_delete', :name => 'delete' } %>
+      <%= f.submit 'Promote to group administrator', { :id => 'members_promote', :name => 'promote' } %>
+        </td>
+      </tr>
+    </table>
+  <% end %>
+</div>

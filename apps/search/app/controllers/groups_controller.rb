@@ -4,20 +4,21 @@ class GroupsController < ApplicationController
   
   caches_action :show, :cache_path => :groups_key.to_proc, :expires_in => 5.minutes
   
+  def update
+    begin
+      expire_fragment groups_key
+      socialnetwork_instance.group_update(params)
+    rescue
+    end  
+    redirect_to :controller => :community, :action => :groups, :anchor => :mine
+  end
+  
   def edit
     role = socialnetwork_instance.group_role(params[:id])
     if role.nil? || role[0].scan(/admin/).empty?
       redirect_to :action => 'show', :anchor => 'mine'
     end
     
-    if request.post?
-      begin
-        expire_fragment groups_key
-        socialnetwork_instance.group_update(params)
-      rescue
-      end
-    end
-
     @breadcrumb = ['Groups', 'Edit']
     @main_menu = 'we_community'
 
@@ -27,6 +28,8 @@ class GroupsController < ApplicationController
       @members_auth = @members.select { |k,v| k[:authorized] == true } 
       @members_no_auth = @members.select { |k,v| k[:authorized] != true }
     end
+    
+    render :partial => 'edit', :layout => false
   end
 
   def create
@@ -49,7 +52,7 @@ class GroupsController < ApplicationController
         socialnetwork_instance.membership_promote(params)
       end
       expire_fragment groups_key
-      redirect_to :action => 'edit', :id => params[:group][:id]
+      redirect_to :controller => :community, :action => :groups, :anchor => :mine
     end
   end
   
@@ -74,9 +77,17 @@ class GroupsController < ApplicationController
       if !role.nil?
         @my_groups[i] = @my_groups[i].merge({ :role => socialnetwork_instance.group_role(g.id)[0] })
       end
+      @my_groups[i].datasets = catalogue_instance.find_datasets_by_group(g.id)
+ 
     end unless @my_groups.nil?
+    
+    @groups.each_with_index do |g, i|
+      if !g.private?
+        @groups[i].datasets = catalogue_instance.find_datasets_by_group(g.id)
+      end
+    end
+    
     @groups
-
   end
 
   def join

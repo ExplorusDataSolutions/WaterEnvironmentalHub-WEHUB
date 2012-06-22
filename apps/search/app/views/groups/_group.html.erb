@@ -1,0 +1,49 @@
+<div class="search-result-each search-result-each-box">
+  <div class="search-text">
+	  <div class="float-left">
+		  <span class="group-title">
+			  <%= group.name %>
+		  </span>&nbsp;
+		  <span class="group-date">
+			  <%= group.created_at %>
+		  </span>
+	  </div>
+	  <div class="clear"></div>
+	  <p>
+		  <span class="head">Description:</span>
+		  <span>
+        <%= group.description %>
+		  </span>
+	  </p>
+	  <% if group.datasets %>
+	  <p>
+		  <span class="head">Datasets:</span>
+	  </p>
+		  <ul>
+        <% group.datasets.each do |dataset| %>
+          <li><%= link_to dataset.name, :controller => 'catalogue', :action => 'details', :id => dataset.uuid %> <%= more_markup(dataset.description).html_safe %></li>
+        <% end unless group.datasets.nil? %>
+		  </ul>
+
+	  <% end %>
+	  <% if group.private? %>
+    <em>This group is private and requires membership confirmation by the group administrator to gain access to the private datasets. These datasets are restricted to memebers only and are not accessible through the search or browse functionality.</em>
+    <% else %>
+    <em>This group is public. Anyone can join and gain access to the publicly shared datasets. These datasets are accessible through the search and browse functionality.</em>
+	  <% end %>
+
+  </div>
+	<div class="float-right">
+    <% if group.role && !group.role.scan(/admin/).empty? %>
+      <% content_tag :button, :type => :button, :name => 'edit-group', 'data-id' => group.id do %>
+        Edit Group
+      <% end %>    
+    <% else %>
+      <% content_tag :button, :type => :button, :name => 'join-group', :onclick => onclick_link_to({ :controller => 'groups', :action => 'join', :id => group.id }) do %>
+        <%= group.private? ? 'Request' : 'Join' %>
+      <% end %>    
+    <% end %>
+	</div>  
+  <div class="clear"></div>
+</div>
+<div class="clear"></div>
