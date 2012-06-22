@@ -52,7 +52,7 @@ class GeoNetworkTranslator
       elsif request == 'properties'
         response = post("xml.search", "<request>#{build_properties(query)}#{build_keywords(query)}</request>")
       else
-        response = post("xml.search", "<request><abstract>#{query}</abstract></request>")
+        response = post("xml.search", "<request><any>#{query}</any></request>")
 
       end
       search_terms = response.body
@@ -65,7 +65,10 @@ class GeoNetworkTranslator
   end
 
   def search_results_advanced(query, date_start, date_end, south, east, north, west)
-  
+    if query == 'all'
+      query = { :keywords => '' }
+    end
+    
     bounds = ''
     if ((south && !south.empty?) && (east && !east.empty?) && (north && !north.empty?) && (west && !west.empty?)) 
       bounds = "<eastBL>#{east}</eastBL><southBL>#{south}</southBL><northBL>#{north}</northBL><westBL>#{west}</westBL><relation>overlaps</relation><sortBy>relevance</sortBy><attrset>geo</attrset>"

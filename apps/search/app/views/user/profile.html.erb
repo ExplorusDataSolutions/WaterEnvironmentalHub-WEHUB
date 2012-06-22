@@ -33,18 +33,13 @@
 <%= render '/shared/left_panel' %>
 
 <div class="profile-right-container">
-  <div class="profile-tab-container">
-    <div class="profile-tab profile-tab-select" style="visibility: hidden;">
-      Info
+  <%= render '/shared/menu_horizontal_tabs' %>
+  <div class="community-tab-right">
+    <div class="profile-tab profile-tab-select">
+      Profile
     </div>
-<%
-=begin %>
-    <div class="profile-tab">
-      Wall
-    </div>
-<% 
-=end %>
   </div>
+  
   <div class="clear"></div>
   <div class="profile-content-container">
     <%= form_for :user do |f| %>

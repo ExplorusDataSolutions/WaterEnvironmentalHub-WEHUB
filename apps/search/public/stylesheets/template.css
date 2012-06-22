@@ -178,6 +178,9 @@ a{
 }
 .yield-body{
   margin:5px 0;
+  min-height:600px;
+  height:auto !important;
+  height:600px;  
 }
 .yield-body > p, .yield-body > h2 {
   margin: 10px;
