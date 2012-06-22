@@ -9,7 +9,8 @@ if [ -f $TOMCAT_HOME/bin/tomcat.pid ]
 then
   echo "PID file exists"
   pid="`cat $TOMCAT_HOME/bin/tomcat.pid`"
-  if [ "X`ps -p $pid | awk '{print $1}' | tail -1`" = "X"]
+  running_pid="$(ps -p $pid -o pid=)"
+  if [ "x$(ps -p $pid -o pid=)" != x ]
   then
     echo "Tomcat is running"
   else
