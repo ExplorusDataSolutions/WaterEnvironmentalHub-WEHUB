@@ -21,6 +21,12 @@
         default:
       }
     });
+    
+    $('[name=befriend], [name=unfriend]').button();
+    $('#community-connect').click(function(event) { 
+      event.preventDefault(); 
+      $('#all-users').trigger('click'); 
+    });
   });
 </script>
 
@@ -73,7 +79,7 @@
     </div>
     
     <div id="friends" style="display: none;">
-    <%= render(:partial => 'user', :collection => @friends, :locals => { :edit => true }) || render('no_users') %>
+    <%= render(:partial => 'user', :collection => @friends, :locals => { :edit => true }) || render('no_friends') %>
     </div>
     
 <% 
