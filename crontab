@@ -1,10 +1,14 @@
+MAILTO=adam.kahtava@tesera.com
+
 0 1 * * * /projects/WEHub/consoles/catalogue/kill_pgsql2shp.sh 
 0 1 * * * /projects/WEHub/consoles/catalogue/do_import_geocens.sh  
 10 1 * * * /projects/WEHub/consoles/catalogue/do_import_alberta_water_portal.sh
 20 1 * * * /projects/WEHub/consoles/catalogue/do_import_water_cloud.sh
-0 2 * * * /projects/WEHub/consoles/geonetwork/tomcat_recycle.sh
+0 2 * * * /projects/WEHub/consoles/geonetwork/do_recycle_tomcat_and_email.sh
 20 2 * * * /projects/WEHub/consoles/geonetwork/do_import.sh
 20 3 * * * /projects/WEHub/consoles/geoserver/do_import.sh
 30 3 * * * /projects/WEHub/consoles/search/do_clear_search_cache_and_email.sh
+30 3 */3 * * /projects/WEHub/consoles/search/do_clear_html_cache_and_email.sh
 35 3 * * * /projects/WEHub/consoles/search/do_prime_search_and_email.sh
-
+7 0 * * 7 /projects/WEHub/consoles/catalogue/do_refresh_geoserver_cache.sh
+*/10 * * * * /projects/WEHub/consoles/geonetwork/do_reboot_tomcat_when_offline_and_email.sh

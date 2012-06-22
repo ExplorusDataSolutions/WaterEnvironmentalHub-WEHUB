@@ -4,4 +4,5 @@
 
 dir=$(dirname $0)
 
-. $dir/do_run_script_and_email_results.sh do_clear_html_cache.sh
+. $dir/do_run_script_and_email_results.sh do_recycle_tomcat.sh
+

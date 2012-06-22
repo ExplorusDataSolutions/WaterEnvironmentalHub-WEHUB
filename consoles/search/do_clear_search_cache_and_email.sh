@@ -2,4 +2,6 @@
 
 [[ "`/usr/bin/tty`" == "not a tty" ]] && . ~/.bash_profile
 
-. do_run_script_and_email_results.sh do_clear_search_cache.sh
+dir=$(dirname $0)
+
+. $dir/do_run_script_and_email_results.sh do_clear_search_cache.sh

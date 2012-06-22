@@ -4,16 +4,14 @@
 
 DIRECTORY=$(cd `dirname $0` && pwd)
 
-/usr/local/tomcat/bin/shutdown.sh -force > $DIRECTORY/recycle.log
+/usr/local/tomcat/bin/shutdown.sh -force 
 
 sleep 5
 
 pkill -f tomcat.*catalina
 
-/usr/local/tomcat/bin/startup.sh >> $DIRECTORY/recycle.log
+/usr/local/tomcat/bin/startup.sh 
 
 sleep 5
 
-ps aux | grep tomcat >> $DIRECTORY/recycle.log
-
-mail -s "Geonetwork's tomcat recycled `date`" adam.kahtava@tesera.com < $DIRECTORY/recycle.log
+ps aux | grep tomcat 
