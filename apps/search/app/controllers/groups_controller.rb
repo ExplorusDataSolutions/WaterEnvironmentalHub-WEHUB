@@ -10,7 +10,7 @@ class GroupsController < ApplicationController
       socialnetwork_instance.group_update(params)
     rescue
     end  
-    redirect_to :controller => :community, :action => :groups, :anchor => :mine
+    redirect_to :controller => :community, :action => :groups, :anchor => :mine, :group_id => params[:id]
   end
   
   def edit
@@ -29,16 +29,18 @@ class GroupsController < ApplicationController
       @members_no_auth = @members.select { |k,v| k[:authorized] != true }
     end
     
-    render :partial => 'edit', :layout => false
+    render :layout => false
   end
 
+  def new
+    render :layout => false
+  end
+  
   def create
-    if request.post?
-      group = socialnetwork_instance.group_create(params)
-      socialnetwork_instance.membership_create({ :user_id => current_user.id, :group_id => group.id })
-      expire_fragment groups_key
-      redirect_to :action => 'show', :anchor => 'mine'
-    end
+    group = socialnetwork_instance.group_create(params)
+    socialnetwork_instance.membership_create({ :user_id => current_user.id, :group_id => group.id })
+    expire_fragment groups_key
+    redirect_to :action => 'show', :anchor => 'mine', :id => group.id
   end
   
   # This should be in its own controller

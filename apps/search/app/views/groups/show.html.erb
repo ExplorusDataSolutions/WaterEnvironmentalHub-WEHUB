@@ -1,5 +1,10 @@
 <script>
   $(document).ready(function() {
+    function idFromUri() { return window.location.search ? window.location.search.match(/(group_id|id)=([^&]*)/)[2] : false; }    
+    if (idFromUri()) {
+      $('.group.' + idFromUri()).effect("highlight", {}, 6000);
+    }
+  
     function eventId(event) { return event.target.id }
     $('#create, #mine, #all').click(function(event) {
       event.preventDefault();
@@ -8,18 +13,28 @@
       switch (eventId(event))
       {
         case 'create': 
-          $('#edit-group-form').show();
-          $('#my-group-list, #all-group-list').hide();
-          $('#create').addClass(selectedClassName);
+          event.preventDefault();          
+          $.get("<%= url_for :controller => 'groups', :action => 'new' %>", function(data) { 
+            WEHub.modal("Create group", data, { 
+              zIndex: 0,
+              buttons: [{
+                text: "Close",
+                click: function() { 
+                  $(this).dialog("close"); 
+                }
+              }]
+            });
+            $('[name=create-group]').button();
+          });
           break;
         case 'mine': 
           $('#my-group-list').show();
-          $('#edit-group-form, #all-group-list').hide();
+          $('#all-group-list').hide();
           $('#mine').addClass(selectedClassName);
           break;
         case 'all': 
           $('#all-group-list').show();
-          $('#edit-group-form, #my-group-list').hide();
+          $('#my-group-list').hide();
           $('#all').addClass(selectedClassName);
         break;
         default:
@@ -27,7 +42,7 @@
     });
     if (location.hash) { $(location.hash).click(); }
     
-    $('[name=edit-group], [name=create-group], [name=join-group]').button();
+    $('[name=edit-group], [name=join-group]').button();
     
     $('[name=edit-group]').click(function() {
       $.get("<%= url_for :controller => 'groups', :action => 'edit' %>?id=" + $(this).data().id, function(data) { 
@@ -79,7 +94,6 @@
     <div id="my-group-list" style="display: none;">
       <%= render(:partial => 'group', :collection => @my_groups) || render('not_member_of_groups') %>    
     </div>
-    <%= render 'create_form' %>
 	</div>
 </div>
 <div class="clear"></div>
