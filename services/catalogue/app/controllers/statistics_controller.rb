@@ -17,7 +17,7 @@ class StatisticsController < ApplicationController
     results = []
     datasets.each do |dataset| 
       if public_dataset?(dataset)
-        results.push({ :uuid => dataset.uuid, :name => dataset.name, :description => dataset.description })
+        results.push({ :uuid => dataset.uuid, :name => dataset.name, :description => dataset.description.gsub(/<(.*?)>/, ' ') })
       end
       if results.count == 2
         break
