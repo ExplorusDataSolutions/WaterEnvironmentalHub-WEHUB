@@ -901,10 +901,10 @@ ul.sub-menu li {
 }
 .top-container-tab-body{
   float:right;
-  width: 400px;
+  width: 500px;
 }
 .top-container-tab{
-  float:left;
+  float:right;
   margin:0 12px 0 0;
   background:#FFBD4A;
   border:solid 1px #F39730;
