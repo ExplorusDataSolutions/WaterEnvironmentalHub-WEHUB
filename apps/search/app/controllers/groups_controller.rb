@@ -9,7 +9,8 @@ class GroupsController < ApplicationController
       expire_fragment groups_key
       socialnetwork_instance.group_update(params)
     rescue
-    end  
+    end 
+
     redirect_to :controller => :community, :action => :groups, :anchor => :mine, :group_id => params[:id]
   end
   
@@ -54,7 +55,8 @@ class GroupsController < ApplicationController
         socialnetwork_instance.membership_promote(params)
       end
       expire_fragment groups_key
-      redirect_to :controller => :community, :action => :groups, :anchor => :mine
+
+      redirect_to :controller => :community, :action => :groups, :anchor => :mine, :group_id => params[:group][:id]
     end
   end
   
