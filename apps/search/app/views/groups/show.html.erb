@@ -93,10 +93,10 @@
 		</div>
 		<div class="clear"></div>
     <div id="all-group-list">
-      <%= render(:partial => 'group', :collection => @groups) || render('no_groups') %>
+      <%= render(:partial => 'group', :collection => @groups, :locals => { :join => true }) || render('no_groups') %>
     </div>
     <div id="my-group-list" style="display: none;">
-      <%= render(:partial => 'group', :collection => @my_groups) || render('not_member_of_groups') %>    
+      <%= render(:partial => 'group', :collection => @my_groups, :locals => { :join => false }) || render('not_member_of_groups') %>    
     </div>
 	</div>
 </div>

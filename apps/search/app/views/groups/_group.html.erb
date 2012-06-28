@@ -39,9 +39,11 @@
         Edit Group
       <% end %>    
     <% else %>
-      <% content_tag :button, :type => :button, :name => 'join-group', :onclick => onclick_link_to({ :controller => 'groups', :action => 'join', :id => group.id }) do %>
-        <%= group.private? ? 'Request' : 'Join' %>
-      <% end %>    
+      <% if join %>
+        <% content_tag :button, :type => :button, :name => 'join-group', :onclick => onclick_link_to({ :controller => 'groups', :action => 'join', :id => group.id }) do %>
+          <%= group.private? ? 'Request' : 'Join' %>
+        <% end %>
+      <% end %>
     <% end %>
 	</div>  
   <div class="clear"></div>

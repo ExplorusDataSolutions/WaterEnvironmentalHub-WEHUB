@@ -18,7 +18,10 @@
     }, 5000);
 
     if (WEHub.logged_in()) {
-      $('#my-collection').css('visibility', 'visible');
+      if (WEHub.id() == '<%= @dataset.owner.user_id %>') {
+        $('#edit-dataset').show();  
+      }
+      $('#my-collection').show();
       $('#my-collection').click(function() {
         var ids = [];
         ids.push('<%= @dataset.uuid %>');
@@ -38,7 +41,7 @@
               }
             }
           }  
-          $('#add-review').css('visibility', 'visible');
+          $('#add-review').show();
           $('#add-review').click(function() {
             WEHub.dialog("Review this dataset", $('.new-comment:first').html());
             $('#dialog-modal .rating-container').rating();
@@ -230,12 +233,13 @@ $(document).ready(function() {
     <a href="#" onclick="history.go(-1);return false;">Back to Search Results</a>
 </div>
 <div class="top-container-tab-body" >
-  <div class="top-container-tab" id="add-review" style="visibility: hidden;">+ Comments</div>
-  <div class="top-container-tab" id="my-collection" style="visibility: hidden;">+ My collection</div>
   <div class="top-container-tab tab-download">
     <div class="float-left">Download</div>
     <div class="float-left tab-download-arrow"></div>   
   </div>
+  <div class="top-container-tab" id="my-collection" style="display: none;">+ My collection</div>
+  <div class="top-container-tab" id="add-review" style="display: none;">+ Comments</div>
+  <div class="top-container-tab" id="edit-dataset" style="display: none;" onclick="<%= onclick_link_to :controller => 'dataset', :action => 'edit', :id => @dataset.uuid %>">Edit</div>  
   <div class="clear"></div>
   
 <%= render 'download_format_selector' %>
