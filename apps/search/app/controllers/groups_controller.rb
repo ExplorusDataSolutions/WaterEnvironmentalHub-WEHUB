@@ -69,6 +69,7 @@ class GroupsController < ApplicationController
     @my_groups = socialnetwork_instance.user_groups(current_user.id)
     all_groups = socialnetwork_instance.groups_all
     if @my_groups
+      @my_groups.uniq!
       @groups = ((@my_groups | all_groups) - @my_groups)
     else
       @groups = all_groups
