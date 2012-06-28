@@ -9,7 +9,6 @@
     $('#create, #mine, #all').click(function(event) {
       event.preventDefault();
       var selectedClassName = 'selected';
-      $('.share-middle-filter').children().removeClass(selectedClassName)
       switch (eventId(event))
       {
         case 'create': 
@@ -28,11 +27,13 @@
           });
           break;
         case 'mine': 
+          $('.share-middle-filter').children().removeClass(selectedClassName);
           $('#my-group-list').show();
           $('#all-group-list').hide();
           $('#mine').addClass(selectedClassName);
           break;
         case 'all': 
+          $('.share-middle-filter').children().removeClass(selectedClassName);
           $('#all-group-list').show();
           $('#my-group-list').hide();
           $('#all').addClass(selectedClassName);
