@@ -1,3 +1,40 @@
+<script>
+$('document').ready(function() {
+  function uuidFromObject(obj) {  
+    return obj.id;
+  }
+
+  function assignUuidsToElements(uuids) {
+    if (uuids && uuids.length !== 0) {
+      $('.tools-landing-box-bottom a').each(function() {
+        $(this).attr('href', $(this).attr('href').replace(/ids=([^&|^#]*)/, 'ids=' + uuids.slice(0,4).join(',')));
+      });
+    }
+  }
+  
+  function getRecentlyViewed() {
+    $.ajax({
+      url: "<%= url_for :controller => 'user', :action => 'recently_viewed' %>",
+      global: false,
+      success: function(data) {
+        assignUuidsToElements(data.map(uuidFromObject));
+      }
+    });
+  }
+
+  $.ajax({
+    url: "<%= url_for :controller => 'user', :action => 'saved_collection' %>",
+    global: false,
+    success: function(data) { 
+      if (data && !data.length === 0 ) {      
+        assignUuidsToElements(data.map(uuidFromObject));
+      } else {
+        getRecentlyViewed();
+      }
+    }
+  });
+});
+</script>
 <div class="float-left">
 	<div class="tools-landing-box-top">
 		<img src="/images/Map.jpg" alt="Map" title="Map" border="0" />
