@@ -1,9 +1,19 @@
 <%= render 'modal_error' %>
 <style>
 .mini-loading-dialog {
-  background: white url(/images/spinner.gif) center top no-repeat;
+  background: #ededed url(/images/spinner.gif) center top no-repeat;
   height: 55px;
-  opacity: 0.6;
+  opacity: 0.5;
+}
+.sub-content-center .table-body {
+  width: 773px;
+  overflow: auto;
+  padding-bottom: 15px;    
+}
+.sub-content-body {
+  min-height:500px;
+  height:auto !important;
+  height:500px; 
 }
 </style>
 <script>
@@ -242,10 +252,7 @@
   </div>
 
   <div class="sub-content-center">
-    <div id="map" style="width:564px;"></div>
-  </div>
-  <div class="sub-content-right">
-    <%= render 'shared/right_panel' %>    
+    <div id="map" style="width:785px;"></div>
   </div>
   <div class="clear"></div>
 </div>
