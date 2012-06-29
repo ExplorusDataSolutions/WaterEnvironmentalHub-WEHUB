@@ -25,9 +25,11 @@ class CommunityController < ApplicationController
     users = socialnetwork_instance.users
     friends = socialnetwork_instance.friends(current_user.id)
 
-    friends.sort! { |x,y| x.first_name <=> y.first_name }
-    friends.sort! { |x,y| x.last_name <=> y.last_name }
-    
+    if friends && !friends.empty?
+      friends.sort! { |x,y| x.first_name <=> y.first_name }
+      friends.sort! { |x,y| x.last_name <=> y.last_name }
+    end
+
     filtered_user_ids = []
     users.each { |u| filtered_user_ids.push(u.id) } unless users.nil?    
     
