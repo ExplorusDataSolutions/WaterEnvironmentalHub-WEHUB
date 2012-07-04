@@ -32,8 +32,20 @@
       numZoomLevels: 22,
       maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34)
     };  
-    map = new OpenLayers.Map('map', options);
-    map.addLayer(new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP}));    
+
+    function loadMap() {
+      if (!map) {
+        $('#map-loading').hide();
+        map = new OpenLayers.Map('map', options);
+        
+        map.addControl(new OpenLayers.Control.LayerSwitcher());
+        
+        map.addLayer(new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP}));
+        map.addLayer(new OpenLayers.Layer.Google("Google Streets", {numZoomLevels: 20}));
+        map.addLayer(new OpenLayers.Layer.Google("Google Hybrid", {type: G_HYBRID_MAP, numZoomLevels: 20}));
+        map.addLayer(new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, numZoomLevels: 22}));
+      }
+    }
     
     function centerMap(coordinates) {
       points.addPoint(OpenLayers.Geometry.fromWKT('POINT(' + coordinates + ')'));
@@ -48,6 +60,7 @@
     }
 
     function drawJSON(data, colour, coordinates, datasetId) {
+      loadMap();
       enableMapControl(datasetId);
       
       var geojson_format = new OpenLayers.Format.GeoJSON({
@@ -73,6 +86,7 @@
         return disableDataset(datasetId);
       }
 
+      loadMap();
       enableMapControl(datasetId);
       
       var wmsLayer = new OpenLayers.Layer.WMS(datasetId, <%= "'#{Rails.application.config.geoserver_address}/geoserver/gn/wms?service=WMS&version=1.1.0&request=GetMap&layers=gn:'".html_safe %> + datasetId,
@@ -108,7 +122,9 @@
     $.ajax({
       url: "<%= url_for :controller => 'api', :action => 'feature', :id => dataset.id, :output => 'json' %>",
       global: false,
-      success: function(data) { <%= "drawJSON(data,'#{css_colour(i)[:code]}', '#{dataset.coordinates.gsub(',', ' ')}', '#{dataset.id}');" -%> },
+      success: function(data) { 
+        <%= "drawJSON(data,'#{css_colour(i)[:code]}', '#{dataset.coordinates.gsub(',', ' ')}', '#{dataset.id}');" -%> 
+      },
       error: function(data) { disableDataset('<%= dataset.id %>'); }
       
     });      
@@ -252,7 +268,11 @@
   </div>
 
   <div class="sub-content-center">
-    <div id="map" style="width:785px;"></div>
+    <div id="map-loading" style="width:780px;">
+      <div style="padding: 20px;">Sit tight. We're loading your map requests.
+      <p>This may take a while - depending on your internet connection speed and the size of the map data.</p></div>
+    </div>
+    <div id="map" style="width:780px;"></div>
   </div>
   <div class="clear"></div>
 </div>
