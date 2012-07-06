@@ -58,13 +58,13 @@ $(document).ready(function() {
       global: false,
       dataType: 'text',
       success: function(data) {
-
         if (data != '') {
 
           var checkbox = $('[name=datasets] .' + idFromUrl(this.url) + ' [name=dataset]');
           checkbox.attr('checked', true).removeAttr('disabled');
           datasetElement.removeClass('mini-loading-dialog');
-          
+    
+          $('#table-message').hide();          
           table.html(data);
           
           table
@@ -73,6 +73,8 @@ $(document).ready(function() {
           $('#table-chart-pager').show();
 
           $('form[name=download] [name=ids]').val($('[name=dataset]:checked').val());
+        } else {
+          disableDataset(idFromUrl(this.url));        
         }
       },
       error: function() {
@@ -86,7 +88,7 @@ $(document).ready(function() {
     datasetElement.removeClass('mini-loading-dialog').addClass('ui-state-disabled')
     datasetElement.find('input').attr('disabled', true);
     $('#table-chart-pager').hide();
-    table.html("<div style='padding: 20px;'><strong>We're sorry, we couldn't retrieve the feature data for this dataset. Please try another dataset.</strong></div>");
+    $('#table-message').show().html("We're sorry, we couldn't retrieve the feature data for this dataset. Please try another dataset.");
   }
 
   
@@ -132,45 +134,20 @@ $(document).ready(function() {
   </div>
   <div class="sub-content-center">
     <div class="table-body">
+      
+      <div id="table-message">
+        Sit tight. We're loading your table request.
+        <p>This may take a while depending on your internet connection speed and the size of the dataset.</p>
+      </div>
 
       <table id="table-chart" class="table-sorter"></table>
 
       <div id="table-chart-pager" class="pager" style="display: none;">
-        <form>
-<%
-=begin %>
-          <img src="/images/table-sorter-pager-first.png" class="first"/>
-<%
-=end %>
-          <img src="/images/table-sorter-pager-prev.png" class="prev"/>
-<%
-=begin %>
-          <input type="text" class="pagedisplay"/>
-<%
-=end %>
-          <img src="/images/table-sorter-pager-next.png" class="next"/>
-<%
-=begin %>
-          <img src="/images/table-sorter-pager-last.png" class="last"/>
-          <select class="pagesize">
-          <% 5.times do |i| %>
-            <% option_value = (i+1)*100 %>
-            <%= "<option value='#{option_value}'>#{option_value}</option>".html_safe -%>
-          <% end %>
-          </select>
-<%
-=end %>          
-        </form>
+        <img src="/images/table-sorter-pager-prev.png" class="prev"/>
+        <img src="/images/table-sorter-pager-next.png" class="next"/>
       </div>
       
     </div>    
   </div>
-<%
-=begin %>  
-  <div class="sub-content-right">
-      <%= render 'shared/right_panel' %>    
-  </div>
-<%
-=end %>  
   <div class="clear"></div>
 </div>

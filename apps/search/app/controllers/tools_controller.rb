@@ -66,8 +66,13 @@ class ToolsController < ApplicationController
       params[:page] = { :start => 0, :size => 100 }
     end
 
-    @feature_csv = catalogue_instance.api_feature_raw(params)    
-    render :partial => 'table_feature'
+    @feature_csv = catalogue_instance.api_feature_raw(params)
+    
+    if !@feature_csv || @feature_csv.empty?
+      render :status => :not_found and return
+    end        
+      
+    render :partial => 'table_feature' and return
   end
   
   def map
