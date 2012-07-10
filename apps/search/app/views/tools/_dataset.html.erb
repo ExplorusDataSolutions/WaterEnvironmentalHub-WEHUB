@@ -4,7 +4,7 @@
     <%= check_box_tag "dataset", dataset.id, false, :id => "dataset_#{dataset.id}" %>
   </div>
   <div class="float-left width-5">&nbsp;</div>
-  <div class="float-left"><label for='<%= "dataset_#{dataset.id}" %>'><ul><li style='color: <%= "#{css_colour(i)[:code]}" %>'></li></ul></label></div>
+  <div class="float-left"><label for='<%= "dataset_#{dataset.id}" %>'><ul><li style='color: <%= "#{css_colour(i-1)[:code]}" %>'></li></ul></label></div>
   <div class="float-left width-5">&nbsp;</div>
   <div class="float-left width-210">
     <label for='<%= "dataset_#{dataset.id}" %>'>
