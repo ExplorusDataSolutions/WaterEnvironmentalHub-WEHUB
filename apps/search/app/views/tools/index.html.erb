@@ -1,5 +1,12 @@
 <script>
 $('document').ready(function() {
+
+  <%# Make the whole tool box clickable %>
+  $('.tools-landing-box-top').css('cursor', 'pointer').click(function(event) {
+    event.preventDefault();
+    window.location = $(this).nextAll('.tools-landing-box-bottom').find('a').attr('href');
+  });
+  
   function uuidFromObject(obj) {  
     return obj.id;
   }
