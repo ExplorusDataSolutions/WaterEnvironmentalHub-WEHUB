@@ -43,7 +43,7 @@ $(document).ready(function() {
 
     $.ajax({
       url: '<%= (url_for :controller => 'tools', :action => 'table_feature').html_safe %>' + '/' + uuid + '.html' + '?page[start]=' + page + '&page[size]=' + size + sortQuery,
-      global: false,
+      global: page !== 0,
       dataType: 'text',
       success: function(data) {
         if (data != '') {
@@ -77,7 +77,7 @@ $(document).ready(function() {
     var datasetElement = $('.datasets.' + uuid);
     datasetElement.removeClass('mini-loading-dialog').addClass('ui-state-disabled')
     datasetElement.find('input').attr('disabled', true);
-    $('#table-chart-pager').hide();    
+    $('.tool-body').hide();        
     displaySorryErrorMessage();
   }
 
