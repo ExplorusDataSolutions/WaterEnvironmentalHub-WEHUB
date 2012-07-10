@@ -7,7 +7,7 @@
     var zoom = 5;
     var map, layer;
     var points = new OpenLayers.Geometry.MultiPoint();
-    var layers = []
+    var coordinates = []
 
     var options = {
       displayProjection: new OpenLayers.Projection("EPSG:4326"),
@@ -60,6 +60,7 @@
       map.addLayer(vector_layer);      
       vector_layer.addFeatures(geojson_format.read(data));
       
+      coordinates[datasetId] = coordinates;
       centerMap(coordinates);
     }
     
@@ -83,9 +84,10 @@
           reproject: false
         }
       );
-      
+
       map.addLayer(wmsLayer);
 
+      coordinates[datasetId] = coordinates;
       centerMap(coordinates);
     }
     
@@ -160,6 +162,8 @@
           }
         }
       }
+      
+      centerMap(coordinates[map.layers[map.layers.length-1].name]);
     }
 
     function uuids() {
