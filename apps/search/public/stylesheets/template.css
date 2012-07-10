@@ -536,8 +536,7 @@ ul.sub-menu li {
   width: 577px;
   padding: 0 15px;
 }
-.sub-content-center .chart-body, .sub-content-center #map-loading{
-  width:591px;
+.sub-content-center .tool-body{
   background-color:#EBEBE9;
   border:solid 1px #C7C7C5;
   -moz-border-radius: 5px 5px 5px 5px;
@@ -545,12 +544,20 @@ ul.sub-menu li {
   border-radius: 5px 5px 5px 5px;
   min-height:490px;
   height:auto !important;
-  height:490px;   
+  height:490px; 
+  padding: 20px;  
+  width:740px;
+  overflow: auto;
 }
-.sub-content-center .chart-body .chart{
-  width:530px;
-  padding:20px 20px 50px 20px 
+.sub-content-center #tool-error-message {
+  width: 790px;
+  min-height:490px;
+  height:auto !important;
+  height:490px; 
+  padding: 20px;  
+  width:740px;  
 }
+
 .sub-content-right{
   float: left;
   width: 190px;

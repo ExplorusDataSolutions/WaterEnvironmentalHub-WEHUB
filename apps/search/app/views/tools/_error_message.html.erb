@@ -1,0 +1,35 @@
+<script>
+function displaySorryErrorMessage() {
+  $('#tool-error-message').show();
+  $('#tool-error-message #loading').hide();
+  $('#tool-error-message #sorry').show();
+}
+
+function displayErrorMessage(message) {
+  $('#tool-error-message').show();
+  $('#tool-error-message #loading').hide();
+  $('#tool-error-message #sorry').show();
+  $('#tool-error-message .message').html(message);
+}
+function hideErrorMessage() {
+  $('#tool-error-message').hide();
+}
+</script>
+
+<div id="tool-error-message">
+  <div id="loading" style="<%= @datasets && !@datasets.empty? ? '' : 'display: none;' %>">
+    <p><strong>Sit tight. We're loading your request.</strong></p>
+    
+    <p>Loading times depend on your internet connection speed and the size of the dataset. Some of our datasets exceed 2GB in size. 
+    We're doing our best to efficiently handle these large datasets, but some requests will take time to process.</p>
+    
+    <p>Thank-you for your patience.</p>
+  </div>
+  <div id="sorry" style="<%= @datasets.nil? ? '' : 'display: none;' %>">
+    <p><strong>We're sorry.</strong></p>
+    
+    <p class="message">We couldn't load your request. We've done our best to accept and accommodate a wide range of data from our members, unfortunately this data could not be retrieved in a format suitable for our tools. We've logged this issue and will do our best to resolve it.</p>
+    
+    <p>Thanks.</p>
+  </div>
+</div>

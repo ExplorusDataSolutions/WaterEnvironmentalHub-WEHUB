@@ -31,7 +31,8 @@ $('document').ready(function() {
       } else {
         getRecentlyViewed();
       }
-    }
+    },
+    error: function() { getRecentlyViewed(); }
   });
 });
 </script>

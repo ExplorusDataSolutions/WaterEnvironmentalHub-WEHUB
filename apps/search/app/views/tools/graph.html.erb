@@ -1,29 +1,4 @@
-<%= render 'modal_error' %>
-<style>
-  .sub-content-center .chart-body {
-    width: 773px;
-  }
-  .chart1 {
-    width: 780px;
-    height: 360px;
-  }
-  #filter-container ul {
-    padding: 0px;
-    margin: 0 -6px 0 20px;
-  }
-  #filter-container li {
-    font-size: 30px;
-    line-height: 18px;
-  }
-  .mini-loading-dialog {
-    background: white url(/images/spinner.gif) center top no-repeat;
-    height: 55px;
-    opacity: 0.6;
-  }
-  .property-selector {
-    margin-left: 45px;
-  }
-</style>
+<%= render 'style_overrides' %>
 <script>
   $(document).ready(function() {
    
@@ -87,7 +62,10 @@
           legend: { show: false }
         }
       }
-        
+
+      
+      hideErrorMessage();
+      $('.tool-body').show();
       $('#chart1').html('');
       $('#chart1').height('auto');
       if (graphData.length > 0) {
@@ -100,15 +78,27 @@
       }
       
       if ($('#chart1').html() === '') {
-        var errorMsg = "<div style='padding: 20px;'><p>We're sorry, we couldn't chart that dataset / property combination.</p> <p>Please try selecting another dataset / property combination (on the left)</p></div>";
+        displayErrorMessage('We couldn\'t chart that combination. Please try selecting another property to request a new graph.');
+        $('.tool-body').hide();
         if (graphTypeFromUrl() == 'line') {
-          errorMsg = "<div style='padding: 20px;'><p>We're sorry, we couldn't chart that dataset / property combination.</p> <p>Some properties can't be plotted on a line graph as their values are non numeric.  Please try selecting another dataset / property combination (on the left) or visualize this data in pie graph.</p></div>";
+          displayErrorMessage('We couldn\'t chart that combination. Some properties can\'t be plotted on a line graph as their values are non numeric.  Please try selecting another property to request a new graph or try representing this data in a pie graph.');
+          $('.tool-body').hide();          
         }
-        $('#chart1').html(errorMsg);
       }
       
     });
     
+    function disableGraphItem(uuid) {
+      $('[name=datasets] .' + uuid + ' [name=dataset]').attr('checked', false);
+
+      $('.datasets.' + uuid).removeClass('mini-loading-dialog').addClass('ui-state-disabled');
+      $('.datasets.' + uuid + ' input').attr('disabled', true);
+      $('.property-selector.' + uuid ).unbind().change(function(event) {           
+          loadGraphData(uuid, this.value);
+        }
+      );    
+    }
+        
     function loadGraphData(uuid, property) {
       property = property ? property : '';
       var type = window.location.hash;
@@ -149,14 +139,7 @@
           var uuid = idFromUrl(this.url);
           allGraphData[uuid]['data'] = [];
           
-          $('[name=datasets] .' + uuid + ' [name=dataset]').attr('checked', false);
-
-          $('.datasets.' + uuid).removeClass('mini-loading-dialog').addClass('ui-state-disabled');
-          $('.datasets.' + uuid + ' input').attr('disabled', true);
-          $('.property-selector.' + uuid ).unbind().change(function(event) {           
-              loadGraphData(uuid, this.value);
-            }
-          );
+          disableGraphItem(uuid);
 
           $(document).trigger('drawGraph');
         }
@@ -183,6 +166,11 @@
             var uuid = uuids[i];
             loadGraphData(uuid, property);
           }          
+        },
+        error: function() {
+          var uuid = idsFromSearch()[0];
+          disableGraphItem(uuid);
+          displaySorryErrorMessage();
         }
       });    
     }
@@ -198,7 +186,10 @@
           } else {
             loadGraphDataWithFirstNumericValue("<%= (url_for :controller => 'api', :action => 'feature_fields_by_type', :format => 'json').html_safe %>" + "&id=" + idsFromSearch()[0])
           }
-        }
+        },
+        error: function() {
+          loadGraphDataWithFirstNumericValue("<%= (url_for :controller => 'api', :action => 'feature_fields_by_type', :format => 'json').html_safe %>" + "&id=" + idsFromSearch()[0])
+        }        
       });
     } else {
       loadGraphDataWithFirstNumericValue("<%= (url_for :controller => 'api', :action => 'feature_fields_by_type', :id => params[:ids], :format => 'json').html_safe %>");
@@ -261,16 +252,10 @@
     </div>
   </div>
   <div class="sub-content-center">
-    <div class="chart-body">
+    <%= render 'error_message' %>  
+    <div class="tool-body" style="display: none;">
       <div id="chart1"></div>
     </div>    
   </div>
-<%
-=begin %>  
-  <div class="sub-content-right">
-    <%= render 'shared/right_panel' %>    
-  </div>
-<%
-=end %>  
   <div class="clear"></div>
 </div>

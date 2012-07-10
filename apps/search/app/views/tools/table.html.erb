@@ -1,16 +1,4 @@
-<%= render 'modal_error' %>
-<style>
-  .mini-loading-dialog {
-    background: white url(/images/spinner.gif) center top no-repeat;
-    height: 55px;
-    opacity: 0.6;
-  }
-  .sub-content-center .table-body {
-    width: 773px;
-    overflow: auto;
-    padding-bottom: 15px;    
-  }
-</style>
+<%= render 'style_overrides' %>
 <script>
 $(document).ready(function() {
   var table = $('#table-chart');
@@ -64,7 +52,8 @@ $(document).ready(function() {
           checkbox.attr('checked', true).removeAttr('disabled');
           datasetElement.removeClass('mini-loading-dialog');
     
-          $('#table-message').hide();          
+          hideErrorMessage();
+          $('.tool-body').show();
           table.html(data);
           
           table
@@ -79,6 +68,7 @@ $(document).ready(function() {
       },
       error: function() {
         disableDataset(idFromUrl(this.url));
+        
       }
     });
   }
@@ -87,8 +77,8 @@ $(document).ready(function() {
     var datasetElement = $('.datasets.' + uuid);
     datasetElement.removeClass('mini-loading-dialog').addClass('ui-state-disabled')
     datasetElement.find('input').attr('disabled', true);
-    $('#table-chart-pager').hide();
-    $('#table-message').show().html("We're sorry, we couldn't retrieve the feature data for this dataset. Please try another dataset.");
+    $('#table-chart-pager').hide();    
+    displaySorryErrorMessage();
   }
 
   
@@ -133,20 +123,14 @@ $(document).ready(function() {
     
   </div>
   <div class="sub-content-center">
-    <div class="table-body">
-      
-      <div id="table-message">
-        Sit tight. We're loading your table request.
-        <p>This may take a while depending on your internet connection speed and the size of the dataset.</p>
-      </div>
-
+    <%= render 'error_message' %>
+    <div class="tool-body" style="display: none;">          
       <table id="table-chart" class="table-sorter"></table>
 
       <div id="table-chart-pager" class="pager" style="display: none;">
         <img src="/images/table-sorter-pager-prev.png" class="prev"/>
         <img src="/images/table-sorter-pager-next.png" class="next"/>
-      </div>
-      
+      </div>      
     </div>    
   </div>
   <div class="clear"></div>
