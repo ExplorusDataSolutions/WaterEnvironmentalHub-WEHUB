@@ -109,7 +109,7 @@
       $('.datasets.' + uuid).addClass('mini-loading-dialog');
       
       $.ajax({
-        url: "<%= url_for :controller => 'tools', :action => 'chart_feature', :format => 'json' %>" + '&properties=' + property + '&id=' + uuid + '&type=' + type,
+        url: "<%= url_for :controller => 'tools', :action => 'chart_feature', :format => 'json' %>" + '&properties=' + escape(property) + '&id=' + uuid + '&type=' + type,
         global: false,
         success: function(data) {
           var uuid = idFromUrl(this.url);
@@ -123,7 +123,7 @@
 
           $('.property-selector.' + uuid)
             .removeAttr('disabled')
-            .val(propertyFromUrl(this.url))
+            .val(unescape(propertyFromUrl(this.url)))
             .unbind()
             .change(function(event) {
               if (this.value !== '') {
