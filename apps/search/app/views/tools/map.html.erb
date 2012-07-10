@@ -1,3 +1,4 @@
+<%= render 'style_overrides' %>
 <script>
   $(document).ready(function() {
 
@@ -179,76 +180,18 @@
 <%= render 'tool_tab_menu' %>
 
 <div class="clear"></div>
-<style>
-  #filter-container ul {
-    padding: 0px;
-    margin: 0 -6px 0 20px;
-  }
-  #filter-container li {
-    font-size: 30px;
-    line-height: 18px;
-  }
-</style>
 <div class="sub-content-body">
   <div class="sub-content-left">
-<%
-=begin %<  
-    <div class="left-tab-body">
-      <div id="bar-chart-div" class="left-tab tab-select">
-        <a href="#">Layers</a>
-      </div>
-      <div id="line-chart-div" class="left-tab">
-        <a href="#">Info</a>
-      </div>
-    </div>
-    <div class="clear"></div>
-<%
-=end %>    
+  
     <div id="filter-container">
       <div id="filter-content">
       
-      <%= form_for :datasets, :html => { :name => 'datasets' } do |f| %>
-      <%  @datasets.each_with_index do |dataset,i| %>
-        <div class="mini-loading-dialog datasets <%= "#{dataset.id}" -%>">
-          <div class="float-left">
-            <%= check_box_tag "dataset", dataset.id, false, :id => "dataset_#{dataset.id}" %>
-          </div>
-          <div class="float-left width-5">&nbsp;</div>
-          <div class="float-left"><label for='<%= "dataset_#{dataset.id}" %>'><ul><li style='color: <%= "#{css_colour(i)[:code]}" %>'></li></ul></label></div>
-          <div class="float-left width-5">&nbsp;</div>
-          <div class="float-left width-210">
-            <label for='<%= "dataset_#{dataset.id}" %>'>
-              <div class="tool-left-link">
-              <%= link_to "#{dataset.name}", {:controller => 'catalogue', :action => 'details', :id => dataset.id}, :target => 'blank' %>
-              </div>
-              <div class="tool-left-text">
-              <%= more_markup(dataset.description).html_safe -%>
-              </div>
-            </label>
-          </div>
-        </div>
-        <div class="clear height-5">&nbsp;</div>
-      <% end unless !@datasets %>
-      <% end %>
+      <%= render(:partial => 'datasets_form', :locals => {:show_dataset_properties => false}) -%>
       
       </div>
-
-<%
-=begin %>
-      <div class="clear height-50">&nbsp;</div>
-      <div>
-        <span class="button">
-          <button class="add">+ Dataset</button>
-        </span>
-        <span class="button">
-          <button class="remove">Remove</button>
-        </span>        
-      </div>
-<%
-=end %>      
     </div>
+    
   </div>
-
   <div class="sub-content-center">
       <%= render 'error_message' %>
       <div id="map" style="width:780px;"></div>
