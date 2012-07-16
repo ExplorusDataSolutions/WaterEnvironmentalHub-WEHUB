@@ -1,5 +1,7 @@
 class VocabulatorUnits < ActiveRecord::Base
 
-    attr_accessor :name, :type, :abbreviation
-    
+  def self.inheritance_column()
+    'type_override'
+   end
+
 end

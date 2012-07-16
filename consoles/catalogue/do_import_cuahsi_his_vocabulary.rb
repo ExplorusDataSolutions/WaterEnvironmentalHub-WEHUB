@@ -36,17 +36,23 @@ def post_json(uri, hash)
   end
 end
 
-def rename_for_catalogue(hash)
-  JSON.parse(hash.to_json.gsub('Term','name').gsub('Definition','description'))
+def rename_for_catalogue(array)
+  array.each { |h| h.delete('UnitsID') }
+  JSON.parse(array.to_json.gsub('UnitsName','name').gsub('UnitsType','type').gsub('UnitsAbbreviation','abbreviation').gsub('Term','name').gsub('Definition','description'))
 end
 
 sample_types = get_the_soap_content(client, 'GetSampleTypeCV')
-
 sample_types = rename_for_catalogue(sample_types)
-puts sample_types
+post_json('http://localhost:3000/vocabulator/sample_types?format=json', { :sample_types => sample_types })
 
-post_json('http://localhost:3000/vocabulator/sample_types', { :sample_types => sample_types })
-#puts get_the_soap_content(client, 'GetVariableNameCV')
-#puts Hash.from_xml(response)['GetUnitsResponse']['Records']['Record']
-#puts Hash.from(response)['
+units = get_the_soap_content(client, 'GetUnits')
+units = rename_for_catalogue(units)
+post_json('http://localhost:3000/vocabulator/units?format=json', { :units => units })
 
+speciations = get_the_soap_content(client, 'GetSpeciationCV')
+speciations = rename_for_catalogue(speciations)
+post_json('http://localhost:3000/vocabulator/speciations?format=json', { :speciations => speciations })
+
+variable_names = get_the_soap_content(client, 'GetVariableNameCV')
+variable_names = rename_for_catalogue(variable_names)
+post_json('http://localhost:3000/vocabulator/variable_names?format=json', { :variable_names => variable_names })
