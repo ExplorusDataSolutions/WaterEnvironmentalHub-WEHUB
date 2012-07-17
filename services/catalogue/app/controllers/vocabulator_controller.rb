@@ -46,7 +46,6 @@ class VocabulatorController < ApplicationController
   end
   
   def variable_names
-debugger
     if request.post?
       VocabulatorVariableName.destroy_all
       
