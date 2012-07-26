@@ -6,7 +6,7 @@ class VocabulatorUnits < ActiveRecord::Base
 
   def as_json(options={})    
     json = { 
-      :type => self.type, :name => self.name, :description => self.abbreviation 
+      :id => self.id, :type => self.type, :name => self.name, :description => self.abbreviation 
     }
   end
 

@@ -4,59 +4,54 @@ class VocabulatorController < ApplicationController
   
   def sample_types
     if request.post?
-      VocabulatorSampleType.destroy_all
-      
       VocabulatorSampleType.create(params[:sample_types])
 
       respond_with({:status => 'success'}, :location => nil) and return
     end
 
-    @results = VocabulatorSampleType.find(:all)
+    @results = filter_by_name(VocabulatorSampleType.find(:all))
 
-    respond_with(@results)
+    respond_with(:results => @results)
   end
   
   def speciations
     if request.post?
-      VocabulatorSpeciation.destroy_all
-      
       VocabulatorSpeciation.create(params[:speciations])
 
       respond_with({:status => 'success'}, :location => nil) and return
     end
 
-    @results = VocabulatorSpeciation.find(:all)
+    @results = filter_by_name(VocabulatorSpeciation.find(:all))
 
-    respond_with(@results)
+    respond_with(:results => @results)
   end
   
   def units
     if request.post?
-      VocabulatorUnits.destroy_all
-      
       VocabulatorUnits.create(params[:units])
 
       respond_with({:status => 'success'}, :location => nil) and return
     end
 
-    @results = VocabulatorUnits.find(:all)
+    @results = filter_by_name(VocabulatorUnits.find(:all))
 
-    respond_with(@results)
-
+    respond_with(:results => @results)
   end
   
   def variable_names
     if request.post?
-      VocabulatorVariableName.destroy_all
-      
       VocabulatorVariableName.create(params[:variable_names])
 
       respond_with({:status => 'success'}, :location => nil) and return
     end
 
-    @results = VocabulatorVariableName.find(:all)
+    @results = filter_by_name(VocabulatorVariableName.find(:all))
 
-    respond_with(@results)
+    respond_with(:results => @results)
   end
-  
+
+  def filter_by_name(terms)
+    terms.find_all { |term| term.name.scan(/no result|no sample|unknown|not applicable/i).empty? }
+  end  
+
 end

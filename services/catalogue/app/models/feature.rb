@@ -176,7 +176,8 @@ class Feature
   end
 
   def destroy
-    execute("DROP TABLE #{tablename}")  
+    execute("DROP TABLE #{tablename}")
+    FeatureVocabular.where(:dataset_uuid => self.uuid).delete_all  
   end
   
   def create(params)
@@ -202,6 +203,10 @@ class Feature
             execute("UPDATE public.#{tablename} SET the_geom = geometryfromtext('POINT(#{longitude} #{latitude})', 4326);")
           end
         rescue Exception => e
+        end
+
+        if params.key?(:vocabulary) 
+          FeatureVocabulary.create(params[:vocabulary].each { |v| v.merge!({ :dataset_uuid => self.uuid}) })
         end
 
       elsif !filename.match(/(\.zip)$/i).nil?

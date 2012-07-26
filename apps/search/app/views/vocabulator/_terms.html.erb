@@ -1,0 +1,22 @@
+<strong>Improve your dataset's visibility in our search engine. Select the terms that apply to your data or skip this step.</strong>
+<div style="font-size: 8pt;">
+<fieldset>
+  <legend>Sample Types</legend>
+<% @sample_types.each do |term| %>
+  <%= check_box_tag "vocabulary[sample_types][#{term.id}]", term.id %><label for='vocabulary_sample_types_<%= term.id %>'><acronym title='<%= term.description.strip.capitalize %>'><%= term.name %></acronym></label>
+<% end unless !@sample_types %>
+</fieldset>
+</body>
+<fieldset>
+  <legend>Speciations</legend>
+<% @speciations.each do |term| %>
+  <%= check_box_tag "vocabulary[speciations][#{term.id}]", term.id %><label for='vocabulary_speciations_<%= term.id %>'><acronym title='<%= term.description.strip.capitalize %>'><%= term.name %></acronym></label>
+<% end unless !@speciations %>
+</fieldset>
+<fieldset>
+  <legend>Variable Names</legend>
+<% @variable_names.each do |term| %>
+  <%= check_box_tag "vocabulary[variable_names][#{term.id}]", term.id %><label for='vocabulary_variable_names_<%= term.id %>'><acronym title='<%= term.description.strip.capitalize %>'><%= term.name %></acronym></label>
+<% end unless !@variable_names %>
+</fieldset>
+</div>

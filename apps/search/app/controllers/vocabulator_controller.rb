@@ -1,19 +1,13 @@
 class VocabulatorController < ApplicationController
 
-  respond_to :xml, :json, :html
-
   def terms
-    @terms = []
-    @terms = catalogue_instance.vocabulator_sample_types
+    @sample_types = catalogue_instance.vocabulator_sample_types
    
-    @terms = @terms + catalogue_instance.vocabulator_speciations
+    @speciations = catalogue_instance.vocabulator_speciations
 
-    @terms = @terms + catalogue_instance.vocabulator_variable_names
+    @variable_names = catalogue_instance.vocabulator_variable_names
 
-    respond_with @terms do |format|
-      format.html { render :layout => false }
-    end
-
+    render :partial => 'terms', :layout => false
   end
 
 end

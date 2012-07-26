@@ -95,7 +95,11 @@ class ItemsController < ApplicationController
       if dataset.valid?
         begin
           dataset.transaction do
-            dataset.feature.create({ :filename => params[:filename][:path] })
+            feature_params = {}
+            feature_params.store(:vocabulary, params[:vocabulary]) if params[:vocabulary]
+            feature_params.store(:filename, params[:filename][:path])
+            
+            dataset.feature.create(feature_params)
             dataset.save        
           end
         rescue Exception => e 
