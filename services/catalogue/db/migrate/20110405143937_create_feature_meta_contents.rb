@@ -6,6 +6,7 @@ class CreateFeatureMetaContents < ActiveRecord::Migration
       t.text :source_uri
       t.text :coordinates
       t.text :bounding_box
+      t.text :feature_types
       
       t.timestamps
     end

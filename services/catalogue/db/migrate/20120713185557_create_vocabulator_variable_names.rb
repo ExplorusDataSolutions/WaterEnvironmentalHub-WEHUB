@@ -1,8 +1,8 @@
 class CreateVocabulatorVariableNames < ActiveRecord::Migration
   def self.up
     create_table :vocabulator_variable_names do |t|
-      t.string :name
-      t.string :description
+      t.text :name
+      t.text :description
       
       t.timestamps
     end
