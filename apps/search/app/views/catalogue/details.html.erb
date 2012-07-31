@@ -398,33 +398,7 @@ $(document).ready(function() {
 <%
 =end %>     
       
-      <h2 class="green-dot-blue-head">Identification Information</h2>
-      
-      <div class="float-left width-165 title">File identifier</div>
-      <div class="float-left width-500 text"><%= @dataset.uuid %></div>
-      <div class="clear"></div>
-      
-      <div class="float-left width-165 title">Language</div>
-      <div class="float-left width-500 text">English</div>
-      <div class="clear"></div>
-      
-      <div class="float-left width-165 title">Character set</div>
-      <div class="float-left width-500 text">UTF-8</div>
-      <div class="clear"></div>
-<%
-=begin %>     
-      <div class="float-left width-165 title">Date stamp</div>
-      <div class="float-left width-500 text">2009-06-26T10:07:03</div>
-      <div class="clear"></div>
-<% 
-=end %>     
-      <div class="float-left width-165 title">Metadata standard name</div>
-      <div class="float-left width-500 text">ISO 19115:2003/19139</div>
-      <div class="clear"></div>
-      
-      <div class="float-left width-165 title">Metadata standard version</div>
-      <div class="float-left width-500 text">1.0</div>
-      <div class="clear"></div>
+      <%= render 'vocabulator_terms' %>
       
 <% if !@dataset.creative_commons_license.nil? %>
       <h2 class="green-dot-blue-head">License</h2>

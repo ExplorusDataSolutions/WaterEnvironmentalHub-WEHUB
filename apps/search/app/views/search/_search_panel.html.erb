@@ -102,13 +102,13 @@
 
     if (searchParam('type') === 'advanced') {
       searchMode.trigger('click');
-      if (searchParam('north') !== '') { 
+      if (searchParam('north')) { 
         $('#box_selector').trigger('click');
       }
       setBoundingBox(searchParam('north'), searchParam('east'), searchParam('south'), searchParam('west'));
       $('[name="bounding_box[relation]"]').val(searchParam('relation'));
-      if (searchParam('date_start') !== '') { $('#date_start').val(searchParam('date_start')); }
-      if (searchParam('date_end') !== '') { $('#date_end').val(searchParam('date_end')); }
+      if (searchParam('date_start')) { $('#date_start').val(searchParam('date_start')); }
+      if (searchParam('date_end')) { $('#date_end').val(searchParam('date_end')); }
     }
 
   <%# jQuery datepicker %>

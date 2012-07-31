@@ -216,7 +216,27 @@ class CatalogueTranslator
   def datasets_last_uploaded
     json_to_mash(get("#{statistics_uri}/last_uploaded?format=json"))['datasets']
   end
+
+  def vocabulator_sample_types
+    json_to_mash(get("#{vocabulator_uri}/sample_types?format=json"))['results']
+  end
+
+  def vocabulator_speciations
+    json_to_mash(get("#{vocabulator_uri}/speciations?format=json"))['results']
+  end
+
+  def vocabulator_units
+    json_to_mash(get("#{vocabulator_uri}/units?format=json"))['results']
+  end
+
+  def vocabulator_variable_names
+    json_to_mash(get("#{vocabulator_uri}/variable_names?format=json"))['results']
+  end
   
+  def vocabulator_dataset(uuid)
+    json_to_mash(get("#{vocabulator_uri}/dataset?id=#{uuid}&format=json"))['results']
+  end
+
   def clean(params, format='xml')
     params.delete(:controller)
     params.delete(:action)
@@ -270,6 +290,10 @@ class CatalogueTranslator
   
   def user_reviews_uri
     "#{url}/reviews"
+  end
+
+  def vocabulator_uri
+    "#{url}/vocabulator"
   end
 
   def post_json(uri, json_hash={})
