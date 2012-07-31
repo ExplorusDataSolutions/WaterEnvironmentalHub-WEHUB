@@ -2,9 +2,15 @@ class VocabulatorController < ApplicationController
   
   respond_to :json, :xml
   
+  include DatabaseHelper
+  include VocabulatorHelper
+  
   def sample_types
     if request.post?
-      VocabulatorSampleType.create(params[:sample_types])
+      begin
+        VocabulatorSampleType.create(params[:sample_types])
+      rescue ActiveRecord::RecordNotUnique
+      end
 
       respond_with({:status => 'success'}, :location => nil) and return
     end
@@ -16,7 +22,10 @@ class VocabulatorController < ApplicationController
   
   def speciations
     if request.post?
-      VocabulatorSpeciation.create(params[:speciations])
+      begin
+        VocabulatorSpeciation.create(params[:speciations])
+      rescue
+      end
 
       respond_with({:status => 'success'}, :location => nil) and return
     end
@@ -28,7 +37,10 @@ class VocabulatorController < ApplicationController
   
   def units
     if request.post?
-      VocabulatorUnits.create(params[:units])
+      begin
+        VocabulatorUnits.create(params[:units])
+      rescue
+      end
 
       respond_with({:status => 'success'}, :location => nil) and return
     end
@@ -40,7 +52,10 @@ class VocabulatorController < ApplicationController
   
   def variable_names
     if request.post?
-      VocabulatorVariableName.create(params[:variable_names])
+      begin
+        VocabulatorVariableName.create(params[:variable_names])
+      rescue ActiveRecord::RecordNotUnique
+      end
 
       respond_with({:status => 'success'}, :location => nil) and return
     end
@@ -49,9 +64,22 @@ class VocabulatorController < ApplicationController
 
     respond_with(:results => @results)
   end
+  
+  def dataset
+    @results = vocabulary(params[:id])
+    
+    @results.each do |item| 
+      item.delete('created_at')
+      item.delete('updated_at') 
+    end
+    
+    @results.sort! { |x,y| y['count'].to_i <=> x['count'].to_i  }
+
+    respond_with(:results => @results)
+  end
 
   def filter_by_name(terms)
-    terms.find_all { |term| term.name.scan(/no result|no sample|unknown|not applicable/i).empty? }
+    terms.find_all { |term| term && term.name && term.name.scan(/no result|no sample|unknown|not applicable/i).empty? }
   end  
 
 end

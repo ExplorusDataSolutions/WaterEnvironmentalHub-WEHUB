@@ -1,6 +1,7 @@
 class Feature 
 
   include DatabaseHelper
+  include VocabulatorHelper
   include FeatureHelper
   include GisHelper  
   include ActiveModel::Validations
@@ -251,8 +252,8 @@ class Feature
   end
   
   def keywords
-    keywords = self.properties
-    
+    keywords = self.properties | vocabulary_keywords(self.uuid)
+
     if !keywords.nil?
       keywords = clean_id_fields(keywords)
       keywords.map { |k| k.downcase! }
@@ -263,6 +264,7 @@ class Feature
     
     keywords
   end
+  
   
   def properties
     if is_data_source?('geoserver')

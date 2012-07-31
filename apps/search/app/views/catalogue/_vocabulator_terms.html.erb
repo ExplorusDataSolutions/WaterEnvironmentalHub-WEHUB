@@ -1,0 +1,42 @@
+<% if @vocabulator_terms %>
+<style>
+	#tags ul{
+		margin: 0px;
+		padding: 0px;
+		text-align: center;
+	}
+	#tags li{
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: inline;
+	}
+	#tags li a{
+		text-decoration: none;
+		padding: 0 2px;	
+	}
+	#tags li a:hover{	
+		color: #cff400;
+	}		
+	.tag-1{ font-size:100%; }
+	.tag-2{ font-size:120%; }
+	.tag-3{ font-size:140%; }
+	.tag-4{ font-size:160%; }
+	.tag-5{ font-size:180%; }
+	.tag-6{ font-size:190%; }
+	.tag-7{ font-size:200%; }
+</style>
+<h2 class="green-dot-blue-head">Shared terms</h2>
+
+<div class="float-left width-165 title"></div>
+<div class="float-left width-500 text" id="tags">
+  <ul>
+  <% @vocabulator_terms.each do |term| %>
+    <% if term.name %>
+    <li class='<%= "tag-#{term['count'].to_i > 7 ? '7' : term['count'] }" %>' ><a href="<%= "/search?type=advanced&properties=#{term.name}" %>"><acronym title='<%= term.description %>. Click here to search for other datasets sharing this term.'><%= term.name %></acronym></a></li>
+    <% end %>
+  <% end %>
+  </ul>
+</div>
+<div class="clear"></div>
+<% end %>
