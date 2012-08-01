@@ -15,7 +15,7 @@ module VocabulatorHelper
 
     dataset_terms_with_count = []
     dataset_terms.each do |d_term|
-      dataset_terms_with_count.push(all_terms.find { |s_term| (d_term['term_id'] == s_term['term_id'] && d_term['term_source'] == s_term['term_source'] && s_term['count'].to_i > 1 ) })
+      dataset_terms_with_count.push(all_terms.find { |s_term| (d_term['term_id'] == s_term['term_id'] && d_term['term_source'] == s_term['term_source']) })
     end
     
     dataset_terms_with_count.each do |term|
