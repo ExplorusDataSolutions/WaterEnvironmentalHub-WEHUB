@@ -16,7 +16,8 @@ module VocabulatorHelper
     dataset_terms_with_count = []
     dataset_terms.each do |d_term|
       dataset_terms_with_count.push(all_terms.find { |s_term| (d_term['term_id'] == s_term['term_id'] && d_term['term_source'] == s_term['term_source']) })
-    end
+    end    
+    dataset_terms_with_count.compact!
     
     dataset_terms_with_count.each do |term|
       result = execute("SELECT * FROM vocabulator_#{term['term_source']} WHERE id = #{term['term_id']}")[0]

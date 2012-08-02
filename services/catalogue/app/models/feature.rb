@@ -273,7 +273,7 @@ class Feature
     elsif is_data_source?('catalogue')
       observation_data = data_lightweight
       if observation_data[:data].count > 0
-        properties = extract_property_names(observation_data[:data][0])
+        properties = extract_property_names(observation_data[:data][0]) | vocabulary_keywords(self.uuid)
       end
     elsif is_data_source_external?
       properties = FeatureMetaContent.find_by_dataset_uuid(uuid).keywords.split(',')
