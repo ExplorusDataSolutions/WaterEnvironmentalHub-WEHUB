@@ -38,6 +38,7 @@ class CatalogueController < ApplicationController
     @reviews = augment_users(catalogue_instance.find_reviews(params[:id], 1, 100))
     @review_summary = catalogue_instance.find_review_summary(params[:id])    
     @vocabulator_terms = catalogue_instance.vocabulator_dataset(params[:id])
+    @vocabulator_terms.delete_if { |v| v['count'].to_i == 1 } unless !@vocabulator_terms || @vocabulator_terms.empty?
 
     @breadcrumb = ['Discover Our Data', 'This Dataset']
     @main_menu = 'we_catalogue'

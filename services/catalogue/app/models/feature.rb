@@ -205,10 +205,8 @@ class Feature
           end
         rescue Exception => e
         end
-
-        if params.key?(:vocabulary) 
-          FeatureVocabulary.create(params[:vocabulary].each { |v| v.merge!({ :dataset_uuid => self.uuid}) })
-        end
+        
+        save_feature_vocabulary(params[:vocabulary], self.uuid) if params.key?(:vocabulary)
 
       elsif !filename.match(/(\.zip)$/i).nil?
         shape_translator = ShapeTranslator.new(filename, tablename, '4326', directory, "#{Rails.root}/tmp/shape_scripts")
@@ -217,6 +215,8 @@ class Feature
       else
         raise ArgumentError, "Feature could not be created from #{params}"
       end
+      
+      save_vocabulary_unit_terms(self.properties, self.uuid)
     else
       meta_feature_params = params
       meta_feature_params.merge!(:dataset_uuid => uuid)

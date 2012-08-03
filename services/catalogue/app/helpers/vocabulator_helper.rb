@@ -21,12 +21,38 @@ module VocabulatorHelper
     
     dataset_terms_with_count.each do |term|
       result = execute("SELECT * FROM vocabulator_#{term['term_source']} WHERE id = #{term['term_id']}")[0]
+      if result.key?('abbreviation')
+        result['description'] = result['abbreviation']
+      end
       result.merge!({'count' => term['count']})
 
       results.push(result)
     end
     
     results
+  end 
+  
+  def save_feature_vocabulary(feature_vocabulary, dataset_uuid)
+    FeatureVocabulary.create(feature_vocabulary.each { |v| v.merge!({ :dataset_uuid => dataset_uuid}) })
+    Rails.cache.delete("vocabulary_all_terms")
+  end
+  
+  def save_vocabulary_unit_terms(properties, dataset_uuid)
+    unit_terms = VocabulatorUnits.find(:all)
+    
+    shared_unit_terms = []
+    properties.each do |term|
+      shared_unit_terms.push(unit_terms.find_all { |unit| term.strip == unit['name'].strip || term.strip == unit['abbreviation'].strip })
+    end
+    shared_unit_terms.flatten!
+    shared_unit_terms.compact!
+    
+    shared_unit_terms_for_feature_vocabulary = []
+    shared_unit_terms.each do |term|
+      shared_unit_terms_for_feature_vocabulary.push({ 'term_id' => term['id'], 'term_source' => 'units' })
+    end
+    
+    save_feature_vocabulary(shared_unit_terms_for_feature_vocabulary, dataset_uuid)
   end
   
   def vocabulary_keywords(dataset_uuid)
