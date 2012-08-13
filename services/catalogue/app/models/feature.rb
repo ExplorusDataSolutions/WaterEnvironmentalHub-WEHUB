@@ -205,8 +205,6 @@ class Feature
           end
         rescue Exception => e
         end
-        
-        save_feature_vocabulary(params[:vocabulary], self.uuid) if params.key?(:vocabulary)
 
       elsif !filename.match(/(\.zip)$/i).nil?
         shape_translator = ShapeTranslator.new(filename, tablename, '4326', directory, "#{Rails.root}/tmp/shape_scripts")
@@ -215,8 +213,9 @@ class Feature
       else
         raise ArgumentError, "Feature could not be created from #{params}"
       end
-      
-      save_vocabulary_unit_terms(self.properties, self.uuid)
+
+      save_vocabulary_unit_terms(feature_fields, self.uuid)
+
     else
       meta_feature_params = params
       meta_feature_params.merge!(:dataset_uuid => uuid)
@@ -265,7 +264,6 @@ class Feature
     keywords
   end
   
-  
   def properties
     if is_data_source?('geoserver')
       observation_data = geoserver_translator.feature_fields(uuid)
@@ -287,8 +285,13 @@ class Feature
   
   def feature_fields
     fields = []
-    fields_with_types = self.feature_fields_by_type
-    fields_with_types.each { |key, value|  fields = fields + value } unless !fields_with_types
+    if is_data_source?('geoserver')
+      fields_with_types = geoserver_translator.feature_fields_by_type(self.uuid)
+      fields_with_types.each { |key, value|  fields = fields + value } unless !fields_with_types
+    elsif is_data_source?('catalogue')
+      observation_data = data_lightweight
+      fields = observation_data[:data][0].keys
+    end
     fields
   end
   
@@ -296,7 +299,7 @@ class Feature
     if is_data_source?('geoserver')
       geoserver_translator.feature_fields_by_type(uuid)
     elsif is_data_source?('catalogue')
-      observation_data = data_lightweight
+      observation_data = data_lightweight      
       get_types(observation_data[:data][0]) unless !observation_data || observation_data[:data].count == 0
     else
     end

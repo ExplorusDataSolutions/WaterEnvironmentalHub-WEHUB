@@ -66,7 +66,7 @@ class VocabulatorController < ApplicationController
   end
   
   def dataset
-    @results = vocabulary(params[:id])
+    @results = vocabulary_summary(params[:id])
     
     @results.each do |item| 
       item.delete('created_at')
@@ -76,6 +76,14 @@ class VocabulatorController < ApplicationController
     @results.sort! { |x,y| y['count'].to_i <=> x['count'].to_i  }
 
     respond_with(:results => @results)
+  end
+  
+  def feature
+    @dataset = Dataset.find_by_uuid(params[:id])
+    
+    @results = vocabulary(@dataset.feature.feature_fields, params[:id])
+    
+    respond_with(:results => @results)     
   end
 
   def filter_by_name(terms)

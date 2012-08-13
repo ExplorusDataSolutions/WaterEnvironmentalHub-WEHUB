@@ -237,6 +237,10 @@ class CatalogueTranslator
     json_to_mash(get("#{vocabulator_uri}/dataset?id=#{uuid}&format=json"))['results']
   end
 
+  def vocabulator_feature(uuid)
+    json_to_mash(get("#{vocabulator_uri}/feature?id=#{uuid}&format=json"))['results'].to_hash
+  end  
+
   def clean(params, format='xml')
     params.delete(:controller)
     params.delete(:action)
