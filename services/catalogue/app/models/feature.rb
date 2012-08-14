@@ -178,7 +178,7 @@ class Feature
 
   def destroy
     execute("DROP TABLE #{tablename}")
-    FeatureVocabular.where(:dataset_uuid => self.uuid).delete_all  
+    delete_feature_vocabulary(self.uuid)
   end
   
   def create(params)
@@ -290,7 +290,7 @@ class Feature
       fields_with_types.each { |key, value|  fields = fields + value } unless !fields_with_types
     elsif is_data_source?('catalogue')
       observation_data = data_lightweight
-      fields = observation_data[:data][0].keys
+      fields = observation_data[:data][0].keys unless !observation_data || observation_data[:data].count == 0
     end
     fields
   end
@@ -303,6 +303,21 @@ class Feature
       get_types(observation_data[:data][0]) unless !observation_data || observation_data[:data].count == 0
     else
     end
+  end
+  
+  def update_feature(fields)
+    current_fields = feature_fields
+    requested_fields = fields
+
+    if !(current_fields - requested_fields).empty?
+      current_fields.each_with_index do |field, i|
+        working_field = requested_fields[i]
+        if !(field == working_field)
+          execute("ALTER TABLE #{self.tablename} RENAME COLUMN \"#{field}\" TO \"#{working_field}\";")
+        end
+      end
+    end
+
   end
   
   def name

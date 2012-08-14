@@ -60,7 +60,12 @@ module VocabulatorHelper
     results
   end 
   
+  def delete_feature_vocabulary(dataset_uuid)
+    FeatureVocabulary.where(:dataset_uuid => dataset_uuid).delete_all
+  end
+  
   def save_feature_vocabulary(feature_vocabulary, dataset_uuid)
+    delete_feature_vocabulary(dataset_uuid)
     FeatureVocabulary.create(feature_vocabulary.each { |v| v.merge!({ :dataset_uuid => dataset_uuid}) })
     Rails.cache.delete("vocabulary_all_terms_group_by")
   end

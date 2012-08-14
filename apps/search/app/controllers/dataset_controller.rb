@@ -6,8 +6,6 @@ class DatasetController < ApplicationController
 
   caches_action :show, :cache_path => :dataset_key.to_proc, :expires_in => 30.minutes
 
-  include VocabulatorHelper
-
   def dataset_key
     "dataset/user/#{current_user.id}"
   end
@@ -97,7 +95,7 @@ class DatasetController < ApplicationController
       params[:filename] = filename_and_path
                       
       begin
-        response = catalogue_instance.create(vocabulary_params(params))
+        response = catalogue_instance.create(params)
         
         if response && response.key?(:uuid)        
           response.merge!({ :callback => (url_for :controller => 'dataset', :action => 'show', :anchor => 'mine', :id => response[:uuid]) })

@@ -49,7 +49,7 @@
   <%= link_to 'Files you have shared', {:controller => 'dataset', :action => 'show', :anchor => 'mine'}, {:id => 'my-datasets'} %>
   <%= link_to 'Contribute (share your dataset)', :controller => 'dataset', :action => 'new', :anchor => 'share' %>
 <% else %>
-  <%= link_to 'Edit your dataset', {:controller => 'dataset', :action => 'edit', :anchor => 'mine', :id => params[:id]} %>
-  <%= link_to 'Edit your dataset\'s feature', {:controller => 'feature', :action => 'edit', :anchor => 'my-feature', :id => params[:id]} %>  
+  <%= link_to 'Edit dataset', {:controller => 'dataset', :action => 'edit', :anchor => 'mine', :id => params[:id]} %>
+  <%= link_to 'Edit feature field names and terms', {:controller => 'feature', :action => 'edit', :anchor => 'my-feature', :id => params[:id]} %>  
 <% end %>
 </div>

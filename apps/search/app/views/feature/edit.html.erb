@@ -1,0 +1,155 @@
+<style>
+  .property-editor table {
+    font-size: 1em;
+  }
+  .property-editor .property-item .ui-widget {
+    font-size: .7em;
+    text-align: left; 
+  }
+  .ui-selectmenu-menu li {
+    text-align: left; 
+    font-size: .8em;  
+  }
+  .property-editor .property-item {
+    padding: 10px;
+    margin-bottom: 10px;  
+  }
+  .property-editor .zebra {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #D5D6D8;
+    border-radius: 5px 5px 5px 5px;
+    background-color: #DEECF4;
+  }
+  .ui-selectmenu-description {
+    font-size: .8em;
+  }
+</style>
+<script>
+  $(document).ready(function() {
+    $('[name=commit]').button();    
+    $('[name=cancel]').button();
+    
+    var elements = $('select.sample-types, select.speciations, select.units, select.speciations, select.variable-names');
+    var page = 20;
+
+  	var itemFormatting = function(text){
+      var newText = text;
+      //array of find replaces
+      var findreps = [
+        {find:/^([^\~]+) \~ (.*)/g, rep: '<span class="ui-selectmenu-item-header">$1</span><span class="ui-selectmenu-description">$2</span>'}
+      ];
+
+      for(var i in findreps){
+        newText = newText.replace(findreps[i].find, findreps[i].rep);
+      }
+      return newText;
+    }
+
+    for (var i=0 ; i*page < elements.length ; i++) {
+
+      var sliceNDice = function(index) {
+        return function() { 
+          elements.slice(index*page,(index+1)*page).selectmenu({
+            width: 380,
+            format: itemFormatting
+          });
+        }
+      }(i)
+        
+      setTimeout(sliceNDice, 500*i);
+    }
+
+  });
+</script>
+<%= render '/shared/left_panel' %>
+
+<div class="profile-right-container">
+  <%= render '/shared/menu_horizontal_tabs' %>
+  <div class="community-tab-right">
+    <div class="profile-tab ">
+      <%= link_to 'Profile', :controller => 'user', :action => 'profile' %>
+    </div>
+  </div>
+  <div class="clear"></div>
+  <div class="profile-content-container">
+    <%= render '/dataset/upper_navbar', :menu => 'edit' %>
+    
+<div class="property-editor">
+<p>
+Modify your feature property field names, associate property terms, or skip this optional step altogether. 
+By adding property terms you will improve your dataset's search visibility and link this data to other similar datasets.
+</p>
+<table style="width: 735px; overflow: auto;">
+  <tr>
+    <th>
+    Property field name
+    </th>
+    <th>
+    Optional property terms
+    </th>
+  </tr>
+  <tr>
+    <td colspan="2">
+<%= form_for :feature, :url => { :action => 'update', :id => params[:id] }, :html => { :method => :put } do |f| %>    
+<% @properties.each_with_index do |property,i| %>
+  <div class="<%= i.even? ? 'property-item' : 'property-item zebra' %>">
+  <table>
+    <tr>
+      <td style="vertical-align: top; padding-top: 5px;">
+    <%= text_field_tag "properties[#{i}]", property, :size => 18 %>
+      </td>
+      <td>
+  <table style="padding-left: 20px;">
+    <tr>
+      <td>
+      Sample type
+      </td>
+      <td>
+      <%= select("vocabulary[#{i}]","sample_types", @sample_types.collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, { :include_blank => true, :selected => selected_value(@feature_fields_vocabulary, property, 'sample_types')  }, { :class => 'sample-types' }) %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      Speciation
+      </td>
+      <td>
+      <%= select("vocabulary#{[i]}","speciations", @speciations.collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, { :include_blank => true, :selected => selected_value(@feature_fields_vocabulary, property, 'speciations') }, { :class => 'speciations' }) %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      Unit
+      </td>
+      <td>
+      <%= select("vocabulary#{[i]}","units", @units.collect { |s| ["#{s.description} ~ #{s.name}", s.id] }, { :include_blank => true, :selected => selected_value(@feature_fields_vocabulary, property, 'units') }, { :class => 'units' }) %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      Variable name
+      </td>
+      <td>
+      <%= select("vocabulary#{[i]}","variable_names", @variable_names.collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, { :include_blank => true, :selected => selected_value(@feature_fields_vocabulary, property, 'variable_names')  }, { :class => 'variable-names' }) %>    
+      </td>
+    </tr>
+  </table>
+      </td>  
+    </tr>
+  </table>
+  </div>
+<% end %>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="right">
+      <%= submit_tag 'Save' %>
+    </td>  
+  </tr>
+</table>
+</div>
+<% end %>
+    <div class="clear"></div>    
+  </div>
+</div>
+<div class="clear"></div>
+

@@ -239,7 +239,18 @@ class CatalogueTranslator
 
   def vocabulator_feature(uuid)
     json_to_mash(get("#{vocabulator_uri}/feature?id=#{uuid}&format=json"))['results'].to_hash
-  end  
+  end
+  
+  def feature_update(properties, vocabulary, user_id, dataset_uuid)
+    params = {
+              :feature_fields => properties, 
+              :vocabulary => vocabulary, 
+              :user_id => user_id,
+              :id => dataset_uuid 
+             }
+              
+    json_to_mash(post_json("#{url}/feature/update", params))
+  end
 
   def clean(params, format='xml')
     params.delete(:controller)
@@ -308,7 +319,7 @@ class CatalogueTranslator
     url = URI.parse(uri)
     http = Net::HTTP.new(url.host, url.port)
     http.read_timeout = timeout
-    http.open_timeout = timeout    
+    http.open_timeout = timeout
     response = http.start {|http| http.post(url.to_s, json_hash.to_json, { 'Content-Type' => 'application/json'}) }
     
     response.value
