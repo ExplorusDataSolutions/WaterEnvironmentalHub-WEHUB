@@ -106,5 +106,13 @@ module DatasetHelper
   def public_dataset?(dataset)
     !dataset.owner || dataset.owner.group_id.nil? || dataset.owner.group_id.to_s.empty? || dataset.owner.group_id && socialnetwork_instance.public_group?(dataset.owner.group_id)
   end
+  
+  def dataset_key(uuid=params[:id], format=params[:format])
+    "dataset/index/#{uuid}?format=#{format}"
+  end
 
+  def expire_dataset_action_cache(uuid)
+    expire_fragment dataset_key(uuid, 'xml')
+    expire_fragment dataset_key(uuid, 'json')    
+  end
 end

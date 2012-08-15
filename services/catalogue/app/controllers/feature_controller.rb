@@ -13,6 +13,8 @@ class FeatureController < ApplicationController
       save_feature_vocabulary(params[:vocabulary], params[:id])
     end
     
+    expire_dataset_action_cache(@dataset.uuid)
+    
     respond_with({ :uuid => @dataset.uuid }, :location => nil) and return
   end
     

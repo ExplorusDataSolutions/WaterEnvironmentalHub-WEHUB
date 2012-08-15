@@ -3,6 +3,8 @@ class FeatureController < ApplicationController
   include FeatureHelper 
 
   respond_to :json, :xml
+  
+  before_filter :verify_logged_in
     
   def edit
     dataset = catalogue_instance.dataset(params[:id])

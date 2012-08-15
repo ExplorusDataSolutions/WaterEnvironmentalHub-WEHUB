@@ -125,9 +125,8 @@ class ItemsController < ApplicationController
     errors = {}
  
     dataset = Dataset.find_by_uuid(params[:dataset_id])
-    
-    expire_fragment dataset_key(dataset.uuid, 'xml')
-    expire_fragment dataset_key(dataset.uuid, 'json')    
+
+    expire_dataset_action_cache(dataset.uuid)    
     
     if is_owner(dataset, params)
       dataset.transaction do
@@ -150,8 +149,7 @@ class ItemsController < ApplicationController
 
     dataset = Dataset.find_by_uuid(params[:dataset][:id])
 
-    expire_fragment dataset_key(dataset.uuid, 'xml')
-    expire_fragment dataset_key(dataset.uuid, 'json')        
+    expire_dataset_action_cache(dataset.uuid)
        
     if is_owner(dataset, params)
       
@@ -258,10 +256,6 @@ class ItemsController < ApplicationController
       render :text => dataset.uuid and return
     end
     render :text => uuid, :status => 500 and return
-  end
-
-  def dataset_key(uuid=params[:id], format=params[:format])
-    "dataset/index/#{uuid}?format=#{format}"
   end
 
   private
