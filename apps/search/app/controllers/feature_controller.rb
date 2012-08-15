@@ -13,14 +13,22 @@ class FeatureController < ApplicationController
     
     @feature_fields_vocabulary = catalogue_instance.vocabulator_feature(params[:id])
 
-    @sample_types = catalogue_instance.vocabulator_sample_types
-    @sample_types.sort! { |x,y| x.name.downcase <=> y.name.downcase }
-    @speciations = catalogue_instance.vocabulator_speciations
-    @speciations.sort! { |x,y| x.name.downcase <=> y.name.downcase }
-    @units = catalogue_instance.vocabulator_units
-    @units.sort! { |x,y| x.description.downcase <=> y.description.downcase }
-    @variable_names = catalogue_instance.vocabulator_variable_names
-    @variable_names.sort! { |x,y| x.name.downcase <=> y.name.downcase }
+    @sample_types = Rails.cache.fetch("vocabulary_sample_types") do
+      catalogue_instance.vocabulator_sample_types.sort! { |x,y| x.name.downcase <=> y.name.downcase }      
+    end
+
+    @speciations = Rails.cache.fetch("vocabulary_speciations") do
+      catalogue_instance.vocabulator_speciations.sort! { |x,y| x.name.downcase <=> y.name.downcase }
+    end
+
+    @units = Rails.cache.fetch("vocabulary_units") do 
+      catalogue_instance.vocabulator_units.sort! { |x,y| x.description.downcase <=> y.description.downcase }
+    end
+
+    @variable_names = Rails.cache.fetch("vocabulary_variable_names") do
+      catalogue_instance.vocabulator_variable_names.sort! { |x,y| x.name.downcase <=> y.name.downcase }
+    end
+    
   end
   
   def update
