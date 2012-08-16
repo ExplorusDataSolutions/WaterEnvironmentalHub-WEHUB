@@ -175,7 +175,8 @@ class ItemsController < ApplicationController
       
       if !dataset.errors.empty?
         dataset.errors.each do |key, value|
-          errors.store('dataset', "#{key} #{value}")
+          errors[:dataset] = {}
+          errors[:dataset].store("#{key}", "#{key} #{value}")
         end
       else
         respond_with({ :uuid => dataset.uuid }, :location => nil) and return      

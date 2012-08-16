@@ -239,7 +239,7 @@ $(document).ready(function() {
   </div>
   <div class="top-container-tab" id="my-collection" style="display: none;">+ My collection</div>
   <div class="top-container-tab" id="add-review" style="display: none;">+ Comments</div>
-  <div class="top-container-tab" id="edit-dataset" style="display: none;" onclick="<%= onclick_link_to :controller => 'dataset', :action => 'edit', :id => @dataset.uuid %>">Edit</div>  
+  <div class="top-container-tab" id="edit-dataset" style="display: none;" onclick="<%= onclick_link_to :controller => 'dataset', :action => 'edit', :id => @dataset.uuid, :anchor => 'mine' %>">Edit</div>  
   <div class="clear"></div>
   
 <%= render 'download_format_selector' %>

@@ -28,8 +28,49 @@
 </style>
 <script>
   $(document).ready(function() {
-    $('[name=commit]').button();    
-    $('[name=cancel]').button();
+    $('[name=commit]').button();
+    
+    function newDataset() {
+      return window.location.search.match(/uploader=success/)
+    }
+    
+    if (newDataset()) {
+      $('.new-dataset-message').show();
+      $('.existing-dataset-message').hide();
+    }    
+
+    $('[name=commit]').click(function(event) {
+      event.preventDefault();
+      $.ajax({
+        url: $('form').attr('action'),
+        data: $('form :input[value]').serialize(),
+        type: 'POST',
+        success: function(data) {
+          if (data.callback) {
+            $("#success-dialog").dialog({
+              height: 250,
+              width: 600,
+              title: 'Thanks!',
+              modal: true,
+              buttons: { "Ok": function() { window.location = data.callback; } }
+            });
+            setTimeout(function() { window.location = data.callback; }, 18000);
+          } else if (data.errors) {
+            var errorMsg = ''
+            $(data.errors).each(function(i,e) { 
+              if (e.dataset) {
+                for (var name in e.dataset) {
+                  errorMsg += '<li>' + name + ' can\'t be blank</li>';
+                }
+              }
+            });
+            $('#error-explanation').html('<strong>Errors:</strong><ul>' + errorMsg + '</ul>').focus();
+            $('#error-explanation, .error').effect("highlight", {}, 3000);
+          }
+        },
+        error: function(data) { alert(data); }
+      });
+    });    
     
     var elements = $('select.sample-types, select.speciations, select.units, select.speciations, select.variable-names');
     var page = 20;
@@ -78,8 +119,13 @@
     
 <div class="property-editor">
 <p>
-Modify your feature feature field names, associate terms, or skip this optional step altogether. 
-By adding terms you will improve your dataset's search visibility and link this data to other similar datasets.
+<div class="new-dataset-message" style="display: none;">
+  <h3>One last step!</h3>
+  Associate common terms with your data to improve your dataset's search visibility and link this data to other similar datasets.
+</div>
+<div class="existing-dataset-message">
+  Edit your feature fields. Modify field names and associate terms. By adding terms you will improve your dataset's search visibility and link this data to other similar datasets.
+</div>
 </p>
 <table>
   <tr>
@@ -87,7 +133,7 @@ By adding terms you will improve your dataset's search visibility and link this 
     Field name
     </th>
     <th>
-    Optional terms
+    Terms
     </th>
   </tr>
   <tr>
@@ -155,3 +201,4 @@ By adding terms you will improve your dataset's search visibility and link this 
 </div>
 <div class="clear"></div>
 
+<%= render '/dataset/success_updates' %>

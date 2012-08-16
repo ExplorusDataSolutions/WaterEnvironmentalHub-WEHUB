@@ -6,7 +6,7 @@ class FeatureController < ApplicationController
   
   before_filter :verify_logged_in
     
-  def edit
+  def edit  
     dataset = catalogue_instance.dataset(params[:id])
     @properties = dataset.properties.split(',')
     
@@ -35,8 +35,12 @@ class FeatureController < ApplicationController
   
   def update
     catalogue_instance.feature_update(properties_params(params), vocabulary_params(params), current_user.id, params[:id])
-
-    redirect_to :controller => 'dataset', :action => 'show', :anchor => 'mine', :id => params[:id]
+    
+    if request.xhr?
+      render :json => { :callback => (url_for :controller => 'dataset', :action => 'show', :anchor => 'mine', :id => params[:id]) } and return
+    else
+      redirect_to :controller => 'dataset', :action => 'show', :anchor => 'mine', :id => params[:id] and return
+    end
   end
   
 end

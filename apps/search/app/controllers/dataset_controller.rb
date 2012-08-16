@@ -62,14 +62,18 @@ class DatasetController < ApplicationController
     
     response = catalogue_instance.dataset_update(current_user.id, params[:dataset])
 
-    if response.key?(:errors)
-      flash[:errors] = response[:errors].values      
-      render 'edit'
+    if request.xhr?
+      render :json => json_response(response, (url_for :action => 'show', :anchor => 'mine', :id => response[:uuid])) and return
     else
-      redirect_to :action => 'show', :anchor => 'mine', :id => response[:uuid]    
+      if response.key?(:errors)
+        flash[:errors] = response[:errors].values      
+        render 'edit'
+      else    
+        redirect_to :action => 'show', :anchor => 'mine', :id => response[:uuid] and return
+      end
     end
   end
-  
+    
   def create
     #ToDo: wrangle this method to be similar to update method (form translation done in search app, not on catalogue service)
     @breadcrumb = ['Community', 'Datasets']
@@ -98,7 +102,7 @@ class DatasetController < ApplicationController
         response = catalogue_instance.create(params)
         
         if response && response.key?(:uuid)        
-          response.merge!({ :callback => (url_for :controller => 'dataset', :action => 'show', :anchor => 'mine', :id => response[:uuid]) })
+          response.merge!({ :callback => (url_for :controller => 'feature', :action => 'edit', :anchor => 'my-feature', :id => response[:uuid], :uploader => 'success') })
           response.delete(:uuid)
         end
       rescue Exception => e
@@ -134,6 +138,13 @@ class DatasetController < ApplicationController
   end
 
   private 
+
+  def json_response(response, callback)
+    json = {}
+    json.store(:errors, response[:errors]) if response.key?(:errors)
+    json.store(:callback, callback) if !response.key?(:errors)
+    json
+  end
 
   def friend_datasets
     friend_ids = []
