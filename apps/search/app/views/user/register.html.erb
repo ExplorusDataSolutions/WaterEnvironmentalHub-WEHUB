@@ -203,6 +203,19 @@
         <td align="left"><%= label_tag :eula, "I agree to the WEHUB's Privacy Statement and #{link_to 'Terms of Use', :controller => 'about', :action => 'terms_of_service'}.".html_safe %></td>
       </tr>
       <tr>
+        <td valign="top"></td>
+        <td>
+          <div>			
+            <script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k=6Le2xtUSAAAAAFygYNtUgr3qN0NHbwhAfROhRVyQ"></script>
+            <noscript>
+              <iframe src="http://www.google.com/recaptcha/api/noscript?k=your_public_key" height="300" width="500" frameborder="0"></iframe><br>
+              <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+              <input type="hidden" name="recaptcha_response_field" value="manual_challenge">
+            </noscript>
+          </div>
+        </td>
+      </tr>
+      <tr>
         <td>&nbsp;</td>
         <td align="left">
           <div class="create-account-button" onclick="$('form').submit();">
