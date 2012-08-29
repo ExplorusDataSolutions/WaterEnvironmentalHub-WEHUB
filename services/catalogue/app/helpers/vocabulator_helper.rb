@@ -101,5 +101,78 @@ module VocabulatorHelper
     
     keywords
   end
+  
+  def find_unit_terms(terms, value)
+    value = strip_to_words(value)
+    
+    results = []
+    terms.each do |term|
+      # description holds the unit symbol
+      desc = term['description']      
+      if value.match(/^#{desc} | #{desc} | #{desc}$|\(#{desc}\)|_#{desc}|_#{desc}_/)
+        results.push(term)
+      elsif term['name'].match(/#{value}/i)
+        results.push(term)      
+      end
+    end
+    
+    results
+  end
 
+  def find_wildcard_terms(terms, value)
+    value = strip_to_words(value)
+    
+    results = []
+    terms.each do |term|
+      term.values.each do |t|
+        if t.is_a?(String) && t.match(/#{value.gsub(/ /,'|')}/i)              
+          results.push(term)
+          return results
+        end
+      end
+    end
+  
+    results
+  end
+
+  def find_closest_terms(terms, value)
+    value = strip_to_words(value)
+    
+    results = []
+    terms.each do |term|
+      term.values.each do |t|
+        if t.is_a?(String)
+          found = false
+          pieces = strip_to_words(t).split(' ')
+          if pieces.length < 7 && pieces.length > 1
+            pieces.permutation.to_a.each do |permutation|
+              if value.match(/#{strip_to_words(permutation.join(' '))}/i)
+                results.push(term)
+                found = true
+              end
+            end
+            if !found
+              pieces.combination(pieces.length-1).to_a.each do |combination|
+                if combination.length > 1 && value.match(/#{strip_to_words(combination.join(' '))}/i)
+                  results.push(term)
+                  found = true
+                end
+              end
+            end            
+          end
+        end
+      end
+    end
+    
+    results
+  end
+  
+  def strip_to_words(value)
+    value = value.gsub(/[-_,\.\+()]/,' ')
+    value = value.gsub(/ +/,' ')
+    value = value.gsub(/ \\/,'\\')    
+    value = value.strip
+    value  
+  end
+  
 end

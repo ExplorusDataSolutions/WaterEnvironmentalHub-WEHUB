@@ -78,6 +78,48 @@ class VocabulatorController < ApplicationController
     respond_with(:results => @results)
   end
   
+  def vocabularize
+    uuid = params[:id]
+    
+    dataset = Dataset.find_by_uuid(params[:id])    
+    feature_fields = dataset.feature.feature_fields
+
+    units = VocabulatorUnits.find(:all)
+    variable_names = VocabulatorVariableName.find(:all)
+    sample_types = VocabulatorSampleType.find(:all)
+
+    @results = {}
+    feature_fields.each_with_index do |field, i|    
+      results = find_unit_terms(to_hash(units), field)
+      if !results.empty?
+        @results[:units] = {}
+        @results[:units][i] = results 
+      end
+      results = find_closest_terms(to_hash(variable_names), field)
+      if !results.empty?
+        @results[:variable_names] = {}
+        @results[:variable_names][i] = results 
+      end      
+      results = find_closest_terms(to_hash(sample_types), field)
+      if !results.empty?
+        @results[:sample_types] = {}
+        @results[:sample_types][i] = results 
+      end
+    end
+    
+    respond_with(:results => @results)
+  end
+
+  def to_hash(active_record)  
+    result = JSON.parse(active_record.to_json(:except => [:created_at, :updated_at]))
+    if result.is_a?(Array) && result[0].key?('type')
+      result.each do |item|
+        item.delete('type')
+      end
+    end
+    result
+  end
+  
   def feature
     @dataset = Dataset.find_by_uuid(params[:id])
     
