@@ -59,15 +59,20 @@ class UserController < ApplicationController
           if params[:eula].nil?
             @user.errors.add_to_base('You must agree to the WEHUB\'s Privacy Statment and Terms of Use.')          
           else
-            @user = socialnetwork_instance.register(params[:user])
-            socialnetwork_instance.sign_out
+            google_instance = GoogleTranslator.new
+            if !google_instance.verify_recaptcha(request.remote_ip, params[:recaptcha_challenge_field], params[:recaptcha_response_field])
+              @user.errors.add_to_base('Your CAPTCHA response could not be verified, please try again.') 
+            else
+              @user = socialnetwork_instance.register(params[:user])
+              socialnetwork_instance.sign_out
 
-            @user = socialnetwork_instance.sign_in(params[:user][:login], params[:user][:password])
-            session[:user] = @user
-            set_wehub_cookie(@user)
-            
-            respond_with(@user) do |format|
-              format.html { redirect_to :root }
+              @user = socialnetwork_instance.sign_in(params[:user][:login], params[:user][:password])
+              session[:user] = @user
+              set_wehub_cookie(@user)
+              
+              respond_with(@user) do |format|
+                format.html { redirect_to :root }
+              end
             end
           end
         end
