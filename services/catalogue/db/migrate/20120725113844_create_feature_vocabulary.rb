@@ -9,7 +9,7 @@ class CreateFeatureVocabulary < ActiveRecord::Migration
       t.timestamps
     end
     
-    add_index :feature_vocabulary, [:dataset_uuid, :feature_field_position, :term_id, :term_source], :unique => true, :name => 'feature_vocabulary_unique_index'
+    add_index :feature_vocabulary, [:dataset_uuid, :feature_field_position, :term_source], :unique => true, :name => 'feature_vocabulary_unique_index'
 
   end
 

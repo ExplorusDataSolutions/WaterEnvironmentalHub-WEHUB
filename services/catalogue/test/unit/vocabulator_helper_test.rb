@@ -52,6 +52,11 @@ class VocabulatorHelperTest < ActiveSupport::TestCase
     results = find_unit_terms([term("tritium units", "TU")], "Feature ID%s")
     assert results.empty?
   end
+
+  test "should mg/L in mgL" do
+    results = find_unit_terms([term("Milligrams per litre", "mg/L")], "Dissolved Oxygen mgL")
+    assert !results.empty?
+  end
   
   private 
   

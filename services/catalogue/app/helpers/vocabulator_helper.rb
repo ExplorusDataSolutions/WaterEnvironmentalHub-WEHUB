@@ -107,12 +107,23 @@ module VocabulatorHelper
     
     results = []
     terms.each do |term|
+      found = false
       # description holds the unit symbol
       desc = term['description']      
       if value.match(/^#{desc} | #{desc} | #{desc}$|\(#{desc}\)|_#{desc}|_#{desc}_/)
         results.push(term)
+        found = true
       elsif term['name'].match(/#{value}/i)
-        results.push(term)      
+        results.push(term)
+        found = true        
+      end
+      if !found
+        desc = desc.scan(/\w/).join()
+        desc.strip!
+
+        if desc.length > 1 && value.match(/^#{desc} | #{desc} | #{desc}$|\(#{desc}\)|_#{desc}|_#{desc}_|^#{desc}$/i)
+          results.push(term)
+        end
       end
     end
     

@@ -88,36 +88,17 @@ class VocabulatorController < ApplicationController
     variable_names = VocabulatorVariableName.find(:all)
     sample_types = VocabulatorSampleType.find(:all)
 
-    @results = {}
+    @results = []
     feature_fields.each_with_index do |field, i|    
-      results = find_unit_terms(to_hash(units), field)
-      if !results.empty?
-        @results[:units] = {}
-        @results[:units][i] = results 
-      end
-      results = find_closest_terms(to_hash(variable_names), field)
-      if !results.empty?
-        @results[:variable_names] = {}
-        @results[:variable_names][i] = results 
-      end      
-      results = find_closest_terms(to_hash(sample_types), field)
-      if !results.empty?
-        @results[:sample_types] = {}
-        @results[:sample_types][i] = results 
-      end
+
+      @results = @results | feature_vocabulary(find_unit_terms(to_hash(units), field), i, 'units')
+      @results = @results | feature_vocabulary(find_closest_terms(to_hash(variable_names), field), i, 'variable_names')
+      @results = @results | feature_vocabulary(find_closest_terms(to_hash(sample_types), field), i, 'sample_types')
     end
     
-    respond_with(:results => @results)
-  end
+    save_feature_vocabulary(@results, uuid) unless @results.empty?
 
-  def to_hash(active_record)  
-    result = JSON.parse(active_record.to_json(:except => [:created_at, :updated_at]))
-    if result.is_a?(Array) && result[0].key?('type')
-      result.each do |item|
-        item.delete('type')
-      end
-    end
-    result
+    respond_with(:status => (@results.empty? ? 'fail' : 'success'))
   end
   
   def feature
@@ -128,8 +109,29 @@ class VocabulatorController < ApplicationController
     respond_with(:results => @results)     
   end
 
+  private
+  
   def filter_by_name(terms)
     terms.find_all { |term| term && term.name && term.name.scan(/no result|no sample|unknown|not applicable/i).empty? }
   end  
 
+  def feature_vocabulary(matches, index, source)
+    results = []
+    if !matches.nil? && !matches.empty?
+      item = matches[0]
+      results.push({:feature_field_position => index, :term_id => item['id'], :term_source => source})
+    end
+    results
+  end
+  
+  def to_hash(active_record)  
+    result = JSON.parse(active_record.to_json(:except => [:created_at, :updated_at]))
+    if result.is_a?(Array) && result[0].key?('type')
+      result.each do |item|
+        item.delete('type')
+      end
+    end
+    result
+  end
+  
 end
