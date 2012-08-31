@@ -9,18 +9,12 @@ class FeatureController < ApplicationController
   def edit  
     dataset = catalogue_instance.dataset(params[:id])
     @properties = dataset.properties.split(',')
-    
-    # removing occurances of / otherwise json serialization breaks
-    @properties.map! { |p| p.gsub('/','').strip }
+    @properties.map! { |p| p.strip }
     
     @feature_fields_vocabulary = catalogue_instance.vocabulator_feature(params[:id])
 
     @sample_types = Rails.cache.fetch("vocabulary_sample_types") do
       catalogue_instance.vocabulator_sample_types.sort! { |x,y| x.name.downcase <=> y.name.downcase }      
-    end
-
-    @speciations = Rails.cache.fetch("vocabulary_speciations") do
-      catalogue_instance.vocabulator_speciations.sort! { |x,y| x.name.downcase <=> y.name.downcase }
     end
 
     @units = Rails.cache.fetch("vocabulary_units") do 

@@ -71,9 +71,9 @@
         error: function(data) { alert(data); }
       });
     });    
-    
-    var elements = $('select.sample-types, select.speciations, select.units, select.speciations, select.variable-names');
-    var page = 20;
+
+    var elements = $('select.sample-types, select.speciations, select.units, select.variable-names');
+    var page = 30;
 
   	var itemFormatting = function(text){
       var newText = text;
@@ -154,14 +154,6 @@
       </td>
       <td>
       <%= select("vocabulary[#{i}]","sample_types", @sample_types.collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, { :include_blank => true, :selected => selected_value(@feature_fields_vocabulary, property, 'sample_types')  }, { :class => 'sample-types' }) %>
-      </td>
-    </tr>
-    <tr>
-      <td>
-      Speciation
-      </td>
-      <td>
-      <%= select("vocabulary#{[i]}","speciations", @speciations.collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, { :include_blank => true, :selected => selected_value(@feature_fields_vocabulary, property, 'speciations') }, { :class => 'speciations' }) %>
       </td>
     </tr>
     <tr>

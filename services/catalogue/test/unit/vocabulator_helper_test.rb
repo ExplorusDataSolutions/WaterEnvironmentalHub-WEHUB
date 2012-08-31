@@ -53,8 +53,18 @@ class VocabulatorHelperTest < ActiveSupport::TestCase
     assert results.empty?
   end
 
-  test "should mg/L in mgL" do
+  test "should find mg/L in mgL" do
     results = find_unit_terms([term("Milligrams per litre", "mg/L")], "Dissolved Oxygen mgL")
+    assert !results.empty?
+  end
+  
+  test "should not find cm^2 in Time" do
+    results = find_unit_terms([term("square centimeter", "cm^2")], "Time")
+    assert results.empty?
+  end
+  
+  test "should find ug/L in Iron Dissolved ug/L" do
+    results = find_unit_terms([term("micrograms per liter", "ug/L")], "Iron Dissolved ug/L")
     assert !results.empty?
   end
   
