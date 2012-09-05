@@ -214,7 +214,7 @@ class Feature
         raise ArgumentError, "Feature could not be created from #{params}"
       end
 
-      save_vocabulary_unit_terms(feature_fields, self.uuid)
+      save_vocabulary_unit_and_variable_terms(feature_fields, self.uuid)
 
     else
       meta_feature_params = params

@@ -114,15 +114,6 @@ class VocabulatorController < ApplicationController
   def filter_by_name(terms)
     terms.find_all { |term| term && term.name && term.name.scan(/no result|no sample|unknown|not applicable/i).empty? }
   end  
-
-  def feature_vocabulary(matches, index, source)
-    results = []
-    if !matches.nil? && !matches.empty?
-      item = matches[0]
-      results.push({:feature_field_position => index, :term_id => item['id'], :term_source => source})
-    end
-    results
-  end
   
   def to_hash(active_record)  
     result = JSON.parse(active_record.to_json(:except => [:created_at, :updated_at]))

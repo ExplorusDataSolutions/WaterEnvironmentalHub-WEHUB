@@ -70,25 +70,20 @@ module VocabulatorHelper
     Rails.cache.delete("vocabulary_all_terms_group_by")
   end
   
-  def save_vocabulary_unit_terms(properties, dataset_uuid)
-    unit_terms = VocabulatorUnits.find(:all)
-    
-    shared_unit_terms = []
-    properties.each_with_index do |term, i|
-      working_terms = unit_terms.find_all { |unit| term.strip.match(/#{unit['name'].strip}/) || term.strip.match(/\(#{unit['abbreviation'].strip}\)| #{unit['abbreviation'].strip} |_#{unit['abbreviation'].strip}/) }
-      working_terms.map! { |t| t.serializable_hash.merge!({ 'feature_field_position' => i }) }
-      
-      shared_unit_terms.push(working_terms)
+  def save_vocabulary_unit_and_variable_terms(properties, dataset_uuid)
+    units = VocabulatorUnits.find(:all)
+    units.map! { |t| { 'id' => t.id, 'name' => t.name, 'description' => t.abbreviation } }
+
+    variable_names = VocabulatorVariableName.find(:all)
+    variable_names.map! { |v| { 'id' => v.id, 'name' => v.name, 'description' => v.description } }
+
+    vocabulary = []
+    properties.each_with_index do |field, i|
+      vocabulary = vocabulary | feature_vocabulary(find_unit_terms(units, field), i, 'units')
+      vocabulary = vocabulary | feature_vocabulary(find_closest_terms(variable_names, field), i, 'variable_names')
     end
-    shared_unit_terms.flatten!
-    shared_unit_terms.compact!
-    
-    shared_unit_terms_for_feature_vocabulary = []
-    shared_unit_terms.each do |term|
-      shared_unit_terms_for_feature_vocabulary.push({ 'term_id' => term['id'], 'term_source' => 'units', :feature_field_position => term['feature_field_position'] })
-    end
-  
-    save_feature_vocabulary(shared_unit_terms_for_feature_vocabulary, dataset_uuid)
+
+    save_feature_vocabulary(vocabulary, dataset_uuid)
   end
   
   def vocabulary_keywords(dataset_uuid)
@@ -126,6 +121,9 @@ module VocabulatorHelper
       end
     end
     
+    if results 
+      results.sort! { |x,y| x['description'].length <=> y['description'].length }
+    end
     results
   end
 
@@ -177,6 +175,15 @@ module VocabulatorHelper
     results
   end
   
+  def feature_vocabulary(matches, index, source)
+    results = []
+    if !matches.nil? && !matches.empty?
+      item = matches[0]
+      results.push({:feature_field_position => index, :term_id => item['id'], :term_source => source})
+    end
+    results
+  end
+
   def strip_to_words(value)
     value = value.gsub(/[-_,\.\+()]/,' ')
     value = value.gsub(/ +/,' ')
