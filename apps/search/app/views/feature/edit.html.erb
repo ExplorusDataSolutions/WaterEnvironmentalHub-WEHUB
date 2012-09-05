@@ -73,7 +73,7 @@
     });    
 
     var elements = $('select.sample-types, select.speciations, select.units, select.variable-names');
-    var page = 30;
+    var page = 10;
 
   	var itemFormatting = function(text){
       var newText = text;
@@ -99,7 +99,7 @@
         }
       }(i)
         
-      setTimeout(sliceNDice, 500*i);
+      setTimeout(sliceNDice, 200*i);
     }
 
   });
@@ -144,7 +144,7 @@
   <table>
     <tr>
       <td style="vertical-align: top; padding-top: 5px;">
-    <%= text_field_tag "properties[#{i}]", property, :size => 18 %>
+    <%= text_field_tag "properties[#{property[:field_position]}]", property[:name], :size => 18 -%>
       </td>
       <td>
   <table style="padding-left: 20px;">
@@ -153,7 +153,7 @@
       Sample type
       </td>
       <td>
-      <%= select("vocabulary[#{i}]","sample_types", @sample_types.collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, { :include_blank => true, :selected => selected_value(@feature_fields_vocabulary, property, 'sample_types')  }, { :class => 'sample-types' }) %>
+      <%= select("vocabulary[#{property[:field_position]}]","sample_types", @sample_types.collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, { :include_blank => true, :selected => selected_value(@feature_fields_vocabulary, property[:name], 'sample_types')  }, { :class => 'sample-types' }) -%>
       </td>
     </tr>
     <tr>
@@ -161,7 +161,7 @@
       Unit
       </td>
       <td>
-      <%= select("vocabulary#{[i]}","units", @units.collect { |s| ["#{s.description} ~ #{s.name}", s.id] }, { :include_blank => true, :selected => selected_value(@feature_fields_vocabulary, property, 'units') }, { :class => 'units' }) %>
+      <%= select("vocabulary[#{property[:field_position]}]","units", @units.collect { |s| ["#{s.description} ~ #{s.name}", s.id] }, { :include_blank => true, :selected => selected_value(@feature_fields_vocabulary, property[:name], 'units') }, { :class => 'units' }) -%>
       </td>
     </tr>
     <tr>
@@ -169,7 +169,7 @@
       Variable name
       </td>
       <td>
-      <%= select("vocabulary#{[i]}","variable_names", @variable_names.collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, { :include_blank => true, :selected => selected_value(@feature_fields_vocabulary, property, 'variable_names')  }, { :class => 'variable-names' }) %>    
+      <%= select("vocabulary[#{property[:field_position]}]","variable_names", @variable_names.collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, { :include_blank => true, :selected => selected_value(@feature_fields_vocabulary, property[:name], 'variable_names')  }, { :class => 'variable-names' }) -%>
       </td>
     </tr>
   </table>
