@@ -8,6 +8,16 @@ module FeatureHelper
       end
     end
   end
+  
+  def selected_value_for_select(feature_fields_vocabulary, property_name, vocabulary_name)
+    property_name = property_name.strip
+    if feature_fields_vocabulary[property_name]
+      if feature_fields_vocabulary[property_name][vocabulary_name]
+        return feature_fields_vocabulary[property_name][vocabulary_name]
+      end
+    end
+    []
+  end
     
   def properties_params(params)
     properties = nil

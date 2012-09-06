@@ -1,0 +1,1 @@
+<%= select("property","variable_names", @variable_names.collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, { :include_blank => true } ) -%>

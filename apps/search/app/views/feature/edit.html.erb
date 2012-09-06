@@ -72,9 +72,6 @@
       });
     });    
 
-    var elements = $('select.sample-types, select.speciations, select.units, select.variable-names');
-    var page = 10;
-
   	var itemFormatting = function(text){
       var newText = text;
       //array of find replaces
@@ -87,21 +84,52 @@
       }
       return newText;
     }
+    
+    $('select.sample-types, select.speciations, select.units, select.variable-names').selectmenu({
+      width: 380,
+      format: itemFormatting
+    });
 
-    for (var i=0 ; i*page < elements.length ; i++) {
-
-      var sliceNDice = function(index) {
-        return function() { 
-          elements.slice(index*page,(index+1)*page).selectmenu({
-            width: 380,
-            format: itemFormatting
+    function loadSelectTerms(url, className) {
+      $.ajax({
+        url: url,
+        global: false,
+        success: function(data) {
+        var selects = $('select.' + className);
+          $.each(selects, function(index, value) {
+            var selectedItem = $(value).val();
+            if (selectedItem) {
+              var options = $(data).find('option');
+              options.filter('[value=' + selectedItem + ']').attr('selected', 'selected');
+              $(value).html(options);
+            } else {
+              $(value).html($(data).find('option'));
+            }
           });
-        }
-      }(i)
-        
-      setTimeout(sliceNDice, 200*i);
-    }
 
+          selects.selectmenu('destroy');
+          var page = 10;
+          for (var i=0 ; i*page < selects.length ; i++) {
+
+            var sliceNDice = function(index) {
+              return function() { 
+                selects.slice(index*page,(index+1)*page).selectmenu({
+                  width: 380,
+                  format: itemFormatting
+                });
+              }
+            }(i)
+              
+            setTimeout(sliceNDice, 10*i);
+          }
+        
+        }
+      });
+    }
+    
+    loadSelectTerms('<%= url_for(:controller => 'feature', :action => 'units') %>', 'units');
+    loadSelectTerms('<%= url_for(:controller => 'feature', :action => 'sample_types') %>', 'sample-types');
+    loadSelectTerms('<%= url_for(:controller => 'feature', :action => 'variable_names') %>', 'variable-names');
   });
 </script>
 <%= render '/shared/left_panel' %>
@@ -153,7 +181,7 @@
       Sample type
       </td>
       <td>
-      <%= select("vocabulary[#{property[:field_position]}]","sample_types", @sample_types.collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, { :include_blank => true, :selected => selected_value(@feature_fields_vocabulary, property[:name], 'sample_types')  }, { :class => 'sample-types' }) -%>
+      <%= select("vocabulary[#{property[:field_position]}]","sample_types", selected_value_for_select(@feature_fields_vocabulary, property[:name], 'sample_types').collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, { :selected => selected_value(@feature_fields_vocabulary, property[:name], 'sample_types') }, { :class => 'sample-types' } ) -%>
       </td>
     </tr>
     <tr>
@@ -161,7 +189,7 @@
       Unit
       </td>
       <td>
-      <%= select("vocabulary[#{property[:field_position]}]","units", @units.collect { |s| ["#{s.description} ~ #{s.name}", s.id] }, { :include_blank => true, :selected => selected_value(@feature_fields_vocabulary, property[:name], 'units') }, { :class => 'units' }) -%>
+      <%= select("vocabulary[#{property[:field_position]}]","units", selected_value_for_select(@feature_fields_vocabulary, property[:name], 'units').collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, { :selected => selected_value(@feature_fields_vocabulary, property[:name], 'units') }, { :class => 'units' } ) -%>
       </td>
     </tr>
     <tr>
@@ -169,7 +197,7 @@
       Variable name
       </td>
       <td>
-      <%= select("vocabulary[#{property[:field_position]}]","variable_names", @variable_names.collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, { :include_blank => true, :selected => selected_value(@feature_fields_vocabulary, property[:name], 'variable_names')  }, { :class => 'variable-names' }) -%>
+      <%= select("vocabulary[#{property[:field_position]}]","variable_names", selected_value_for_select(@feature_fields_vocabulary, property[:name], 'variable_names').collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, {}, { :class => 'variable-names' } ) -%>      
       </td>
     </tr>
   </table>

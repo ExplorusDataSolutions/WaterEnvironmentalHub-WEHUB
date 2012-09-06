@@ -5,8 +5,13 @@ class FeatureController < ApplicationController
   respond_to :json, :xml
   
   before_filter :verify_logged_in
+  
+  caches_page :sample_types, :units, :variable_names
     
-  def edit  
+  def edit
+    @breadcrumb = ['Community', 'Datasets', 'Edit Feature']
+    @main_menu = 'we_community'  
+  
     dataset = catalogue_instance.dataset(params[:id])
     properties = dataset.properties.split(',')
     properties.map! { |p| p.strip }
@@ -19,19 +24,6 @@ class FeatureController < ApplicationController
       @properties.insert(number_of_properties, { :field_position => i, :name => property, :vocabulary_matches => number_of_properties })
     end
     @properties.sort! { |x,y| y[:vocabulary_matches] <=> x[:vocabulary_matches] }
-
-    @sample_types = Rails.cache.fetch("vocabulary_sample_types", :expires_in => 15.minutes) do
-      catalogue_instance.vocabulator_sample_types.sort! { |x,y| x.name.downcase <=> y.name.downcase }      
-    end
-
-    @units = Rails.cache.fetch("vocabulary_units", :expires_in => 15.minutes) do 
-      catalogue_instance.vocabulator_units.sort! { |x,y| x.description.downcase <=> y.description.downcase }
-    end
-
-    @variable_names = Rails.cache.fetch("vocabulary_variable_names", :expires_in => 15.minutes) do
-      catalogue_instance.vocabulator_variable_names.sort! { |x,y| x.name.downcase <=> y.name.downcase }
-    end
-
   end
   
   def update
@@ -42,6 +34,24 @@ class FeatureController < ApplicationController
     else
       redirect_to :controller => 'dataset', :action => 'show', :anchor => 'mine', :id => params[:id] and return
     end
+  end
+  
+  def sample_types
+    catalogue_instance.vocabulator_sample_types.sort! { |x,y| x.name.downcase <=> y.name.downcase }      
+    
+    render :layout => false
+  end
+  
+  def units
+    catalogue_instance.vocabulator_units.sort! { |x,y| x.description.downcase <=> y.description.downcase }
+    
+    render :layout => false
+  end
+  
+  def variable_names
+    catalogue_instance.vocabulator_variable_names.sort! { |x,y| x.name.downcase <=> y.name.downcase }
+
+    render :layout => false
   end
   
 end
