@@ -85,7 +85,7 @@
       return newText;
     }
     
-    $('select.sample-types, select.speciations, select.units, select.variable-names').selectmenu({
+    $('select.sample-types, select.speciations, select.units, select.variable-names').slice(0, 30).selectmenu({
       width: 380,
       format: itemFormatting
     });
@@ -107,20 +107,19 @@
             }
           });
 
-          selects.selectmenu('destroy');
           var page = 10;
           for (var i=0 ; i*page < selects.length ; i++) {
 
             var sliceNDice = function(index) {
               return function() { 
-                selects.slice(index*page,(index+1)*page).selectmenu({
+                selects.slice(index*page,(index+1)*page).selectmenu('destroy').selectmenu({
                   width: 380,
                   format: itemFormatting
                 });
               }
             }(i)
               
-            setTimeout(sliceNDice, 10*i);
+            setTimeout(sliceNDice, 5*i);
           }
         
         }

@@ -37,19 +37,19 @@ class FeatureController < ApplicationController
   end
   
   def sample_types
-    catalogue_instance.vocabulator_sample_types.sort! { |x,y| x.name.downcase <=> y.name.downcase }      
+    @sample_types = catalogue_instance.vocabulator_sample_types.sort! { |x,y| x.name.downcase <=> y.name.downcase }      
     
     render :layout => false
   end
   
   def units
-    catalogue_instance.vocabulator_units.sort! { |x,y| x.description.downcase <=> y.description.downcase }
+    @units = catalogue_instance.vocabulator_units.sort! { |x,y| x.description.downcase <=> y.description.downcase }
     
     render :layout => false
   end
   
   def variable_names
-    catalogue_instance.vocabulator_variable_names.sort! { |x,y| x.name.downcase <=> y.name.downcase }
+    @variable_names = catalogue_instance.vocabulator_variable_names.sort! { |x,y| x.name.downcase <=> y.name.downcase }
 
     render :layout => false
   end
