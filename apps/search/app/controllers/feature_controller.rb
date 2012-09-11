@@ -35,9 +35,15 @@ class FeatureController < ApplicationController
   end
   
   def edit_fields
-    @units = catalogue_instance.vocabulator_units.sort! { |x,y| x.description.downcase <=> y.description.downcase }
-    @sample_types = catalogue_instance.vocabulator_sample_types.sort! { |x,y| x.name.downcase <=> y.name.downcase }      
-    @variable_names = catalogue_instance.vocabulator_variable_names.sort! { |x,y| x.name.downcase <=> y.name.downcase }
+    @units = Rails.cache.fetch("vocabulary_units") do
+      catalogue_instance.vocabulator_units.sort! { |x,y| x.description.downcase <=> y.description.downcase }
+    end
+    @sample_types = Rails.cache.fetch("vocabulary_sample_types") do
+      catalogue_instance.vocabulator_sample_types.sort! { |x,y| x.name.downcase <=> y.name.downcase }      
+    end
+    @variable_names = Rails.cache.fetch("vocabulary_variable_names") do
+      catalogue_instance.vocabulator_variable_names.sort! { |x,y| x.name.downcase <=> y.name.downcase }
+    end
 
     @feature_fields_vocabulary = catalogue_instance.vocabulator_feature(params[:id])
     
