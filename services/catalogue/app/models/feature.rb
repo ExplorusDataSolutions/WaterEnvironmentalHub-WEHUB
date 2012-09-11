@@ -306,18 +306,13 @@ class Feature
   end
   
   def update_feature(fields)
-    current_fields = feature_fields
-    requested_fields = fields
+    index = fields.keys[0].to_i
+    current_field = feature_fields[index]
+    requested_field = fields.values[0]
 
-    if !(current_fields - requested_fields).empty?
-      current_fields.each_with_index do |field, i|
-        working_field = requested_fields[i]
-        if !(field == working_field)
-          execute("ALTER TABLE #{self.tablename} RENAME COLUMN \"#{field}\" TO \"#{working_field}\";")
-        end
-      end
+    if current_field != requested_field
+      execute("ALTER TABLE #{self.tablename} RENAME COLUMN \"#{current_field}\" TO \"#{requested_field}\";")
     end
-
   end
   
   def name

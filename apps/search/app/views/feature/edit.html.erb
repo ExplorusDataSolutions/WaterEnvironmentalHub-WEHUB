@@ -39,39 +39,6 @@
       $('.existing-dataset-message').hide();
     }    
 
-    $('[name=commit]').click(function(event) {
-      event.preventDefault();
-      $.ajax({
-        url: $('form').attr('action'),
-        data: $('form :input[value]').serialize(),
-        type: 'POST',
-        success: function(data) {
-          if (data.callback) {
-            $("#success-dialog").dialog({
-              height: 250,
-              width: 600,
-              title: 'Thanks!',
-              modal: true,
-              buttons: { "Ok": function() { window.location = data.callback; } }
-            });
-            setTimeout(function() { window.location = data.callback; }, 18000);
-          } else if (data.errors) {
-            var errorMsg = ''
-            $(data.errors).each(function(i,e) { 
-              if (e.dataset) {
-                for (var name in e.dataset) {
-                  errorMsg += '<li>' + name + ' can\'t be blank</li>';
-                }
-              }
-            });
-            $('#error-explanation').html('<strong>Errors:</strong><ul>' + errorMsg + '</ul>').focus();
-            $('#error-explanation, .error').effect("highlight", {}, 3000);
-          }
-        },
-        error: function(data) { alert(data); }
-      });
-    });    
-
   	var itemFormatting = function(text){
       var newText = text;
       //array of find replaces
@@ -84,51 +51,76 @@
       }
       return newText;
     }
-    
-    $('select.sample-types, select.speciations, select.units, select.variable-names').slice(0, 30).selectmenu({
-      width: 380,
-      format: itemFormatting
-    });
 
-    function loadSelectTerms(url, className) {
+    $('.field-name').addClass('ui-selectmenu ui-widget ui-state-default ui-corner-all');
+
+    $('.edit-field').click(function(event) {
+      event.preventDefault();
+      var fieldPosition = $(event.currentTarget).data('field-position');
       $.ajax({
-        url: url,
-        global: false,
+        url: '<%= url_for(:controller => 'feature', :action => 'edit_fields', :id => params[:id]) %>?field_position=' + fieldPosition,
+        global: true,
         success: function(data) {
-        var selects = $('select.' + className);
-          $.each(selects, function(index, value) {
-            var selectedItem = $(value).val();
-            if (selectedItem) {
-              var options = $(data).find('option');
-              options.filter('[value=' + selectedItem + ']').attr('selected', 'selected');
-              $(value).html(options);
-            } else {
-              $(value).html($(data).find('option'));
-            }
+          WEHub.modal("Edit field name and terms", data, { 
+            width: 1000,
+            zIndex: 0,
+            buttons: [
+              { 
+                text: "Save",
+                click: function() {
+                  $(this).dialog("close");
+                  $.ajax({
+                    url: $('form').attr('action'),
+                    data: $('#field-editor :input[value]').serialize(),
+                    type: 'POST',
+                    success: function(data) {
+                      if (data.callback) {
+                        $("#success-dialog").dialog({
+                          height: 250,
+                          width: 600,
+                          title: 'Thanks!',
+                          modal: true,
+                          buttons: { "Ok": function() { window.location.reload(); } }
+                        });
+                        setTimeout(function() { window.location.reload(); }, 18000);
+                      } else if (data.errors) {
+                        var errorMsg = ''
+                        $(data.errors).each(function(i,e) { 
+                          if (e.dataset) {
+                            for (var name in e.dataset) {
+                              errorMsg += '<li>' + name + ' can\'t be blank</li>';
+                            }
+                          }
+                        });
+                        $('#error-explanation').html('<strong>Errors:</strong><ul>' + errorMsg + '</ul>').focus();
+                        $('#error-explanation, .error').effect("highlight", {}, 3000);
+                      }
+                    },
+                    error: function(data) { alert(data); }
+                  });
+
+                }
+              },
+              {
+                text: "Close",
+                click: function() { 
+                  $(this).dialog("close"); 
+                }
+              }            
+            ]
+          });
+          
+          $('.field-name').addClass('ui-selectmenu ui-widget ui-state-default ui-corner-all');
+          
+          $('select.sample-types, select.speciations, select.units, select.variable-names').selectmenu({
+            width: 380,
+            format: itemFormatting
           });
 
-          var page = 10;
-          for (var i=0 ; i*page < selects.length ; i++) {
-
-            var sliceNDice = function(index) {
-              return function() { 
-                selects.slice(index*page,(index+1)*page).selectmenu('destroy').selectmenu({
-                  width: 380,
-                  format: itemFormatting
-                });
-              }
-            }(i)
-              
-            setTimeout(sliceNDice, 5*i);
-          }
-        
         }
       });
-    }
-    
-    loadSelectTerms('<%= url_for(:controller => 'feature', :action => 'units') %>', 'units');
-    loadSelectTerms('<%= url_for(:controller => 'feature', :action => 'sample_types') %>', 'sample-types');
-    loadSelectTerms('<%= url_for(:controller => 'feature', :action => 'variable_names') %>', 'variable-names');
+      
+    });
   });
 </script>
 <%= render '/shared/left_panel' %>
@@ -171,7 +163,7 @@
   <table>
     <tr>
       <td style="vertical-align: top; padding-top: 5px;">
-    <%= text_field_tag "properties[#{property[:field_position]}]", property[:name], :size => 18 -%>
+    <%= text_field_tag "properties[#{property[:field_position]}]", property[:name], :class => 'field-name', :disabled => true, :size => 25 -%>
       </td>
       <td>
   <table style="padding-left: 20px;">
@@ -180,7 +172,10 @@
       Sample type
       </td>
       <td>
-      <%= select("vocabulary[#{property[:field_position]}]","sample_types", selected_value_for_select(@feature_fields_vocabulary, property[:name], 'sample_types').collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, { :selected => selected_value(@feature_fields_vocabulary, property[:name], 'sample_types') }, { :class => 'sample-types' } ) -%>
+    <%= text_field_tag "vocabulary[#{property[:field_position]}]", selected_value_text_field(@feature_fields_vocabulary, property[:name], 'sample_types'), :class => 'sample-types field-name', :disabled => true, :size => 50 -%>
+      </td>
+      <td colspan="3">
+        <span class="button edit-field" data-field-position="<%= property[:field_position]%>"><button>Edit</button></span>
       </td>
     </tr>
     <tr>
@@ -188,7 +183,7 @@
       Unit
       </td>
       <td>
-      <%= select("vocabulary[#{property[:field_position]}]","units", selected_value_for_select(@feature_fields_vocabulary, property[:name], 'units').collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, { :selected => selected_value(@feature_fields_vocabulary, property[:name], 'units') }, { :class => 'units' } ) -%>
+    <%= text_field_tag "vocabulary[#{property[:field_position]}]", selected_value_text_field(@feature_fields_vocabulary, property[:name], 'units'), :class => 'units field-name', :disabled => true, :size => 50 -%>
       </td>
     </tr>
     <tr>
@@ -196,7 +191,7 @@
       Variable name
       </td>
       <td>
-      <%= select("vocabulary[#{property[:field_position]}]","variable_names", selected_value_for_select(@feature_fields_vocabulary, property[:name], 'variable_names').collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, {}, { :class => 'variable-names' } ) -%>      
+    <%= text_field_tag "vocabulary[#{property[:field_position]}]", selected_value_text_field(@feature_fields_vocabulary, property[:name], 'variable_names'), :class => 'variable-names field-name', :disabled => true, :size => 50 -%>
       </td>
     </tr>
   </table>
@@ -206,11 +201,6 @@
   </div>
 <% end %>
     </td>
-  </tr>
-  <tr>
-    <td colspan="2" align="right">
-      <%= submit_tag 'Save' %>
-    </td>  
   </tr>
 </table>
 </div>

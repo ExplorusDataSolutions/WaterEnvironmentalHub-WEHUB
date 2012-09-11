@@ -19,13 +19,16 @@ class DatasetController < ApplicationController
   end
   
   def new
-    @breadcrumb = ['Community', 'Datasets']
+    @breadcrumb = ['Community', 'Datasets', 'New']
     @main_menu = 'we_community'
     
     @dataset = params[:dataset] ? Hashie::Mash.new(params[:dataset]) : Hashie::Mash.new({:source => nil, :author => nil})  
   end
   
   def edit
+    @breadcrumb = ['Community', 'Datasets', 'Edit']
+    @main_menu = 'we_community'
+  
     @dataset = catalogue_instance.dataset(params[:id])    
     @dataset.description = @dataset.description_with_html
     
