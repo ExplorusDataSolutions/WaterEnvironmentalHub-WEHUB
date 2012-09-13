@@ -15,22 +15,38 @@ class FeatureController < ApplicationController
     properties = properties(params[:id])
     
     @feature_fields_vocabulary = catalogue_instance.vocabulator_feature(params[:id])
+    
+    properties_order = params[:order]
 
-    @properties = []
-    properties.each_with_index do |property,i|
-      number_of_properties = (@feature_fields_vocabulary[property] && @feature_fields_vocabulary[property].keys) ? @feature_fields_vocabulary[property].keys.length : 0
-      @properties.insert(number_of_properties, { :field_position => i, :name => property, :vocabulary_matches => number_of_properties })
+    if properties_order && !properties_order.empty?
+      properties_order = properties_order.split(',').map { |p| p.to_i }
+      @properties = []
+      properties_order.each do |index|
+        result = property(properties[index], index, @feature_fields_vocabulary)
+        @properties.push(result[:value])
+      end
+      @properties.compact!
+
+      @properties_order = params[:order]
+    else
+      @properties = []
+      properties.each_with_index do |property, index|
+        result = property(property, index, @feature_fields_vocabulary)
+        @properties.insert(result[:index], result[:value])
+      end
+      @properties.sort! { |x,y| y[:vocabulary_matches] <=> x[:vocabulary_matches] }
+      
+      @properties_order = @properties.map { |p| p[:field_position] }.join(',')    
     end
-    @properties.sort! { |x,y| y[:vocabulary_matches] <=> x[:vocabulary_matches] }
   end
   
   def update
     catalogue_instance.feature_update(params[:properties], vocabulary_params(params), current_user.id, params[:id])
-    
+
     if request.xhr?
-      render :json => { :callback => url_for(:controller => 'feature', :action => 'edit', :anchor => 'my-feature', :id => params[:id]) } and return
+      render :json => { :callback => ( url_for(:controller => 'feature', :action => 'edit', :id => params[:id]) + "?order=#{params[:order]}") } and return
     else
-      redirect_to :controller => 'dataset', :action => 'show', :anchor => 'mine', :id => params[:id] and return
+      redirect_to :controller => 'dataset', :action => 'show', :id => params[:id] and return
     end
   end
   
@@ -57,6 +73,11 @@ class FeatureController < ApplicationController
     dataset = catalogue_instance.dataset(id)
     properties = dataset.properties.split(',')
     properties.map! { |p| p.strip }
+  end
+  
+  def property(property, i, feature_fields_vocabulary)
+    number_of_properties = (feature_fields_vocabulary[property] && feature_fields_vocabulary[property].keys) ? feature_fields_vocabulary[property].keys.length : 0
+    { :index => number_of_properties, :value => { :field_position => i, :name => property, :vocabulary_matches => number_of_properties } }
   end
   
 end

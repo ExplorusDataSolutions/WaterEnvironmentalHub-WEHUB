@@ -65,11 +65,12 @@ module VocabulatorHelper
   end
   
   def save_feature_vocabulary(feature_vocabulary, dataset_uuid)
-    FeatureVocabulary.where("dataset_uuid = ? AND feature_field_position = ?", dataset_uuid, feature_vocabulary[0]['feature_field_position'].to_i).delete_all
-    feature_vocabulary.each do |v| 
-      FeatureVocabulary.create(v.merge!({ :dataset_uuid => dataset_uuid}))
+    FeatureVocabulary.where("dataset_uuid = ? AND feature_field_position = ?", dataset_uuid, params[:feature_fields].keys[0].to_i).delete_all
+    if feature_vocabulary && !feature_vocabulary.empty?
+      feature_vocabulary.each do |v| 
+        FeatureVocabulary.create(v.merge!({ :dataset_uuid => dataset_uuid}))
+      end
     end
-
     Rails.cache.delete("vocabulary_all_terms_group_by")
   end
   
