@@ -33,12 +33,24 @@
     var nav = $('#dataset-upper-nav');
     nav.children().removeClass(selected);
 
+    var found = false;
     nav.find('a').each(function(k,v) { 
       var item = $(v);
-      if (item.attr('href').search(window.location.hash) > 0) {
+      if (!found && (item.attr('href').search(window.location.hash) > 0)) {
         item.addClass(selected);
+        found = true;
       }
     });
+
+    if (!found) {
+      nav.find('a').each(function(k,v) { 
+        var item = $(v);
+        if (!found && (item.attr('href').match(/[^?][^#]*/)[0] === window.location.pathname)) {
+          item.addClass(selected);
+          found = true;
+        }
+      });
+    }
   });
 </script>
 <div class="clear"></div>

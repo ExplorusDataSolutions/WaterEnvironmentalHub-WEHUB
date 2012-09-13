@@ -34,6 +34,7 @@ class FeatureController < ApplicationController
         result = property(property, index, @feature_fields_vocabulary)
         @properties.insert(result[:index], result[:value])
       end
+      @properties.compact!
       @properties.sort! { |x,y| y[:vocabulary_matches] <=> x[:vocabulary_matches] }
       
       @properties_order = @properties.map { |p| p[:field_position] }.join(',')    
