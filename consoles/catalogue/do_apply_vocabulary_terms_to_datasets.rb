@@ -7,9 +7,10 @@ def execute(query)
 end
 
 def http_get(url_param)
-puts url_param
+  puts url_param
   url = URI.parse(url_param)
   http = Net::HTTP.new(url.host, url.port)
+  http.read_timeout = 1000
   response = http.start {|http| http.get(url.to_s) }
   
   case response
@@ -23,24 +24,11 @@ puts url_param
   response.body
 end
 
-def post_json(uri, request)
-  puts "Updating Catalogue"
-  timeout = 500
-  url = URI.parse(uri)
-  http = Net::HTTP.new(url.host, url.port)
-  http.read_timeout = timeout
-  http.open_timeout = timeout
-  
-  response = http.start {|http| http.post(url.to_s, request.to_json, { 'Content-Type' => 'application/json'}) }
-
-  case response
-  when Net::HTTPSuccess, Net::HTTPRedirection
-    puts "Success, record for #{uri} updated"
-  else
-    puts "Failure, record for #{uri} was not updated"
-  end
-      
-
+result = execute("SELECT uuid FROM datasets WHERE uuid NOT IN (SELECT dataset_uuid AS uuid FROM feature_vocabulary);")
+uuids = result.split(/\n/)
+uuids.each do |uuid|
+  result = JSON.parse(http_get("http://localhost:3000/vocabulator/vocabularize/#{uuid.strip!}?format=json"))['status']
+  puts result
 end
 
 result = execute("SELECT uuid FROM datasets WHERE uuid NOT IN (SELECT dataset_uuid AS uuid FROM feature_vocabulary);")
