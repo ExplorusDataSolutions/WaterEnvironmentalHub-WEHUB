@@ -29,7 +29,7 @@ class DatasetController < ApplicationController
     @breadcrumb = ['Community', 'Datasets', 'Edit']
     @main_menu = 'we_community'
   
-    @dataset = catalogue_instance.dataset(params[:id])    
+    @dataset = catalogue_instance.dataset(params[:id])
     @dataset.description = @dataset.description_with_html
     
     expire_fragment dataset_key
@@ -40,6 +40,7 @@ class DatasetController < ApplicationController
   end
 
   def destroy
+    @dataset = catalogue_instance.dataset(params[:id])
     response = catalogue_instance.dataset_destroy(current_user.id, params[:id])
 
     expire_fragment dataset_key
@@ -49,6 +50,8 @@ class DatasetController < ApplicationController
     if response.key?(:errors)
       flash[:errors] = response[:errors].values
     end
+    
+    flash[:message] = "Dataset <strong>#{@dataset.name}</strong> has been deleted."
 
     redirect_to :action => 'show', :anchor => 'mine'
   end
