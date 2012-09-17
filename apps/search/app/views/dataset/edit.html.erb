@@ -1,3 +1,39 @@
+<script>
+  $(document).ready(function() {
+    $('[name=update]').click(function(event) {
+      event.preventDefault();
+      $.ajax({
+        url: $('form').attr('action'),
+        data: $('form').serialize(),
+        type: 'POST',
+        success: function(data) {
+          if (data.callback) {
+            $("#success-dialog").dialog({
+              height: 250,
+              width: 600,
+              title: 'Thanks!',
+              modal: true,
+              buttons: { "Ok": function() { window.location = data.callback; } }
+            });
+            setTimeout(function() { window.location = data.callback; }, 18000);
+          } else if (data.errors) {
+            var errorMsg = ''
+            $(data.errors).each(function(i,e) { 
+              if (e.dataset) {
+                for (var name in e.dataset) {
+                  errorMsg += '<li>' + name + ' can\'t be blank</li>';
+                }
+              }
+            });
+            $('#error-explanation').html('<strong>Errors:</strong><ul>' + errorMsg + '</ul>').focus();
+            $('#error-explanation, .error').effect("highlight", {}, 3000);
+          }
+        },
+        error: function(data) { alert(data); }
+      });    
+    });
+  });
+</script>
 <%= render '/shared/left_panel' %>
 
 <div class="profile-right-container">
@@ -9,7 +45,7 @@
   </div>
   <div class="clear"></div>
   <div class="profile-content-container">
-    <%= render 'upper_navbar' %>
+    <%= render 'upper_navbar', :menu => 'edit' %>
     
     <div>
       <%= render 'dataset_form' %>
@@ -23,6 +59,4 @@
   I agree that the data I am about to upload meets our definition of openness. <p>Openness: <strong>"A piece of content or data is open if anyone is free to use, reuse, and redistribute it &mdash; subject only, at most, to the requirement to attribute and share-alike."</strong></p>
 </div>
 
-<div id="success-dialog" style="display: none;">
-  <p><strong>Thank-you for your contribution!</strong></p><p>Your data submission was successful, but it will be a couple hours before you can find it in our search index. Please sit tight as our search bot indexes your data.</p>
-</div>
+<%= render 'success_updates' %>

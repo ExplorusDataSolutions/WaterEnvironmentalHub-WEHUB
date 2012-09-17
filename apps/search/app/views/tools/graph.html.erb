@@ -16,8 +16,11 @@
     function propertyFromUrl(url) { return url.match(/properties=(.[^&]*)/)[1]; }
     function graphTypeFromUrl() { return window.location.hash.replace('#',''); }
     function idsFromSearch() { 
-      var unescapedSearch = unescape(window.location.search);
-      return unescapedSearch.match(/ids=([\w-,]*)/)[1].split(','); 
+      if (unescapedSearch === '') {
+        return window.location.pathname.match(/.*\/([\w-]*)/)[1];
+      } else {
+        return unescapedSearch.match(/ids=([\w-,]*)/)[1].split(','); 
+      }
     }
     function idsFromForm() {
       var ids = []

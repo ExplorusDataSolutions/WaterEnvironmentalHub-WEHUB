@@ -216,7 +216,42 @@ class CatalogueTranslator
   def datasets_last_uploaded
     json_to_mash(get("#{statistics_uri}/last_uploaded?format=json"))['datasets']
   end
+
+  def vocabulator_sample_types
+    json_to_mash(get("#{vocabulator_uri}/sample_types?format=json"))['results']
+  end
+
+  def vocabulator_speciations
+    json_to_mash(get("#{vocabulator_uri}/speciations?format=json"))['results']
+  end
+
+  def vocabulator_units
+    json_to_mash(get("#{vocabulator_uri}/units?format=json"))['results']
+  end
+
+  def vocabulator_variable_names
+    json_to_mash(get("#{vocabulator_uri}/variable_names?format=json"))['results']
+  end
   
+  def vocabulator_dataset(uuid)
+    json_to_mash(get("#{vocabulator_uri}/dataset?id=#{uuid}&format=json"))['results']
+  end
+
+  def vocabulator_feature(uuid)
+    json_to_mash(get("#{vocabulator_uri}/feature?id=#{uuid}&format=json"))['results'].to_hash
+  end
+  
+  def feature_update(properties, vocabulary, user_id, dataset_uuid)
+    params = {
+              :feature_fields => properties, 
+              :vocabulary => vocabulary, 
+              :user_id => user_id,
+              :id => dataset_uuid 
+             }
+              
+    json_to_mash(post_json("#{url}/feature/update", params))
+  end
+
   def clean(params, format='xml')
     params.delete(:controller)
     params.delete(:action)
@@ -272,6 +307,10 @@ class CatalogueTranslator
     "#{url}/reviews"
   end
 
+  def vocabulator_uri
+    "#{url}/vocabulator"
+  end
+
   def post_json(uri, json_hash={})
     json_hash.delete(:utf8)
     json_hash.delete(:authenticity_token)
@@ -280,7 +319,7 @@ class CatalogueTranslator
     url = URI.parse(uri)
     http = Net::HTTP.new(url.host, url.port)
     http.read_timeout = timeout
-    http.open_timeout = timeout    
+    http.open_timeout = timeout
     response = http.start {|http| http.post(url.to_s, json_hash.to_json, { 'Content-Type' => 'application/json'}) }
     
     response.value

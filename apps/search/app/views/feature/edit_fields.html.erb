@@ -1,0 +1,53 @@
+<div id="field-editor">
+<table>
+  <tr>
+    <th align="left">
+    Field name
+    </th>
+    <th align="left">
+    Terms
+    </th>
+  </tr>
+  <tr>
+    <td colspan="2">
+
+<table>
+  <tr>
+    <td style="vertical-align: top; padding-top: 5px;">
+  <%= text_field_tag "properties[#{@property[:field_position]}]", @property[:name], :class => 'field-name', :size => 25 -%>
+    </td>
+    <td>
+      <table style="padding-left: 20px;">
+        <tr>
+          <td align="left">
+          Sample type
+          </td>
+          <td align="left">
+      <%= select("vocabulary[#{@property[:field_position]}]","sample_types", @sample_types.collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, { :selected => selected_value(@feature_fields_vocabulary, @property[:name], 'sample_types'), :include_blank => true }, { :class => 'sample-types' } ) -%>
+          </td>
+        </tr>
+        <tr>
+          <td align="left">
+          Unit
+          </td>
+          <td align="left">
+      <%= select("vocabulary[#{@property[:field_position]}]","units", @units.collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, { :selected => selected_value(@feature_fields_vocabulary, @property[:name], 'units'), :include_blank => true }, { :class => 'units' } ) -%>
+          </td>
+        </tr>
+        <tr>
+          <td align="left">
+          Variable name
+          </td>
+          <td align="left">
+      <%= select("vocabulary[#{@property[:field_position]}]","variable_names", @variable_names.collect { |s| ["#{s.name} ~ #{s.description}", s.id] }, { :selected => selected_value(@feature_fields_vocabulary, @property[:name], 'variable_names'), :include_blank => true }, { :class => 'variable-names' } ) -%>      
+          </td>
+        </tr>
+      </table>
+    </td>  
+  </tr>
+</table>
+
+    </td>
+  </tr>
+</table>
+</div>

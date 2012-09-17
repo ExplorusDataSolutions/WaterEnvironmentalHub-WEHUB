@@ -95,7 +95,11 @@ class ItemsController < ApplicationController
       if dataset.valid?
         begin
           dataset.transaction do
-            dataset.feature.create({ :filename => params[:filename][:path] })
+            feature_params = {}
+            feature_params.store(:vocabulary, params[:vocabulary]) if params[:vocabulary]
+            feature_params.store(:filename, params[:filename][:path])
+            
+            dataset.feature.create(feature_params)
             dataset.save        
           end
         rescue Exception => e 
@@ -121,9 +125,8 @@ class ItemsController < ApplicationController
     errors = {}
  
     dataset = Dataset.find_by_uuid(params[:dataset_id])
-    
-    expire_fragment dataset_key(dataset.uuid, 'xml')
-    expire_fragment dataset_key(dataset.uuid, 'json')    
+
+    expire_dataset_action_cache(dataset.uuid)    
     
     if is_owner(dataset, params)
       dataset.transaction do
@@ -146,8 +149,7 @@ class ItemsController < ApplicationController
 
     dataset = Dataset.find_by_uuid(params[:dataset][:id])
 
-    expire_fragment dataset_key(dataset.uuid, 'xml')
-    expire_fragment dataset_key(dataset.uuid, 'json')        
+    expire_dataset_action_cache(dataset.uuid)
        
     if is_owner(dataset, params)
       
@@ -173,7 +175,8 @@ class ItemsController < ApplicationController
       
       if !dataset.errors.empty?
         dataset.errors.each do |key, value|
-          errors.store('dataset', "#{key} #{value}")
+          errors[:dataset] = {}
+          errors[:dataset].store("#{key}", "#{key} #{value}")
         end
       else
         respond_with({ :uuid => dataset.uuid }, :location => nil) and return      
@@ -254,10 +257,6 @@ class ItemsController < ApplicationController
       render :text => dataset.uuid and return
     end
     render :text => uuid, :status => 500 and return
-  end
-
-  def dataset_key(uuid=params[:id], format=params[:format])
-    "dataset/index/#{uuid}?format=#{format}"
   end
 
   private

@@ -1,6 +1,7 @@
 class Feature 
 
   include DatabaseHelper
+  include VocabulatorHelper
   include FeatureHelper
   include GisHelper  
   include ActiveModel::Validations
@@ -176,7 +177,8 @@ class Feature
   end
 
   def destroy
-    execute("DROP TABLE #{tablename}")  
+    execute("DROP TABLE #{tablename}")
+    delete_feature_vocabulary(self.uuid)
   end
   
   def create(params)
@@ -211,6 +213,9 @@ class Feature
       else
         raise ArgumentError, "Feature could not be created from #{params}"
       end
+
+      save_vocabulary_unit_and_variable_terms(feature_fields, self.uuid)
+
     else
       meta_feature_params = params
       meta_feature_params.merge!(:dataset_uuid => uuid)
@@ -246,8 +251,8 @@ class Feature
   end
   
   def keywords
-    keywords = self.properties
-    
+    keywords = self.properties | vocabulary_keywords(self.uuid)
+
     if !keywords.nil?
       keywords = clean_id_fields(keywords)
       keywords.map { |k| k.downcase! }
@@ -266,7 +271,7 @@ class Feature
     elsif is_data_source?('catalogue')
       observation_data = data_lightweight
       if observation_data[:data].count > 0
-        properties = extract_property_names(observation_data[:data][0])
+        properties = extract_property_names(observation_data[:data][0]) | vocabulary_keywords(self.uuid)
       end
     elsif is_data_source_external?
       properties = FeatureMetaContent.find_by_dataset_uuid(uuid).keywords.split(',')
@@ -280,8 +285,13 @@ class Feature
   
   def feature_fields
     fields = []
-    fields_with_types = self.feature_fields_by_type
-    fields_with_types.each { |key, value|  fields = fields + value } unless !fields_with_types
+    if is_data_source?('geoserver')
+      fields_with_types = geoserver_translator.feature_fields_by_type(self.uuid)
+      fields_with_types.each { |key, value|  fields = fields + value } unless !fields_with_types
+    elsif is_data_source?('catalogue')
+      observation_data = data_lightweight
+      fields = observation_data[:data][0].keys unless !observation_data || observation_data[:data].count == 0
+    end
     fields
   end
   
@@ -289,9 +299,19 @@ class Feature
     if is_data_source?('geoserver')
       geoserver_translator.feature_fields_by_type(uuid)
     elsif is_data_source?('catalogue')
-      observation_data = data_lightweight
+      observation_data = data_lightweight      
       get_types(observation_data[:data][0]) unless !observation_data || observation_data[:data].count == 0
     else
+    end
+  end
+  
+  def update_feature(fields)
+    index = fields.keys[0].to_i
+    current_field = feature_fields[index]
+    requested_field = fields.values[0]
+
+    if current_field != requested_field
+      execute("ALTER TABLE #{self.tablename} RENAME COLUMN \"#{current_field}\" TO \"#{requested_field}\";")
     end
   end
   

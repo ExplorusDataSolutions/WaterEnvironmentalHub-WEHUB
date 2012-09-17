@@ -177,7 +177,7 @@
               <%= link_to 'Learn About Us', {:controller => 'about'}, :class => 'top-menu' %>
               <ul style="display: none;">
                 <li><%= link_to 'The Project', {:controller => 'about', :action => 'project'} %></li>
-                <li><%= link_to 'The Partners', {:controller => 'about', :action => 'partners'} %></li>                
+                <li><%= link_to 'Partners', {:controller => 'about', :action => 'partners'} %></li>                
                 <li><%= link_to 'Our Users', {:controller => 'about', :action => 'community'} %></li>                                
                 <li><%= link_to 'Our Newsroom', {:controller => 'about', :action => 'news'} %></li>                                                
               </ul>                                          
@@ -244,7 +244,7 @@
                   $('#social-widgets-slug').hide();
                   $('#social-widgets, #plusone').fadeIn('slow'); 
                   }, 1500);
-              }, 500);
+              }, 1000);
             });
           </script>        
           <div style="border:none; height:27px; float: right; padding-top: 13px;">

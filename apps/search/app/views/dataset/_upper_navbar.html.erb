@@ -33,18 +33,35 @@
     var nav = $('#dataset-upper-nav');
     nav.children().removeClass(selected);
 
+    var found = false;
     nav.find('a').each(function(k,v) { 
       var item = $(v);
-      if (item.attr('href').search(window.location.hash) > 0) {
+      if (!found && (item.attr('href').search(window.location.hash) > 0)) {
         item.addClass(selected);
+        found = true;
       }
     });
+
+    if (!found) {
+      nav.find('a').each(function(k,v) { 
+        var item = $(v);
+        if (!found && (item.attr('href').match(/[^?][^#]*/)[0] === window.location.pathname)) {
+          item.addClass(selected);
+          found = true;
+        }
+      });
+    }
   });
 </script>
 <div class="clear"></div>
 <div class="share-middle-filter" id="dataset-upper-nav">
+<% if !defined?(menu) %>
   <%= link_to 'Files friends have shared', {:controller => 'dataset', :action => 'show', :anchor => 'friends'}, {:id => 'friend-datasets'} %>
   <%= link_to 'Files groups have shared', {:controller => 'dataset', :action => 'show', :anchor => 'groups'}, {:id => 'group-datasets'} %>
   <%= link_to 'Files you have shared', {:controller => 'dataset', :action => 'show', :anchor => 'mine'}, {:id => 'my-datasets'} %>
   <%= link_to 'Contribute (share your dataset)', :controller => 'dataset', :action => 'new', :anchor => 'share' %>
+<% else %>
+  <%= link_to 'Edit dataset', {:controller => 'dataset', :action => 'edit', :anchor => 'mine', :id => params[:id]} %>
+  <%= link_to 'Edit feature field names and terms', {:controller => 'feature', :action => 'edit', :anchor => 'my-feature', :id => params[:id]} %>  
+<% end %>
 </div>

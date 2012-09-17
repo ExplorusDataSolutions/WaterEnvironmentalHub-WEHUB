@@ -58,6 +58,26 @@
 
 		<div class="clear"></div>
 
+    <% if flash[:message] %>
+    <script>
+      $(document).ready(function() {
+        $('#flash-message').effect("highlight", { color: '#FFFFFF' }, 6000);
+      });
+    </script>
+    <style>
+      #flash-message {
+        margin: 0 0 15px 0;
+        padding: 10px;
+        border-radius: 5px;
+        -webkit-border-radius: 5px;  
+        background: #FFFF9C;
+      }
+    </style>
+    <div id="flash-message">
+      <%= flash[:message].html_safe %>
+    </div>
+    <% end %>
+
     <div id="friend-dataset-list">
     <%= render(:partial => '/shared/dataset', :collection => @friend_datasets) || render('/shared/no_results') %>
     </div>

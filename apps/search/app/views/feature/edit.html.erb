@@ -1,0 +1,217 @@
+<style>
+  .property-editor table {
+    font-size: 1em;
+  }
+  .property-editor .property-item .ui-widget {
+    font-size: .7em;
+    text-align: left; 
+  }
+  .ui-selectmenu-menu li {
+    text-align: left; 
+    font-size: .8em;  
+  }
+  .property-editor .property-item {
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 709px; 
+    overflow: auto;
+  }
+  .property-editor .zebra {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #D5D6D8;
+    border-radius: 5px 5px 5px 5px;
+    background-color: #DEECF4;
+  }
+  .ui-selectmenu-description {
+    font-size: .8em;
+  }
+</style>
+<script>
+  $(document).ready(function() {
+    $('[name=commit]').button();
+    
+    function newDataset() {
+      return window.location.search.match(/uploader=success/)
+    }
+    
+    if (newDataset()) {
+      $('.new-dataset-message').show();
+      $('.existing-dataset-message').hide();
+    }    
+
+  	var itemFormatting = function(text){
+      var newText = text;
+      //array of find replaces
+      var findreps = [
+        {find:/^([^\~]+) \~ (.*)/g, rep: '<span class="ui-selectmenu-item-header">$1</span><span class="ui-selectmenu-description">$2</span>'}
+      ];
+
+      for(var i in findreps){
+        newText = newText.replace(findreps[i].find, findreps[i].rep);
+      }
+      return newText;
+    }
+
+    $('.field-name').addClass('ui-selectmenu ui-widget ui-state-default ui-corner-all');
+
+    $('.property-item').click(function(event) {
+      event.preventDefault();
+      var fieldPosition = $(event.currentTarget).data('field-position');
+      $.ajax({
+        url: '<%= url_for(:controller => 'feature', :action => 'edit_fields', :id => params[:id]) %>?field_position=' + fieldPosition,
+        global: true,
+        success: function(data) {
+          WEHub.modal("Edit field name and terms", data, { 
+            width: 1000,
+            zIndex: 0,
+            buttons: [
+              { 
+                text: "Save",
+                click: function() {
+                  $(this).dialog("close");
+                  $.ajax({
+                    url: $('form').attr('action'),
+                    data: $('#field-editor :input[value], #order:input[value]').serialize(),
+                    type: 'POST',
+                    success: function(data) {
+                      if (data.callback) {
+                        $("#success-dialog").dialog({
+                          height: 250,
+                          width: 600,
+                          title: 'Thanks!',
+                          modal: true,
+                          buttons: { "Ok": function() { window.location = data.callback; } }
+                        });
+                        setTimeout(function() { window.location = data.callback; }, 18000);
+                      } else if (data.errors) {
+                        var errorMsg = ''
+                        $(data.errors).each(function(i,e) { 
+                          if (e.dataset) {
+                            for (var name in e.dataset) {
+                              errorMsg += '<li>' + name + ' can\'t be blank</li>';
+                            }
+                          }
+                        });
+                        $('#error-explanation').html('<strong>Errors:</strong><ul>' + errorMsg + '</ul>').focus();
+                        $('#error-explanation, .error').effect("highlight", {}, 3000);
+                      }
+                    },
+                    error: function(data) { alert(data); }
+                  });
+
+                }
+              },
+              {
+                text: "Close",
+                click: function() { 
+                  $(this).dialog("close"); 
+                }
+              }            
+            ]
+          });
+          
+          $('.field-name').addClass('ui-selectmenu ui-widget ui-state-default ui-corner-all');
+          
+          $('select.sample-types, select.speciations, select.units, select.variable-names').selectmenu({
+            width: 380,
+            format: itemFormatting
+          });
+
+        }
+      });
+      
+    });
+  });
+</script>
+<%= render '/shared/left_panel' %>
+
+<div class="profile-right-container">
+  <%= render '/shared/menu_horizontal_tabs' %>
+  <div class="community-tab-right">
+    <div class="profile-tab ">
+      <%= link_to 'Profile', :controller => 'user', :action => 'profile' %>
+    </div>
+  </div>
+  <div class="clear"></div>
+  <div class="profile-content-container">
+    <%= render '/dataset/upper_navbar', :menu => 'edit' %>
+    
+<div class="property-editor">
+<p>
+<div class="new-dataset-message" style="display: none;">
+  <h3>One last step!</h3>
+  Associate common terms with your data to improve your dataset's search visibility and link this data to other similar datasets.
+</div>
+<div class="existing-dataset-message">
+  Edit your feature fields. Modify field names and associate terms. By adding terms you will improve your dataset's search visibility and link this data to other similar datasets.
+</div>
+</p>
+<table>
+  <tr>
+    <th>
+    Field name
+    </th>
+    <th>
+    Terms
+    </th>
+  </tr>
+  <tr>
+    <td colspan="2">
+<%= form_for :feature, :url => { :action => 'update', :id => params[:id] }, :html => { :method => :put } do |f| %>
+<%= hidden_field_tag 'order', @properties_order %>
+<% @properties.each_with_index do |property,i| %>
+  <div class="<%= i.even? ? 'property-item' : 'property-item zebra' %>" data-field-position="<%= property[:field_position]%>">
+  <table>
+    <tr>
+      <td style="vertical-align: top; padding-top: 5px;">
+    <%= text_field_tag "properties[#{property[:field_position]}]", property[:name], :class => 'field-name', :size => 25 -%>
+      </td>
+      <td>
+  <table style="padding-left: 20px;">
+    <tr>
+      <td>
+      Sample type
+      </td>
+      <td>
+    <%= text_field_tag "vocabulary[#{property[:field_position]}]", selected_value_text_field(@feature_fields_vocabulary, property[:name], 'sample_types'), :class => 'sample-types field-name', :size => 50 -%>
+      </td>
+      <td colspan="3">
+        <span class="button edit-field"><button>Edit</button></span>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      Unit
+      </td>
+      <td>
+    <%= text_field_tag "vocabulary[#{property[:field_position]}]", selected_value_text_field(@feature_fields_vocabulary, property[:name], 'units'), :class => 'units field-name', :size => 50 -%>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      Variable name
+      </td>
+      <td>
+    <%= text_field_tag "vocabulary[#{property[:field_position]}]", selected_value_text_field(@feature_fields_vocabulary, property[:name], 'variable_names'), :class => 'variable-names field-name', :size => 50 -%>
+      </td>
+    </tr>
+  </table>
+      </td>  
+    </tr>
+  </table>
+  </div>
+<% end %>
+    </td>
+  </tr>
+</table>
+</div>
+<div class="new-dataset-message" style="display: none; float: right;">
+  <span class="button"><button onclick="<%= onclick_link_to ((url_for :controller => 'community', :action => 'datasets') + "?id=" + params[:id] + "#mine") %>">Continue</button></span>
+</div>
+<% end %>
+    <div class="clear"></div>    
+  </div>
+</div>
+<div class="clear"></div>
+
+<%= render '/dataset/success_updates' %>
