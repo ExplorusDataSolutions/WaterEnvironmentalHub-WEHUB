@@ -205,6 +205,9 @@
   </tr>
 </table>
 </div>
+<div class="new-dataset-message" style="display: none; float: right;">
+  <span class="button"><button onclick="<%= onclick_link_to ((url_for :controller => 'community', :action => 'datasets') + "?id=" + params[:id] + "#mine") %>">Continue</button></span>
+</div>
 <% end %>
     <div class="clear"></div>    
   </div>
