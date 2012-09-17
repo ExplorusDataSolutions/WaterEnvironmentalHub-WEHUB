@@ -106,7 +106,7 @@ class VocabulatorController < ApplicationController
     
     save_feature_vocabulary(@results, uuid) unless @results.empty?
 
-    respond_with(:status => true)
+    respond_with(:status => true, :message => "Success")
   end
   
   def feature
