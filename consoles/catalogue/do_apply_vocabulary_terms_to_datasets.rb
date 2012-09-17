@@ -27,16 +27,6 @@ end
 result = execute("SELECT uuid FROM datasets WHERE uuid NOT IN (SELECT dataset_uuid AS uuid FROM feature_vocabulary);")
 uuids = result.split(/\n/)
 uuids.each do |uuid|
-  result = JSON.parse(http_get("http://localhost:3000/vocabulator/vocabularize/#{uuid.strip!}?format=json"))['status']
+  result = JSON.parse(http_get("http://localhost:3000/vocabulator/vocabularize/#{uuid.strip!}?format=json"))['message']
   puts result
-end
-
-result = execute("SELECT uuid FROM datasets WHERE uuid NOT IN (SELECT dataset_uuid AS uuid FROM feature_vocabulary);")
-uuids = result.split(/\n/)
-uuids.each do |uuid|
-  vocabulary = JSON.parse(http_get("http://localhost:3000/vocabulator/vocabularize/#{uuid.strip!}?format=json"))['results']
-  if !vocabulary.empty?
-    result = post_json("http://localhost:3000/feature/update?id=#{uuid}", {:vocabulary => vocabulary })
-    puts result
-  end
 end
