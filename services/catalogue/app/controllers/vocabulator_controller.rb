@@ -84,6 +84,10 @@ class VocabulatorController < ApplicationController
     dataset = Dataset.find_by_uuid(params[:id])    
     feature_fields = dataset.feature.feature_fields
 
+    if !feature_fields || feature_fields.empty?
+      respond_with(:status => false, :message => "Feature feilds do not exist") and return
+    end
+
     units = VocabulatorUnits.find(:all)
     variable_names = VocabulatorVariableName.find(:all)
     sample_types = VocabulatorSampleType.find(:all)
@@ -96,9 +100,13 @@ class VocabulatorController < ApplicationController
       @results = @results | feature_vocabulary(find_closest_terms(to_hash(sample_types), field), i, 'sample_types')
     end
     
+    if @results.empty?
+      respond_with(:status => false, :message => "Vocabulary terms could not be found for feature fields: #{feature_fields.join(',')}") and return
+    end
+    
     save_feature_vocabulary(@results, uuid) unless @results.empty?
 
-    respond_with(:status => (@results.empty? ? 'fail' : 'success'))
+    respond_with(:status => true)
   end
   
   def feature
