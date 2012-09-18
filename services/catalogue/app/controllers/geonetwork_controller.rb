@@ -7,6 +7,14 @@ class GeonetworkController < ApplicationController
   def metadata    
     @dataset = Dataset.find_by_uuid(params[:id])
     
+    #Geonetwork won't search between round brackets so we're added a space so the terms are searchable
+    dataset_name = @dataset.name
+    if dataset_name && dataset_name.match(/\(|\)/)
+      dataset_name.gsub!(/\(/,'( ')
+      dataset_name.gsub!(/\)/,' )')
+    end
+    @dataset.name = dataset_name
+    
     @related_datasets = []
     
     if @dataset.dataset_groups.count > 0
