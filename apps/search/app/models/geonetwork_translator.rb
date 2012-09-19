@@ -143,6 +143,9 @@ class GeoNetworkTranslator
         additional_info = JSON.parse(item.elements['additionalInfo'].text)
         result.period = additional_info['period']
         result.name = item.elements['dataIdInfo/idCitation/resTitle'].text
+        #Geonetwork won't search between round brackets so we added spaces so the terms are searchable, now we're removing the spaces
+        result.name.gsub!('( ','(')
+        result.name.gsub!(' )',')')        
         result.owner = Hashie::Mash.new(additional_info['owner'])
         result.author = Hashie::Mash.new(additional_info['author'])
         result.coordinates = additional_info['coordinates']
