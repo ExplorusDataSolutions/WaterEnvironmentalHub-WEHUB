@@ -28,6 +28,9 @@ Catalogue::Application.routes.draw do
   
   match 'search/status' => 'status#search'
   
+  match 'api/shared-terms' => 'api#shared_terms'
+  match 'api/related-datasets' => 'api#related_datasets'
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

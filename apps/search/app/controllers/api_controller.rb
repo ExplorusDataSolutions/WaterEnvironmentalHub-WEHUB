@@ -48,6 +48,31 @@ class ApiController < ApplicationController
     end
   end
   
+  def related_datasets
+    @uuids = catalogue_instance.vocabulator_related_datasets(params[:id])
+    
+    request.format = params[:output] unless !params[:output]
+    
+    respond_with(@uuids)
+  end
+  
+  def shared_terms
+    @breadcrumb = ['Build An App', 'API Builder']
+    @main_menu = 'api'
+  
+    @uuid = params[:id]
+    @output = 'xml'
+    @terms = catalogue_instance.vocabulator_dataset(@uuid)
+    
+    request.format = params[:output] unless !params[:output]
+    
+    respond_with do |format|
+      format.html
+      format.xml
+      format.json { render :json => @terms, :except => [:abbreviation, :type] }
+    end
+  end
+  
   def shared_properties
     result = catalogue_instance.api_shared_properties(params)
     if result.numeric && result.numeric.length > 1
@@ -68,7 +93,7 @@ class ApiController < ApplicationController
   end
 
   def feature_fields
-    @feature_fields = catalogue_instance.api_feature_fields(params)
+    @feature_fields = catalogue_api.instance_feature_fields(params)
     respond_with(@feature_fields) do |format|
       format.html { render :partial => 'feature_fields' }
     end unless @feature_fields.empty?

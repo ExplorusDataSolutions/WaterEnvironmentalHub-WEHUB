@@ -1,0 +1,56 @@
+<style>
+  #shared_term_response {
+    background: none repeat scroll 0 0 #FFFF9C;
+    border-radius: 5px 5px 5px 5px;
+    margin: 0 0 15px;
+    padding: 10px;
+  }
+  .response {
+    background: none repeat scroll 0 0 #FFFF9C;  
+  }
+</style>
+<%= render 'shared_styles' %>
+<script>
+  $(document).ready(function() {
+    $('#output').selectmenu();
+    $('#output').change(function(event) {
+      event.preventDefault();
+      var valueToReplace = (this.value == 'json' ? 'xml' : 'json');
+      var result = $('#shared_term_response').html().replace(/output=xml/g, 'output=' + this.value);
+      $('#shared_term_response').html(result);
+      result = $('#shared_terms').html().replace(/output=xml/g, 'output=' + this.value);
+      $('#shared_terms').html(result);
+    });
+  });
+</script>
+<div id="query_builder">
+  <div class="rounded">
+    <div class="circle"><h3>1</h3></div>
+    <%= label_tag 'output', 'Select a format' %>    
+    <%= select_tag 'output', options_for_select([['JSON', 'json'], ['XML', 'xml']], 'xml') %>
+  </div>
+
+  <div id="shared_term_response">
+    <strong>Shared Terms API call</strong>
+    <div class="uri">
+      <% url = (url_for( :controller => 'api', :action => 'shared-terms', :only_path => false) + "?id=#{@uuid}&key=#{current_user.api_key}&output=#{@output}") %>
+      <%= "<a href=\"#{url}\" target=\"shared-terms-api\">#{url}</a>".html_safe %>      
+    </div>
+  </div>
+
+  <div id="shared_terms" class="rounded">
+    <strong>Shared Terms</strong>
+      <table>
+      <% @terms.each do |term| %>
+        <tr>
+          <td>
+        <%= "<a href='/search?type=advanced&properties=#{term.name}' title='View this shared terms in search'>#{term.name}</a>".html_safe %>,
+        <%= term.count %> datasets share this term. 
+          </td>
+          <% url = (url_for( :controller => 'api', :action => 'related-datasets', :only_path => false) + "?id=#{term.id}&key=#{current_user.api_key}&output=#{@output}") %>
+          <td><strong>API call</strong> <span class="response uri"><%= "<a href=\"#{url}\" target=\"common-datasets-api\">...#{url.match(/(\/api.*)/)[1].gsub!("#{current_user.api_key}", "#{current_user.api_key[0,12]}..#{current_user.api_key[-12,12]}")}</a>".html_safe %></span></td>
+      </tr>
+      <% end %>
+    </table>
+  </div>
+</div>

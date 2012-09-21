@@ -26,6 +26,10 @@ module VocabulatorHelper
     results
   end
   
+  def related_uuids(term_id)
+    results = execute(["SELECT DISTINCT dataset_uuid FROM feature_vocabulary WHERE term_id = ?", term_id]);
+    results.collect { |r| r["dataset_uuid"] } unless !results
+  end
 
   def vocabulary_summary(dataset_uuid)
     results = []

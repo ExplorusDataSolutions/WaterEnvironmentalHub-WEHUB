@@ -72,7 +72,7 @@ class VocabulatorController < ApplicationController
       item.delete('created_at')
       item.delete('updated_at') 
     end
-    
+
     @results.sort! { |x,y| y['count'].to_i <=> x['count'].to_i  }
 
     respond_with(:results => @results)
@@ -107,6 +107,10 @@ class VocabulatorController < ApplicationController
     save_feature_vocabulary(@results, uuid) unless @results.empty?
 
     respond_with(:status => true, :message => "Success")
+  end
+  
+  def related_datasets
+    respond_with(:results => related_uuids(params[:id]))
   end
   
   def feature

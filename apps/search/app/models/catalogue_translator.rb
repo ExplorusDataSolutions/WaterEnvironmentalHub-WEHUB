@@ -240,6 +240,10 @@ class CatalogueTranslator
   def vocabulator_feature(uuid)
     json_to_mash(get("#{vocabulator_uri}/feature?id=#{uuid}&format=json"))['results'].to_hash
   end
+
+  def vocabulator_related_datasets(term_id)
+    json_to_mash(get("#{vocabulator_uri}/related_datasets?id=#{term_id}&format=json"))['results']
+  end
   
   def feature_update(properties, vocabulary, user_id, dataset_uuid)
     params = {

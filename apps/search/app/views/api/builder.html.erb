@@ -1,96 +1,5 @@
 <% cache "api_builder" do %>
-<style>
-form {
-  margin: 10px;
-}
-form .round div {
-  padding-top: 10px;
-}
-#advanced_search_selector input, #layer-selector input, #feature_layer_filter input {
-  width: 85px;
-}
-#builder_result, #response div {
-  padding-top: 10px;
-}
-#response div > div {
-  padding-left: 10px;
-}
-#builder_response, #search_builder_response {
-  margin: 0 0 15px 0;
-  padding: 10px;
-	border-radius: 5px;
-	-webkit-border-radius: 5px;  
-	background: #FFFF9C;	
-}
-#builder_response pre, #search_builder_response pre {
-  height: 300px;
-  overflow: scroll;
-  width: 1070px;
-}
-#builder_response .uri, #search_builder_response .uri {
-  padding: 0 0 0 10px;
-  white-space: nowrap;
-  overflow: auto;
-}
-#feature_type_filter, #feature_layer_filter {
-  padding: 5px 0 0 50px;
-}
-#search_builder_response pre {
-  height: 100px;
-}
-.circle {
-	display: block;
-	width: 30px;
-	height: 30px;
-	line-height: 30px;
-	vertical-align: middle;
-	text-align: center;
-	background: #CBE2F0;
-	border-radius: 40px;
-	-webkit-border-radius: 40px;
-	padding: 0px;
-	float: left;
-	margin-right: 20px;
-}
-.circle h3 {
-  margin: 0px;
-  color: #066497;
-}
-.rounded {
-  background: none repeat scroll 0 0 #FFFFFF;
-  border: 1px solid #D5D6D8;
-  border-radius: 5px 5px 5px 5px;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-.emphasized {
-  background-color: #DEECF4;
-}
-#layer-selector {
-  text-align: left;
-}
-#layer-selector table td {
-  vertical-align: top;
-}
-#layer-selector .layers span {
-  font-size: 10pt;
-}
-#query_builder h4 {
-  padding: 0px;
-  margin: 0px;
-}
-#query_builder .option .circle {
-  background: #fff;
-  border: solid 2px #CBE2F0;
-}
-#query_builder .option h3 {
-  color: #066497;
-}
-#query_builder .ui-widget, .ui-selectmenu-menu ul li {
-  font-size: 0.8em;
-  text-align: left;  
-}
-</style>
+<%= render 'shared_styles' %>
 
 <script>
   $('document').ready(function() {
@@ -422,6 +331,10 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
       <%= select_tag 'datasets', nil, { :include_blank => true } %>
       </div>
     </div>
+    <div class="rounded" id="dataset_common_terms">
+      <strong>Shared terms</strong>
+      <div>This dataset shares common terms with other datasets. <%= link_to 'View', :controller => 'api', :action => 'shared-terms', :target => 'shared-terms' %> shared terms.</div>
+    </div>    
     <div class="rounded">
       <div class="circle"><h3>3</h3></div>
       <%= label_tag 'info_type', 'Select the type of information you would like to request' %>
