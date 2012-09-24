@@ -15,10 +15,12 @@
     $('#output').selectmenu();
     $('#output').change(function(event) {
       event.preventDefault();
-      var valueToReplace = (this.value == 'json' ? 'xml' : 'json');
-      var result = $('#shared_term_response').html().replace(/output=xml/g, 'output=' + this.value);
+      var regex = new RegExp('output=' + (this.value == 'json' ? 'xml' : 'json'), 'g');
+      var replacement = 'output=' + this.value;
+      
+      var result = $('#shared_term_response').html().replace(regex, replacement);
       $('#shared_term_response').html(result);
-      result = $('#shared_terms').html().replace(/output=xml/g, 'output=' + this.value);
+      result = $('#shared_terms').html().replace(regex, replacement);
       $('#shared_terms').html(result);
     });
   });

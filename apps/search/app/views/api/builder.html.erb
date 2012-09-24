@@ -163,6 +163,23 @@
       data = data.replace('properties=<%= CGI::escape(constants.text.properties) %>', '');
       return data.replace(/&+/g,'&');
     }
+
+    $('[name=datasets]').change(function() {
+      var uuid = $('[name=datasets]').val();
+      var url = "<%= url_for :controller => 'api', :action => 'shared-terms', :only_path => false %>" + "?" + "id=" + uuid + "&key=<%= current_user.api_key %>" + "&format=json";
+      $.ajax({
+        url: url,
+        global: false,
+        success: function(data) {
+          if (data && data.length > 0) {
+            $('#dataset_common_terms').find('a').attr('href', url.replace(/&format=json/, ''));
+            $('#dataset_common_terms').show('fast');
+          } else {
+            $('#dataset_common_terms').hide('fast');
+          }
+        }
+      });
+    });
     
     $('[name=search]').click(function(event) {
       event.preventDefault();
@@ -184,7 +201,6 @@
           $('[name=datasets]').selectmenu('destroy').trigger('change').selectmenu({ width: 995 });
           response.effect("highlight", { color: '#FFFFFF' }, 6000);
           $('#second-step input:text').val('');
-
         },
         error: function() { 
           WEHub.modal("We're Sorry", "No data could be retrieved. Try making a new request."); 
@@ -331,9 +347,9 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
       <%= select_tag 'datasets', nil, { :include_blank => true } %>
       </div>
     </div>
-    <div class="rounded" id="dataset_common_terms">
+    <div class="rounded" id="dataset_common_terms" style="display: none;">
       <strong>Shared terms</strong>
-      <div>This dataset shares common terms with other datasets. <%= link_to 'View', :controller => 'api', :action => 'shared-terms', :target => 'shared-terms' %> shared terms.</div>
+      <div>This dataset shares common terms with other datasets. <%= link_to 'View', { :controller => 'api', :action => 'shared-terms', :id => 'uuid' }, :target => 'shared-terms' %> shared terms.</div>
     </div>    
     <div class="rounded">
       <div class="circle"><h3>3</h3></div>
