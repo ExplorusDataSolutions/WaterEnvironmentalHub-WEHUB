@@ -92,4 +92,10 @@ class ToolsController < ApplicationController
     @main_menu = 'we_tools'
   end
   
+  def compatibilities
+    uuid = params[:id]
+            
+    respond_with(:supports => tool_compatibilities(uuid))
+  end
+  
 end
