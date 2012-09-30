@@ -66,8 +66,10 @@ uuids.each do |uuid|
   rescue Exception => ex
   end
   
-  if !supported_tools.empty?
-    puts "Supported tools: #{supported_tools}"
-    puts post_json("http://localhost:3000/tools/compatibilities/#{uuid}", { :supported_tools => supported_tools })
+  if supported_tools.empty?
+    supported_tools.push('nothing')
   end
+
+  puts "Supported tools: #{supported_tools}"
+  puts post_json("http://localhost:3000/tools/compatibilities/#{uuid}", { :supported_tools => supported_tools })
 end
