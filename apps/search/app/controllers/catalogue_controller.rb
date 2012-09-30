@@ -41,8 +41,6 @@ class CatalogueController < ApplicationController
     @vocabulator_terms = catalogue_instance.vocabulator_dataset(params[:id])
     @vocabulator_terms.delete_if { |v| v['count'].to_i == 1 } unless !@vocabulator_terms || @vocabulator_terms.empty?
 
-    @supported_tools = tool_compatibilities(params[:id])
-    
     @breadcrumb = ['Discover Our Data', 'This Dataset']
     @main_menu = 'we_catalogue'
   end

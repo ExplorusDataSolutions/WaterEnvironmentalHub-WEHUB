@@ -34,6 +34,11 @@ class Dataset < ActiveRecord::Base
     @feature
   end  
   
+  def compatibilities
+    result = ToolCompatibility.find_by_dataset_uuid(self.uuid)
+    result.compatibilities unless !result
+  end
+  
   def as_json(options={})    
     json = { 
       :dataset => { :uuid => self.uuid, :name => self.name, :description => self.description }, 
@@ -120,6 +125,11 @@ class Dataset < ActiveRecord::Base
       if self.feature && self.feature.feature_fields
         xml.tag!(:properties, self.feature.feature_fields.join(', '))
       end
+      
+      if compatibilities
+        xml.tag!(:tools, compatibilities.join(','))
+      end
+      
     end
   end
 
