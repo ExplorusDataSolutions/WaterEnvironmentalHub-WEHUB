@@ -3,6 +3,8 @@
 xml.Metadata('xmlns:geonet' => 'http://www.fao.org/geonetwork') do
   xml.mdFileID(@dataset.uuid)
 
+  xml.mdDateSt(@dataset.created_at.iso8601.gsub!('Z',''))
+
   xml.dataIdInfo do
     xml.idCitation do
       xml.resTitle(@dataset.name)
