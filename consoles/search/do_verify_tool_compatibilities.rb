@@ -16,7 +16,6 @@ def http_get(url_param)
   case response
   when Net::HTTPSuccess, Net::HTTPRedirection
   else
-    
     response.error!
   end
   
@@ -36,8 +35,6 @@ def post_json(uri, request)
   case response
   when Net::HTTPSuccess, Net::HTTPRedirection
   else
-    puts request
-    puts response.body
     response.error!
   end
 end
@@ -46,9 +43,9 @@ result = execute("SELECT uuid FROM datasets WHERE uuid NOT IN (SELECT dataset_uu
 uuids = result.split(/\n/)
 uuids.each do |uuid|
   uuid.strip!
-  chart_url = "http://localhost:3001/tools/chart_features/#{uuid}?output=csv&page[start]=0&page[size]=100"
-  map_url = "http://localhost:3001/api/feature/#{uuid}?output=json"
-  table_url = "http://localhost:3001/tools/table_feature/#{uuid}.html?page[start]=0&page[size]=100"
+  chart_url = "http://localhost/tools/chart_feature/#{uuid}.json"
+  map_url = "http://localhost/api/feature/#{uuid}?output=json"
+  table_url = "http://localhost/tools/table_feature/#{uuid}.html?page[start]=0&page[size]=100"
   
   supported_tools = []
   begin
@@ -69,7 +66,10 @@ uuids.each do |uuid|
   rescue Exception => ex
   end
   
-  if !supported_tools.empty?
-    puts post_json("http://localhost:3000/tools/compatibilities/#{uuid}", { :supported_tools => supported_tools })
+  if supported_tools.empty?
+    supported_tools.push('nothing')
   end
+
+  puts "Supported tools: #{supported_tools}"
+  puts post_json("http://localhost:3000/tools/compatibilities/#{uuid}", { :supported_tools => supported_tools })
 end
