@@ -109,6 +109,8 @@
       global: false,
       success: function(data) { 
         <%= "drawJSON(data,'#{css_colour(i)[:code]}', '#{dataset.coordinates.gsub(',', ' ')}', '#{dataset.id}');" -%> 
+
+        $('form[name=download] [name=ids]').val($('[name=dataset]:checked').val());
       },
       error: function(data) { disableDataset('<%= dataset.id %>'); }
       
