@@ -10,8 +10,12 @@ class GeoNetworkTranslator
     @cache = cache
   end
  
-  def cache_key(query)
-    "search_results_#{query}"
+  def cache_key(query, request='')
+    if request.empty? || request == 'auto'
+      "search_results_#{query}"
+    else
+      "search_results_#{query}_#{request}"
+    end
   end
   
   def cookies_cache_key
@@ -40,13 +44,14 @@ class GeoNetworkTranslator
   end
   
   def search_results(query, request='auto')
-
     results = nil
-    if cache.exist?(cache_key(query))
-      results = cache.fetch(cache_key(query))
+    if cache.exist?(cache_key(query, request))
+      results = cache.fetch(cache_key(query, request))
     else 
-      if query == 'all'
+      if query == 'all' && request == 'auto'
         response = post("xml.search", "<request><any>#{query}</any></request>")
+      elsif query == 'all' && request == 'order_by_date'
+        response = post("xml.search", "<request><any>#{query}</any><sortBy>changeDate</sortBy></request>")
       elsif request == 'uuid'
         response = post("xml.search", "<request><uuid>#{query}</uuid></request>")
       elsif request == 'properties'
@@ -58,7 +63,7 @@ class GeoNetworkTranslator
       search_terms = response.body
   
       results = translate_to_search_results(search_terms)
-      cache.write(cache_key(query), results) unless !results || results.empty?
+      cache.write(cache_key(query, request), results) unless !results || results.empty?
     end    
 
     results

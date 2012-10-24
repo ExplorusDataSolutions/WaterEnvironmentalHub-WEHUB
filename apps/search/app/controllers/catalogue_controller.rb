@@ -55,7 +55,7 @@ class CatalogueController < ApplicationController
 
     @observation_data = build_groups(@search.observation_data.dup)
 
-    @search = search_instance.do_query('all', nil, nil, nil)
+    @search = search_instance.do_query('all', nil, nil, 'order_by_date')
     results = @search.results
     
     page = params[:page]

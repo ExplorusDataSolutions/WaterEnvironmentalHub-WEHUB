@@ -2,6 +2,7 @@
 <html>
   <head>
     <title><%= !yield(:title).empty? ? "#{yield(:title).gsub(/  /, '')} - " : "#{!@breadcrumb.nil? ? @breadcrumb.join(' - ') : params[:controller].capitalize} - " %> The Water and Environment Hub (WEHUB) </title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
     <%= stylesheet_link_tag :all %>
     <%= stylesheet_link_tag "jqplot/jquery.jqplot"%>    
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script> 
@@ -88,7 +89,7 @@
             url: '<%= url_for :controller => "twitter" , :format => "json" %>',
             global: false,
             success: function(data) {
-              if (data && data.length != 0) {
+              if (data && data.length != 0 && !data.errors) {
                 var messages = []
                 for (var i=0 ; i < data.length ; i++) {
                   messages.push(data[i].text);

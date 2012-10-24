@@ -40,7 +40,8 @@ class GeonetworkController < ApplicationController
   
   def mef_import_list
     uuids = []
-    Dataset.all.each do |dataset|
+    datasets = Dataset.all.sort_by { |d| d.created_at }
+    datasets.each do |dataset|
       if public_dataset?(dataset)
         uuids.push(dataset.uuid)
       end
