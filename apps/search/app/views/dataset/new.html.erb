@@ -57,7 +57,20 @@
                   }
                 }, 
                 error: function(data){
-                  WEHub.modal("We're Sorry", "We're exeriencing an issue with the data you've submitted. <p>Error: <em>" + data.responseText + "</em></p>");
+                  var message = data.responseText;
+                  try {
+                    var message = $.parseJSON(message);
+                    if (typeof message == 'object') {
+                      if (message.exception) {
+                        message = message.exception
+                      }
+                      if (message.indexOf(':')) {
+                        message = message.match(/.*: (.*)/)[1];                    
+                      }
+                    }                  
+                  } catch(e) {
+                  }
+                  WEHub.modal("We're Sorry", "We're exeriencing an issue with the data you've submitted. <p>Error: <em>" + message + "</em></p>");
                 }
               });
             },
