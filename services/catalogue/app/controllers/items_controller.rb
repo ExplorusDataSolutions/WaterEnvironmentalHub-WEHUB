@@ -8,8 +8,6 @@ class ItemsController < ApplicationController
   
   respond_to :json, :xml
 
-  protect_from_forgery :except => :create
-  
   def index
     respond_with(Dataset.find_by_uuid(params[:id])) 
   end
@@ -94,12 +92,8 @@ class ItemsController < ApplicationController
       
       if dataset.valid?
         begin
-          dataset.transaction do
-            feature_params = {}
-            feature_params.store(:vocabulary, params[:vocabulary]) if params[:vocabulary]
-            feature_params.store(:filename, params[:filename][:path])
-            
-            dataset.feature.create(feature_params)
+          dataset.transaction do          
+            dataset.feature.create(feature_params(params))
             dataset.save        
           end
         rescue Exception => e 

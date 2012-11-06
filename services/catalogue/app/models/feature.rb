@@ -207,7 +207,8 @@ class Feature
         end
 
       elsif !filename.match(/(\.zip)$/i).nil?
-        shape_translator = ShapeTranslator.new(filename, tablename, '4326', directory, "#{Rails.root}/tmp/shape_scripts")
+        source_epsg = (params[:epsg] && is_valid_epsg?(params[:epsg])) ? params[:epsg] : '4326'
+        shape_translator = ShapeTranslator.new(filename, tablename, source_epsg, directory, "#{Rails.root}/tmp/shape_scripts")
             
         execute(shape_translator.shape_sql)
       else

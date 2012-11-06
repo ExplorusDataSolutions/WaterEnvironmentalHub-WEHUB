@@ -171,6 +171,14 @@
     </tr>
   <% if (params[:action] == 'new' || params[:action] == 'create') %>  
     <tr>
+      <td width="25%" class="label">
+        <%= f.label :epsg, 'EPSG code' -%>
+      </td>
+      <td width="10%" class="input">
+        <%= f.text_field :epsg, :value=> '4326', :class => 'required', :friendly => 'EPSG code', :maxlength => 4, :style => 'width: 40px;' -%> <%= required_markup.html_safe -%>
+      </td>
+    </tr>
+    <tr>
       <td class="label">
         <%= label_tag :filename, 'File' -%>
       </td>  

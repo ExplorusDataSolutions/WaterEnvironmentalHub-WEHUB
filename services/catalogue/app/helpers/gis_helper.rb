@@ -38,4 +38,8 @@ module GisHelper
     end
   end
   
+  def is_valid_epsg?(epsg)
+    execute("SELECT auth_srid FROM spatial_ref_sys WHERE auth_srid = '#{epsg}';").one?
+  end
+  
 end

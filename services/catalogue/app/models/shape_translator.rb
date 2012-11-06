@@ -1,6 +1,6 @@
 class ShapeTranslator
   
-  def initialize(filename, tablename, srs='4326', uploads_directory='public/uploads', sql_directory='tmp/shape_scripts')
+  def initialize(filename, tablename, source_srs='4326', uploads_directory='public/uploads', sql_directory='tmp/shape_scripts')
     @filename = filename
     @uploads_directory = uploads_directory
     @sql_directory = sql_directory
@@ -9,13 +9,14 @@ class ShapeTranslator
     
     filenames = unzip(upload_path(filename))
     ogr_filenames = to_ogr_filenames(filenames)
+    source_srs_param = !(source_srs == '4326') ? "-s_srs \"EPSG:#{source_srs}\"" : ''
 
-    result = %x[ogr2ogr -f "ESRI Shapefile" -t_srs "EPSG:#{srs}" "#{upload_path(ogr_filenames['shp'])}" "#{upload_path(filenames['shp'])}"]
+    result = %x[ogr2ogr -f "ESRI Shapefile" #{source_srs_param} -t_srs "EPSG:4326" "#{upload_path(ogr_filenames['shp'])}" "#{upload_path(filenames['shp'])}"]
     if $?.exitstatus == 127
       raise_error("Executable ogr2ogr could not be found")
     end
 
-    result = %x[shp2pgsql -s srs "#{upload_path(ogr_filenames['shp'])}" "#{tablename}" > "#{@filename_sql}"]
+    result = %x[shp2pgsql -s '4326' "#{upload_path(ogr_filenames['shp'])}" "#{tablename}" > "#{@filename_sql}"]
     if $?.exitstatus == 127
       raise_error("Executable shp2pgsql could not be found")
     end

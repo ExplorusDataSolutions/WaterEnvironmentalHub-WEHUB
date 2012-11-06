@@ -36,8 +36,9 @@ module DatasetHelper
   end
   
   def dataset_params(params)
-    dataset_params = params[:dataset]
-
+    dataset_params = params[:dataset].clone
+    
+    dataset_params.delete(:epsg)
     dataset_params[:feature_period] = feature_period(dataset_params)
 
     dataset_params[:feature_type] =  FeatureType.find_by_name(dataset_params[:feature_type])
@@ -53,6 +54,20 @@ module DatasetHelper
     end
     
     dataset_params
+  end
+  
+  def feature_params(params)
+    feature_params = {}
+    
+    feature_params.store(:vocabulary, params[:vocabulary]) if params[:vocabulary]
+    feature_params.store(:filename, params[:filename][:path])
+    
+    epsg = params[:dataset][:epsg] if params[:dataset] && params[:dataset][:epsg]
+    if epsg && !epsg.empty? && epsg.match(/\d{4}/)
+      feature_params.store(:epsg, epsg.match(/\d{4}/)[0])
+    end
+
+    feature_params  
   end
 
   def creative_commons_license(params)
