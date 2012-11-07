@@ -1,3 +1,5 @@
+require 'csv' 
+
 class SpreadsheetTranslator
   
   def initialize(filename, uploads_directory='public/uploads', spreadsheets_directory='tmp/spreadsheets')
@@ -12,11 +14,17 @@ class SpreadsheetTranslator
       
       save_as_csv
     else
-      %x[cp #{filename_upload} #{filename_csv}]
+      begin
+        file = CSV.open(filename_upload)
+        file.readline        
+        %x[cp #{filename_upload} #{filename_csv}]
+      rescue Exception => e
+        raise ArgumentError, "SpreadsheetTranslator: Invalid comma-seperated values. Please check for unterminated quoted fields and remove all carriage returns (\\r or \\r\\n) within fields"
+      end
     end
     
     @field_names = load_fieldnames
-    
+
     delete_fieldnames_row
   end
   
