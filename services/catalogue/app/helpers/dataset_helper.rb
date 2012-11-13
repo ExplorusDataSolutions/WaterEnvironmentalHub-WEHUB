@@ -56,16 +56,21 @@ module DatasetHelper
     dataset_params
   end
   
+  def epsg_params(params)
+    epsg = params[:dataset][:epsg] if params[:dataset] && params[:dataset][:epsg]
+    if epsg && !epsg.empty? && epsg.match(/\d{4}/)
+      { :epsg => epsg.match(/\d{4}/)[0] }
+    end
+  end
+  
   def feature_params(params)
     feature_params = {}
     
     feature_params.store(:vocabulary, params[:vocabulary]) if params[:vocabulary]
     feature_params.store(:filename, params[:filename][:path])
     
-    epsg = params[:dataset][:epsg] if params[:dataset] && params[:dataset][:epsg]
-    if epsg && !epsg.empty? && epsg.match(/\d{4}/)
-      feature_params.store(:epsg, epsg.match(/\d{4}/)[0])
-    end
+    epsg = epsg_params(params)
+    feature_params.merge!(epsg) if epsg
 
     feature_params  
   end

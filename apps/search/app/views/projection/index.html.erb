@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript">
+  
+  
+  $(document).ready(function() {
+    var lat = 65.5236382493873;
+    var lon = -107.289256818494;
+    var map;
+    
+    var options = {
+      displayProjection: new OpenLayers.Projection("EPSG:4326"),
+      units: "m",
+      numZoomLevels: 22
+    };  
+    map = new OpenLayers.Map('map', options);
+    map.addControl(new OpenLayers.Control.LayerSwitcher());
+
+    $.get('/projection/reproject/', function(response) {
+      var layer = new OpenLayers.Layer.WMS("OpenLayers WMS", "http://vmap0.tiles.osgeo.org/wms/vmap0", { layers: 'basic' });  
+      var gphy = new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP, sphericalMercator: false, numZoomLevels: 22});
+      var gmap = new OpenLayers.Layer.Google("Google Streets", {sphericalMercator: false, numZoomLevels: 22});
+      var ghyb = new OpenLayers.Layer.Google("Google Hybrid", {type: G_HYBRID_MAP, sphericalMercator: false, numZoomLevels: 22});
+      var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, sphericalMercator: false, numZoomLevels: 22});
+
+      map.addLayers([layer, gphy, gmap, ghyb, gsat]);
+
+      WEHub.OpenLayers.setCenter(map, lon, lat, 5);
+
+
+      var featurecollection = response.data;
+
+      var geojson_format = new OpenLayers.Format.GeoJSON();
+      var vector_layer = new OpenLayers.Layer.Vector("Shape Projection"); 
+      map.addLayer(vector_layer);
+      vector_layer.addFeatures(geojson_format.read(featurecollection));
+
+      var bbox = response.bbox;
+      var bounds = new OpenLayers.Bounds();
+      bounds.extend(new OpenLayers.LonLat(bbox.east, bbox.north).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));
+      bounds.extend(new OpenLayers.LonLat(bbox.west, bbox.south).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));  
+      var boxes = new OpenLayers.Layer.Boxes('Bounding Box');
+      var box = new OpenLayers.Marker.Box(bounds);
+
+      boxes.addMarker(box);
+      map.addLayer(boxes);
+      map.zoomToExtent(bounds);
+    });
+  }); 
+  
+</script>
+
+  </head>
+  <body>
+    <h1 id="title">GeoJSON Example</h1>
+    
+    <div id="tags">
+       JSON, GeoJSON
+    </div>
+
+      <p id="shortdesc">
+        Demonstrate the use of the GeoJSON format.
+    </p>
+    <div id="map" class="smallmap"></div>
+    <div id="docs">
+        <p>This example uses the GeoJSON format.</p>
+    </div>
+  </body>
+</html>
+

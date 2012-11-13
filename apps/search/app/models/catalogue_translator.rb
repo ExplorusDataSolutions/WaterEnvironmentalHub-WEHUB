@@ -256,6 +256,10 @@ class CatalogueTranslator
     json_to_mash(post_json("#{url}/feature/update", params))
   end
 
+  def reproject(params)
+    get("#{projection_uri}/reproject?#{params.to_query}")
+  end
+  
   def clean(params, format='xml')
     params.delete(:controller)
     params.delete(:action)
@@ -315,6 +319,10 @@ class CatalogueTranslator
     "#{url}/vocabulator"
   end
 
+  def projection_uri
+    "#{url}/projection"
+  end
+  
   def post_json(uri, json_hash={})
     json_hash.delete(:utf8)
     json_hash.delete(:authenticity_token)

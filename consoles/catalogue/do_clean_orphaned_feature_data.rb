@@ -4,7 +4,7 @@
 
 # 1) COPY (SELECT tablename FROM pg_tables WHERE tablename LIKE 'feature_data%') TO '/projects/WEHub/consoles/catalogue/all_feature_data_tables.csv' WITH CSV HEADER;
 # 2) ruby do_clean_orphaned_feature_data.rb ? drop_orphaned_feature_data.sql
-# 3) psql ... -f drop orphaned_feature_data.sql
+# 3) psql ... -f drop_orphaned_feature_data.sql
 
 require 'csv'
 
