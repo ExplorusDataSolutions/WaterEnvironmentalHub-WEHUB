@@ -1,0 +1,169 @@
+<style>
+  #reprojector {
+    text-align: left;
+  }
+  #reprojector .rounded {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #D5D6D8;
+    border-radius: 5px 5px 5px 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  #reprojector .emphasized {
+    background-color: #DEECF4;
+  }  
+  #reprojector .circle {
+      background: none repeat scroll 0 0 #CBE2F0;
+      border-radius: 40px 40px 40px 40px;
+      display: block;
+      float: left;
+      height: 30px;
+      line-height: 30px;
+      margin-right: 20px;
+      padding: 0;
+      text-align: center;
+      vertical-align: middle;
+      width: 30px;
+  }  
+  #reprojector .circle h3 {
+      color: #066497;
+      margin: 0;
+  }  
+</style>
+<script>  
+  $(document).ready(function() {
+    
+    function reprojectAndDisplay(params) {
+debugger;    
+      var lat = 65.5236382493873;
+      var lon = -107.289256818494;
+      var map;
+      
+      var options = {
+        displayProjection: new OpenLayers.Projection("EPSG:4326"),
+        units: "m",
+        numZoomLevels: 22
+      };
+
+      map = new OpenLayers.Map('map', options);
+      map.addControl(new OpenLayers.Control.LayerSwitcher());
+
+      $.ajax({
+        url: '<%= url_for :controller => "projection", :action => "reproject", :format => "json" %>',
+        data: params, 
+        global: true,
+        type: 'POST',
+        contentType: false,
+        processData: false,                
+        success: function(response) {
+          var layer = new OpenLayers.Layer.WMS("OpenLayers WMS", "http://vmap0.tiles.osgeo.org/wms/vmap0", { layers: 'basic' });  
+          var gphy = new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP, sphericalMercator: false, numZoomLevels: 22});
+          var gmap = new OpenLayers.Layer.Google("Google Streets", {sphericalMercator: false, numZoomLevels: 22});
+          var ghyb = new OpenLayers.Layer.Google("Google Hybrid", {type: G_HYBRID_MAP, sphericalMercator: false, numZoomLevels: 22});
+          var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, sphericalMercator: false, numZoomLevels: 22});
+
+          map.addLayers([layer, gphy, gmap, ghyb, gsat]);
+
+          WEHub.OpenLayers.setCenter(map, lon, lat, 5);
+
+
+          var featurecollection = response.data;
+
+          var geojson_format = new OpenLayers.Format.GeoJSON();
+          var vector_layer = new OpenLayers.Layer.Vector("Shape Projection"); 
+          map.addLayer(vector_layer);
+          vector_layer.addFeatures(geojson_format.read(featurecollection));
+
+          var bbox = response.bbox;
+          var bounds = new OpenLayers.Bounds();
+          bounds.extend(new OpenLayers.LonLat(bbox.east, bbox.north).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));
+          bounds.extend(new OpenLayers.LonLat(bbox.west, bbox.south).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));  
+          var boxes = new OpenLayers.Layer.Boxes('Bounding Box');
+          var box = new OpenLayers.Marker.Box(bounds);
+
+          boxes.addMarker(box);
+          map.addLayer(boxes);
+          map.zoomToExtent(bounds);
+        }
+      });
+    }
+    
+    $('[name=view-projection]').click(function(event) { 
+      event.preventDefault();
+      $('#map').html('');
+      $('#reprojection-result').show();
+      reprojectAndDisplay(new FormData($('[name=reproject]')[0]));
+    });
+
+    $('#reprojector input:submit').button()
+  }); 
+  
+</script>
+
+<div id="reprojector">
+  <p>
+  Use this tool to visualize your EPSG code reprojection. Shape files need to be converted into WGS84 Geographic ESPG 4326 (<a href="http://spatialreference.org/ref/epsg/4326/">http://spatialreference.org/ref/epsg/4326/</a>). Files with incorrect projections will not be indexed geographically by our search engine or displayed on maps. 
+  </p>
+
+  <div class="rounded emphasized" style="margin: 10px;"> 
+  <%= form_for :projection, :html => { :name => 'reproject' } do |f| %>
+    <table>
+      <tr>
+        <td>
+    <div class="circle option">
+      <h3>1</h3>
+    </div>
+        </td>
+        <td>
+    <%= f.label :epsg, "Enter the four digit EPSG Code this file was created with" %>
+    <%= f.text_field :epsg, :value => '4326', :maxlength => 4, :style => 'width: 40px;' -%>
+        </td>
+      </tr>
+      <tr>
+        <td>
+    <div class="circle option">
+      <h3>2</h3>
+    </div>
+        </td>
+        <td>
+    <%= f.submit :reproject, :value => 'View reprojection', :name => 'view-projection' %>
+        </td>
+      </tr>
+    </table>
+  <% end %>
+  
+  <table id="reprojection-result" style="display: none;">
+    <tr>
+      <td valign="top">
+    <div class="circle option">
+      <h3>3</h3>
+    </div>
+      </td>
+      <td style="width: 950px;">
+    <div id="map"></div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+    <div class="circle option">
+      <h3>4</h3>
+    </div>
+      </td>
+      <td>
+    <%= submit_tag :accept, :value => 'Use this EPSG code', :name => 'use-projection' %>
+      </td>
+    </tr>
+  </table>
+  </div>
+    
+  <div style="font-style: italic; font-size: 11pt;">
+    In addition to altering the projection, your data also needs to meet the following specifications:
+    <ul>
+      <li>The file will be set up in a horizontal data representation with the first row being the column headings with units.</li>
+      <li>The file will have an FID column which will represent the feature ID for each individual feature (e.g., a station, a person, etc.) in the table. This can have one to many values.</li>
+      <li>The file will have a Date\Time column. This column can be in multiple formats as long as it is present and populated with values.</li>
+      <li>The file will have a Latitude column. This column will be populated with the features latitude in WGS84 in decimal degrees (example 52.495912).</li>
+      <li>The file will have a Longitude column. This column will be populated with the features longitude in WGS84 in decimal degrees (example -114.19012).</li>
+    </ul>
+  </div>
+</div>

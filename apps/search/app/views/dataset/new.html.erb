@@ -78,7 +78,44 @@
           }
         });
       }
-    });    
+    }); 
+    
+    $('[name=filename]').change(function() {
+      console.log($(this).val().match(/\.zip$/) ? 't' : 'f')
+      if ($(this).val().match(/\.zip$/)) {
+        $('.shapefile-dialog').fadeIn('slow');
+      } else {
+        $('.shapefile-dialog').fadeOut('slow');
+      }
+    });
+    $('#reprojector').hide();
+    function mapCode() {
+      $('[name="create"] [name="dataset[epsg]"]').val($('[name="reproject"] [name="projection[epsg]"]').val());
+    }
+    $("#reprojector").find('[name=use-projection]').click(function(event) {
+      event.preventDefault();
+      mapCode();
+      $("#reprojector").dialog('close');
+    });
+    $('#reprojector-tool').click(function(event) {
+      event.preventDefault();
+      var filename = $('form[name=create] [name=filename]').clone();
+      filename.hide();
+      $(filename).appendTo('form[name=reproject]');
+      
+      $("#reprojector").dialog({
+        width: 1090,
+        title: 'Visualize your shape file reprojection',
+        modal: true,
+        buttons: { 
+          "Ok": function() { 
+            mapCode();
+            $(this).dialog("close");
+          },
+          "Cancel": function() { $(this).dialog("close"); }
+        }
+      });
+    });
   });
 
 </script> 
@@ -111,3 +148,5 @@
 <div id="success-dialog" style="display: none;">
   <p><strong>Thank you for your contribution!</strong></p><p>Your data submission was successful, but it will take a few hours before you'll find it in our search index. Please sit tight as our search bot indexes your data.</p>
 </div>
+
+<%= render '/projection/reprojector' %>

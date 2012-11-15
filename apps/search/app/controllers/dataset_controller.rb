@@ -1,5 +1,7 @@
 class DatasetController < ApplicationController
 
+  include DatasetHelper
+  
   respond_to :json, :xml
   
   before_filter :verify_logged_in
@@ -173,18 +175,7 @@ class DatasetController < ApplicationController
   def my_datasets
     catalogue_instance.find_datasets_by_user(current_user.id)
   end
-  
-  def sanitize_filename(filename)
-    filename.strip.tap do |name|
-      # NOTE: File.basename doesn't work right with Windows paths on Unix
-      # get only the filename, not the whole path
-      name.sub! /\A.*(\\|\/)/, ''
-      # Finally, replace all non alphanumeric, underscore
-      # or periods with underscore
-      name.gsub! /[^\w\.\-]/, '_'
-    end
-  end
-  
+    
   def map_from_form(params)
     if params[:feature_period_start]
       params[:feature_period] = "#{params[:feature_period_start]} - #{params[:feature_period_end]}"

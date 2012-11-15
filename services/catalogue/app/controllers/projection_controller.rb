@@ -3,19 +3,18 @@ class ProjectionController < ApplicationController
   include DatabaseHelper
   include DatasetHelper  
   
-  def reproject
-  
+  def reproject 
     epsg = epsg_params(params)
-    
-    filename = params[:filename][:path]
+
+    filename = params[:filename]
     ip_address = params[:ip_address].match(/[\d.]*/)[0].gsub('.','_')
     tablename = "temp_reprojection_table_#{ip_address}"
     directory = '/projects/WEHub/apps/search/public/uploads'
 
     begin
-#      translator = ShapeTranslator.new(filename, tablename, epsg, directory, "#{Rails.root}/tmp/spreadsheets")
+      translator = ShapeTranslator.new(filename, tablename, epsg, directory, "#{Rails.root}/tmp/spreadsheets")
       
-#      execute(translator.shape_sql)
+      execute(translator.shape_sql)
       
     rescue Exception => e
       debugger
