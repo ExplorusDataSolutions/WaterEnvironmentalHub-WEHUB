@@ -58,6 +58,7 @@ module DatasetHelper
   
   def epsg_params(params)
     epsg = params[:dataset][:epsg] if params[:dataset] && params[:dataset][:epsg]
+    epsg = params[:epsg] if params[:epsg]
     if epsg && !epsg.empty? && epsg.match(/\d{4}/)
       { :epsg => epsg.match(/\d{4}/)[0] }
     end

@@ -29,12 +29,14 @@
       color: #066497;
       margin: 0;
   }  
+  #reprojector .errors {
+    padding: 5px;
+  }
 </style>
 <script>  
   $(document).ready(function() {
-    
-    function reprojectAndDisplay(params) {
-debugger;    
+
+    function loadMap(params) {
       var lat = 65.5236382493873;
       var lon = -107.289256818494;
       var map;
@@ -48,6 +50,36 @@ debugger;
       map = new OpenLayers.Map('map', options);
       map.addControl(new OpenLayers.Control.LayerSwitcher());
 
+      var layer = new OpenLayers.Layer.WMS("OpenLayers WMS", "http://vmap0.tiles.osgeo.org/wms/vmap0", { layers: 'basic' });  
+      var gphy = new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP, sphericalMercator: false, numZoomLevels: 22});
+      var gmap = new OpenLayers.Layer.Google("Google Streets", {sphericalMercator: false, numZoomLevels: 22});
+      var ghyb = new OpenLayers.Layer.Google("Google Hybrid", {type: G_HYBRID_MAP, sphericalMercator: false, numZoomLevels: 22});
+      var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, sphericalMercator: false, numZoomLevels: 22});
+
+      map.addLayers([layer, gphy, gmap, ghyb, gsat]);
+
+      WEHub.OpenLayers.setCenter(map, lon, lat, 5);
+
+      var featurecollection = params.data;
+
+      var geojson_format = new OpenLayers.Format.GeoJSON();
+      var vector_layer = new OpenLayers.Layer.Vector("Shape Projection"); 
+      map.addLayer(vector_layer);
+      vector_layer.addFeatures(geojson_format.read(featurecollection));
+
+      var bbox = params.bbox;
+      var bounds = new OpenLayers.Bounds();
+      bounds.extend(new OpenLayers.LonLat(bbox.east, bbox.north).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));
+      bounds.extend(new OpenLayers.LonLat(bbox.west, bbox.south).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));  
+      var boxes = new OpenLayers.Layer.Boxes('Bounding Box');
+      var box = new OpenLayers.Marker.Box(bounds);
+
+      boxes.addMarker(box);
+      map.addLayer(boxes);
+      map.zoomToExtent(bounds);
+    }
+        
+    function reprojectAndDisplay(params) {
       $.ajax({
         url: '<%= url_for :controller => "projection", :action => "reproject", :format => "json" %>',
         data: params, 
@@ -56,42 +88,27 @@ debugger;
         contentType: false,
         processData: false,                
         success: function(response) {
-          var layer = new OpenLayers.Layer.WMS("OpenLayers WMS", "http://vmap0.tiles.osgeo.org/wms/vmap0", { layers: 'basic' });  
-          var gphy = new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP, sphericalMercator: false, numZoomLevels: 22});
-          var gmap = new OpenLayers.Layer.Google("Google Streets", {sphericalMercator: false, numZoomLevels: 22});
-          var ghyb = new OpenLayers.Layer.Google("Google Hybrid", {type: G_HYBRID_MAP, sphericalMercator: false, numZoomLevels: 22});
-          var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, sphericalMercator: false, numZoomLevels: 22});
-
-          map.addLayers([layer, gphy, gmap, ghyb, gsat]);
-
-          WEHub.OpenLayers.setCenter(map, lon, lat, 5);
-
-
-          var featurecollection = response.data;
-
-          var geojson_format = new OpenLayers.Format.GeoJSON();
-          var vector_layer = new OpenLayers.Layer.Vector("Shape Projection"); 
-          map.addLayer(vector_layer);
-          vector_layer.addFeatures(geojson_format.read(featurecollection));
-
-          var bbox = response.bbox;
-          var bounds = new OpenLayers.Bounds();
-          bounds.extend(new OpenLayers.LonLat(bbox.east, bbox.north).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));
-          bounds.extend(new OpenLayers.LonLat(bbox.west, bbox.south).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject()));  
-          var boxes = new OpenLayers.Layer.Boxes('Bounding Box');
-          var box = new OpenLayers.Marker.Box(bounds);
-
-          boxes.addMarker(box);
-          map.addLayer(boxes);
-          map.zoomToExtent(bounds);
+          if ('errors' in response) {
+            var ul = $('#reprojector .errors ul');
+            ul.html('');
+            for (var i=0 ; i < response.errors.length ; i++) {
+              var error = response.errors[i].match(/(.*): (.*)/)[2];
+              ul.append('<li>' + error + '</li>');
+            }
+            $('#reprojector .errors').show().effect("highlight", {}, 3000);
+            $('#reprojection-result').hide();          
+          } else {
+            $('#map').html('');
+            $('#reprojector .errors').hide();
+            $('#reprojection-result').show();
+            loadMap(response);
+          }
         }
       });
     }
     
     $('[name=view-projection]').click(function(event) { 
       event.preventDefault();
-      $('#map').html('');
-      $('#reprojection-result').show();
       reprojectAndDisplay(new FormData($('[name=reproject]')[0]));
     });
 
@@ -115,7 +132,7 @@ debugger;
     </div>
         </td>
         <td>
-    <%= f.label :epsg, "Enter the four digit EPSG Code this file was created with" %>
+    <%= f.label :epsg, "Enter the four digit EPSG code this file was created with" %>
     <%= f.text_field :epsg, :value => '4326', :maxlength => 4, :style => 'width: 40px;' -%>
         </td>
       </tr>
@@ -132,6 +149,11 @@ debugger;
     </table>
   <% end %>
   
+  <div class="errors rounded" style="display: none;">
+    <strong>Errors:</strong>
+    <ul></ul>
+  </div>
+
   <table id="reprojection-result" style="display: none;">
     <tr>
       <td valign="top">
