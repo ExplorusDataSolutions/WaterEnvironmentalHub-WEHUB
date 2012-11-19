@@ -26,11 +26,12 @@ class ProjectionController < ApplicationController
     ip_address = params[:ip_address].match(/[\d.]*/)[0].gsub('.','_')
     tablename = "temp_reprojection_table_#{ip_address}"
     
-    if false #errors.empty?    
+    if errors.empty?    
       directory = '/projects/WEHub/apps/search/public/uploads'
 
       begin
         #run this everytime
+        execute("DROP TABLE IF EXISTS #{tablename};")
         translator = ShapeTranslator.new(filename, tablename, epsg, directory, "#{Rails.root}/tmp/shape_scripts")
         execute(translator.shape_sql)
       rescue Exception => e

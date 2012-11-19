@@ -5,7 +5,7 @@
       $('#permission_group').attr('checked', true);
     });
     
-    $('[type="submit"]').click(function(event) {
+    $('[name=create] [type="submit"]').click(function(event) {
       event.preventDefault();
       
       var required = ['dataset[feature_type]', 'permission'];
@@ -81,7 +81,6 @@
     }); 
     
     $('[name=filename]').change(function() {
-      console.log($(this).val().match(/\.zip$/) ? 't' : 'f')
       if ($(this).val().match(/\.zip$/)) {
         $('.shapefile-dialog').fadeIn('slow');
       } else {
@@ -100,10 +99,14 @@
     $('#reprojector-tool').click(function(event) {
       event.preventDefault();
       var filename = $('form[name=create] [name=filename]').clone();
-      filename.hide();
+      filename.removeAttr('id').hide();
+      $('form[name=reproject] [type=file]').remove();
       $(filename).appendTo('form[name=reproject]');
-      
-      $("#reprojector").dialog({
+
+      var reprojector = $('#reprojector');
+      reprojector.find('.errors').hide();
+      reprojector.find('#reprojection-result').hide();
+      reprojector.dialog({
         width: 1090,
         title: 'Visualize your shape file reprojection',
         modal: true,

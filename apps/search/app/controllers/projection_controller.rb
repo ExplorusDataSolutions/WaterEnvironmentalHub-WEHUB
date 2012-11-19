@@ -8,11 +8,9 @@ class ProjectionController < ApplicationController
     filename = sanitize_filename(uploaded_file.original_filename)
 
     filename_and_path = Rails.root.join('public', 'uploads', filename)
-    if !File.exists?(filename_and_path)
-      if File.ctime(filename_and_path) < 1.day.ago    
-        File.open(filename_and_path, 'wb') do |file|
-          file.write(uploaded_file.read)
-        end
+    if !File.exists?(filename_and_path) || File.ctime(filename_and_path) < 1.day.ago    
+      File.open(filename_and_path, 'wb') do |file|
+        file.write(uploaded_file.read)
       end
     end
 
