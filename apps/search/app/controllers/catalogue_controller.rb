@@ -41,6 +41,12 @@ class CatalogueController < ApplicationController
     @vocabulator_terms = catalogue_instance.vocabulator_dataset(params[:id])
     @vocabulator_terms.delete_if { |v| v['count'].to_i == 1 } unless !@vocabulator_terms || @vocabulator_terms.empty?
 
+    @data = nil
+    begin    
+      @data = { :geojson => catalogue_instance.api_feature({ :id => params[:id], :format => 'json'}).to_json } 
+    rescue Exception => e
+    end
+    
     @breadcrumb = ['Discover Our Data', 'This Dataset']
     @main_menu = 'we_catalogue'
   end

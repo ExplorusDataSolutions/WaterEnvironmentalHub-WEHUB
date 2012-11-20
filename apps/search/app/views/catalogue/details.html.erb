@@ -78,19 +78,28 @@ $(document).ready(function() {
     var options = {
       displayProjection: new OpenLayers.Projection("EPSG:4326"),
       units: "m",
-      numZoomLevels: 22,
-      maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34)
+      numZoomLevels: 22
     };  
     map = new OpenLayers.Map('map', options);
     map.addControl(new OpenLayers.Control.LayerSwitcher());
     
+<% if @data && @data[:geojson] %>
+    var layer = new OpenLayers.Layer.WMS("OpenLayers WMS", "http://vmap0.tiles.osgeo.org/wms/vmap0", { layers: 'basic' });
+    var gphy = new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP, sphericalMercator: false, numZoomLevels: 22});
+    var gmap = new OpenLayers.Layer.Google("Google Streets", {sphericalMercator: false, numZoomLevels: 22});
+    var ghyb = new OpenLayers.Layer.Google("Google Hybrid", {type: G_HYBRID_MAP, sphericalMercator: false, numZoomLevels: 22});
+    var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, sphericalMercator: false, numZoomLevels: 22});
+
+    map.addLayers([layer, gphy, gmap, ghyb, gsat]);
+<% else %>
     var gphy = new OpenLayers.Layer.Google("Google Physical", {type: G_PHYSICAL_MAP, sphericalMercator: true, numZoomLevels: 22});
     var gmap = new OpenLayers.Layer.Google("Google Streets", {numZoomLevels: 22});
     var ghyb = new OpenLayers.Layer.Google("Google Hybrid", {type: G_HYBRID_MAP, numZoomLevels: 22});
     var gsat = new OpenLayers.Layer.Google("Google Satellite", {type: G_SATELLITE_MAP, numZoomLevels: 22});
 
     map.addLayers([gphy, gmap, ghyb, gsat]);
-    
+<% end %>
+
     WEHub.OpenLayers.setCenter(map, lon, lat, 1);
 
     markers = new OpenLayers.Layer.Markers("Features");
@@ -226,6 +235,15 @@ $(document).ready(function() {
   %>  
   <% end %>
 
+<% end %>
+
+<% if @data && @data[:geojson] %>  
+  var featureCollection = <%= "#{@data[:geojson]}".html_safe %>;  
+  var geojson_format = new OpenLayers.Format.GeoJSON();
+  var vector_layer = new OpenLayers.Layer.Vector(); 
+  map.addLayer(vector_layer);
+  vector_layer.addFeatures(geojson_format.read(featureCollection));
+  map.setBaseLayer(gphy);
 <% end %>
 });
 </script>
