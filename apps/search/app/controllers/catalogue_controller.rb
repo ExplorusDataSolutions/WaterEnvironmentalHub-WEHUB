@@ -43,7 +43,10 @@ class CatalogueController < ApplicationController
 
     @data = nil
     begin    
-      @data = { :geojson => catalogue_instance.api_feature({ :id => params[:id], :format => 'json'}).to_json } 
+      geojson = catalogue_instance.api_feature({ :id => params[:id], :format => 'json'})
+      if geojson.features[0].geometry.type == "MultiLineString"
+        @data = { :geojson => geojson.to_json } 
+      end     
     rescue Exception => e
     end
     
