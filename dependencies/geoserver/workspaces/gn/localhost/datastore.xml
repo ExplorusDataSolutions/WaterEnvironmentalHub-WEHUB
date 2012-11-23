@@ -1,0 +1,30 @@
+<dataStore>
+  <id>DataStoreInfoImpl--3e911a0a:12dab421a75:-7ffc</id>
+  <name>localhost</name>
+  <type>PostGIS</type>
+  <enabled>true</enabled>
+  <workspace>
+    <id>WorkspaceInfoImpl--6c6d7dee:135d472eccd:-8000</id>
+  </workspace>
+  <connectionParameters>
+    <entry key="Connection timeout">20</entry>
+    <entry key="port">5432</entry>
+    <entry key="passwd">t3s3raDe\/</entry>
+    <entry key="dbtype">postgis</entry>
+    <entry key="host">localhost</entry>
+    <entry key="validate connections">true</entry>
+    <entry key="max connections">100</entry>
+    <entry key="database">geoserver</entry>
+    <entry key="namespace">http://geonetwork-opensource.org</entry>
+    <entry key="schema">public</entry>
+    <entry key="Loose bbox">true</entry>
+    <entry key="Expose primary keys">true</entry>
+    <entry key="Max open prepared statements">50</entry>
+    <entry key="fetch size">1000</entry>
+    <entry key="preparedStatements">false</entry>
+    <entry key="Estimated extends">false</entry>
+    <entry key="user">postgres</entry>
+    <entry key="min connections">1</entry>
+  </connectionParameters>
+  <__default>false</__default>
+</dataStore>
