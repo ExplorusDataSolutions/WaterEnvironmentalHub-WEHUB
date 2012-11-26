@@ -8,3 +8,4 @@ chkconfig --add geoserver
 chkconfig --add wehub-enginey
 chkconfig --add wehub-catalogue
 chkconfig --add wehub-search
+chkconfig --add nginx
