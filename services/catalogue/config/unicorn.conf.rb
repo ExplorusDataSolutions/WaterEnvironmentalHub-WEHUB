@@ -30,7 +30,7 @@ listen APP_PATH + "/tmp/unicorn.sock", :backlog => 64
 #listen 3000, :tcp_nopush => true
 
 # nuke workers after 240 seconds instead of 60 seconds (the default)
-timeout 1200
+timeout 240
 
 # feel free to point this anywhere accessible on the filesystem
 pid APP_PATH + "/tmp/pids/unicorn.pid"

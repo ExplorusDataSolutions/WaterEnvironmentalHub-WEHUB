@@ -6,7 +6,7 @@ Catalogue::Application.configure do
   config.cache_classes = true
 
   config.cache_store = :dalli_store, 'we-rails2-cache.gqmntp.0001.use1.cache.amazonaws.com:11211', { 
-    :namespace => 'dev_cat', 
+    :namespace => 'prod_cat2', 
     :value_max_bytes => 5242880, 
     :expires_in => 172800, 
     :compress => true 
@@ -55,7 +55,7 @@ Catalogue::Application.configure do
   config.active_support.deprecation = :notify
 
   # End points for our various dependencies
-  config.geoserver_address = 'http://localhost:8080'
+  config.geoserver_address = 'http://184.73.111.158:8080'
   config.enginey_address = 'http://localhost:3002'  
 
 end
