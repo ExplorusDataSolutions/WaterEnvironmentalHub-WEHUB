@@ -87,19 +87,30 @@
         $('.shapefile-dialog').fadeOut('slow');
       }
     });
+    
     $('#reprojector').hide();
+    
     function mapCode() {
       $('[name="create"] [name="dataset[epsg]"]').val($('[name="reproject"] [name="projection[epsg]"]').val());
     }
+    
+    function restoreFilename() {
+      var filename = $('form[name=reproject] [name=filename]');
+      filename.show();
+      $(filename).appendTo('form[name=create] .filename');
+    }    
+    
     $("#reprojector").find('[name=use-projection]').click(function(event) {
       event.preventDefault();
       mapCode();
+      restoreFilename();
       $("#reprojector").dialog('close');
-    });
+    });   
+    
     $('#reprojector-tool').click(function(event) {
       event.preventDefault();
-      var filename = $('form[name=create] [name=filename]').clone();
-      filename.removeAttr('id').hide();
+      var filename = $('form[name=create] [name=filename]');
+      filename.hide();
       $('form[name=reproject] [type=file]').remove();
       $(filename).appendTo('form[name=reproject]');
 
@@ -114,9 +125,13 @@
         buttons: { 
           "Ok": function() { 
             mapCode();
+            restoreFilename();
             $(this).dialog("close");
           },
-          "Cancel": function() { $(this).dialog("close"); }
+          "Cancel": function() { 
+            restoreFilename();
+            $(this).dialog("close");
+          }
         }
       });
     });
