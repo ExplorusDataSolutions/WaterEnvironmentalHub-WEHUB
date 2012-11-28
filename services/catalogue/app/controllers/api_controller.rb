@@ -61,22 +61,26 @@ class ApiController < ApplicationController
     respond_with(@dataset)
   end
   
-  def feature  
+  def feature
     if params[:id] && params[:output]
       dataset = Dataset.find_by_uuid(params[:id])
       if dataset && dataset.feature
-        feature_format_factory = FeatureFormatFactory.new
-        feature = feature_format_factory.find(params[:output], dataset.feature, params)
-        if feature
-          @data = feature[:data]
+        begin
+          feature_format_factory = FeatureFormatFactory.new
+          feature = feature_format_factory.find(params[:output], dataset.feature, params)
+          if feature
+            @data = feature[:data]
+          end
+        rescue
+          @data = { :error => { :code => 404, :message => 'No data could be retrieved for your request'}}.to_json
         end
       end
     end
-    
+
     # returns results in text format b/c some of our data results in invalid XML and JSON
-    render :text => @data
+    render :text => @data and return
   end
-  
+
   def shared_properties
     uuids = params[:ids].split(',') unless !params[:ids]
 

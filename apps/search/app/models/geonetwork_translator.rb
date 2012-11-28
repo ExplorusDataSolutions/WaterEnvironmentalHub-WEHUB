@@ -11,7 +11,7 @@ class GeoNetworkTranslator
   end
  
   def cache_key(query, request='')
-    if request.empty? || request == 'auto'
+    if request.nil? || request.empty? || request == 'auto'
       "search_results_#{query}"
     else
       "search_results_#{query}_#{request}"

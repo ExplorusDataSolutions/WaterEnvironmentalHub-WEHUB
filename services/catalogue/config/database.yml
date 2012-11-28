@@ -46,6 +46,6 @@ production:
   adapter: postgresql
   encoding: unicode
   database: catalogue_development
-  pool: 5
+  pool: 25
   username: catalogue
   password: t3s3raDeV
