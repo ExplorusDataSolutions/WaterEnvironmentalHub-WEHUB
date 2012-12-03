@@ -4,13 +4,13 @@
 
 DIRECTORY=$(cd `dirname $0` && pwd)
 
-/usr/local/tomcat/bin/shutdown.sh -force 
+/etc/init.d/geonetwork stop 
 
 sleep 5
 
 pkill -f tomcat.*catalina
 
-/usr/local/tomcat/bin/startup.sh 
+/etc/init.d/geonetwork start 
 
 sleep 5
 
