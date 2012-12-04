@@ -3,7 +3,7 @@ require 'net/http'
 class Importer
   attr_accessor :cookies, :server_address, :temp_directory, :username, :password, :boundary
   
-  def initialize(temp_directory="#{Dir.getwd}/tmp/mefs", server_address='localhost:9090', username='development', password='development')
+  def initialize(temp_directory="#{Dir.getwd}/tmp/mefs", server_address='184.73.111.158:8080', username='development', password='development')
     @server_address = server_address
     @temp_directory = temp_directory
     @username = username
@@ -91,6 +91,7 @@ class Importer
     puts "#{mef_files.count} Mef file(s) queued for upload"
     mef_files.each do |file|
       upload_mef(file)
+      sleep 2
     end
   end
 end
