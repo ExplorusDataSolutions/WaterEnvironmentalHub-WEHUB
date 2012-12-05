@@ -65,8 +65,6 @@ class MefFactory
         errors[result[:status]] = [] 
       end
       errors[result[:status]].push(result[:uuid])
-
-      sleep 2
     end
     
     puts "-------"

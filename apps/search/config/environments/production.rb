@@ -55,9 +55,9 @@ Catalogue::Application.configure do
   config.active_support.deprecation = :notify
 
   # End points for our various dependencies
-  config.geoserver_address = 'http://184.73.111.158:8080'   
+  config.geoserver_address = 'http://107.20.26.228:8080'   
   config.enginey_address = 'http://localhost:3002'
-  config.geonetwork_address = 'http://localhost:9090'
+  config.geonetwork_address = 'http://10.76.46.117:8080'
   config.catalogue_address = 'http://localhost:3000'
 
 end
