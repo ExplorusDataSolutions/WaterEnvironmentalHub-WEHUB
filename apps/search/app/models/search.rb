@@ -19,15 +19,17 @@ class Search
     
     if query
       @results = geonetwork.search_results(query)
-      @base_data = geonetwork.search_results_by_groups(["20", "21"])
-      @observation_data = geonetwork.search_results_by_groups(["22", "23"])
+      # These numeric values correspond to GeoNetwork groups
+      @base_data = geonetwork.search_results_by_groups(["6", "3"])
+      @observation_data = geonetwork.search_results_by_groups(["4", "5"])
       @query = query
     end
   end
 
   def load_browse_data  
-      @base_data = geonetwork.search_results_by_groups(["20", "21"])
-      @observation_data = geonetwork.search_results_by_groups(["22", "23"])
+      # These numeric values correspond to GeoNetwork groups
+      @base_data = geonetwork.search_results_by_groups(["6", "3"])
+      @observation_data = geonetwork.search_results_by_groups(["4", "5"])
       self
   end
 

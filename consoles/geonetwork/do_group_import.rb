@@ -3,26 +3,26 @@ require 'active_support/core_ext'
 
 class GroupImporter
   
-  attr_accessor :catalogue_server_address, :geoserver_server_address, :timeout, :username, :password, :cookies
+  attr_accessor :catalogue_address, :geonetwork_address, :timeout, :username, :password, :cookies
   
-  def initialize(catalogue_server_address='localhost:3000', geoserver_server_address='50.19.106.48:9090', timeout=300, username='development', password='development')
-    @geoserver_server_address = geoserver_server_address
-    @catalogue_server_address = catalogue_server_address
+  def initialize(catalogue_address='localhost:3000', geonetwork_address='107.20.26.228:8080', timeout=300, username='development', password='development')
+    @geonetwork_address = geonetwork_address
+    @catalogue_address = catalogue_address
     @timeout = timeout
     @username = username
     @password = password
   end
   
   def group_info(name)
-    http_get("http://#{catalogue_server_address}/geonetwork/group/#{name}.xml")
+    http_get("http://#{catalogue_address}/geonetwork/group/#{name}.xml")
   end
   
   def group_list
-    http_get("http://#{catalogue_server_address}/geonetwork/group-import-list.xml")
+    http_get("http://#{catalogue_address}/geonetwork/group-import-list.xml")
   end
   
   def group_list_geonetwork
-    url = URI.parse("http://#{geoserver_server_address}/geonetwork/srv/en/xml.group.list")
+    url = URI.parse("http://#{geonetwork_address}/geonetwork/srv/en/xml.group.list")
     request = Net::HTTP::Post.new(url.path)
     request.body = "<?xml version='1.0' encoding='UTF-8'?><request />"
     request.content_type = "text/xml"
@@ -63,7 +63,7 @@ class GroupImporter
   def import_group(group)
     puts "Uploading group to GeoNetwork"
 
-    url = URI.parse("http://#{geoserver_server_address}/geonetwork/srv/en/group.update")
+    url = URI.parse("http://#{geonetwork_address}/geonetwork/srv/en/group.update")
     request = Net::HTTP::Post.new(url.path)
     request.body = group
     request.content_type = "text/xml"
@@ -104,7 +104,7 @@ class GroupImporter
   def authenticate
     puts "Authenticating user #{username} with GeoNetwork"    
     
-    url = URI.parse("http://#{geoserver_server_address}/geonetwork/srv/en/xml.user.login")  
+    url = URI.parse("http://#{geonetwork_address}/geonetwork/srv/en/xml.user.login")  
     request = Net::HTTP::Post.new(url.path)
     request.body = "<?xml version='1.0' encoding='UTF-8'?><request><username>#{username}</username><password>#{password}</password></request>"    
     request.content_type = "text/xml"

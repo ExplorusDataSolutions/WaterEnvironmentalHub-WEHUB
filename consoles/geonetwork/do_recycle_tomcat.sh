@@ -1,4 +1,4 @@
-#!/bin/bash
+!/bin/bash
 
 [[ "`/usr/bin/tty`" == "not a tty" ]] && . ~/.bash_profile
 
@@ -14,4 +14,4 @@ pkill -f tomcat6
 
 sleep 5
 
-ps aux | grep [t]omcat6 
+ps aux | grep [t]omcat6

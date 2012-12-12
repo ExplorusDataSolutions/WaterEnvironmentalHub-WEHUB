@@ -3,7 +3,7 @@ require 'net/http'
 class Importer
   attr_accessor :cookies, :server_address, :temp_directory, :username, :password, :boundary
   
-  def initialize(temp_directory="#{Dir.getwd}/tmp/mefs", server_address='localhost:9090', username='development', password='development')
+  def initialize(temp_directory="#{Dir.getwd}/tmp/mefs", server_address='10.76.46.117:8080', username='development', password='development')
     @server_address = server_address
     @temp_directory = temp_directory
     @username = username
