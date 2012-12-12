@@ -2,8 +2,6 @@
 
 [[ "`/usr/bin/tty`" == "not a tty" ]] && . ~/.bash_profile
 
-DIRECTORY=$(cd `dirname $0` && pwd)
+dir=$(dirname $0)
 
-ruby $DIRECTORY/do_import.rb > $DIRECTORY/do_import.log
-mail -s "Geonetwork import log `date`" adam.kahtava@tesera.com < $DIRECTORY/do_import.log
-
+ruby $dir/do_import.rb

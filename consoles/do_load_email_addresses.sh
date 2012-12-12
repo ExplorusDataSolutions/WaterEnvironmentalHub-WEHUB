@@ -2,6 +2,4 @@
 
 [[ "`/usr/bin/tty`" == "not a tty" ]] && . ~/.bash_profile
 
-dir=$(dirname $0)
-
-ruby $dir/do_import_external_service.rb water_cloud
+echo "spencer.cox@tesera.com,adam.kahtava@tesera.com"
