@@ -4,4 +4,4 @@
 
 dir=$(dirname $0)
 
-. $dir/../do_run_script_and_email_results.sh do_apply_vocabulary_terms_to_datasets.sh
+. $dir/../do_run_script_and_email_results.sh $dir/do_apply_vocabulary_terms_to_datasets.sh
