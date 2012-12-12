@@ -4,14 +4,14 @@
 
 DIRECTORY=$(cd `dirname $0` && pwd)
 
-/usr/local/tomcat/bin/shutdown.sh -force 
+/etc/init.d/tomcat6 stop
 
 sleep 5
 
-pkill -f tomcat.*catalina
+pkill -f tomcat6
 
-/usr/local/tomcat/bin/startup.sh 
+/etc/init.d/tomcat6 start
 
 sleep 5
 
-ps aux | grep tomcat 
+ps aux | grep [t]omcat6 

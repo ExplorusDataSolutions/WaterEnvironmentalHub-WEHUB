@@ -26,4 +26,19 @@ class FeatureCacheTest < ActiveSupport::TestCase
     assert response == '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"shape_area":"0.00000502"}},{"type":"Feature","properties":{"shape_area":"0.00000171"}}]}'
   end
   
+
+  test "CSV" do
+  
+    csv = 'FID,Latitude,Longitude,ObsDateTime,Discharge,"Discharge_Flags
+",the_geom
+1,51.34879,-116.325,31-May-06,0.285,,0101000020E6100000CDCCCCCCCC145DC0FF959526A5AC4940
+1,51.34879,-116.325,31-May-06,0.288,,0101000020E6100000CDCCCCCCCC145DC0FF959526A5AC4940'
+
+    CSV.parse(csv, { :headers => true }).each_with_index do |row, i|
+      row.each do |item|
+        puts item
+      end
+    end
+    
+  end
 end
