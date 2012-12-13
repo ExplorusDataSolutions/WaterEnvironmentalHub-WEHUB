@@ -33,7 +33,7 @@ def add_to_catalogue(uri, request)
 end
 
 catalogue_uri = 'http://localhost:3000/items/load_geoserver_content'
-geoserver_base = 'http://184.72.200.76:8080/geoserver'
+geoserver_base = 'http://107.20.26.228:8080/geoserver'
 xml_capabilities = http_get("#{geoserver_base}/ows?service=wfs&version=1.1.0&request=GetCapabilities")
 
 if !xml_capabilities.empty?

@@ -4,4 +4,4 @@
 
 dir=$(dirname $0)
 
-. $dir/do_run_script_and_email_results.sh do_prime_search.sh
+. $dir/../do_run_script_and_email_results.sh $dir/do_prime_search.sh
