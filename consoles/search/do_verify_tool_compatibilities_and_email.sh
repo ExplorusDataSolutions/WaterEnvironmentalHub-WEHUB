@@ -4,4 +4,4 @@
 
 dir=$(dirname $0)
 
-. $dir/../do_run_script_and_email_results.sh do_verify_tool_compatibilities.sh
+. $dir/../do_run_script_and_email_results.sh $dir/do_verify_tool_compatibilities.sh
