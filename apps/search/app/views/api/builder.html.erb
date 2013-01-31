@@ -344,7 +344,7 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
       <div class="circle"><h3>2</h3></div>
       <div>
       <%= label_tag 'datasets', 'Select from the search results' %>
-      <%= select_tag 'datasets', nil, { :include_blank => true } %>
+      <%= select_tag 'datasets', '', { :include_blank => true } %>
       </div>
     </div>
     <div class="rounded" id="dataset_common_terms" style="display: none;">
@@ -356,7 +356,7 @@ The apps being built from the WEHUB range from quick-and-easy smartphone apps to
       <%= label_tag 'info_type', 'Select the type of information you would like to request' %>
       <%= select_tag 'info_type', options_for_select([ ['Dataset Information', 'dataset'], ['Feature Data', 'feature'] ]) %>
       <div id="feature_type_filter" style="display: none;">
-        Select an optional feature property to filter your results <%= select_tag 'feature_fields', nil, { :include_blank => true } %>
+        Select an optional feature property to filter your results <%= select_tag 'feature_fields', "", { :include_blank => true } %>
       </div>
       <div id="feature_layer_filter" style="margin: 10px 0px 10px 50px; display: none;" class="rounded emphasized">
         <div class="filter_layer_display" style="display: none;">
