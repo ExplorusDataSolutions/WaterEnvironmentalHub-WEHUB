@@ -78,40 +78,6 @@
       });
     </script>
     <script>
-      $('document').ready(function() {
-      
-        var container = $('#twitter-ticker');
-        function updateMessage(text) {
-          container.fadeOut('slow', function() { container.html(text).fadeIn('slow'); });
-        }
-        setTimeout(function() { 
-          $.ajax({
-            url: '<%= url_for :controller => "twitter" , :format => "json" %>',
-            global: false,
-            success: function(data) {
-              if (data && data.length != 0 && !data.errors) {
-                var messages = []
-                for (var i=0 ; i < data.length ; i++) {
-                  messages.push(data[i].text);
-                }
-                                
-                updateMessage(messages[0]);
-                
-                var count = 1;
-                setInterval(function() {
-                  if (count == data.length) {
-                    count = 0;
-                  }
-                  updateMessage(messages[count])
-                  count++;
-                }, 10000);
-              }
-            }
-          });
-        }, 2000);
-      });
-    </script>
-    <script>
       $(document).ready(function() {
         if (WEHub.logged_in()) {
           $('.edit-panel').each(function() {
