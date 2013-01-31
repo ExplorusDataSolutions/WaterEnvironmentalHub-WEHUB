@@ -2,9 +2,9 @@ class StatusController < ApplicationController
 
   respond_to :json, :xml
   
-  caches_action :search, :cache_path => Proc.new { |c| c.params }, :expires_in => 5.minutes
-  caches_action :social_network, :cache_path => Proc.new { |c| c.params }, :expires_in => 15.minutes
-  caches_action :catalogue, :cache_path => Proc.new { |c| c.params }, :expires_in => 15.minutes
+  caches_action :search, :cache_path => Proc.new { |c| c.params }, :expires_in => 15.minutes
+  caches_action :social_network, :cache_path => Proc.new { |c| c.params }, :expires_in => 25.minutes
+  caches_action :catalogue, :cache_path => Proc.new { |c| c.params }, :expires_in => 25.minutes
 
   def search
     search_instance.do_query(random_string, nil, nil, nil)
