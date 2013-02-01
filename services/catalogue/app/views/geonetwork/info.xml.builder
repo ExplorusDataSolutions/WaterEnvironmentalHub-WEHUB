@@ -7,7 +7,6 @@ xml.info(:version => 1) do
     # siteId req'd when uuid present, this is an arbitrary meaningless uuid    
     xml.siteId('ee3d3049-5d83-4750-98d4-f60911922b94')
     
-    xml.createDate(@dataset.created_at)
     xml.createDate(@dataset.updated_at)
     xml.schema('iso19115')
     xml.isTemplate('false')
