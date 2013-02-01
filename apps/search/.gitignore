@@ -2,3 +2,7 @@
 db/*.sqlite3
 log/*.log
 tmp/**/*
+public/upload*
+!public/uploas/README
+public/catalogue
+/logs

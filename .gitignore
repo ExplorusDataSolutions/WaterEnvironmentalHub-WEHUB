@@ -1,3 +1,7 @@
 *~
 *.erb~
 *.swp
+consoles/catalogue/*.log
+consoles/geonetwork/*.log
+consoles/geoserver/*.log
+consoles/search/*.log

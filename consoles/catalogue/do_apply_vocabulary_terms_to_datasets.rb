@@ -16,7 +16,6 @@ def http_get(url_param)
   case response
   when Net::HTTPSuccess, Net::HTTPRedirection
   else
-    puts service_hash
     puts response.body
     response.error!
   end
@@ -27,6 +26,11 @@ end
 result = execute("SELECT uuid FROM datasets WHERE uuid NOT IN (SELECT dataset_uuid AS uuid FROM feature_vocabulary);")
 uuids = result.split(/\n/)
 uuids.each do |uuid|
-  result = JSON.parse(http_get("http://localhost:3000/vocabulator/vocabularize/#{uuid.strip!}?format=json"))['message']
-  puts result
+  url = "http://localhost:3000/vocabulator/vocabularize/#{uuid.strip!}?format=json"
+  begin
+    result = JSON.parse(http_get(url))['message']
+    puts result
+  rescue
+    puts "#{url}\nFailed to load"
+  end
 end
