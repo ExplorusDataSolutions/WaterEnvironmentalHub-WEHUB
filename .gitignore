@@ -1,7 +1,7 @@
 *~
+*.log
 *.erb~
 *.swp
-consoles/catalogue/*.log
-consoles/geonetwork/*.log
-consoles/geoserver/*.log
-consoles/search/*.log
+jcs_caching/
+consoles/geonetwork/tmp
+consoles/catalogue/tmp

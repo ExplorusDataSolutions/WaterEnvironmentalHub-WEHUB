@@ -5,4 +5,5 @@ tmp/**/*
 public/upload*
 !public/uploas/README
 public/catalogue
-/logs
+logs
+jcs_caching/
