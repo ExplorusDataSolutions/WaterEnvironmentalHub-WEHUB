@@ -17,5 +17,5 @@ else
 
 fi
 
-rvm use 1.9.2
+#rvm 1.9.3@wecat-rails303
 unicorn_rails -c config/unicorn.conf.rb -D -E production 
