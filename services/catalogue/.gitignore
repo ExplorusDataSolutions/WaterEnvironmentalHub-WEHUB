@@ -3,6 +3,7 @@ db/*.sqlite3
 log/
 logs/
 tmp/**/*
-jcs_cashing/
+jcs_caching/
+oo_11223/
 public/uploads/
 
